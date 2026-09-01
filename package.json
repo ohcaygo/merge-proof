@@ -2,18 +2,45 @@
   "name": "merge-proof",
   "version": "0.1.0",
   "description": "Before an AI-authored PR merges, determine whether the available evidence actually proves the candidate against the repository state being merged.",
-  "keywords": ["git", "merge", "pull-request", "verification", "ci", "code-review", "ai-generated"],
+  "keywords": [
+    "git",
+    "merge",
+    "pull-request",
+    "verification",
+    "ci",
+    "code-review",
+    "ai-generated"
+  ],
   "homepage": "https://github.com/ohcaygo/merge-proof#readme",
-  "bugs": { "url": "https://github.com/ohcaygo/merge-proof/issues" },
-  "repository": { "type": "git", "url": "git+https://github.com/ohcaygo/merge-proof.git" },
+  "bugs": {
+    "url": "https://github.com/ohcaygo/merge-proof/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ohcaygo/merge-proof.git"
+  },
   "license": "MIT",
   "author": "ohcaygo",
   "type": "commonjs",
-  "bin": { "merge-proof": "bin/merge-proof.js" },
+  "bin": {
+    "merge-proof": "bin/merge-proof.js"
+  },
   "main": "src/analyze.js",
-  "files": ["bin/", "src/", "action.yml", "README.md", "STUDY.md", "study-data.json", "LICENSE", ".mergeproofignore.example"],
-  "engines": { "node": ">=18" },
-  "scripts": { "test": "node test/run.js" },
+  "files": [
+    "bin/",
+    "src/",
+    "action.yml",
+    "README.md",
+    "STUDY.md",
+    "LICENSE",
+    ".mergeproofignore.example"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node test/run.js"
+  },
   "dependencies": {},
   "devDependencies": {}
 }
