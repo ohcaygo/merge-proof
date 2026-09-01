@@ -1,0 +1,135 @@
+name: 'merge-proof'
+description: 'Check whether the evidence available in the repository actually proves this candidate against the base it will merge into.'
+author: 'ohcaygo'
+
+branding:
+  icon: 'git-merge'
+  color: 'purple'
+
+# Required permissions, least-privilege:
+#
+#   permissions:
+#     contents: read          # always required, to read git history
+#     pull-requests: write    # ONLY required when comment: 'true'
+#
+# This action never requests contents: write and never needs org-wide scopes.
+# It runs entirely on local git state: no network calls, no model or API calls,
+# no telemetry, and no cloud backend.
+#
+# IMPORTANT: check out full history, or merge-proof will fail closed:
+#
+#   - uses: actions/checkout@v4
+#     with:
+#       fetch-depth: 0
+
+inputs:
+  base:
+    description: 'Base ref the candidate merges into. Defaults to the PR base branch, then origin/HEAD.'
+    required: false
+    default: ''
+  head:
+    description: 'Candidate ref to verify.'
+    required: false
+    default: 'HEAD'
+  fail-on:
+    description: 'Fail the step on a verdict: none, fail, or not-proven. Default none (diagnostic).'
+    required: false
+    default: 'none'
+  comment:
+    description: 'Post or update a sticky PR comment with the result. Requires pull-requests: write.'
+    required: false
+    default: 'false'
+  ignore-file:
+    description: 'Path to an exclusion file. Defaults to .mergeproofignore in the repository root.'
+    required: false
+    default: ''
+  working-directory:
+    description: 'Repository directory to analyze.'
+    required: false
+    default: '.'
+
+outputs:
+  verdict:
+    description: 'VERIFIED, NOT_PROVEN or FAIL.'
+    value: ${{ steps.merge-proof.outputs.verdict }}
+  drift-count:
+    description: 'Number of commits the base advanced since the candidate diverged.'
+    value: ${{ steps.merge-proof.outputs.drift-count }}
+  overlap-count:
+    description: 'Number of candidate files also changed on the base since divergence.'
+    value: ${{ steps.merge-proof.outputs.overlap-count }}
+  json:
+    description: 'Path to the full JSON result on the runner.'
+    value: ${{ steps.merge-proof.outputs.json }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Run merge-proof
+      id: merge-proof
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        MP_BASE: ${{ inputs.base }}
+        MP_HEAD: ${{ inputs.head }}
+        MP_IGNORE: ${{ inputs.ignore-file }}
+      run: |
+        set -euo pipefail
+        args=(--head "$MP_HEAD" )
+        if [ -n "$MP_BASE" ]; then args+=(--base "$MP_BASE"); fi
+        if [ -n "$MP_IGNORE" ]; then args+=(--ignore-file "$MP_IGNORE"); fi
+
+        json="$RUNNER_TEMP/merge-proof.json"
+        markdown="$RUNNER_TEMP/merge-proof.md"
+
+        # Always exit 0 here; the verdict is enforced in a later step so that
+        # the summary and the optional comment are produced either way.
+        node "$GITHUB_ACTION_PATH/bin/merge-proof.js" "${args[@]}" --json > "$json"
+        node "$GITHUB_ACTION_PATH/bin/merge-proof.js" "${args[@]}" --markdown > "$markdown"
+
+        verdict=$(node -e 'process.stdout.write(require(process.argv[1]).verdict)' "$json")
+        drift=$(node -e 'process.stdout.write(String(require(process.argv[1]).metrics.baseAdvanceCommits ?? 0))' "$json")
+        overlap=$(node -e 'process.stdout.write(String(require(process.argv[1]).metrics.overlapCount ?? 0))' "$json")
+
+        {
+          echo "verdict=$verdict"
+          echo "drift-count=$drift"
+          echo "overlap-count=$overlap"
+          echo "json=$json"
+        } >> "$GITHUB_OUTPUT"
+
+        cat "$markdown" >> "$GITHUB_STEP_SUMMARY"
+
+    - name: Comment on pull request
+      if: ${{ inputs.comment == 'true' && github.event_name == 'pull_request' }}
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const marker = '<!-- merge-proof:sticky -->';
+          const body = `${marker}\n${fs.readFileSync(process.env.RUNNER_TEMP + '/merge-proof.md', 'utf8')}`;
+          const { owner, repo } = context.repo;
+          const issue_number = context.payload.pull_request.number;
+          const existing = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number });
+          const mine = existing.find((comment) => comment.body && comment.body.includes(marker));
+          if (mine) await github.rest.issues.updateComment({ owner, repo, comment_id: mine.id, body });
+          else await github.rest.issues.createComment({ owner, repo, issue_number, body });
+
+    - name: Enforce fail-on
+      shell: bash
+      env:
+        MP_VERDICT: ${{ steps.merge-proof.outputs.verdict }}
+        MP_FAIL_ON: ${{ inputs.fail-on }}
+      run: |
+        set -euo pipefail
+        case "$MP_FAIL_ON" in
+          none) exit 0 ;;
+          fail)
+            if [ "$MP_VERDICT" = "FAIL" ]; then echo "merge-proof: FAIL"; exit 3; fi ;;
+          not-proven)
+            if [ "$MP_VERDICT" = "FAIL" ]; then echo "merge-proof: FAIL"; exit 3; fi
+            if [ "$MP_VERDICT" = "NOT_PROVEN" ]; then echo "merge-proof: NOT_PROVEN"; exit 2; fi ;;
+          *)
+            echo "Unknown fail-on value: $MP_FAIL_ON" >&2; exit 1 ;;
+        esac
+        exit 0

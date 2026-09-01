@@ -1,0 +1,49 @@
+# Candidate repositories for the merge-proof G1 corpus.
+#
+# Selection criterion, fixed BEFORE any result was observed: public
+# repositories that are known or expected to merge pull requests authored by
+# AI coding agents, so that a corpus of agent-authored merges can be built at
+# all. This is a purposive sample of repositories that use coding agents. It
+# is NOT a random sample of GitHub, and rates measured on it should not be
+# read as rates for GitHub as a whole.
+#
+# Repositories that fail to clone or analyze within the collection budget are
+# reported as excluded in study-data.json rather than silently dropped.
+#
+# Stratification is NOT assigned here. It is computed from git after
+# collection, from the number of distinct commit authors in each repository.
+
+github/gh-aw
+Azure/azureml-assets
+Azure/typespec-azure
+microsoft/markitdown
+microsoft/kiota
+microsoft/graphrag
+microsoft/autogen
+microsoft/semantic-kernel
+microsoft/playwright
+microsoft/PowerToys
+microsoft/terminal
+microsoft/fluentui
+microsoft/onnxruntime
+microsoft/WSL
+microsoft/vcpkg
+microsoft/TypeScript
+microsoft/FluidFramework
+github/docs
+github/codeql
+Azure/bicep
+Azure/azure-cli
+Azure/azure-dev
+Azure/azure-sdk-for-python
+Azure/azure-sdk-for-js
+Azure/azure-sdk-for-net
+Azure/azure-functions-host
+Azure/azure-powershell
+Azure/communication-ui-library
+dotnet/docs
+dotnet/efcore
+dotnet/machinelearning
+dotnet/aspnetcore
+dotnet/runtime
+microsoft/vscode

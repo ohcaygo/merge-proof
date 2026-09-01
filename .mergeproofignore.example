@@ -1,0 +1,31 @@
+# .mergeproofignore
+#
+# Paths listed here are excluded from merge-proof analysis: they are not
+# counted as base-drift overlap and do not trigger protected-boundary
+# findings.
+#
+# Syntax is gitignore-style: `#` comments, `*`, `**`, `?`, a leading `/` to
+# anchor at the repository root, a trailing `/` for directories, and `!` to
+# re-include a path a previous line excluded. Later lines win.
+#
+# merge-proof already excludes common generated and vendored output by
+# default (lockfiles, dist/, build/, vendor/, node_modules/, *.min.js,
+# *.generated.*, protobuf output). You do not need to list those.
+#
+# Use this file when a path is noisy in YOUR repository specifically.
+# Excluding a path means giving up evidence about it, so prefer to keep the
+# list short and to explain each entry.
+
+# Docs churn constantly and rarely interacts with code changes.
+# docs/**
+
+# Generated API reference, rebuilt on every release.
+# api-reference/**
+
+# This repository IS CI tooling, so workflow files are the product and are
+# reviewed as code rather than treated as a protected boundary.
+# .github/workflows/**
+
+# Fixture data that is rewritten wholesale by a generator.
+# test/fixtures/**
+# !test/fixtures/handwritten/**
