@@ -26,7 +26,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - name: Run tests
-        run: node test/run.js
+        run: npm test
 
   dogfood:
     name: merge-proof checks itself
@@ -45,7 +45,36 @@ jobs:
         with:
           fail-on: none
       - name: Report verdict
-        run: echo "merge-proof verdict: ${{ steps.mp.outputs.verdict }}"
+        env:
+          MP_VERDICT: ${{ steps.mp.outputs.verdict }}
+        run: |
+          echo "merge-proof verdict: $MP_VERDICT"
+          test "$MP_VERDICT" != "FAIL"
+
+  pilot-report:
+    name: public pilot HTML and PDF
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate YAML with a full parser
+        run: |
+          python -m pip install PyYAML==6.0.2
+          python -c 'import pathlib, yaml; [yaml.safe_load(p.read_text()) for p in [pathlib.Path("action.yml"), *pathlib.Path(".github/workflows").glob("*.yml")]]'
+      - name: Test PDF export and generate the public sample
+        run: |
+          node test/pilot-report.js --pdf
+          npm run report:sample
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kiota-pilot-report
+          path: output/kiota.*
+          if-no-files-found: error
 
   no-dependencies:
     name: dependency surface stays empty

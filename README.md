@@ -121,6 +121,46 @@ Add repository-specific exclusions in a `.mergeproofignore` file, gitignore-styl
 
 merge-proof makes no network requests, no model or API calls, and no telemetry calls of any kind. It has no cloud backend and no dependencies. Everything it reports is derived from `git` commands run against your local repository. You can verify this: the whole tool is about 700 lines across four files in [`src/`](src/).
 
+## Generate a pilot report in 5 minutes
+
+From a clone of this repository, use **Node 18+** and a locally installed **Google Chrome or Chromium**. No npm install is needed. The verifier and HTML renderer remain dependency-free; PDF export launches the browser in headless mode with a temporary profile. On Linux, install Chrome/Chromium using your distribution's supported installation path. If it is not detected, set `CHROME_BIN` to its executable or pass `--chrome /path/to/chrome`.
+
+Run the committed public sample offline:
+
+```bash
+npm run report:sample
+# output/kiota.html and output/kiota.pdf
+```
+
+The sample selects `microsoft/kiota` from `study-data.json`: **75 VERIFIED, 2 NOT_PROVEN, 0 FAIL**, with no unresolvable records. It is a historical methodology demonstration, not a fresh assessment. **Microsoft is not a customer.** Inspect the committed [sample HTML](samples/kiota.html) and [sample PDF](samples/kiota.pdf), or download the `kiota-pilot-report` artifact from a self-check run.
+
+For one real candidate, collect JSON and render it (replace the repository, refs and scope with the agreed pilot):
+
+```bash
+node bin/merge-proof.js --repo /path/to/full-clone --base origin/main --head HEAD --json > pilot.json
+node bin/merge-proof-report.js --input pilot.json \
+  --scope "One candidate against origin/main; refs captured in JSON; no CI evidence inspected" \
+  --out output/pilot
+```
+
+For a retrospective pilot, use the existing collector with an explicit repository list. **Collection uses the network** to read GitHub; rendering does not recollect evidence. Set the selection bounds deliberately:
+
+```bash
+printf '%s\n' 'owner/repository' > pilot-repos.txt
+node study/collect.js --repos pilot-repos.txt --out pilot.json --max-prs 20 --max-commits 4000
+node bin/merge-proof-report.js --input pilot.json --repo owner/repository \
+  --scope "Up to 20 detected agent-authored squash merges in 4000 scanned commits; no date-window guarantee" \
+  --out output/pilot
+```
+
+Collection can take longer than five minutes. Once JSON exists, the same rendering command creates both files without hand assembly. `--scope` is required. No timestamps are invented: existing formats omit capture/merge dates. A local CLI result is not evidence that its candidate landed on its base. The collector records base-at-merge but still does not inspect final-state CI.
+
+Reports include scope, all three verdict counts, every NOT_PROVEN/FAIL record in plain English, a recommendation including **do nothing**, coverage limits, an evidence register, and the source file's SHA-256. Unresolvable collector records remain visible outside verdict counts; they are never silently counted as VERIFIED or changed into FAIL. **NOT_PROVEN means missing evidence under implemented checks, not bad code.** The renderer preserves the source verdicts; it does not authenticate JSON, verify CI, or execute recommendations.
+
+Invalid/empty input or a PDF export error exits `1`. Successful export exits `0` regardless of evidence verdicts; retain the verifier's `--fail-on` option if you need an evidence gate. A failed browser export leaves HTML and removes the previous PDF so stale output is not mistaken for a new report. For an explicit HTML-only run use `--html-only` (also removes an older PDF at that prefix). Keep the input JSON alongside the report for audit and review scope/paths before sharing private data.
+
+Validation: `npm test` runs verifier and HTML/report contract tests on Node 18/20/22 in CI. `node test/pilot-report.js --pdf` additionally exercises real browser export. Self-check parses workflow YAML with a full parser and publishes the Kiota HTML/PDF artifact. Browser and YAML-parser tooling are CI/export prerequisites, not npm package dependencies.
+
 ## The study
 
 merge-proof exists because of a measurement, not a hunch.
