@@ -1,7 +1,7 @@
 name: Merge assurance live acceptance
 on:
   pull_request:
-    branches: [codex/merge-assurance-acceptance-base]
+    branches: [codex/ruleset-only-acceptance-base]
   merge_group:
     types: [checks_requested]
 permissions:
