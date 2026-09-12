@@ -1,0 +1,16 @@
+name: Merge assurance live acceptance
+on:
+  pull_request:
+    branches: [codex/merge-assurance-acceptance-base]
+  merge_group:
+    types: [checks_requested]
+permissions:
+  contents: read
+jobs:
+  validation:
+    name: assurance acceptance validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate acceptance state
+        run: node -e "require('node:assert/strict').equal(require('node:fs').readFileSync('acceptance/state.txt','utf8').trim(),'ready')"
