@@ -1,0 +1,8 @@
+A. after merge_group checks_requested (group is PR 1's):
+   sub pr 1 mergeGroup.head_ref = refs/heads/gh-readonly-queue/main/pr-1-abc
+   sub pr 2 mergeGroup.head_ref = refs/heads/gh-readonly-queue/main/pr-1-abc
+   queue: pr1:GROUP pr2:GROUP
+B. PR 2 collected with PR 1's group: target = UNAVAILABLE CANDIDATE_NOT_IN_GROUP | verdict = NOT_PROVEN | gaps = APPLICABLE_MERGE_STATE_UNAVAILABLE,CURRENT_STATE_EXECUTION_NOT_PROVEN,REVIEWS_UNAVAILABLE,REMOTE_CANDIDATE_NOT_CONFIRMED
+C. unrelated check_run event during collection -> receipt VERIFIED current = STALE EVENT_DURING_COLLECTION | policy(enforcing).conclusion = failure
+D. org-level repository_ruleset without repository -> INVALID_WEBHOOK_SCOPE (no receipt staled, no re-proof queued)
+E. real collector, behind-base: target.kind = PR_TEST_MERGE sha = cccc | checks on: aaaa | verdict = NOT_PROVEN | ci.required[0].state = OTHER_SHA_OR_STATUS_ONLY | accepted = 1

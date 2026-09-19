@@ -1,0 +1,89 @@
+
+=== 0 baseline fixture
+verdict=VERIFIED freshness=CURRENT gaps=[]
+ci.state=PROVEN accepted=1/1 executed=1 required[0].state=EXECUTION_RECORDED acceptanceSha=aaaa
+approval=PROVEN current=reviewer advisories=[]
+
+=== 1 behind-base PR, Actions checks on HEAD only
+verdict=NOT_PROVEN freshness=CURRENT gaps=[CURRENT_STATE_EXECUTION_NOT_PROVEN]
+ci.state=NOT_PROVEN accepted=1/1 executed=0 required[0].state=OTHER_SHA_OR_STATUS_ONLY acceptanceSha=aaaa
+approval=PROVEN current=reviewer advisories=[]
+title_advisory=NOT_PROVEN · CURRENT at observation · reporting only
+title_enforcing=NOT_PROVEN · policy reports failure · 1 item(s) to resolve
+remediation_first=Run the required validation against the current version.
+
+=== 2 PR rewrote .github/workflows/test.yml (required check producer)
+verdict=VERIFIED freshness=CURRENT gaps=[]
+ci.state=PROVEN accepted=1/1 executed=1 required[0].state=EXECUTION_RECORDED acceptanceSha=aaaa
+approval=PROVEN current=reviewer advisories=[PROTECTED_BOUNDARY_ADVISORY]
+
+=== 3 approver authored commits in the PR
+verdict=VERIFIED freshness=CURRENT gaps=[]
+ci.state=PROVEN accepted=1/1 executed=1 required[0].state=EXECUTION_RECORDED acceptanceSha=aaaa
+approval=PROVEN current=reviewer advisories=[]
+
+=== 4 required job has one skipped conditional step
+verdict=NOT_PROVEN freshness=CURRENT gaps=[CURRENT_STATE_EXECUTION_NOT_PROVEN]
+ci.state=NOT_PROVEN accepted=1/1 executed=0 required[0].state=SUCCESS_ASSERTED_EXECUTION_UNAVAILABLE acceptanceSha=aaaa
+approval=PROVEN current=reviewer advisories=[]
+
+=== 5 two same-app 'test' check runs: id9 failure, id10 success
+verdict=VERIFIED freshness=CURRENT gaps=[]
+ci.state=PROVEN accepted=1/1 executed=1 required[0].state=EXECUTION_RECORDED acceptanceSha=aaaa
+approval=PROVEN current=reviewer advisories=[]
+
+=== 6 run_attempt=2 success (attempt 1 failed)
+verdict=VERIFIED freshness=CURRENT gaps=[]
+ci.state=PROVEN accepted=1/1 executed=1 required[0].state=EXECUTION_RECORDED acceptanceSha=aaaa
+approval=PROVEN current=reviewer advisories=[]
+attempt_in_receipt=2
+any_flag=0
+
+=== 7 base renamed candidate's file; checks on M
+verdict=VERIFIED freshness=CURRENT gaps=[]
+ci.state=PROVEN accepted=1/1 executed=1 required[0].state=EXECUTION_RECORDED acceptanceSha=cccc
+approval=PROVEN current=reviewer advisories=[]
+
+=== 8 required job success, other job in run failed
+verdict=NOT_PROVEN freshness=CURRENT gaps=[CURRENT_STATE_EXECUTION_NOT_PROVEN]
+ci.state=NOT_PROVEN accepted=1/1 executed=0 required[0].state=SUCCESS_ASSERTED_EXECUTION_UNAVAILABLE acceptanceSha=aaaa
+approval=PROVEN current=reviewer advisories=[]
+
+=== 9 CHANGES_REQUESTED by read-only account
+verdict=NOT_PROVEN freshness=CURRENT gaps=[CHANGES_REQUESTED_OBSERVED]
+ci.state=PROVEN accepted=1/1 executed=1 required[0].state=EXECUTION_RECORDED acceptanceSha=aaaa
+approval=NOT_PROVEN current=reviewer advisories=[]
+
+=== 10 branch_name/commit_message_pattern rule present
+verdict=NOT_PROVEN freshness=CURRENT gaps=[UNSUPPORTED_REPOSITORY_REQUIREMENTS]
+ci.state=PROVEN accepted=1/1 executed=1 required[0].state=EXECUTION_RECORDED acceptanceSha=aaaa
+approval=PROVEN current=reviewer advisories=[]
+
+=== 11 commented reviewer whose permission read 404s
+verdict=VERIFIED freshness=UNAVAILABLE gaps=[]
+ci.state=PROVEN accepted=1/1 executed=1 required[0].state=EXECUTION_RECORDED acceptanceSha=aaaa
+approval=PROVEN current=reviewer advisories=[]
+freshness_live=UNAVAILABLE
+
+=== 12 merged PR
+verdict=NOT_PROVEN freshness=UNAVAILABLE gaps=[LIVE_PR_NOT_OPEN,APPLICABLE_MERGE_STATE_UNAVAILABLE,CURRENT_STATE_EXECUTION_NOT_PROVEN]
+ci.state=NOT_PROVEN accepted=1/1 executed=0 required[0].state=OTHER_SHA_OR_STATUS_ONLY acceptanceSha=aaaa
+approval=PROVEN current=reviewer advisories=[]
+
+=== 13 protected boundary only
+verdict=NOT_PROVEN freshness=CURRENT gaps=[PROTECTED_BOUNDARY]
+ci.state=PROVEN accepted=1/1 executed=1 required[0].state=EXECUTION_RECORDED acceptanceSha=aaaa
+approval=PROVEN current=reviewer advisories=[]
+enforcing_conclusion=success
+enforcing_title=NOT_PROVEN · merge requirement satisfied
+advisory_conclusion=neutral
+advisory NOT_PROVEN conclusion = neutral (GitHub treats neutral as pass for a required check)
+
+=== 14 ledger binding: squash= PROOF_BOUND_TO_PR_HEAD_ONLY  merge-commit= PROOF_BOUND_TO_PR_HEAD_ONLY  landed==head= PROOF_BOUND_TO_MERGED_STATE
+
+=== 15 execution row fields (no event/path/blob): runId,workflowId,attempt,runSha,actor,triggeringActor,jobId,checkId,sha,status,conclusion,runStatus,runConclusion,steps
+
+=== 16 strict=false, behind-base, checks on head (GitHub would merge)
+verdict=NOT_PROVEN freshness=CURRENT gaps=[CURRENT_STATE_EXECUTION_NOT_PROVEN]
+ci.state=NOT_PROVEN accepted=1/1 executed=0 required[0].state=OTHER_SHA_OR_STATUS_ONLY acceptanceSha=aaaa
+approval=PROVEN current=reviewer advisories=[]

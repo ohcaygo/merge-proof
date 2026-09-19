@@ -1,0 +1,87 @@
+
+=== F1 real 'test' (wf 30) FAILED, PR-added workflow 31 job 'test' succeeded (higher check id)
+verdict=VERIFIED freshness=CURRENT gaps=[]
+ci.state=PROVEN accepted=1/1 executed=1 req.states=[EXECUTION_RECORDED] checkId=11
+approval=PROVEN reason= current=[reviewer] unsupported=[]
+workflowIds_seen=[30,31]
+chosen_workflowId=31
+local_findings=[]
+advisories=["PROTECTED_BOUNDARY_ADVISORY"]
+
+=== F2 pull_request run failed; later run of same workflow on same SHA (event unknown: dispatch?) succeeded
+verdict=VERIFIED freshness=CURRENT gaps=[]
+ci.state=PROVEN accepted=1/1 executed=1 req.states=[EXECUTION_RECORDED] checkId=12
+approval=PROVEN reason= current=[reviewer] unsupported=[]
+row_keys=["runId","workflowId","attempt","runSha","actor","triggeringActor","jobId","checkId","sha","status","conclusion","runStatus","runConclusion","steps"]
+has_event=false
+
+=== F3 rule appId=10; app 11 posts failing 'test' on same sha
+verdict=VERIFIED freshness=CURRENT gaps=[]
+ci.state=PROVEN accepted=1/1 executed=1 req.states=[EXECUTION_RECORDED] checkId=10
+approval=PROVEN reason= current=[reviewer] unsupported=[]
+
+=== F3b rule appId=null; app10 success + app11 failure on target
+verdict=NOT_PROVEN freshness=CURRENT gaps=[CURRENT_STATE_EXECUTION_NOT_PROVEN]
+ci.state=NOT_PROVEN accepted=0/1 executed=0 req.states=[FAILED] checkId=11
+approval=PROVEN reason= current=[reviewer] unsupported=[]
+
+=== F3c non-Actions app check success, no Actions job rows
+verdict=NOT_PROVEN freshness=CURRENT gaps=[CURRENT_STATE_EXECUTION_NOT_PROVEN]
+ci.state=NOT_PROVEN accepted=1/1 executed=0 req.states=[SUCCESS_ASSERTED_EXECUTION_UNAVAILABLE] checkId=11
+approval=PROVEN reason= current=[reviewer] unsupported=[]
+
+=== F3d commit status success only
+verdict=NOT_PROVEN freshness=CURRENT gaps=[CURRENT_STATE_EXECUTION_NOT_PROVEN]
+ci.state=NOT_PROVEN accepted=1/1 executed=0 req.states=[OTHER_SHA_OR_STATUS_ONLY] checkId=null
+approval=PROVEN reason= current=[reviewer] unsupported=[]
+
+=== F4 base drift overlap, but required check EXECUTED on test-merge M
+verdict=NOT_PROVEN freshness=CURRENT gaps=[BASE_DRIFT_UNVERIFIED]
+ci.state=PROVEN accepted=1/1 executed=1 req.states=[EXECUTION_RECORDED] checkId=10
+approval=PROVEN reason= current=[reviewer] unsupported=[]
+
+=== F5 GitHub still computing mergeable on first observation
+verdict=NOT_PROVEN freshness=STALE gaps=[EVIDENCE_CHANGED_DURING_COLLECTION]
+ci.state=PROVEN accepted=1/1 executed=1 req.states=[EXECUTION_RECORDED] checkId=10
+approval=PROVEN reason= current=[reviewer] unsupported=[]
+consistency=CHANGED_DURING_COLLECTION
+first_vs_second=mergeable null->true
+
+=== F6 extra APPROVED review from account whose permission read 404s
+verdict=VERIFIED freshness=UNAVAILABLE gaps=[]
+ci.state=PROVEN accepted=1/1 executed=1 req.states=[EXECUTION_RECORDED] checkId=10
+approval=PROVEN reason= current=[reviewer] unsupported=[]
+live_freshness=UNAVAILABLE
+enforcing_conclusion=failure
+blocking=["CURRENTNESS_UNAVAILABLE"]
+
+=== F7 only approval is from a Bot account with write
+verdict=NOT_PROVEN freshness=CURRENT gaps=[INSUFFICIENT_CURRENT_HUMAN_APPROVAL]
+ci.state=PROVEN accepted=1/1 executed=1 req.states=[EXECUTION_RECORDED] checkId=10
+approval=NOT_PROVEN reason=INSUFFICIENT_CURRENT_HUMAN_APPROVAL current=[] unsupported=[]
+F8 active rule type=update -> verdict=NOT_PROVEN unsupported=[update]
+F8 active rule type=workflows -> verdict=NOT_PROVEN unsupported=[workflows]
+F8 active rule type=code_scanning -> verdict=NOT_PROVEN unsupported=[code_scanning]
+F8 active rule type=branch_name_pattern -> verdict=NOT_PROVEN unsupported=[branch_name_pattern]
+F8 active rule type=required_deployments -> verdict=NOT_PROVEN unsupported=[required_deployments]
+F8 active rule type=copilot_code_review -> verdict=NOT_PROVEN unsupported=[copilot_code_review]
+F8 active rule type=max_file_size -> verdict=NOT_PROVEN unsupported=[max_file_size]
+F8b merge_queue ALLGREEN -> NOT_PROVEN ALLGREEN_OTHER_GROUP_ENTRIES_UNAVAILABLE
+F8b merge_queue HEADGREEN (no group yet) -> VERIFIED queueStage= ADMISSION_ONLY notChecked has MERGE_QUEUE_GROUP_NOT_YET_PROVEN: true | enforcing title: VERIFIED · PR evidence satisfied · queue group proof still required
+F8b CODEOWNERS required -> NOT_PROVEN CODE_OWNER_APPROVAL_UNAVAILABLE
+
+=== F9 required check concluded skipped (GitHub counts as pass)
+verdict=NOT_PROVEN freshness=CURRENT gaps=[CURRENT_STATE_EXECUTION_NOT_PROVEN]
+ci.state=NOT_PROVEN accepted=1/1 executed=0 req.states=[SKIPPED] checkId=10
+approval=PROVEN reason= current=[reviewer] unsupported=[]
+
+=== F10 21 workflow runs on head -> execution: UNAVAILABLE WORKFLOW_LIMIT | verdict NOT_PROVEN | freshness UNAVAILABLE
+
+=== F11 merge group target, check+job on group sha, approval on head
+verdict=VERIFIED freshness=CURRENT gaps=[]
+ci.state=PROVEN accepted=1/1 executed=1 req.states=[EXECUTION_RECORDED] checkId=10
+approval=PROVEN reason= current=[reviewer] unsupported=[]
+subjects=["PULL_REQUEST_HEAD","MERGE_GROUP"]
+
+F12 approve then comment -> VERIFIED
+F12 dismissed approval -> NOT_PROVEN INSUFFICIENT_CURRENT_HUMAN_APPROVAL
