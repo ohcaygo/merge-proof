@@ -1,0 +1,11 @@
+{
+  "archive": "merge-proof-0.2.0.tgz",
+  "integrity": "sha512-HN2IQr33f1+QIXjHxoN55sJX+AkdkaAo8TCIJh8XdnqmExLguOn3Qi1DYXqXqHw4njw4lSP/I37oTAwc57xCyA==",
+  "files": 76,
+  "bytes": 151065,
+  "unsignedExit": 2,
+  "consistencyExit": 0,
+  "frozenAfterCommonChangeExit": 0,
+  "mcpTools": 1,
+  "ghExit": 0
+}

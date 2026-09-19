@@ -3,7 +3,7 @@ const crypto = require("node:crypto"), fs = require("node:fs"), path = require("
 const { hash, canonical, assert } = require("./common");
 const TYPE = "application/vnd.in-toto+json";
 const PREDICATE = "https://merge-proof.ohcaygo.com/attestation/receipt/v3";
-const CODE = ["package.json","github/proof.js", "github/claims.js", "github/rules.js", "github/subject.js", "github/bindings.js", "github/actors.js", "github/authority.js", "github/setup.js", "github/local-evidence.js", "github/wording.js", "github/check.js", "src/analyze.js", "src/rules.js"];
+const CODE = ["package.json", "github/common.js", "github/reconstruct.js","github/proof.js", "github/claims.js", "github/rules.js", "github/subject.js", "github/bindings.js", "github/actors.js", "github/authority.js", "github/setup.js", "github/local-evidence.js", "github/wording.js", "github/check.js", "src/analyze.js", "src/rules.js"];
 const codeDigest = () => hash(CODE.map(f => [f, crypto.createHash("sha256").update(fs.readFileSync(path.join(__dirname, "..", f))).digest("hex")]));
 function pae(type, bytes) { const t = Buffer.from(type); return Buffer.concat([Buffer.from(`DSSEv1 ${t.length} `), t, Buffer.from(` ${bytes.length} `), bytes]); }
 const stripNull = v => Array.isArray(v) ? v.map(stripNull) : v && typeof v === "object" ? Object.fromEntries(Object.entries(v).filter(([, x]) => x != null).map(([k, x]) => [k, stripNull(x)])) : v;
@@ -22,6 +22,7 @@ async function create(receipt, { signer = null, keys = null } = {}) {
     signing: signatures.length ? "SIGNED_STATEMENT" : "SIGNING_NOT_CONFIGURED",
     coverage: { offline: ["receipt digest", "subject binding", "verdict replay", "policy and engine identity"],
       online: ["retained check and workflow identifiers", "review identity and commit", "commit and tree identifiers"],
+      independentlyRecomputableWithGitObjects: ["commit trees", "merge bases", "test-merge parents", "group ancestry", "expected tree inside the recorded envelope"],
       providerTrusted: ["historical observations", "provider truth", "permissions at observation"],
       unavailable: ["what CI actually checked out", "unobserved exempt bypasses", "atomic currentness at merge"] } };
 }

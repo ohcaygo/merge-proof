@@ -300,7 +300,7 @@ test("event during an active proof stales it and retains a subsequent refresh jo
   a.equal(h.service.data.queue.length, 1);
   await h.service.drain();
   const secondId = h.service.data.subscriptions["1:1"].latestReceiptId;
-  a.notEqual(firstId, secondId);
+  a.equal(firstId, secondId); // The full observation confirmed identical bindings.
   a.equal(h.service.data.receipts[secondId].current.state, "CURRENT");
 });
 test("refresh revalidates a saved merge-group hint instead of discarding its binding", async (t) => {
@@ -324,7 +324,7 @@ test("refresh revalidates a saved merge-group hint instead of discarding its bin
   a.deepEqual(after.current.changed, []);
 });
 
-test("failed stale-check update does not prevent core re-proof", async (t) => {
+test("failed stale-check update does not prevent complete re-observation", async (t) => {
   const h = harness(t);
   h.service.config.publishChecks = true;
   let id = 700;
@@ -342,8 +342,8 @@ test("failed stale-check update does not prevent core re-proof", async (t) => {
   const first = Object.values(h.service.data.receipts)[0];
   await h.service.webhook(...hook("push"));
   await h.service.drain();
-  a.equal(Object.keys(h.service.data.receipts).length, 2);
-  a.equal(first.current.state, "UNAVAILABLE");
+  a.equal(Object.keys(h.service.data.receipts).length, 1);
+  a.equal(first.current.state, "CURRENT");
   a.equal(first.receipt.verdict, "VERIFIED");
   a.equal(first.checkDelivery, "UNAVAILABLE");
   a.equal(h.service.data.queue.length, 0);

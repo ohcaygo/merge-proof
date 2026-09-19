@@ -28,3 +28,37 @@ async function online(bundle, client) {
     limitation: "Provider records are assertions. Missing records do not prove retention expiry; changed mutable state does not impeach a historical receipt. Rules and permissions at issue cannot be re-observed." };
 }
 module.exports = { online };
+
+// Optional independent verification uses caller-supplied bare Git objects and
+// the exact recorded binary pin. It never fetches missing objects or updates refs.
+function independent(bundle, directory, binary = "/usr/bin/git") {
+  const c = bundle.receipt.evidence, expected = bundle.receipt.expectedTree;
+  const rows = [];
+  const config = { binary, version: expected?.gitVersion, sha256: expected?.gitBinaryDigest, offline: true };
+  if (expected?.status !== "RECONSTRUCTED" || !config.version || !config.sha256)
+    return { state: "INDEPENDENT_VERIFICATION_UNAVAILABLE", reason: "RECONSTRUCTION_PIN_OR_CLAIM_UNAVAILABLE", rows, exitCode: 2 };
+  try {
+    const {engine,reconstruct} = require('./reconstruct');
+    const g = engine(directory,config);
+    const inspect = (kind, expectedValue, read) => {
+      try { const actual=read(); rows.push({kind,state:JSON.stringify(actual)===JSON.stringify(expectedValue)?'MATCH':'DIVERGED',expected:expectedValue,actual}); }
+      catch { rows.push({kind,state:'OBJECT_UNAVAILABLE'}); }
+    };
+    if(c.git.value?.headTree) inspect('HEAD_TREE',c.git.value.headTree,()=>g.tree(c.identity.headSha));
+    if(c.git.value?.baseTree) inspect('BASE_TREE',c.git.value.baseTree,()=>g.tree(c.identity.baseSha));
+    inspect('CANDIDATE_TREE',c.target.value?.tree,()=>g.tree(c.target.value.sha));
+    inspect('MERGE_BASE_CONTAINMENT',true,()=>g.get(['merge-base','--all',c.identity.baseSha,c.identity.headSha]).split('\n').includes(c.git.value?.mergeBase));
+    if(c.target.value?.kind==='PR_TEST_MERGE') inspect('TEST_MERGE_PARENTS',[c.identity.baseSha,c.identity.headSha],()=>g.get(['rev-list','--parents','-n','1',c.target.value.sha]).split(' ').slice(1));
+    if(c.target.value?.kind==='MERGE_GROUP') for(const [kind,ancestor] of [['GROUP_HEAD_ANCESTRY',c.identity.headSha],['GROUP_BASE_ANCESTRY',c.identity.baseSha]])
+      inspect(kind,true,()=>{const result=g.run(['merge-base','--is-ancestor',ancestor,c.target.value.sha]);require('./common').assert(result.code===0 || result.code===1,'ANCESTRY_OBJECT_UNAVAILABLE');return result.code===0;});
+    const recomputed = reconstruct(directory,{base:c.identity.baseSha,head:c.identity.headSha,method:expected.method,
+      providerTree:c.target.value?.tree, ...(expected.method==='queue'?{entries:expected.steps.map(x=>({head:x.head,tree:x.providerTree})),providerOrderConfirmed:true}:{})},config);
+    if(recomputed.status==='RECONSTRUCTED') rows.push({kind:'EXPECTED_TREE',state:recomputed.tree===expected.tree?'MATCH':'DIVERGED',expected:expected.tree,actual:recomputed.tree});
+    else rows.push({kind:'EXPECTED_TREE',state:'OBJECT_OR_RECONSTRUCTION_UNAVAILABLE',reason:recomputed.reason});
+    const diverged=rows.some(x=>x.state==='DIVERGED'), complete=rows.every(x=>x.state==='MATCH');
+    return {state:diverged?'INDEPENDENT_VERIFICATION_DIVERGED':complete?'INDEPENDENTLY_RECOMPUTED':'INDEPENDENT_VERIFICATION_UNAVAILABLE',rows,recomputed,
+      flags:recomputed.flags,exitCode:diverged?5:complete?0:2,
+      limitation:'Recomputes the recorded inputs with the pinned Git. Provider queue membership/order, checks, reviews and permissions remain provider-trusted; caveats are preserved.'};
+  } catch(e) {return {state:'INDEPENDENT_VERIFICATION_UNAVAILABLE',reason:e.code||'GIT_OBJECTS_UNAVAILABLE',rows,exitCode:2};}
+}
+module.exports.independent = independent;

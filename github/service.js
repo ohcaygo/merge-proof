@@ -853,12 +853,14 @@ class ProofService {
       await this.retractChecks(client, job.repositoryId, job.pr);
       const previousRow = this.data.receipts[this.data.subscriptions[`${job.repositoryId}:${job.pr}`]?.latestReceiptId];
       const areas = job.claims ? currentness.areas(job.claims) : null;
-      if (previousRow && areas) {
+      if (previousRow && previousRow.artifacts?.policy?.codeDigest === require("./bundle").codeDigest()) {
         const eventStart = this.activeEvents;
-        const c = await this.exclusive(() => collect(client, job.repo, job.pr, { previous: previousRow.receipt.evidence, areas }));
+        const c = await this.exclusive(() => collect(client, job.repo, job.pr, { previous: previousRow.receipt.evidence, areas, mergeGroup: job.mergeGroup }));
         const current = freshness(previousRow.receipt, c);
         if (current.state === "CURRENT" && !eventStart.some(e => e.repo === job.repo.toLowerCase() && currentness.touches(e.event, e.payload, c).length)) {
           previousRow.current = current;
+          const reconciledSub = this.data.subscriptions[`${job.repositoryId}:${job.pr}`];
+          if (reconciledSub) { reconciledSub.reconciledAt = Date.now(); reconciledSub.refreshState = "CURRENT"; }
           if (this.config.publishChecks) await require("./check").publish(client, previousRow.receipt, current, this.config.origin, this.gateFor(previousRow.receipt, current), async (on, gate) => {
             if (Number.isSafeInteger(on.id)) (previousRow.checkIds ||= []).push(on.id);
             previousRow.publishedAt = new Date().toISOString(); previousRow.publishedGate = gate;

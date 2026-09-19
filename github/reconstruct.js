@@ -5,14 +5,14 @@ const fs = require("node:fs"), crypto = require("node:crypto");
 const { spawnSync } = require("node:child_process");
 const { sha, assert } = require("./common");
 const EMPTY = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
-const CONFIG = ["core.hooksPath=/dev/null", "merge.renameLimit=7000", "merge.directoryRenames=conflict", "merge.renormalize=false", "protocol.file.allow=never"];
-function engine(directory, { binary = "/usr/bin/git", version, sha256, authEnvironment = {} } = {}) {
+const CONFIG = ["core.hooksPath=/dev/null", "core.attributesFile=/dev/null", "merge.renameLimit=7000", "merge.directoryRenames=conflict", "merge.renormalize=false", "protocol.file.allow=never"];
+function engine(directory, { binary = "/usr/bin/git", version, sha256, authEnvironment = {}, offline = false } = {}) {
   assert(typeof version === "string" && /^git version 2\./.test(version), "PINNED_GIT_VERSION_REQUIRED");
   assert(typeof sha256 === "string" && crypto.createHash("sha256").update(fs.readFileSync(binary)).digest("hex") === sha256, "PINNED_GIT_BINARY_MISMATCH");
   const env = { PATH: "/usr/bin:/bin", GIT_CONFIG_NOSYSTEM: "1", GIT_CONFIG_SYSTEM: "/dev/null", GIT_CONFIG_GLOBAL: "/dev/null",
-    GIT_NO_REPLACE_OBJECTS: "1", GIT_ATTR_SOURCE: EMPTY, GIT_TERMINAL_PROMPT: "0", LC_ALL: "C",
+    GIT_NO_REPLACE_OBJECTS: "1", GIT_ATTR_NOSYSTEM: "1", GIT_ATTR_SOURCE: EMPTY, GIT_TERMINAL_PROMPT: "0", LC_ALL: "C",
     GIT_AUTHOR_NAME: "Merge Proof", GIT_AUTHOR_EMAIL: "reconstruction@invalid", GIT_COMMITTER_NAME: "Merge Proof", GIT_COMMITTER_EMAIL: "reconstruction@invalid",
-    ...authEnvironment, GIT_AUTHOR_DATE: "2000-01-01T00:00:00Z", GIT_COMMITTER_DATE: "2000-01-01T00:00:00Z" };
+    ...authEnvironment, ...(offline ? { GIT_NO_LAZY_FETCH: "1", GIT_CONFIG_COUNT: "1", GIT_CONFIG_KEY_0: "protocol.allow", GIT_CONFIG_VALUE_0: "never" } : {}), GIT_AUTHOR_DATE: "2000-01-01T00:00:00Z", GIT_COMMITTER_DATE: "2000-01-01T00:00:00Z" };
   const run = (args, options = {}) => {
     const r = spawnSync(binary, ["-C", directory, ...CONFIG.flatMap(x => ["-c", x]), ...args], {
       env: { ...env, ...(options.env || {}) }, encoding: "utf8", timeout: 30000, maxBuffer: 8 * 1024 * 1024, input: options.input,
@@ -23,6 +23,8 @@ function engine(directory, { binary = "/usr/bin/git", version, sha256, authEnvir
   assert(get(["--version"]) === version, "PINNED_GIT_VERSION_MISMATCH");
   assert(Number(version.match(/2\.(\d+)/)?.[1]) >= 46, "GIT_VERSION_OUTSIDE_ENVELOPE");
   assert(get(["rev-parse", "--is-bare-repository"]) === "true", "BARE_MIRROR_REQUIRED");
+  const infoAttributes = require("node:path").join(directory, "info", "attributes");
+  assert(!fs.existsSync(infoAttributes) || fs.statSync(infoAttributes).size === 0, "LOCAL_ATTRIBUTES_OUTSIDE_ENVELOPE");
   assert(run(["config", "--local", "--get-regexp", "^merge\\..*\\.driver$"]).code === 1, "CUSTOM_MERGE_DRIVER_CONFIGURED");
   get(["mktree"], { input: "" });
   const tree = commit => get(["rev-parse", `${commit}^{tree}`]);

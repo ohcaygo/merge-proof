@@ -1,6 +1,29 @@
 "use strict";
 const fs = require("node:fs"), path = require("node:path");
 const { assert } = require("./common");
+function validateDecision(d, input) {
+  const { sha } = require("./common");
+  const valid = condition => assert(condition, "INVALID_DECISION_CONTRACT");
+  valid(d && d.$schema === "urn:merge-proof:decision:1" && d.schemaVersion === 1);
+  valid(["PROCEED", "HOLD", "REFUSE", "UNAVAILABLE"].includes(d.outcome) && typeof d.proceed === "boolean");
+  valid(["VERIFIED", "NOT_PROVEN", "FAIL"].includes(d.verdict) && ["CURRENT", "STALE", "UNAVAILABLE"].includes(d.currentness));
+  valid((d.outcome === "PROCEED") === d.proceed);
+  valid(d.request && ["repository", "repositoryId", "pr", "expectedHeadSha", "expectedBaseSha", "expectedTargetSha"].every(k => d.request[k] === input[k]));
+  valid(typeof d.request.matched === "boolean" && Array.isArray(d.request.mismatch));
+  valid(d.subject && ["AVAILABLE", "UNAVAILABLE"].includes(d.subject.state));
+  valid(d.receipt && typeof d.receipt.receiptId === "string" && /^[a-f0-9]{64}$/.test(d.receipt.digest) && typeof d.receipt.url === "string");
+  valid(d.bindings && ["expected", "candidate", "tested", "authorized", "landed"].every(k => d.bindings[k] === null || d.bindings[k] === "UNAVAILABLE" || sha(d.bindings[k])));
+  valid(Array.isArray(d.reasons) && d.reasons.every(r => typeof r.code === "string" && typeof r.blocking === "boolean") && Array.isArray(d.missingEvidence) && Array.isArray(d.exceptions));
+  valid(d.nextAction && typeof d.nextAction.kind === "string" && typeof d.nextAction.text === "string");
+  if (d.proceed) {
+    const subject = d.subject.value;
+    valid(d.verdict === "VERIFIED" && d.currentness === "CURRENT" && d.request.matched && !d.request.mismatch.length && !d.reasons.length && !d.missingEvidence.length && !d.exceptions.length);
+    valid(d.subject.state === "AVAILABLE" && subject?.platform === "github" && subject.repositoryId === input.repositoryId && subject.commit === input.expectedTargetSha && subject.base === input.expectedBaseSha && sha(subject.tree));
+    valid(d.bindings.candidate === subject.tree && d.bindings.tested === input.expectedTargetSha && d.bindings.authorized === input.expectedHeadSha);
+    valid(d.nextAction.kind === "MERGE_WITH_SHA" && d.nextAction.mergeArguments?.sha === input.expectedHeadSha);
+  }
+  return d;
+}
 async function remote(input) {
   const origin = new URL(process.env.MP_ORIGIN || "https://merge-proof.ohcaygo.com");
   assert(origin.protocol === "https:" || origin.protocol === "http:" && ["127.0.0.1", "localhost"].includes(origin.hostname), "INVALID_ORIGIN");
@@ -9,29 +32,33 @@ async function remote(input) {
     headers: { "content-type": "application/json", authorization: `Bearer ${process.env.MP_GITHUB_TOKEN}` }, body: JSON.stringify(input) });
   assert(response.ok, response.status === 401 || response.status === 403 ? "ACCESS_DENIED" : "DECISION_UNAVAILABLE");
   const value = await response.json();
-  assert(value.$schema === "urn:merge-proof:decision:1", "UNSUPPORTED_CONTRACT");
-  return value;
+  return validateDecision(value, input);
 }
 function lines(d) { return [d.outcome + " · " + d.verdict + " · " + d.currentness,
   ...["expected", "candidate", "tested", "authorized", "landed"].map(k => `${k.toUpperCase()}: ${d.bindings[k] ?? "NOT_YET_APPLICABLE"}`),
   ...d.reasons.map(r => r.code), `Receipt: ${d.receipt.url}`].join("\n"); }
 async function main(args) {
-  if (args.includes("--help")) { console.log("merge-proof verify --repo OWNER/REPO --repository-id ID --pr N --head SHA --base SHA --target SHA [--json] [--wait SECONDS]\nmerge-proof verify --bundle DIRECTORY [--trusted-keys JWKS.json] [--allow-unsigned] [--online]\nmerge-proof mcp\nUses MP_GITHUB_TOKEN and optional MP_ORIGIN; never merges."); return 0; }
+  if (args.includes("--help")) { console.log("merge-proof verify --repo OWNER/REPO --repository-id ID --pr N --head SHA --base SHA --target SHA [--json] [--wait SECONDS]\nmerge-proof verify --bundle DIRECTORY [--trusted-keys JWKS.json] [--allow-unsigned] [--online] [--git-dir BARE_REPO] [--git-binary PATH]\nmerge-proof mcp\nUses MP_GITHUB_TOKEN and optional MP_ORIGIN; never merges."); return 0; }
   const opts = {};
   for (let n = 0; n < args.length; n++) {
     const flag = args[n];
-    assert(["--bundle", "--trusted-keys", "--allow-unsigned", "--repo", "--repository-id", "--pr", "--head", "--base", "--target", "--json", "--online", "--wait"].includes(flag), "INVALID_ARGUMENT");
+    assert(["--bundle", "--git-dir", "--git-binary", "--trusted-keys", "--allow-unsigned", "--repo", "--repository-id", "--pr", "--head", "--base", "--target", "--json", "--online", "--wait"].includes(flag), "INVALID_ARGUMENT");
     opts[flag] = ["--json", "--allow-unsigned", "--online"].includes(flag) ? true : args[++n];
   }
   if (opts["--bundle"]) {
     const bundle = JSON.parse(fs.readFileSync(path.join(opts["--bundle"], "bundle.json"), "utf8"));
     const trustedKeys = opts["--trusted-keys"] ? JSON.parse(fs.readFileSync(opts["--trusted-keys"], "utf8")).keys : [];
     const result = require("./bundle").verify(bundle, { trustedKeys, allowUnsigned: opts["--allow-unsigned"] === true });
+    const checks = { offline: result };
+    if (opts["--git-dir"] && result.exitCode === 0) {
+      checks.independent = require("./reverify").independent(bundle, opts["--git-dir"], opts["--git-binary"] || "/usr/bin/git");
+    }
     if (opts["--online"] && result.exitCode === 0) {
       const online = await require("./reverify").online(bundle, new (require("./client").Client)({ token: process.env.MP_GITHUB_TOKEN }));
-      console.log(JSON.stringify({ offline: result, online }, null, 2)); return online.exitCode;
+      checks.online = online;
+      console.log(JSON.stringify(checks, null, 2)); return checks.independent?.exitCode || online.exitCode;
     }
-    console.log(JSON.stringify(result, null, 2)); return result.exitCode;
+    console.log(JSON.stringify(checks.independent ? checks : result, null, 2)); return checks.independent?.exitCode || result.exitCode;
   }
   const request = { repository: opts["--repo"], repositoryId: Number(opts["--repository-id"]), pr: Number(opts["--pr"]),
     expectedHeadSha: opts["--head"], expectedBaseSha: opts["--base"], expectedTargetSha: opts["--target"] };
@@ -82,4 +109,4 @@ async function mcp(input = process.stdin, output = process.stdout) {
     } catch (e) { output.write(JSON.stringify({ jsonrpc: "2.0", id: r.id, error: { code: -32000, message: e.code || "DECISION_UNAVAILABLE" } }) + "\n"); }
   }
 }
-module.exports = { main, mcp, remote, lines };
+module.exports = { main, mcp, remote, lines, validateDecision };

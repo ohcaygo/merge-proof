@@ -82,3 +82,9 @@ test("delivery reconciliation follows cursor pages, redelivers missed GUID and r
   await s.reconcileDeliveries();a.equal(s.data.deliveryHealth,'RECONCILED');a.ok(s.data.events['missed-guid']);a.equal(s.data.queue.length,1);
   const n=calls.length;await s.reconcileDeliveries();a.equal(calls.length,n);
 });
+test("unchanged full reconciliations retain one receipt and refresh observation time",async t=>{
+  const h=harness(t),s=h.service;await h.hook('pull_request',{pull_request:{number:1,state:'open'}});await s.drain();
+  const row=Object.values(s.data.receipts)[0],before=JSON.stringify(row.receipt);
+  for(let n=0;n<3;n++){s.data.subscriptions['1:1'].reconciledAt=1;s.data.subscriptions['1:1'].reconcileQueuedAt=1;s.reconcile();await s.drain();a.equal(Object.keys(s.data.receipts).length,1);}
+  a.equal(JSON.stringify(row.receipt),before);a.ok(s.data.subscriptions['1:1'].reconciledAt>1);a.equal(s.data.queue.length,0);
+});

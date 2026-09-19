@@ -8,15 +8,15 @@ The existing GitHub collector and deterministic engine now bind the candidate's 
 
 `VERIFIED` requires sufficient current positive evidence. `FAIL` requires a demonstrated unmet required condition with the necessary bindings. Missing, ambiguous, stale, unsupported or unavailable evidence yields `NOT_PROVEN`. The local CLI uses `collectionComplete: false` for collection failures; historical records keep their recorded verdict. Factory fulfillment still rejects incomplete collection.
 
-Currentness compares dependencies for TARGET, CI_EXECUTED, APPROVAL_CURRENT, RULES_SNAPSHOT and REMOTE_DURABLE. Unrelated checks, comments, mergeability rollups and push-time rules do not invalidate them. Signed relevant events trigger targeted re-observation with conditional reads; they do not pretend the dependency has already changed. Six-hour complete reconciliation and four-hour App-delivery scans recover missed events. Receipt bodies and observation identifiers remain immutable; new receipts link to predecessors. Existing report-only defaults, tenant boundaries, pricing and metering authority remain intact.
+Currentness compares dependencies for TARGET, CI_EXECUTED, APPROVAL_CURRENT, RULES_SNAPSHOT and REMOTE_DURABLE. Unrelated checks, comments, mergeability rollups and push-time rules do not invalidate them. Signed relevant events trigger targeted re-observation with conditional reads; they do not pretend the dependency has already changed. Six-hour complete reconciliation and four-hour App-delivery scans recover missed events. Receipt bodies and observation identifiers remain immutable; new receipts link to predecessors. Unchanged full reconciliations retain the receipt and refresh currentness; they do not consume receipt capacity. Existing report-only defaults, tenant boundaries, pricing and metering authority remain intact.
 
 Approval evidence records opinionated writer reviews, permission at observation, account class, dismissal history and head-push activity. Bot reviews never count as human approvals. Bot authors add one approval; the initiating human must be established before the authorization claim can pass. A push actor is not assumed to be an agent initiator. CODEOWNERS, last-push satisfaction and unattributable initiators remain named limitations.
 
 Merge events append landed observations joined to immutable pre-merge receipts. A different squash commit can match by tree and parent; different content is a mismatch, and unsupported parentage is unresolved. Rule-suite results record observed bypasses without claiming visibility into exempt actors. Push ranges record commits without proof. The existing merge-history list shows the landed state; lookup by commit returns the same evidence.
 
-Independent reconstruction runs in an isolated worker against an operator-owned bare blobless mirror, with Git version and binary SHA-256 pins, fixed merge options, empty attribute source, no replace refs, no hooks and no configured custom merge drivers. Clean merge/squash, confirmed ordered queue entries and first-parent rebase are supported. Conflicts, both-sided gitlink changes and rebase merge commits refuse a tree. Attribute, multiple-base, rename, case, empty-commit and duplicate-patch caveats are retained; caveated divergence never becomes a definitive mismatch.
+Independent reconstruction runs in an isolated worker against an operator-owned bare blobless mirror, with Git version and binary SHA-256 pins, fixed merge options, empty attribute source, no replace refs, no hooks and no configured custom merge drivers. Nonempty mirror `info/attributes` is rejected; system/user/local attribute-file overrides are disabled. Clean merge/squash, confirmed ordered queue entries and first-parent rebase are supported. Conflicts, both-sided gitlink changes and rebase merge commits refuse a tree. Attribute, multiple-base, rename, case, empty-commit and duplicate-patch caveats are retained; caveated divergence never becomes a definitive mismatch.
 
-Portable bundles contain the immutable receipt, normalized/raw policy snapshot, explicit claims and observation references, verdict-info, in-toto statement and DSSE envelope. Verification checks digests, exact subjects and deterministic replay, with frozen versioned logic. Signatures require an independently supplied trusted P-256 key; a bundled key does not authenticate itself. Unsigned output is labeled and rejected unless the verifier caller explicitly accepts unsigned consistency checking. Online checks distinguish immutable-record divergence, mutable-state changes and missing records. Provider assertions remain provider-trusted. The local operator log is a hash chain with a daily-root preparation function; it is not an externally witnessed transparency log.
+Portable bundles contain the immutable receipt, normalized/raw policy snapshot, explicit claims and observation references, verdict-info, in-toto statement and DSSE envelope. Verification checks digests, exact subjects and deterministic replay, with frozen versioned logic. Signatures require an independently supplied trusted P-256 key; a bundled key does not authenticate itself. Unsigned output is labeled and rejected unless the verifier caller explicitly accepts unsigned consistency checking. With `--git-dir`, the verifier uses caller-supplied bare Git objects and the recorded binary pin to independently check trees, merge-base/parent/ancestry relationships and the expected tree. Missing objects remain unavailable; lazy fetching is disabled and no refs are updated. Reconstruction may add synthetic objects to that local mirror. Online checks distinguish immutable-record divergence, mutable-state changes and missing records. Provider assertions remain provider-trusted. The local operator log is a hash chain with a daily-root preparation function; it is not an externally witnessed transparency log.
 
 ## GitHub September addendum
 
@@ -30,7 +30,7 @@ Sources: [Actions policies API](https://docs.github.com/en/rest/actions/policies
 
 ## Using the candidate
 
-The machine contract is `urn:merge-proof:decision:1`. `POST /proof/v1/decision` requires a GitHub bearer token and exact repository ID, PR, expected head/base/target SHAs. Hosted use additionally requires access to the App installation and its repository. Output is PROCEED, HOLD, REFUSE or UNAVAILABLE, with the unchanged three-verdict vocabulary, currentness, bindings, reasons, next action and receipt. PROCEED is a point-in-time observation. A caller must still use GitHub's head-SHA guard and required checks; the base is not reserved. Queue admission alone cannot authorize merging.
+The machine contract is `urn:merge-proof:decision:1`. `POST /proof/v1/decision` requires a GitHub bearer token and exact repository ID, PR, expected head/base/target SHAs. Hosted use additionally requires access to the App installation and its repository. CLI/MCP validate the full response, caller bindings and consistent outcome/verdict/currentness before consuming it. Output is PROCEED, HOLD, REFUSE or UNAVAILABLE, with the unchanged three-verdict vocabulary, currentness, bindings, reasons, next action and receipt. PROCEED is a point-in-time observation. A caller must still use GitHub's head-SHA guard and required checks; the base is not reserved. Queue admission alone cannot authorize merging.
 
 ```sh
 merge-proof verify --repo OWNER/REPO --repository-id ID --pr NUMBER \
@@ -40,6 +40,7 @@ merge-proof verify --repo OWNER/REPO --repository-id ID --pr NUMBER \
 gh merge-proof verify --help
 merge-proof verify --bundle DIRECTORY --trusted-keys trusted-jwks.json
 merge-proof verify --bundle DIRECTORY --allow-unsigned
+merge-proof verify --bundle DIRECTORY --trusted-keys trusted-jwks.json --git-dir BARE_REPO
 merge-proof mcp
 ```
 
@@ -67,3 +68,9 @@ No production deployment, App permission change, live GitHub lab, new credential
 4. Approve the reviewed candidate for a separate release, including the production Git binary pin and provider-backed smoke tests. Local tests do not establish deployment or live GitHub acceptance.
 
 No rename, pricing change or broader product is proposed.
+
+## Validation and review
+
+Local acceptance: GitHub 266/266 (including 20 recorded synthetic cases and 1,000 seeded sequences), factory 37/37, CLI 26/26 and report 9/9. The affected Git/receipt/consumer chain passed 19/19 after the final review fix. The npm artifact passed CLI, frozen-verifier, MCP and gh-shim smoke checks. Tests used Node 24.12.0 and SHA-256-pinned Apple Git 2.50.1; no Linux or live-provider acceptance is implied.
+
+The single independent review of `134f9bb` returned five actionable findings. All five were fixed and regression-tested: ambient Git attributes, duplicate reconciliation receipts, malformed machine responses, incomplete engine digest and missing optional offline Git recomputation. The reviewer did not re-approve the resolution commit. See [review and evidence](validation/final-frontier-l3-2026-09-19/review.md) for the exact boundary and captured test outputs.

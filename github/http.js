@@ -97,7 +97,7 @@ async function handle(service, req, res, url) {
         }
         let out;
         const saved = service.data.receipts[sub?.latestReceiptId];
-        if (saved && ["github-exact-state-v2", "github-exact-state-v3"].includes(saved.receipt.policy))
+        if (saved && saved.artifacts?.policy?.codeDigest === require("./bundle").codeDigest() && ["github-exact-state-v2", "github-exact-state-v3"].includes(saved.receipt.policy))
           out = await service.read(saved.receipt.receiptId, token, { refresh: true });
         if (!out || out.current.state !== "CURRENT") out = await service.run(input.repository, input.pr, { client, installationId: sub?.installationId, mergeGroup: sub?.mergeGroup });
         send(200, require("./decision").decide(out.receipt, out.current, input, service.config.origin));

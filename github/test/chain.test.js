@@ -131,3 +131,40 @@ test("decision with a changed provider head cannot pass the provider SHA guard",
   const providerMerge=(head,guard)=>head===guard.sha?200:409;
   a.equal(providerMerge(B,d.nextAction.mergeArguments),409);
 });
+test("ambient attributes cannot turn a conflicted merge into an uncaveated expected tree",t=>{
+  const l=lab(t);l.write('f.txt','original\n');l.commit();l.git('checkout','-b','feature');l.write('f.txt','feature\n');const head=l.commit();
+  l.git('checkout','main');l.write('f.txt','main\n');const base=l.commit();l.mirror();
+  const reconstruct=()=>require('../reconstruct').reconstruct(l.bare,{base,head,method:'merge'},l.config);
+  a.equal(reconstruct().status,'NOT_RECONSTRUCTABLE');
+  fs.writeFileSync(path.join(l.bare,'info/attributes'),'*.txt merge=union\n');
+  a.equal(reconstruct().reason,'LOCAL_ATTRIBUTES_OUTSIDE_ENVELOPE');a.equal(reconstruct().tree,null);
+  fs.unlinkSync(path.join(l.bare,'info/attributes'));
+  const file=path.join(l.root,'ambient-attributes');fs.writeFileSync(file,'*.txt merge=union\n');
+  const configured=spawnSync('/usr/bin/git',['-C',l.bare,'config','core.attributesFile',file],{encoding:'utf8'});a.equal(configured.status,0);
+  a.equal(reconstruct().status,'NOT_RECONSTRUCTABLE');a.equal(reconstruct().tree,null);
+});
+test("CLI/MCP reject contradictory, malformed or wrong-subject decision contracts",()=>{
+  const c=capture(),r=prove(c),input={repository:'fixture/public',repositoryId:1,pr:1,expectedHeadSha:H,expectedBaseSha:B,expectedTargetSha:H};
+  const d=require('../decision').decide(r,freshness(r,c),input),{validateDecision}=require('../verify-cli');
+  a.equal(validateDecision(d,input).proceed,true);
+  for(const change of [x=>x.outcome='HOLD',x=>x.verdict='NOT_PROVEN',x=>x.currentness='STALE',x=>x.proceed='true',x=>delete x.subject,x=>x.subject.value.commit=B,x=>x.request.pr=2,x=>x.nextAction.mergeArguments.sha=B,x=>delete x.receipt]) {
+    const bad=structuredClone(d);change(bad);a.throws(()=>validateDecision(bad,input),{code:'INVALID_DECISION_CONTRACT'});
+  }
+});
+test("offline verifier recomputes supplied Git objects and detects a consistently recorded false tree",async t=>{
+  const l=lab(t);l.write('base','b');const base=l.commit();l.git('checkout','-b','feature');l.write('feature','f');const head=l.commit(),headTree=l.git('rev-parse','HEAD^{tree}'),baseTree=l.git('rev-parse','main^{tree}');l.mirror();
+  const c=JSON.parse(JSON.stringify(capture()).replaceAll(H,head).replaceAll(B,base));
+  c.target.value.tree=headTree;c.git.value.headTree=headTree;c.git.value.baseTree=baseTree;
+  c.expectedTree=require('../reconstruct').reconstruct(l.bare,{base,head,method:'merge',providerTree:headTree},l.config);
+  const receipt=prove(c),b=await bundle.create(receipt),{independent}=require('../reverify');
+  const checked=independent(b,l.bare);a.equal(checked.state,'INDEPENDENTLY_RECOMPUTED',JSON.stringify(checked));
+  const changed=structuredClone(b);changed.receipt.expectedTree.tree=B;
+  a.equal(independent(changed,l.bare).state,'INDEPENDENT_VERIFICATION_DIVERGED');
+  const directory=path.join(l.root,'bundle');bundle.write(directory,b);
+  const run=spawnSync(process.execPath,[path.join(__dirname,'../../bin/merge-proof.js'),'verify','--bundle',directory,'--allow-unsigned','--git-dir',l.bare],{encoding:'utf8'});
+  a.equal(run.status,0,run.stderr+run.stdout);a.equal(JSON.parse(run.stdout).independent.state,'INDEPENDENTLY_RECOMPUTED');
+  const missing=structuredClone(b);missing.receipt.evidence.target.value.sha=M;missing.receipt.evidence.target.value.kind='MERGE_GROUP';
+  a.equal(independent(missing,l.bare).state,'INDEPENDENT_VERIFICATION_UNAVAILABLE');
+  const wrongPin=structuredClone(b);wrongPin.receipt.expectedTree.gitBinaryDigest='0'.repeat(64);
+  a.equal(independent(wrongPin,l.bare).reason,'PINNED_GIT_BINARY_MISMATCH');
+});
