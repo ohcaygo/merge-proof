@@ -18,7 +18,7 @@ To avoid redelivering unrelated repository history, the lab adapter selected thi
 
 ## Remaining boundaries
 
-- B01/B02 update: [second-account functional validation](reviewer-resume.md) now covers approval, head invalidation, explicit reviewer dismissal and re-approval. Both accounts have the same operator; independent-second-human validation remains NOT_PROVEN. B03 reviewer permission loss remains blocked by automatic approval review pending explicit access-change authorization.
+- B01/B02 update: [second-account functional validation](reviewer-resume.md) now covers approval, head invalidation, explicit reviewer dismissal and re-approval. Both accounts have the same operator; independent-second-human validation remains NOT_PROVEN. B03 reviewer permission loss subsequently [passed under explicit authorization](permission-resume.md), with Write access restored and verified.
 - B04: organization-only ruleset enforcement remains blocked by the previously observed plan entitlement.
 - B06: signed merge_group delivery remains unexecuted. The App already subscribes to merge_group and has Merge queues read permission, but the selected repository has no applicable main-branch queue policy and no merge_group delivery in the available history. The separate queue fixture repositories are outside its selected scope. No permission is missing for the completed delivery/reconciliation cases, and scope or repository rules were not changed to manufacture this case.
 - Production deployment, production Git pin/smoke checks, production signing/JWKS and public anchoring remain separate gates and were not performed.
