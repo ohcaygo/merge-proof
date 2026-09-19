@@ -90,3 +90,26 @@ test("unchanged full reconciliations retain one receipt and refresh observation 
   for(let n=0;n<3;n++){s.data.subscriptions['1:1'].reconciledAt=1;s.data.subscriptions['1:1'].reconcileQueuedAt=1;s.reconcile();await s.drain();a.equal(Object.keys(s.data.receipts).length,1);}
   a.equal(JSON.stringify(row.receipt),before);a.ok(s.data.subscriptions['1:1'].reconciledAt>1);a.equal(s.data.queue.length,0);
 });
+
+test('live-sized delivery IDs survive parsing, pagination, and redelivery exactly',async t=>{
+  const h=harness(t),s=h.service,calls=[];s.config.appId=42;s.config.privateKey='fixture-never-used';
+  s.deliveryClient=()=>new Client({fetchImpl:async(url,init)=>{
+    const u=new URL(url);calls.push([u.pathname,init.method]);
+    if(init.method==='POST'){a.equal(u.pathname,'/app/hook/deliveries/3843641202479988736/attempts');return new Response(null,{status:202});}
+    if(u.searchParams.has('cursor'))return new Response('[{"id":3843641202479988736,"guid":"missed-large-id","event":"pull_request","status_code":200}]');
+    return new Response('[{"id":1,"guid":"ping","event":"ping","status_code":200}]',{headers:{link:'<https://api.github.com/app/hook/deliveries?cursor=next&per_page=100>; rel="next"'}});
+  }});
+  await s.reconcileDeliveries();a.equal(s.data.deliveryHealth,'RECONCILED');a.equal(calls.filter(x=>x[1]==='POST').length,1);
+});
+for(const id of [null,0,-1,1.5,3843641202479988700,'../attempts','1e20','999999999999999999999'])
+ test(`malformed delivery identity cannot report reconciled (${id})`,async t=>{
+  const h=harness(t),s=h.service;s.config.appId=42;s.config.privateKey='fixture';
+  s.deliveryClient=()=>({get:async()=>[{id,guid:'unseen',event:'pull_request',status_code:200}],request:async()=>{throw Error('Must not send');},links:new Map()});
+  await s.reconcileDeliveries();a.equal(s.data.deliveryHealth,'UNAVAILABLE');
+ });
+test('lossless delivery parsing preserves quoted text and safe numeric fields',async()=>{
+ const raw='[{"id":3843641202479988736,"status_code":200,"duration":0.5,"message":"id 3843641202479988736 and \\"id\\":1234567890123456789","guid":"real-guid"}]';
+ const c=new Client({fetchImpl:async()=>new Response(raw)}),row=(await c.get('/app/hook/deliveries?per_page=100'))[0];
+ a.equal(row.id,'3843641202479988736');a.equal(row.status_code,200);a.equal(row.duration,0.5);
+ a.equal(row.message,'id 3843641202479988736 and "id":1234567890123456789');
+});

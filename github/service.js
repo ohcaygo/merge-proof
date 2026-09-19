@@ -647,7 +647,10 @@ class ProofService {
         const rows = await client.get(endpoint);
         assert(Array.isArray(rows), "DELIVERY_SCAN_UNAVAILABLE");
         for (const row of rows) {
-          if (!Number.isSafeInteger(row.id) || typeof row.guid !== "string" || row.event === "ping" || seen.has(row.guid)) continue;
+          const validId = Number.isSafeInteger(row?.id) && row.id > 0 ||
+            typeof row?.id === "string" && /^[1-9][0-9]{0,19}$/.test(row.id);
+          assert(validId && typeof row.guid === "string" && /^[\w-]{1,100}$/.test(row.guid), "DELIVERY_IDENTITY_UNAVAILABLE");
+          if (row.event === "ping" || seen.has(row.guid)) continue;
           seen.add(row.guid);
           if (!this.data.events[row.guid] || row.status_code >= 400)
             await client.request(`/app/hook/deliveries/${row.id}/attempts`, { method: "POST" });

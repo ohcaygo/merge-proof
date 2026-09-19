@@ -59,7 +59,14 @@ class Client {
     }
     this.links.set(endpoint, response.headers.get("link") || "");
     const bytes = Buffer.concat(chunks).toString("utf8");
-    const value = bytes.length ? JSON.parse(bytes) : null;
+    // Delivery IDs are opaque 64-bit identifiers. JSON.parse would round
+    // them before the reconciler can address the original delivery. Preserve
+    // unsafe integer tokens only on this API; quoted JSON strings are intact.
+    const json = /^\/app\/hook\/deliveries(?:[/?]|$)/.test(endpoint)
+      ? bytes.replace(/"(?:\\.|[^"\\])*"|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?/g,
+        token => /^-?\d+$/.test(token) && !Number.isSafeInteger(Number(token)) ? JSON.stringify(token) : token)
+      : bytes;
+    const value = json.length ? JSON.parse(json) : null;
     if (method === "GET" && response.headers.get("etag")) {
       if (this.cache.size >= 500) this.cache.delete(this.cache.keys().next().value);
       this.cache.set(endpoint, { etag: response.headers.get("etag"), body: structuredClone(value) });
