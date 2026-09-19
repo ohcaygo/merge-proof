@@ -52,18 +52,20 @@ test("HTTP machine decision, subject guard and authorized durable bundle journey
   a.equal((await fetch(root+`/proof/receipts/${decision.receipt.receiptId}/bundle`)).status,403);
 });
 
-test("proof-to-merge journey retains immutable receipt, detects content and records bypass",async t=>{
+for (const legacy of [true, false]) test(`proof-to-merge journey preserves ledger and resolves REST 2026 commit (legacy=${legacy})`,async t=>{
   const h=harness(t);await h.hook("pull_request",{pull_request:{number:1,state:"open"}});await h.service.drain();
   const original=Object.values(h.service.data.receipts)[0],before=JSON.stringify(original.receipt),commit="c".repeat(40),tree=original.receipt.summary.target.value.tree;
   h.set({override:(url)=>{
     const p=new URL(url).pathname;
+    if(p === '/graphql') return Promise.resolve(Response.json({data:{repository:{databaseId:1,nameWithOwner:'fixture/public',pullRequest:{number:1,headRefOid:H,baseRefName:'main',merged:true,state:'MERGED',mergeCommit:{oid:commit}}}}}));
     if(p.endsWith('/git/commits/'+commit))return Promise.resolve(Response.json({sha:commit,tree:{sha:tree},parents:[{sha:B}]}));
     if(p.endsWith('/rulesets/rule-suites'))return Promise.resolve(Response.json([{id:99,repository_id:1,after_sha:commit,ref:'refs/heads/main'}]));
     if(p.endsWith('/rulesets/rule-suites/99'))return Promise.resolve(Response.json({id:99,repository_id:1,after_sha:commit,before_sha:B,ref:'refs/heads/main',result:'bypass',actor_id:9,rule_evaluations:[]}));
   }});
-  await h.hook("pull_request",{action:"closed",pull_request:{number:1,state:"closed",merged:true,head:{sha:H},base:{ref:"main"},merge_commit_sha:commit,merged_at:new Date().toISOString(),merged_by:{id:9,login:"merger",type:"User"}}});
+  await h.hook("pull_request",{action:"closed",pull_request:{number:1,state:"closed",merged:true,head:{sha:H},base:{ref:"main"},...(legacy ? {merge_commit_sha:commit} : {}),merged_at:new Date().toISOString(),merged_by:{id:9,login:"merger",type:"User"}}});
   await h.service.drain();
   const record=require('../ledger').area(h.store).records[0],landed=h.service.data.landings[record.recordId];
+  a.equal(record.mergeCommitSha, legacy ? commit : null);a.equal(landed.commitResolution.value,commit);
   a.equal(landed.state,'LANDED_VERIFIED');a.equal(landed.bypass,'BYPASS_OBSERVED');a.equal(JSON.stringify(original.receipt),before);
   a.equal(landed.attestation.predicate.receiptDigest,require('../common').hash(record.proof.receiptSnapshot));
   a.equal(require('../ledger').list(h.store,{repositoryId:1}).records[0].landed.state,'LANDED_VERIFIED');

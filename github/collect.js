@@ -121,6 +121,11 @@ async function identity(client, repo, pr) {
     `${root}/branches/${encodeURIComponent(p.base.ref)}`,
   );
   assert(sha(branch.commit?.sha) && typeof branch.protected === "boolean");
+  const merged = p.merged === true;
+  const mergeCommit = merged && !sha(p.merge_commit_sha)
+    ? await client.observe(() => require("./pull-commit").mergedCommit(client, {
+      repository: r.full_name, repositoryId: r.id, pr, headSha: p.head.sha, baseRef: p.base.ref,
+    })) : null;
   return {
     repository: r.full_name,
     repositoryId: r.id,
@@ -135,8 +140,8 @@ async function identity(client, repo, pr) {
     baseSha: branch.commit.sha,
     branchProtected: branch.protected,
     prState: p.state,
-    merged: p.merged === true,
-    mergeCommitSha: p.merge_commit_sha,
+    merged,
+    mergeCommitSha: p.merge_commit_sha || mergeCommit?.value || null,
     authorId: p.user?.id,
     // Account identity only. Git header name/email are unvalidated client
     // strings and are never stored.
@@ -314,14 +319,17 @@ async function collectOnce(
       });
     } else {
       target = await client.observe(async () => {
-        assert(sha(i.mergeCommitSha), "TEST_MERGE_UNAVAILABLE");
         const ref = await client.get(`${root}/git/ref/pull/${pr}/merge`);
+        // The exact PR ref plus both ordered parents binds the synthetic
+        // commit even when REST no longer supplies merge_commit_sha.
+        const mergeSha = ref.object?.sha;
+        assert(sha(mergeSha), "TEST_MERGE_UNAVAILABLE");
         const m = commitMeta(
-          await client.get(`${root}/commits/${i.mergeCommitSha}`),
+          await client.get(`${root}/commits/${mergeSha}`),
         );
         assert(
-          ref.object?.sha === i.mergeCommitSha &&
-            m.sha === i.mergeCommitSha &&
+          (!i.mergeCommitSha || mergeSha === i.mergeCommitSha) &&
+            m.sha === mergeSha &&
             m.parents.length === 2 &&
             m.parents[0] === i.baseSha &&
             m.parents[1] === i.headSha,

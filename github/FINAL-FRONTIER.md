@@ -60,12 +60,12 @@ Existing receipt and ledger capacity limits still apply. Observation retention f
 
 ## Release gates requiring Ryan
 
-No production deployment, App permission change, live GitHub lab, new credentials, external signature publication or public-log commit has occurred.
+An authorized owned-repository live lab ran on 2026-09-19. No production deployment, App permission change, new credentials, production signing identity, external signature publication or public anchoring occurred. See [live validation](validation/final-frontier-l3-2026-09-19/live-lab.md).
 
 1. Choose/authorize the KMS P-256 signing key and published trusted JWKS identity. The signer callback and verifier are implemented and tested with ephemeral local fixture keys. No production signing identity exists in this candidate.
 2. Authorize the public daily-root destination and publication mechanism. Local hash-chain/root preparation is implemented; external anchoring is absent.
-3. Authorize the owned GitHub lab/App and live differential runs, if desired. The committed local/synthetic corpus runs in existing CI; no outside repository is modified.
-4. Approve the reviewed candidate for a separate release, including the production Git binary pin and provider-backed smoke tests. Local tests do not establish deployment or live GitHub acceptance.
+3. Complete the blocked live gates: legitimate second-human approval/revocation, development-App delivery and reconciliation, and organization-only ruleset enforcement. The owner confirmed that no second reviewer is available. The completed live cases do not substitute for these gates.
+4. Approve the candidate for a separate release only after the remaining acceptance gates, including the production Git binary pin and provider-backed smoke tests. Local and partial live acceptance do not establish deployment readiness.
 
 No rename, pricing change or broader product is proposed.
 
@@ -74,3 +74,5 @@ No rename, pricing change or broader product is proposed.
 Local acceptance: GitHub 266/266 (including 20 recorded synthetic cases and 1,000 seeded sequences), factory 37/37, CLI 26/26 and report 9/9. The affected Git/receipt/consumer chain passed 19/19 after the final review fix. The npm artifact passed CLI, frozen-verifier, MCP and gh-shim smoke checks. Tests used Node 24.12.0 and SHA-256-pinned Apple Git 2.50.1; no Linux or live-provider acceptance is implied.
 
 The single independent review of `134f9bb` returned five actionable findings. All five were fixed and regression-tested: ambient Git attributes, duplicate reconciliation receipts, malformed machine responses, incomplete engine digest and missing optional offline Git recomputation. The reviewer did not re-approve the resolution commit. See [review and evidence](validation/final-frontier-l3-2026-09-19/review.md) for the exact boundary and captured test outputs.
+
+The live lab found that REST 2026-03-10 omits `merge_commit_sha`. The collector now reads the exact PR test-merge ref and verifies its ordered parents; landed identity resolves through GraphQL with repository, PR, head, base ref and merged-state checks. Resolution is recorded beside the immutable merge ledger. Live retests passed for queue landing, refreshed test-merge tree comparison and historical merged identity. The affected service path and negative bindings are regression-tested; the GitHub suite passes 281/281. The published frozen verdict implementation is unchanged.

@@ -25,6 +25,10 @@ function compare(record, landed) {
 }
 async function resolve(client, record) {
   const root = `/repos/${record.repository}`;
+  const commitResolution = await client.observe(async () => sha(record.mergeCommitSha)
+    ? record.mergeCommitSha
+    : require("./pull-commit").mergedCommit(client, { ...record, headSha: record.mergedHeadSha }));
+  record = { ...record, mergeCommitSha: commitResolution.value || null };
   const content = await client.observe(async () => {
     assert(sha(record.mergeCommitSha), "LANDED_COMMIT_UNAVAILABLE");
     const c = await client.get(`${root}/git/commits/${record.mergeCommitSha}`);
@@ -42,7 +46,7 @@ async function resolve(client, record) {
       actorId: r.actor_id, pushedAt: r.pushed_at, trust: "GITHUB_API",
       evaluations: (r.rule_evaluations || []).map(x => ({ source: x.rule_source, enforcement: x.enforcement, result: x.result, type: x.rule_type })) };
   });
-  const result = { ...binding, ruleSuite, bypass: ruleSuite.value?.result === "bypass" ? "BYPASS_OBSERVED" : "UNKNOWN_EXEMPT_OR_UNREADABLE",
+  const result = { ...binding, commitResolution, ruleSuite, bypass: ruleSuite.value?.result === "bypass" ? "BYPASS_OBSERVED" : "UNKNOWN_EXEMPT_OR_UNREADABLE",
     authorityLimitation: "Rule suites record observed evaluations. Exempt actors and decision-time authorization may remain unobservable.",
     recordedAt: new Date().toISOString() };
   return { ...result, attestation: { _type: "https://in-toto.io/Statement/v1",

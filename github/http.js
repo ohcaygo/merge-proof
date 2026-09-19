@@ -121,7 +121,8 @@ async function handle(service, req, res, url) {
       assert(token, "ACCESS_DENIED");
       const repositoryId = Number(url.searchParams.get("repository_id")), commit = url.searchParams.get("commit");
       assert(Number.isSafeInteger(repositoryId) && require("./common").sha(commit), "INVALID_SCOPE");
-      const records = require("./ledger").area(service.store).records.filter(r => r.repositoryId === repositoryId && r.mergeCommitSha === commit);
+      const records = require("./ledger").area(service.store).records.filter(r => r.repositoryId === repositoryId &&
+        (r.mergeCommitSha === commit || service.data.landings[r.recordId]?.landed?.sha === commit));
       const pushes = Object.values(service.data.pushObservations).filter(p => p.repositoryId === repositoryId && p.commits.some(c => c.sha === commit));
       assert(records.length || pushes.length, "NOT_FOUND");
       await service.clientFactory({ token }).authorize((records[0] || pushes[0]).repository, repositoryId);
