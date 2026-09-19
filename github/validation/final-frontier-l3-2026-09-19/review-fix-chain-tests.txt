@@ -1,0 +1,27 @@
+✔ portable receipt replays offline; tampering and untrusted self-signed keys do not pass (49.3595ms)
+✔ machine contract holds wrong subject, stale receipt and queue admission (2.757875ms)
+✔ landing checks content, proof, head and method parentage; squash SHA may differ (2.410708ms)
+✔ local differential lab: clean merge expected tree matches Git (812.987ms)
+✔ local differential lab: clean squash expected tree matches Git (853.932917ms)
+✔ local differential lab: clean rebase expected tree matches Git (1147.685ms)
+✔ conflicted reconstruction emits no expected tree (490.945958ms)
+✔ rebase with a merge commit is explicitly refused (679.014209ms)
+✔ queue reconstruction follows confirmed order and refuses missing membership (1499.797375ms)
+✔ clean binary, executable mode and symlink changes preserve Git tree identity (492.764333ms)
+✔ attribute-dependent conflict and both-sided gitlinks refuse a definitive tree (594.223334ms)
+✔ both-sided gitlinks retain the researched refusal boundary (659.884542ms)
+✔ frozen pure engine matches current policy across passing and failing captures (17.805292ms)
+✔ online verifier distinguishes provider divergence from record retention uncertainty (3.380125ms)
+✔ MCP advertises only a read-only decision tool and bounds incoming messages (2.957208ms)
+✔ decision with a changed provider head cannot pass the provider SHA guard (1.483667ms)
+✔ ambient attributes cannot turn a conflicted merge into an uncaveated expected tree (1094.541458ms)
+✔ CLI/MCP reject contradictory, malformed or wrong-subject decision contracts (2.072541ms)
+✔ offline verifier recomputes supplied Git objects and detects a consistently recorded false tree (2163.090209ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10628.967167

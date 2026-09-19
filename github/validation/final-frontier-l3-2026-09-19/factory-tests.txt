@@ -1,0 +1,49 @@
+
+> merge-proof@0.2.0 test:factory
+> node --test factory/test/*.test.js
+
+✔ Stripe raw signature rejects modified, expired, unsigned and live-mode events (1.231083ms)
+✔ Stripe retrieves authoritative amount/contact/transaction; ignores webhook amount (3.818875ms)
+✔ Stripe rejects wrong SKU, mode, quantity, link, pending payment (1.296416ms)
+✔ offer price comes from Payment Link and rejects adjustable or recurring SKU (82.902375ms)
+✔ repository input is public GitHub only; no token, query, fragment, local path or other host (0.282791ms)
+✔ public repo scope is exact; private adapter fails eligibility without requesting token (0.719375ms)
+✔ merged history requires explicit parent relationship and landed CI SHA (0.1955ms)
+✔ GitHub pagination exhaustion fails closed (3.220292ms)
+✔ secret scrub covers tokens and does not retain review bodies (0.232542ms)
+✔ restricted API keys preserve strict live/test separation (499.879917ms)
+✔ exact SHA and expected App success can meet CI (0.627791ms)
+✔ wrong SHA never verifies, even when same check succeeds (0.272333ms)
+✔ wrong App, missing, failed, neutral, skipped, in-progress CI all block (0.199416ms)
+✔ latest failed attempt overrides old success (0.081875ms)
+✔ unresolved or empty CI policy cannot infer not-applicable (0.074375ms)
+✔ approval is exact candidate bound (0.108459ms)
+✔ dismissed, changes-requested, bot, author and outsider cannot be current approval (0.099084ms)
+✔ later comment does not erase an approval but latest decision does (0.075166ms)
+✔ outstanding changes requested from another reviewer blocks (0.068209ms)
+✔ unresolvable approval remains unknown (0.095625ms)
+✔ existing FAIL or blocking local finding is never upgraded (0.089625ms)
+✔ reassessment preserves original, reports resolved remaining and new gaps (0.505792ms)
+✔ complete HTTP journey: eligibility -> signed fixture webhook -> authorization -> real Git/PDF -> download -> one reassessment (7049.201792ms)
+✔ eligibility blocks inaccessible or unsupported scope without taking payment (239.650541ms)
+✔ report failure is honest, retryable, preserves cleanup, escalates refund to Ryan (2465.288542ms)
+✔ post-payment auth and unsupported history have explicit states (857.696959ms)
+✔ expired access is denied and artifacts are purged; unknown paid reference escalates (816.500625ms)
+✔ isolated runner has hard timeout and removes its working directory (266.547125ms)
+✔ new visitors see Pro, retired checkout fails closed, historical access still routes (69.358ms)
+✔ hosted sandbox isolates provider credentials and accounting from historical live orders (188.365583ms)
+✔ authenticated proxy preserves per-client eligibility limits and rejects direct forwarding (48.919625ms)
+✔ Pages proxy preserves webhook bytes, origin, cookie and protected response without exposing its key (5.921042ms)
+✔ undelivered expired payment escalates once to Ryan instead of disappearing (117.591708ms)
+✔ delivered expired pack retains reconciliation but does not invent a refund on later sweeps (61.056041ms)
+✔ expired failed reassessment also escalates while unused reassessment does not (37.554083ms)
+✔ one thousand expired paid records do not permanently block new eligibility (26.967458ms)
+✔ factory merge report labels and shows the real landed state (18.589083ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 11788.053667
