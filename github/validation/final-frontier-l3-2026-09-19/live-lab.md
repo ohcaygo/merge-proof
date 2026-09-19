@@ -2,7 +2,7 @@
 
 Status of the initial run: **PARTIAL LIVE ACCEPTANCE; NOT READY for final production gates.**
 
-Update: the subsequent [development-App resume](app-resume.md) closes B05 delivery and B07 scoped reconciliation with unchanged installation scope and permissions. This document preserves the initial run and its original blocked results.
+Update: the subsequent [development-App resume](app-resume.md) closes B05 delivery and B07 scoped reconciliation with unchanged installation scope and permissions. The later [second-account resume](reviewer-resume.md) validates approval and dismissal behavior, with the same-person limitation explicit. This document preserves the initial run and its original blocked results.
 
 The requested candidate `2fe609d7120cabc5dbb958a69c45ad959a1ec256` was pushed normally to `codex/final-frontier-l3` before testing. All live mutations used four newly created owned synthetic repositories and an owned fork. Production, production signing/JWKS, public anchoring, App permissions and token scopes were unchanged. Full calibration captures and the per-case expected/actual matrix remain private outside the product repository, as required by Level 3 §22.
 
