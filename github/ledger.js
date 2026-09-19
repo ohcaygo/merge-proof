@@ -61,6 +61,7 @@ function proofSnapshot(row, mergedHeadSha, policyResult, mergeCommitSha = null) 
     publicationObservedAt: row.publishedAt || null,
     gateObservation: "Published policy result, not an assertion of GitHub's decision at merge time.",
     receiptSnapshot: JSON.parse(JSON.stringify(receipt)),
+    receiptArtifacts: row.artifacts ? structuredClone(row.artifacts) : null,
     gaps: [...(receipt.gaps || [])],
     requiredChecks: (receipt.summary?.rules?.checks || []).map((c) => ({
       name: c.name,
@@ -187,7 +188,7 @@ function list(store, { installationId, repositoryId, ...filter } = {}) {
     completeness: m.pruned
       ? `${m.pruned} older merge record(s) were pruned at capacity and are not in this ledger.`
       : "No merge records have been pruned.",
-    records: page.map(summaryOf),
+    records: page.map(row => ({ ...summaryOf(row), landed: store.data.github.landings?.[row.recordId] || { state: "LANDED_UNRESOLVED", reason: "LANDING_OBSERVATION_PENDING" } })),
   };
 }
 

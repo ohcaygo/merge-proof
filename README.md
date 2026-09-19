@@ -25,7 +25,7 @@ NOT_PROVEN - this merge may be fine, but the available evidence does not prove i
 
 - **Zero dependencies.** Nothing is installed but merge-proof itself.
 - **No network calls, no model or API calls, no telemetry.** It reads local git state and prints a result.
-- **Fails closed.** If the history it needs is missing, it says `FAIL` — it never reports `VERIFIED` from evidence it could not see.
+- **Fails closed.** If the history it needs is missing, it says `NOT_PROVEN` — it never reports `VERIFIED` from evidence it could not see.
 
 ## What this is not
 
@@ -37,7 +37,7 @@ merge-proof is a merge-evidence verifier. It is **not** an AI code reviewer, a b
 |---|---|
 | `VERIFIED` | The checks merge-proof implements found the evidence they look for. **This is not a proof of correctness** — it is the absence of the specific evidence gaps below. |
 | `NOT_PROVEN` | The merge may well be fine, but the available evidence does not establish it. This is a prompt to look, not an accusation. |
-| `FAIL` | merge-proof could not safely establish a result, for example because history is missing. |
+| `FAIL` | Current bound evidence demonstrates an unmet required condition. Missing history or other uncertainty yields NOT_PROVEN. |
 
 ## Install and run
 

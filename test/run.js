@@ -68,27 +68,27 @@ test('base drift finding answers all four output-quality questions', () => {
   }
 });
 
-test('FAIL when the base ref cannot be resolved', () => {
+test('NOT_PROVEN when the base ref cannot be resolved', () => {
   const dir = h.cleanScenario();
   const result = analyzeAt(dir, { base: 'origin/does-not-exist' });
-  assert.strictEqual(result.verdict, 'FAIL');
+  assert.strictEqual(result.verdict, 'NOT_PROVEN');
   assert.strictEqual(result.findings[0].id, 'BASE_UNRESOLVABLE');
 });
 
-test('FAIL when no merge base exists between the two refs', () => {
+test('NOT_PROVEN when no merge base exists between the two refs', () => {
   const dir = h.makeRepo('orphan');
   h.commit(dir, 'initial', { 'a.txt': 'a\n' });
   h.git(dir, 'checkout', '-q', '--orphan', 'feature');
   h.git(dir, 'rm', '-rq', '--cached', '.');
   h.commit(dir, 'unrelated root', { 'b.txt': 'b\n' });
   const result = analyzeAt(dir);
-  assert.strictEqual(result.verdict, 'FAIL');
+  assert.strictEqual(result.verdict, 'NOT_PROVEN');
   assert.strictEqual(result.findings[0].id, 'NO_MERGE_BASE');
 });
 
-test('FAIL when the path is not a git repository', () => {
+test('NOT_PROVEN when the path is not a git repository', () => {
   const result = analyze({ repoPath: path.join(require('os').tmpdir(), 'merge-proof-not-a-repo-xyz'), base: 'main', version: '0.1.0' });
-  assert.strictEqual(result.verdict, 'FAIL');
+  assert.strictEqual(result.verdict, 'NOT_PROVEN');
   assert.strictEqual(result.findings[0].id, 'NOT_A_GIT_REPOSITORY');
 });
 
@@ -102,7 +102,7 @@ test('shallow clone fails closed and never returns VERIFIED', () => {
   h.run(path.dirname(shallow), 'git', ['clone', '-q', '--depth', '1', `file://${source}`, shallow]);
 
   const result = analyze({ repoPath: shallow, base: 'origin/main', head: 'HEAD', version: '0.1.0' });
-  assert.strictEqual(result.verdict, 'FAIL');
+  assert.strictEqual(result.verdict, 'NOT_PROVEN');
   assert.strictEqual(result.findings[0].id, 'SHALLOW_CLONE');
   assert.notStrictEqual(result.verdict, 'VERIFIED');
   assert.ok(/fetch-depth: 0/.test(result.findings[0].doNext), 'remedy must name the fix');
@@ -221,11 +221,11 @@ test('--fail-on not-proven exits 2 on NOT_PROVEN and 0 on VERIFIED', () => {
   assert.strictEqual(clean.status, 0);
 });
 
-test('--fail-on fail exits 3 on FAIL but 0 on NOT_PROVEN', () => {
+test('--fail-on fail does not misclassify missing history as a failed requirement', () => {
   const notProven = h.cli(h.driftScenario(), ['--base', 'main', '--head', 'feature', '--fail-on', 'fail']);
   assert.strictEqual(notProven.status, 0);
   const failing = h.cli(h.cleanScenario(), ['--base', 'origin/nope', '--head', 'feature', '--fail-on', 'fail']);
-  assert.strictEqual(failing.status, 3);
+  assert.strictEqual(failing.status, 0);
 });
 
 test('human output always states what is not checked', () => {

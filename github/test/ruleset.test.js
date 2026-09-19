@@ -26,7 +26,7 @@ test('ruleset-only checks/reviews prove satisfied and fail closed on real requir
  for(const change of [
   (p,v)=>p.endsWith('/check-runs')?{...v,check_runs:v.check_runs.map(x=>({...x,conclusion:'failure'}))}:v,
   (p,v)=>p.endsWith('/reviews')?[]:v,
- ]){const failed=await collect(client({mutate:change}),'fixture/public',1);a.equal(prove(failed).verdict,'NOT_PROVEN');}
+ ]){const failed=await collect(client({mutate:change}),'fixture/public',1);a.equal(prove(failed).verdict, failed.checks.value.some(x=>x.conclusion==='failure')?'FAIL':'NOT_PROVEN');}
  const changed=await collect(client({rules:[...active,{type:'required_signatures'}]}),'fixture/public',1);
  a.equal(prove(changed).verdict,'NOT_PROVEN');a.equal(freshness(receipt,changed).state,'STALE');
  a.equal(prove(await collect(client(),'fixture/public',1)).verdict,'VERIFIED');
@@ -45,7 +45,7 @@ test('ruleset and classic requirements intersect by context/app and maximum appr
  a.deepEqual(r.checks,[{name:'classic',appId:8},{name:'test',appId:10},{name:'test',appId:20}]);a.equal(r.approvals,2);a.equal(r.strict,true);
 });
 test('unsupported/malformed rules never silently verify',async()=>{
- for(const rule of [{type:'update'},{type:'required_deployments'},{type:'workflows'},{type:'code_scanning'},{type:'unknown'},{type:'required_status_checks',parameters:{}},{type:'required_status_checks',parameters:{required_status_checks:[null]}},{type:'pull_request',parameters:{}},{type:'merge_queue',parameters:{grouping_strategy:'ALLGREEN'}}]){
+ for(const rule of [{type:'required_deployments'},{type:'workflows'},{type:'code_scanning'},{type:'unknown'},{type:'required_status_checks',parameters:{}},{type:'required_status_checks',parameters:{required_status_checks:[null]}},{type:'pull_request',parameters:{}},{type:'merge_queue',parameters:{grouping_strategy:'ALLGREEN'}}]){
  const c=await collect(client({rules:[...active,rule]}),'fixture/public',1);a.equal(prove(c).verdict,'NOT_PROVEN',rule.type);
  }
 });
@@ -61,6 +61,6 @@ test('ruleset-only required receipt gate enforces failure and succeeds only with
   const g=gate(c.rules,99);a.equal(g.required,true);a.equal(g.boundToThisApp,true);
   const receipt=prove(c,{appId:99});
   const result=policy.evaluate(receipt,{state:'CURRENT'},{preset:'REPOSITORY_REQUIREMENTS'});
-  a.equal(receipt.verdict,fail?'NOT_PROVEN':'VERIFIED');a.equal(result.conclusion,fail?'failure':'success');
+  a.equal(receipt.verdict,fail?'FAIL':'VERIFIED');a.equal(result.conclusion,fail?'failure':'success');
  }
 });

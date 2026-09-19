@@ -53,7 +53,7 @@ test("optional GitHub check reports same verdict and cannot be its own CI eviden
     app_id: 77,
   });
   failing.checks.value[0].conclusion = "failure";
-  a.equal(prove(failing, { appId: 77 }).verdict, "NOT_PROVEN");
+  a.equal(prove(failing, { appId: 77 }).verdict, "FAIL");
 
   // A different App publishing a check with the same name is somebody else's
   // requirement, not ours, and stays a real requirement.

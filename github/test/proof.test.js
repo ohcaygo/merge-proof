@@ -134,7 +134,7 @@ for (const conclusion of [
     const c = capture();
     c.checks.value[0].conclusion = conclusion;
     const r = prove(c);
-    a.equal(r.verdict, "NOT_PROVEN");
+    a.equal(r.verdict, conclusion === "failure" ? "FAIL" : "NOT_PROVEN");
     a.equal(
       r.summary.ci.acceptedCount,
       ["skipped", "neutral"].includes(conclusion) ? 1 : 0,
@@ -185,10 +185,12 @@ test("base movement without overlap keeps STALE_BASE advisory and can prove comb
   c.git.value.mergeBase = OLD;
   c.git.value.baseFiles = ["docs/a.md"];
   c.git.value.baseAdvanceCommits = 101;
-  c.target = A({ kind: "PR_TEST_MERGE", sha: M, headSha: H, baseSha: B });
+  c.target = A({ kind: "PR_TEST_MERGE", tree: "e".repeat(40), sha: M, headSha: H, baseSha: B, parents: [B,H] });
   c.checks.value[0].sha = M;
   c.execution.value[0].sha = M;
   c.execution.value[0].runSha = M;
+  c.execution.value[0].workflowBlob.value.commit = M;
+  if (c.target.value.kind === "MERGE_GROUP") c.execution.value[0].event = "merge_group";
   const r = prove(c);
   a.equal(r.verdict, "VERIFIED");
   a.ok(r.local.advisories.some((x) => x.id === "STALE_BASE"));
@@ -198,13 +200,14 @@ test("protected boundary keeps local meaning; unavailable history fails closed",
   c.git.value.candidateFiles = ["auth/session.js"];
   a.ok(prove(c).gaps.includes("PROTECTED_BOUNDARY"));
   c.git = U("TRUNCATED");
-  a.equal(prove(c).verdict, "FAIL");
+  a.equal(prove(c).verdict, "NOT_PROVEN");
 });
 test("merge group execution binds group SHA; head success cannot substitute", () => {
   const c = capture();
   c.rules.active.value.push({ type: "merge_queue" });
   c.target = A({
     kind: "MERGE_GROUP",
+    tree: "e".repeat(40),
     sha: M,
     headSha: H,
     baseSha: B,
@@ -214,6 +217,8 @@ test("merge group execution binds group SHA; head success cannot substitute", ()
   c.checks.value[0].sha = M;
   c.execution.value[0].sha = M;
   c.execution.value[0].runSha = M;
+  c.execution.value[0].workflowBlob.value.commit = M;
+  if (c.target.value.kind === "MERGE_GROUP") c.execution.value[0].event = "merge_group";
   a.equal(prove(c).verdict, "VERIFIED");
 });
 test("review comments do not erase approval, latest decision and count apply", () => {
@@ -323,24 +328,9 @@ test("issuance currentness and fresh human envelope agree when required sources 
   a.equal(r.freshness.state, "UNAVAILABLE");
   a.equal(freshness(r, c).state, r.freshness.state);
 });
-test("nested unavailable reviewer permission or queue selection cannot advertise CURRENT", () => {
-  for (const change of [
-    (c) =>
-      (c.reviews.value[0].writePermission = {
-        state: "UNAVAILABLE",
-        reason: "403",
-      }),
-    (c) => {
-      c.target.value.selection = {
-        state: "UNAVAILABLE",
-        reason: "NO_QUEUE_ENTRY",
-      };
-    },
-  ]) {
-    const c = capture();
-    change(c);
-    const r = prove(c);
-    a.equal(r.freshness.state, "UNAVAILABLE");
-    a.equal(freshness(r, c).state, "UNAVAILABLE");
-  }
+test("reviewer permission uncertainty is scoped; queue selection uncertainty remains unavailable", () => {
+  const c = capture(); c.reviews.value[0].writePermission = U("403");
+  a.equal(prove(c).verdict, "NOT_PROVEN"); a.equal(freshness(prove(c), c).state, "CURRENT");
+  c.target.value.selection = U("NO_QUEUE_ENTRY");
+  a.equal(prove(c).freshness.state, "UNAVAILABLE"); a.equal(freshness(prove(c), c).state, "UNAVAILABLE");
 });

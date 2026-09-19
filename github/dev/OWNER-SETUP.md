@@ -98,7 +98,7 @@ Proof a required check or change any repository rule for this test.
 Subscribe to these event names (GitHub UI may display words with spaces):
 `pull_request`, `pull_request_review`, `check_run`, `check_suite`, `status`,
 `workflow_run`, `push`, `merge_group`, `repository_ruleset`,
-`branch_protection_rule`, `repository`. Ping needs no subscription.
+`branch_protection_rule`, `branch_protection_configuration`, `member`, `team`, `membership`, `organization`, `delete`, `repository`. Ping needs no subscription.
 
 Create the App. On its General page copy **App ID** (not Client ID) into `appId`.
 Generate/download one private key. Import the PEM into the same config without

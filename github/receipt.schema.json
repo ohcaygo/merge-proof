@@ -21,7 +21,7 @@
   "properties": {
     "schemaVersion": { "const": 2 },
     "receiptId": { "type": "string", "format": "uuid" },
-    "policy": { "const": "github-exact-state-v1" },
+    "policy": { "enum": ["github-exact-state-v1", "github-exact-state-v2", "github-exact-state-v3"] },
     "verdict": { "enum": ["VERIFIED", "NOT_PROVEN", "FAIL"] },
     "issuedAt": { "type": "string", "format": "date-time" },
     "fingerprint": { "type": "string", "pattern": "^[a-f0-9]{64}$" },

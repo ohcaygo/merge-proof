@@ -15,14 +15,7 @@ async function installationClient(
       Number.isSafeInteger(repositoryId) &&
       repositoryId > 0,
   );
-  assert(config.appId && config.privateKey, "APP_NOT_CONFIGURED");
-  const now = Math.floor(Date.now() / 1000);
-  const encode = (x) => Buffer.from(JSON.stringify(x)).toString("base64url");
-  const payload = `${encode({ alg: "RS256", typ: "JWT" })}.${encode({ iat: now - 60, exp: now + 540, iss: String(config.appId) })}`;
-  const signature = createSign("RSA-SHA256")
-    .update(payload)
-    .sign(config.privateKey, "base64url");
-  const client = new Client({ token: `${payload}.${signature}`, fetchImpl });
+  const client = appClient(config, fetchImpl);
   const value = await client.request(
     `/app/installations/${installationId}/access_tokens`,
     {
@@ -47,6 +40,16 @@ async function installationClient(
   );
   return new Client({ token: value.token, fetchImpl });
 }
+function appClient(config, fetchImpl) {
+  assert(config.appId && config.privateKey, "APP_NOT_CONFIGURED");
+  const now = Math.floor(Date.now() / 1000);
+  const encode = (x) => Buffer.from(JSON.stringify(x)).toString("base64url");
+  const payload = `${encode({ alg: "RS256", typ: "JWT" })}.${encode({ iat: now - 60, exp: now + 540, iss: String(config.appId) })}`;
+  const signature = createSign("RSA-SHA256")
+    .update(payload)
+    .sign(config.privateKey, "base64url");
+  return new Client({ token: `${payload}.${signature}`, fetchImpl });
+}
 function verifyWebhook(raw, signature, secret) {
   assert(
     typeof secret === "string" && secret.length >= 32,
@@ -60,4 +63,4 @@ function verifyWebhook(raw, signature, secret) {
     expected = createHmac("sha256", secret).update(raw).digest();
   assert(timingSafeEqual(actual, expected), "WEBHOOK_DENIED");
 }
-module.exports = { installationClient, verifyWebhook };
+module.exports = { installationClient, verifyWebhook, appClient };

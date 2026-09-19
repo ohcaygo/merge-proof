@@ -48,7 +48,7 @@ Verdicts
   VERIFIED    The checks merge-proof implements found the evidence they look for.
               It is not a proof of correctness.
   NOT_PROVEN  The merge may be fine, but the evidence does not establish it.
-  FAIL        merge-proof could not safely establish a result.
+  FAIL        a required condition is demonstrably unsatisfied.
 
 merge-proof runs entirely on local git state. It makes no network requests,
 no model or API calls, and collects no data.
@@ -162,7 +162,13 @@ function main(argv) {
 }
 
 if (require.main === module) {
-  process.exitCode = main(process.argv.slice(2));
+  const argv = process.argv.slice(2);
+  if (argv[0] === 'verify' || argv[0] === 'mcp') {
+    const cli = require('../github/verify-cli');
+    (argv[0] === 'mcp' ? cli.mcp() : cli.main(argv.slice(1))).then(code => { process.exitCode = code || 0; }).catch(e => {
+      console.error(JSON.stringify({ outcome: 'HOLD', proceed: false, verdict: 'NOT_PROVEN', reason: e.code || 'DECISION_UNAVAILABLE' })); process.exitCode = ['ACCESS_DENIED', 'GITHUB_TOKEN_REQUIRED'].includes(e.code) ? 4 : e.code === 'INVALID_ARGUMENT' ? 1 : 9;
+    });
+  } else process.exitCode = main(argv);
 }
 
 module.exports = { main, parseArgs, inferBase, exitCodeFor, EXIT, HELP };

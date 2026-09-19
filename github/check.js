@@ -31,12 +31,14 @@ function subjects(receipt) {
 
 function title(receipt, current, result) {
   if (result.enforced && result.conclusion === "success" && receipt.summary?.queueStage === "ADMISSION_ONLY")
-    return `${receipt.verdict} · PR evidence satisfied · queue group proof still required`;
+    return `${receipt.verdict} · queue proof pending · PR admission only`;
+  if (result.enforced && result.conclusion === "success" && receipt.verdict === "NOT_PROVEN")
+    return "NOT_PROVEN · policy requirements satisfied; evidence gaps remain";
   if (!result.enforced)
     return `${receipt.verdict} · ${current?.state || "UNAVAILABLE"} at observation · reporting only`;
   return result.conclusion === "success"
     ? `${receipt.verdict} · merge requirement satisfied`
-    : `${receipt.verdict} · policy reports failure · ${result.blocking.length} item(s) to resolve`;
+    : `${receipt.verdict} · merge blocked · ${result.blocking.length} item(s) to resolve`;
 }
 
 function summary(receipt, current, result, remediation = require("./remediation").build(receipt, current, result)) {
@@ -88,12 +90,13 @@ async function publish(client, receipt, current, origin, policyResult = null, on
   const result = policyResult || evaluate(receipt, current, null);
   const body = {
     name: NAME,
+    external_id: receipt.receiptId,
     status: "completed",
     conclusion: conclusionFor(receipt, current, result),
     details_url: `${url.origin}/proof/receipts/${receipt.receiptId}`,
     output: {
       title: title(receipt, current, result).slice(0, 255),
-      summary: (notice ? notice + "\n\n" : "") + summary(receipt, current, result, remediation),
+      summary: ((notice ? notice + "\n\n" : "") + summary(receipt, current, result, remediation)).slice(0, 59000) + `\n<!-- merge-proof ${JSON.stringify({ schema: "urn:merge-proof:check:1", receiptId: receipt.receiptId, verdict: receipt.verdict, subject: receipt.subject, currentness: current?.state || "UNAVAILABLE" })} -->`,
     },
   };
   const published = [];

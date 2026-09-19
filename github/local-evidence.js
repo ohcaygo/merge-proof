@@ -9,7 +9,7 @@ function analyzeMetadata(capture) {
   if (g.state !== "AVAILABLE")
     return {
       schemaVersion: 1,
-      verdict: "FAIL",
+      verdict: "NOT_PROVEN",
       refs: {},
       metrics: {},
       findings: [

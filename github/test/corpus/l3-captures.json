@@ -1,0 +1,4563 @@
+{
+  "description": "Synthetic recorded API projections derived from cited L2/L3 cases. No production records.",
+  "cases": [
+    {
+      "id": "clean",
+      "source": "L3 0.1 control",
+      "capture": {
+        "source": "github-rest",
+        "startedAt": "2026-09-10T12:00:00Z",
+        "observedAt": "2026-09-10T12:00:00Z",
+        "consistency": "STABLE_OBSERVATION",
+        "identity": {
+          "repository": "fixture/public",
+          "repositoryId": 1,
+          "visibility": "public",
+          "authorization": "PUBLIC_ANONYMOUS",
+          "pr": 1,
+          "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "headRef": "feature",
+          "headRepository": "fixture/public",
+          "headRepositoryId": 1,
+          "baseRef": "main",
+          "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "branchProtected": true,
+          "prState": "open",
+          "merged": false,
+          "mergeCommitSha": "cccccccccccccccccccccccccccccccccccccccc",
+          "authorId": 1,
+          "author": {
+            "id": 1,
+            "login": "author",
+            "type": "User"
+          },
+          "mergedBy": null,
+          "githubMergeable": true,
+          "githubMergeState": "clean"
+        },
+        "rules": {
+          "classic": {
+            "state": "AVAILABLE",
+            "value": {
+              "required_status_checks": {
+                "strict": true,
+                "checks": [
+                  {
+                    "context": "test",
+                    "app_id": 10
+                  }
+                ]
+              },
+              "required_pull_request_reviews": {
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews": true
+              }
+            }
+          },
+          "active": {
+            "state": "AVAILABLE",
+            "value": []
+          }
+        },
+        "git": {
+          "state": "AVAILABLE",
+          "value": {
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mergeBase": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "candidateFiles": [
+              "src/feature.js"
+            ],
+            "baseFiles": [],
+            "baseAdvanceCommits": 0,
+            "dates": {
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": "2026-09-10T12:00:00Z",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": "2026-09-10T12:00:00Z"
+            }
+          }
+        },
+        "target": {
+          "state": "AVAILABLE",
+          "value": {
+            "tree": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "kind": "HEAD_CONTAINS_CURRENT_BASE",
+            "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "remote": {
+          "state": "AVAILABLE",
+          "value": {
+            "repositoryId": 1,
+            "ref": "feature",
+            "expectedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "confirmed": true
+          }
+        },
+        "checks": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 10,
+              "name": "test",
+              "appId": 10,
+              "appSlug": "ci",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "startedAt": "2026-09-10T12:00:00Z",
+              "completedAt": "2026-09-10T12:00:00Z",
+              "suiteId": 50
+            }
+          ]
+        },
+        "statuses": {
+          "state": "AVAILABLE",
+          "value": []
+        },
+        "execution": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "runId": 20,
+              "workflowId": 30,
+              "workflowPath": ".github/workflows/ci.yml",
+              "workflowBlob": {
+                "state": "AVAILABLE",
+                "value": {
+                  "sha": "ffffffffffffffffffffffffffffffffffffffff",
+                  "path": ".github/workflows/ci.yml",
+                  "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "trust": "GITHUB_API"
+                }
+              },
+              "event": "pull_request",
+              "pullRequests": [
+                {
+                  "number": 1,
+                  "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "repositoryId": 1
+                }
+              ],
+              "headBranch": "feature",
+              "attempt": 1,
+              "runSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "actor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "triggeringActor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "jobId": 40,
+              "checkId": 10,
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "runStatus": "completed",
+              "runConclusion": "success",
+              "steps": [
+                {
+                  "number": 1,
+                  "status": "completed",
+                  "conclusion": "success",
+                  "startedAt": "2026-09-10T12:00:00Z",
+                  "completedAt": "2026-09-10T12:00:00Z"
+                }
+              ]
+            }
+          ]
+        },
+        "reviews": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 60,
+              "userId": 2,
+              "login": "reviewer",
+              "userType": "User",
+              "state": "APPROVED",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "submittedAt": "2026-09-10T12:00:00Z",
+              "writePermission": {
+                "state": "AVAILABLE",
+                "value": true
+              }
+            }
+          ]
+        },
+        "actors": {
+          "state": "AVAILABLE",
+          "value": {
+            "author": {
+              "id": 1,
+              "login": "author",
+              "type": "User"
+            },
+            "mergedBy": null,
+            "truncated": false,
+            "commits": [
+              {
+                "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "author": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "committer": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "verified": false,
+                "verificationReason": "unsigned"
+              }
+            ]
+          }
+        }
+      },
+      "expect": {
+        "verdict": "VERIFIED",
+        "gap": null,
+        "changed": [],
+        "landed": "LANDED_VERIFIED"
+      }
+    },
+    {
+      "id": "producer-collision",
+      "source": "L2 F1",
+      "capture": {
+        "source": "github-rest",
+        "startedAt": "2026-09-10T12:00:00Z",
+        "observedAt": "2026-09-10T12:00:00Z",
+        "consistency": "STABLE_OBSERVATION",
+        "identity": {
+          "repository": "fixture/public",
+          "repositoryId": 1,
+          "visibility": "public",
+          "authorization": "PUBLIC_ANONYMOUS",
+          "pr": 1,
+          "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "headRef": "feature",
+          "headRepository": "fixture/public",
+          "headRepositoryId": 1,
+          "baseRef": "main",
+          "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "branchProtected": true,
+          "prState": "open",
+          "merged": false,
+          "mergeCommitSha": "cccccccccccccccccccccccccccccccccccccccc",
+          "authorId": 1,
+          "author": {
+            "id": 1,
+            "login": "author",
+            "type": "User"
+          },
+          "mergedBy": null,
+          "githubMergeable": true,
+          "githubMergeState": "clean"
+        },
+        "rules": {
+          "classic": {
+            "state": "AVAILABLE",
+            "value": {
+              "required_status_checks": {
+                "strict": true,
+                "checks": [
+                  {
+                    "context": "test",
+                    "app_id": 10
+                  }
+                ]
+              },
+              "required_pull_request_reviews": {
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews": true
+              }
+            }
+          },
+          "active": {
+            "state": "AVAILABLE",
+            "value": []
+          }
+        },
+        "git": {
+          "state": "AVAILABLE",
+          "value": {
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mergeBase": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "candidateFiles": [
+              "src/feature.js"
+            ],
+            "baseFiles": [],
+            "baseAdvanceCommits": 0,
+            "dates": {
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": "2026-09-10T12:00:00Z",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": "2026-09-10T12:00:00Z"
+            }
+          }
+        },
+        "target": {
+          "state": "AVAILABLE",
+          "value": {
+            "tree": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "kind": "HEAD_CONTAINS_CURRENT_BASE",
+            "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "remote": {
+          "state": "AVAILABLE",
+          "value": {
+            "repositoryId": 1,
+            "ref": "feature",
+            "expectedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "confirmed": true
+          }
+        },
+        "checks": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 10,
+              "name": "test",
+              "appId": 10,
+              "appSlug": "ci",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "startedAt": "2026-09-10T12:00:00Z",
+              "completedAt": "2026-09-10T12:00:00Z",
+              "suiteId": 50
+            },
+            {
+              "id": 11,
+              "name": "test",
+              "appId": 10,
+              "appSlug": "ci",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "startedAt": "2026-09-10T12:00:00Z",
+              "completedAt": "2026-09-10T12:00:00Z",
+              "suiteId": 50
+            }
+          ]
+        },
+        "statuses": {
+          "state": "AVAILABLE",
+          "value": []
+        },
+        "execution": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "runId": 20,
+              "workflowId": 30,
+              "workflowPath": ".github/workflows/ci.yml",
+              "workflowBlob": {
+                "state": "AVAILABLE",
+                "value": {
+                  "sha": "ffffffffffffffffffffffffffffffffffffffff",
+                  "path": ".github/workflows/ci.yml",
+                  "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "trust": "GITHUB_API"
+                }
+              },
+              "event": "pull_request",
+              "pullRequests": [
+                {
+                  "number": 1,
+                  "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "repositoryId": 1
+                }
+              ],
+              "headBranch": "feature",
+              "attempt": 1,
+              "runSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "actor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "triggeringActor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "jobId": 40,
+              "checkId": 10,
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "runStatus": "completed",
+              "runConclusion": "success",
+              "steps": [
+                {
+                  "number": 1,
+                  "status": "completed",
+                  "conclusion": "success",
+                  "startedAt": "2026-09-10T12:00:00Z",
+                  "completedAt": "2026-09-10T12:00:00Z"
+                }
+              ]
+            },
+            {
+              "runId": 20,
+              "workflowId": 31,
+              "workflowPath": ".github/workflows/ci.yml",
+              "workflowBlob": {
+                "state": "AVAILABLE",
+                "value": {
+                  "sha": "ffffffffffffffffffffffffffffffffffffffff",
+                  "path": ".github/workflows/ci.yml",
+                  "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "trust": "GITHUB_API"
+                }
+              },
+              "event": "pull_request",
+              "pullRequests": [
+                {
+                  "number": 1,
+                  "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "repositoryId": 1
+                }
+              ],
+              "headBranch": "feature",
+              "attempt": 1,
+              "runSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "actor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "triggeringActor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "jobId": 40,
+              "checkId": 11,
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "runStatus": "completed",
+              "runConclusion": "success",
+              "steps": [
+                {
+                  "number": 1,
+                  "status": "completed",
+                  "conclusion": "success",
+                  "startedAt": "2026-09-10T12:00:00Z",
+                  "completedAt": "2026-09-10T12:00:00Z"
+                }
+              ]
+            }
+          ]
+        },
+        "reviews": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 60,
+              "userId": 2,
+              "login": "reviewer",
+              "userType": "User",
+              "state": "APPROVED",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "submittedAt": "2026-09-10T12:00:00Z",
+              "writePermission": {
+                "state": "AVAILABLE",
+                "value": true
+              }
+            }
+          ]
+        },
+        "actors": {
+          "state": "AVAILABLE",
+          "value": {
+            "author": {
+              "id": 1,
+              "login": "author",
+              "type": "User"
+            },
+            "mergedBy": null,
+            "truncated": false,
+            "commits": [
+              {
+                "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "author": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "committer": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "verified": false,
+                "verificationReason": "unsigned"
+              }
+            ]
+          }
+        }
+      },
+      "expect": {
+        "verdict": "NOT_PROVEN",
+        "gap": "EVIDENCE_PRODUCER_AMBIGUOUS",
+        "changed": [
+          "CI_EXECUTED"
+        ],
+        "landed": "LANDED_UNRESOLVED"
+      }
+    },
+    {
+      "id": "authority-edited",
+      "source": "L3 0.1",
+      "capture": {
+        "source": "github-rest",
+        "startedAt": "2026-09-10T12:00:00Z",
+        "observedAt": "2026-09-10T12:00:00Z",
+        "consistency": "STABLE_OBSERVATION",
+        "identity": {
+          "repository": "fixture/public",
+          "repositoryId": 1,
+          "visibility": "public",
+          "authorization": "PUBLIC_ANONYMOUS",
+          "pr": 1,
+          "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "headRef": "feature",
+          "headRepository": "fixture/public",
+          "headRepositoryId": 1,
+          "baseRef": "main",
+          "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "branchProtected": true,
+          "prState": "open",
+          "merged": false,
+          "mergeCommitSha": "cccccccccccccccccccccccccccccccccccccccc",
+          "authorId": 1,
+          "author": {
+            "id": 1,
+            "login": "author",
+            "type": "User"
+          },
+          "mergedBy": null,
+          "githubMergeable": true,
+          "githubMergeState": "clean"
+        },
+        "rules": {
+          "classic": {
+            "state": "AVAILABLE",
+            "value": {
+              "required_status_checks": {
+                "strict": true,
+                "checks": [
+                  {
+                    "context": "test",
+                    "app_id": 10
+                  }
+                ]
+              },
+              "required_pull_request_reviews": {
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews": true
+              }
+            }
+          },
+          "active": {
+            "state": "AVAILABLE",
+            "value": []
+          }
+        },
+        "git": {
+          "state": "AVAILABLE",
+          "value": {
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mergeBase": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "candidateFiles": [
+              "src/feature.js",
+              ".github/workflows/ci.yml"
+            ],
+            "baseFiles": [],
+            "baseAdvanceCommits": 0,
+            "dates": {
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": "2026-09-10T12:00:00Z",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": "2026-09-10T12:00:00Z"
+            }
+          }
+        },
+        "target": {
+          "state": "AVAILABLE",
+          "value": {
+            "tree": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "kind": "HEAD_CONTAINS_CURRENT_BASE",
+            "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "remote": {
+          "state": "AVAILABLE",
+          "value": {
+            "repositoryId": 1,
+            "ref": "feature",
+            "expectedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "confirmed": true
+          }
+        },
+        "checks": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 10,
+              "name": "test",
+              "appId": 10,
+              "appSlug": "ci",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "startedAt": "2026-09-10T12:00:00Z",
+              "completedAt": "2026-09-10T12:00:00Z",
+              "suiteId": 50
+            }
+          ]
+        },
+        "statuses": {
+          "state": "AVAILABLE",
+          "value": []
+        },
+        "execution": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "runId": 20,
+              "workflowId": 30,
+              "workflowPath": ".github/workflows/ci.yml",
+              "workflowBlob": {
+                "state": "AVAILABLE",
+                "value": {
+                  "sha": "ffffffffffffffffffffffffffffffffffffffff",
+                  "path": ".github/workflows/ci.yml",
+                  "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "trust": "GITHUB_API"
+                }
+              },
+              "event": "pull_request",
+              "pullRequests": [
+                {
+                  "number": 1,
+                  "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "repositoryId": 1
+                }
+              ],
+              "headBranch": "feature",
+              "attempt": 1,
+              "runSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "actor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "triggeringActor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "jobId": 40,
+              "checkId": 10,
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "runStatus": "completed",
+              "runConclusion": "success",
+              "steps": [
+                {
+                  "number": 1,
+                  "status": "completed",
+                  "conclusion": "success",
+                  "startedAt": "2026-09-10T12:00:00Z",
+                  "completedAt": "2026-09-10T12:00:00Z"
+                }
+              ]
+            }
+          ]
+        },
+        "reviews": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 60,
+              "userId": 2,
+              "login": "reviewer",
+              "userType": "User",
+              "state": "APPROVED",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "submittedAt": "2026-09-10T12:00:00Z",
+              "writePermission": {
+                "state": "AVAILABLE",
+                "value": true
+              }
+            }
+          ]
+        },
+        "actors": {
+          "state": "AVAILABLE",
+          "value": {
+            "author": {
+              "id": 1,
+              "login": "author",
+              "type": "User"
+            },
+            "mergedBy": null,
+            "truncated": false,
+            "commits": [
+              {
+                "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "author": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "committer": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "verified": false,
+                "verificationReason": "unsigned"
+              }
+            ]
+          }
+        }
+      },
+      "expect": {
+        "verdict": "NOT_PROVEN",
+        "gap": "EVIDENCE_AUTHORITY_CHANGED_BY_SUBJECT",
+        "changed": [
+          "TARGET",
+          "CI_EXECUTED"
+        ],
+        "landed": "LANDED_UNRESOLVED"
+      }
+    },
+    {
+      "id": "event-workflow_dispatch",
+      "source": "L2 F2",
+      "capture": {
+        "source": "github-rest",
+        "startedAt": "2026-09-10T12:00:00Z",
+        "observedAt": "2026-09-10T12:00:00Z",
+        "consistency": "STABLE_OBSERVATION",
+        "identity": {
+          "repository": "fixture/public",
+          "repositoryId": 1,
+          "visibility": "public",
+          "authorization": "PUBLIC_ANONYMOUS",
+          "pr": 1,
+          "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "headRef": "feature",
+          "headRepository": "fixture/public",
+          "headRepositoryId": 1,
+          "baseRef": "main",
+          "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "branchProtected": true,
+          "prState": "open",
+          "merged": false,
+          "mergeCommitSha": "cccccccccccccccccccccccccccccccccccccccc",
+          "authorId": 1,
+          "author": {
+            "id": 1,
+            "login": "author",
+            "type": "User"
+          },
+          "mergedBy": null,
+          "githubMergeable": true,
+          "githubMergeState": "clean"
+        },
+        "rules": {
+          "classic": {
+            "state": "AVAILABLE",
+            "value": {
+              "required_status_checks": {
+                "strict": true,
+                "checks": [
+                  {
+                    "context": "test",
+                    "app_id": 10
+                  }
+                ]
+              },
+              "required_pull_request_reviews": {
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews": true
+              }
+            }
+          },
+          "active": {
+            "state": "AVAILABLE",
+            "value": []
+          }
+        },
+        "git": {
+          "state": "AVAILABLE",
+          "value": {
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mergeBase": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "candidateFiles": [
+              "src/feature.js"
+            ],
+            "baseFiles": [],
+            "baseAdvanceCommits": 0,
+            "dates": {
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": "2026-09-10T12:00:00Z",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": "2026-09-10T12:00:00Z"
+            }
+          }
+        },
+        "target": {
+          "state": "AVAILABLE",
+          "value": {
+            "tree": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "kind": "HEAD_CONTAINS_CURRENT_BASE",
+            "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "remote": {
+          "state": "AVAILABLE",
+          "value": {
+            "repositoryId": 1,
+            "ref": "feature",
+            "expectedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "confirmed": true
+          }
+        },
+        "checks": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 10,
+              "name": "test",
+              "appId": 10,
+              "appSlug": "ci",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "startedAt": "2026-09-10T12:00:00Z",
+              "completedAt": "2026-09-10T12:00:00Z",
+              "suiteId": 50
+            }
+          ]
+        },
+        "statuses": {
+          "state": "AVAILABLE",
+          "value": []
+        },
+        "execution": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "runId": 20,
+              "workflowId": 30,
+              "workflowPath": ".github/workflows/ci.yml",
+              "workflowBlob": {
+                "state": "AVAILABLE",
+                "value": {
+                  "sha": "ffffffffffffffffffffffffffffffffffffffff",
+                  "path": ".github/workflows/ci.yml",
+                  "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "trust": "GITHUB_API"
+                }
+              },
+              "event": "workflow_dispatch",
+              "pullRequests": [
+                {
+                  "number": 1,
+                  "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "repositoryId": 1
+                }
+              ],
+              "headBranch": "feature",
+              "attempt": 1,
+              "runSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "actor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "triggeringActor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "jobId": 40,
+              "checkId": 10,
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "runStatus": "completed",
+              "runConclusion": "success",
+              "steps": [
+                {
+                  "number": 1,
+                  "status": "completed",
+                  "conclusion": "success",
+                  "startedAt": "2026-09-10T12:00:00Z",
+                  "completedAt": "2026-09-10T12:00:00Z"
+                }
+              ]
+            }
+          ]
+        },
+        "reviews": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 60,
+              "userId": 2,
+              "login": "reviewer",
+              "userType": "User",
+              "state": "APPROVED",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "submittedAt": "2026-09-10T12:00:00Z",
+              "writePermission": {
+                "state": "AVAILABLE",
+                "value": true
+              }
+            }
+          ]
+        },
+        "actors": {
+          "state": "AVAILABLE",
+          "value": {
+            "author": {
+              "id": 1,
+              "login": "author",
+              "type": "User"
+            },
+            "mergedBy": null,
+            "truncated": false,
+            "commits": [
+              {
+                "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "author": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "committer": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "verified": false,
+                "verificationReason": "unsigned"
+              }
+            ]
+          }
+        }
+      },
+      "expect": {
+        "verdict": "NOT_PROVEN",
+        "gap": "EXECUTION_EVENT_INELIGIBLE",
+        "changed": [
+          "CI_EXECUTED"
+        ],
+        "landed": "LANDED_UNRESOLVED"
+      }
+    },
+    {
+      "id": "event-schedule",
+      "source": "L2 F2",
+      "capture": {
+        "source": "github-rest",
+        "startedAt": "2026-09-10T12:00:00Z",
+        "observedAt": "2026-09-10T12:00:00Z",
+        "consistency": "STABLE_OBSERVATION",
+        "identity": {
+          "repository": "fixture/public",
+          "repositoryId": 1,
+          "visibility": "public",
+          "authorization": "PUBLIC_ANONYMOUS",
+          "pr": 1,
+          "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "headRef": "feature",
+          "headRepository": "fixture/public",
+          "headRepositoryId": 1,
+          "baseRef": "main",
+          "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "branchProtected": true,
+          "prState": "open",
+          "merged": false,
+          "mergeCommitSha": "cccccccccccccccccccccccccccccccccccccccc",
+          "authorId": 1,
+          "author": {
+            "id": 1,
+            "login": "author",
+            "type": "User"
+          },
+          "mergedBy": null,
+          "githubMergeable": true,
+          "githubMergeState": "clean"
+        },
+        "rules": {
+          "classic": {
+            "state": "AVAILABLE",
+            "value": {
+              "required_status_checks": {
+                "strict": true,
+                "checks": [
+                  {
+                    "context": "test",
+                    "app_id": 10
+                  }
+                ]
+              },
+              "required_pull_request_reviews": {
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews": true
+              }
+            }
+          },
+          "active": {
+            "state": "AVAILABLE",
+            "value": []
+          }
+        },
+        "git": {
+          "state": "AVAILABLE",
+          "value": {
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mergeBase": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "candidateFiles": [
+              "src/feature.js"
+            ],
+            "baseFiles": [],
+            "baseAdvanceCommits": 0,
+            "dates": {
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": "2026-09-10T12:00:00Z",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": "2026-09-10T12:00:00Z"
+            }
+          }
+        },
+        "target": {
+          "state": "AVAILABLE",
+          "value": {
+            "tree": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "kind": "HEAD_CONTAINS_CURRENT_BASE",
+            "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "remote": {
+          "state": "AVAILABLE",
+          "value": {
+            "repositoryId": 1,
+            "ref": "feature",
+            "expectedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "confirmed": true
+          }
+        },
+        "checks": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 10,
+              "name": "test",
+              "appId": 10,
+              "appSlug": "ci",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "startedAt": "2026-09-10T12:00:00Z",
+              "completedAt": "2026-09-10T12:00:00Z",
+              "suiteId": 50
+            }
+          ]
+        },
+        "statuses": {
+          "state": "AVAILABLE",
+          "value": []
+        },
+        "execution": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "runId": 20,
+              "workflowId": 30,
+              "workflowPath": ".github/workflows/ci.yml",
+              "workflowBlob": {
+                "state": "AVAILABLE",
+                "value": {
+                  "sha": "ffffffffffffffffffffffffffffffffffffffff",
+                  "path": ".github/workflows/ci.yml",
+                  "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "trust": "GITHUB_API"
+                }
+              },
+              "event": "schedule",
+              "pullRequests": [
+                {
+                  "number": 1,
+                  "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "repositoryId": 1
+                }
+              ],
+              "headBranch": "feature",
+              "attempt": 1,
+              "runSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "actor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "triggeringActor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "jobId": 40,
+              "checkId": 10,
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "runStatus": "completed",
+              "runConclusion": "success",
+              "steps": [
+                {
+                  "number": 1,
+                  "status": "completed",
+                  "conclusion": "success",
+                  "startedAt": "2026-09-10T12:00:00Z",
+                  "completedAt": "2026-09-10T12:00:00Z"
+                }
+              ]
+            }
+          ]
+        },
+        "reviews": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 60,
+              "userId": 2,
+              "login": "reviewer",
+              "userType": "User",
+              "state": "APPROVED",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "submittedAt": "2026-09-10T12:00:00Z",
+              "writePermission": {
+                "state": "AVAILABLE",
+                "value": true
+              }
+            }
+          ]
+        },
+        "actors": {
+          "state": "AVAILABLE",
+          "value": {
+            "author": {
+              "id": 1,
+              "login": "author",
+              "type": "User"
+            },
+            "mergedBy": null,
+            "truncated": false,
+            "commits": [
+              {
+                "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "author": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "committer": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "verified": false,
+                "verificationReason": "unsigned"
+              }
+            ]
+          }
+        }
+      },
+      "expect": {
+        "verdict": "NOT_PROVEN",
+        "gap": "EXECUTION_EVENT_INELIGIBLE",
+        "changed": [
+          "CI_EXECUTED"
+        ],
+        "landed": "LANDED_UNRESOLVED"
+      }
+    },
+    {
+      "id": "event-push",
+      "source": "L2 F2",
+      "capture": {
+        "source": "github-rest",
+        "startedAt": "2026-09-10T12:00:00Z",
+        "observedAt": "2026-09-10T12:00:00Z",
+        "consistency": "STABLE_OBSERVATION",
+        "identity": {
+          "repository": "fixture/public",
+          "repositoryId": 1,
+          "visibility": "public",
+          "authorization": "PUBLIC_ANONYMOUS",
+          "pr": 1,
+          "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "headRef": "feature",
+          "headRepository": "fixture/public",
+          "headRepositoryId": 1,
+          "baseRef": "main",
+          "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "branchProtected": true,
+          "prState": "open",
+          "merged": false,
+          "mergeCommitSha": "cccccccccccccccccccccccccccccccccccccccc",
+          "authorId": 1,
+          "author": {
+            "id": 1,
+            "login": "author",
+            "type": "User"
+          },
+          "mergedBy": null,
+          "githubMergeable": true,
+          "githubMergeState": "clean"
+        },
+        "rules": {
+          "classic": {
+            "state": "AVAILABLE",
+            "value": {
+              "required_status_checks": {
+                "strict": true,
+                "checks": [
+                  {
+                    "context": "test",
+                    "app_id": 10
+                  }
+                ]
+              },
+              "required_pull_request_reviews": {
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews": true
+              }
+            }
+          },
+          "active": {
+            "state": "AVAILABLE",
+            "value": []
+          }
+        },
+        "git": {
+          "state": "AVAILABLE",
+          "value": {
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mergeBase": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "candidateFiles": [
+              "src/feature.js"
+            ],
+            "baseFiles": [],
+            "baseAdvanceCommits": 0,
+            "dates": {
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": "2026-09-10T12:00:00Z",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": "2026-09-10T12:00:00Z"
+            }
+          }
+        },
+        "target": {
+          "state": "AVAILABLE",
+          "value": {
+            "tree": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "kind": "HEAD_CONTAINS_CURRENT_BASE",
+            "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "remote": {
+          "state": "AVAILABLE",
+          "value": {
+            "repositoryId": 1,
+            "ref": "feature",
+            "expectedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "confirmed": true
+          }
+        },
+        "checks": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 10,
+              "name": "test",
+              "appId": 10,
+              "appSlug": "ci",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "startedAt": "2026-09-10T12:00:00Z",
+              "completedAt": "2026-09-10T12:00:00Z",
+              "suiteId": 50
+            }
+          ]
+        },
+        "statuses": {
+          "state": "AVAILABLE",
+          "value": []
+        },
+        "execution": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "runId": 20,
+              "workflowId": 30,
+              "workflowPath": ".github/workflows/ci.yml",
+              "workflowBlob": {
+                "state": "AVAILABLE",
+                "value": {
+                  "sha": "ffffffffffffffffffffffffffffffffffffffff",
+                  "path": ".github/workflows/ci.yml",
+                  "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "trust": "GITHUB_API"
+                }
+              },
+              "event": "push",
+              "pullRequests": [
+                {
+                  "number": 1,
+                  "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "repositoryId": 1
+                }
+              ],
+              "headBranch": "feature",
+              "attempt": 1,
+              "runSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "actor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "triggeringActor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "jobId": 40,
+              "checkId": 10,
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "runStatus": "completed",
+              "runConclusion": "success",
+              "steps": [
+                {
+                  "number": 1,
+                  "status": "completed",
+                  "conclusion": "success",
+                  "startedAt": "2026-09-10T12:00:00Z",
+                  "completedAt": "2026-09-10T12:00:00Z"
+                }
+              ]
+            }
+          ]
+        },
+        "reviews": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 60,
+              "userId": 2,
+              "login": "reviewer",
+              "userType": "User",
+              "state": "APPROVED",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "submittedAt": "2026-09-10T12:00:00Z",
+              "writePermission": {
+                "state": "AVAILABLE",
+                "value": true
+              }
+            }
+          ]
+        },
+        "actors": {
+          "state": "AVAILABLE",
+          "value": {
+            "author": {
+              "id": 1,
+              "login": "author",
+              "type": "User"
+            },
+            "mergedBy": null,
+            "truncated": false,
+            "commits": [
+              {
+                "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "author": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "committer": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "verified": false,
+                "verificationReason": "unsigned"
+              }
+            ]
+          }
+        }
+      },
+      "expect": {
+        "verdict": "NOT_PROVEN",
+        "gap": "EXECUTION_EVENT_INELIGIBLE",
+        "changed": [
+          "CI_EXECUTED"
+        ],
+        "landed": "LANDED_UNRESOLVED"
+      }
+    },
+    {
+      "id": "event-pull_request_target",
+      "source": "L2 F2",
+      "capture": {
+        "source": "github-rest",
+        "startedAt": "2026-09-10T12:00:00Z",
+        "observedAt": "2026-09-10T12:00:00Z",
+        "consistency": "STABLE_OBSERVATION",
+        "identity": {
+          "repository": "fixture/public",
+          "repositoryId": 1,
+          "visibility": "public",
+          "authorization": "PUBLIC_ANONYMOUS",
+          "pr": 1,
+          "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "headRef": "feature",
+          "headRepository": "fixture/public",
+          "headRepositoryId": 1,
+          "baseRef": "main",
+          "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "branchProtected": true,
+          "prState": "open",
+          "merged": false,
+          "mergeCommitSha": "cccccccccccccccccccccccccccccccccccccccc",
+          "authorId": 1,
+          "author": {
+            "id": 1,
+            "login": "author",
+            "type": "User"
+          },
+          "mergedBy": null,
+          "githubMergeable": true,
+          "githubMergeState": "clean"
+        },
+        "rules": {
+          "classic": {
+            "state": "AVAILABLE",
+            "value": {
+              "required_status_checks": {
+                "strict": true,
+                "checks": [
+                  {
+                    "context": "test",
+                    "app_id": 10
+                  }
+                ]
+              },
+              "required_pull_request_reviews": {
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews": true
+              }
+            }
+          },
+          "active": {
+            "state": "AVAILABLE",
+            "value": []
+          }
+        },
+        "git": {
+          "state": "AVAILABLE",
+          "value": {
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mergeBase": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "candidateFiles": [
+              "src/feature.js"
+            ],
+            "baseFiles": [],
+            "baseAdvanceCommits": 0,
+            "dates": {
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": "2026-09-10T12:00:00Z",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": "2026-09-10T12:00:00Z"
+            }
+          }
+        },
+        "target": {
+          "state": "AVAILABLE",
+          "value": {
+            "tree": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "kind": "HEAD_CONTAINS_CURRENT_BASE",
+            "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "remote": {
+          "state": "AVAILABLE",
+          "value": {
+            "repositoryId": 1,
+            "ref": "feature",
+            "expectedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "confirmed": true
+          }
+        },
+        "checks": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 10,
+              "name": "test",
+              "appId": 10,
+              "appSlug": "ci",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "startedAt": "2026-09-10T12:00:00Z",
+              "completedAt": "2026-09-10T12:00:00Z",
+              "suiteId": 50
+            }
+          ]
+        },
+        "statuses": {
+          "state": "AVAILABLE",
+          "value": []
+        },
+        "execution": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "runId": 20,
+              "workflowId": 30,
+              "workflowPath": ".github/workflows/ci.yml",
+              "workflowBlob": {
+                "state": "AVAILABLE",
+                "value": {
+                  "sha": "ffffffffffffffffffffffffffffffffffffffff",
+                  "path": ".github/workflows/ci.yml",
+                  "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "trust": "GITHUB_API"
+                }
+              },
+              "event": "pull_request_target",
+              "pullRequests": [
+                {
+                  "number": 1,
+                  "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "repositoryId": 1
+                }
+              ],
+              "headBranch": "feature",
+              "attempt": 1,
+              "runSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "actor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "triggeringActor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "jobId": 40,
+              "checkId": 10,
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "runStatus": "completed",
+              "runConclusion": "success",
+              "steps": [
+                {
+                  "number": 1,
+                  "status": "completed",
+                  "conclusion": "success",
+                  "startedAt": "2026-09-10T12:00:00Z",
+                  "completedAt": "2026-09-10T12:00:00Z"
+                }
+              ]
+            }
+          ]
+        },
+        "reviews": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 60,
+              "userId": 2,
+              "login": "reviewer",
+              "userType": "User",
+              "state": "APPROVED",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "submittedAt": "2026-09-10T12:00:00Z",
+              "writePermission": {
+                "state": "AVAILABLE",
+                "value": true
+              }
+            }
+          ]
+        },
+        "actors": {
+          "state": "AVAILABLE",
+          "value": {
+            "author": {
+              "id": 1,
+              "login": "author",
+              "type": "User"
+            },
+            "mergedBy": null,
+            "truncated": false,
+            "commits": [
+              {
+                "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "author": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "committer": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "verified": false,
+                "verificationReason": "unsigned"
+              }
+            ]
+          }
+        }
+      },
+      "expect": {
+        "verdict": "NOT_PROVEN",
+        "gap": "EXECUTION_EVENT_INELIGIBLE",
+        "changed": [
+          "CI_EXECUTED"
+        ],
+        "landed": "LANDED_UNRESOLVED"
+      }
+    },
+    {
+      "id": "missing-run",
+      "source": "L3 invariant 2",
+      "capture": {
+        "source": "github-rest",
+        "startedAt": "2026-09-10T12:00:00Z",
+        "observedAt": "2026-09-10T12:00:00Z",
+        "consistency": "STABLE_OBSERVATION",
+        "identity": {
+          "repository": "fixture/public",
+          "repositoryId": 1,
+          "visibility": "public",
+          "authorization": "PUBLIC_ANONYMOUS",
+          "pr": 1,
+          "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "headRef": "feature",
+          "headRepository": "fixture/public",
+          "headRepositoryId": 1,
+          "baseRef": "main",
+          "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "branchProtected": true,
+          "prState": "open",
+          "merged": false,
+          "mergeCommitSha": "cccccccccccccccccccccccccccccccccccccccc",
+          "authorId": 1,
+          "author": {
+            "id": 1,
+            "login": "author",
+            "type": "User"
+          },
+          "mergedBy": null,
+          "githubMergeable": true,
+          "githubMergeState": "clean"
+        },
+        "rules": {
+          "classic": {
+            "state": "AVAILABLE",
+            "value": {
+              "required_status_checks": {
+                "strict": true,
+                "checks": [
+                  {
+                    "context": "test",
+                    "app_id": 10
+                  }
+                ]
+              },
+              "required_pull_request_reviews": {
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews": true
+              }
+            }
+          },
+          "active": {
+            "state": "AVAILABLE",
+            "value": []
+          }
+        },
+        "git": {
+          "state": "AVAILABLE",
+          "value": {
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mergeBase": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "candidateFiles": [
+              "src/feature.js"
+            ],
+            "baseFiles": [],
+            "baseAdvanceCommits": 0,
+            "dates": {
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": "2026-09-10T12:00:00Z",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": "2026-09-10T12:00:00Z"
+            }
+          }
+        },
+        "target": {
+          "state": "AVAILABLE",
+          "value": {
+            "tree": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "kind": "HEAD_CONTAINS_CURRENT_BASE",
+            "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "remote": {
+          "state": "AVAILABLE",
+          "value": {
+            "repositoryId": 1,
+            "ref": "feature",
+            "expectedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "confirmed": true
+          }
+        },
+        "checks": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 10,
+              "name": "test",
+              "appId": 10,
+              "appSlug": "ci",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "startedAt": "2026-09-10T12:00:00Z",
+              "completedAt": "2026-09-10T12:00:00Z",
+              "suiteId": 50
+            }
+          ]
+        },
+        "statuses": {
+          "state": "AVAILABLE",
+          "value": []
+        },
+        "execution": {
+          "state": "UNAVAILABLE",
+          "reason": "404"
+        },
+        "reviews": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 60,
+              "userId": 2,
+              "login": "reviewer",
+              "userType": "User",
+              "state": "APPROVED",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "submittedAt": "2026-09-10T12:00:00Z",
+              "writePermission": {
+                "state": "AVAILABLE",
+                "value": true
+              }
+            }
+          ]
+        },
+        "actors": {
+          "state": "AVAILABLE",
+          "value": {
+            "author": {
+              "id": 1,
+              "login": "author",
+              "type": "User"
+            },
+            "mergedBy": null,
+            "truncated": false,
+            "commits": [
+              {
+                "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "author": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "committer": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "verified": false,
+                "verificationReason": "unsigned"
+              }
+            ]
+          }
+        }
+      },
+      "expect": {
+        "verdict": "NOT_PROVEN",
+        "gap": "CURRENT_STATE_EXECUTION_NOT_PROVEN",
+        "changed": [
+          "CI_EXECUTED"
+        ],
+        "landed": "LANDED_UNRESOLVED"
+      }
+    },
+    {
+      "id": "wrong-pr",
+      "source": "L3 invariant 1",
+      "capture": {
+        "source": "github-rest",
+        "startedAt": "2026-09-10T12:00:00Z",
+        "observedAt": "2026-09-10T12:00:00Z",
+        "consistency": "STABLE_OBSERVATION",
+        "identity": {
+          "repository": "fixture/public",
+          "repositoryId": 1,
+          "visibility": "public",
+          "authorization": "PUBLIC_ANONYMOUS",
+          "pr": 1,
+          "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "headRef": "feature",
+          "headRepository": "fixture/public",
+          "headRepositoryId": 1,
+          "baseRef": "main",
+          "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "branchProtected": true,
+          "prState": "open",
+          "merged": false,
+          "mergeCommitSha": "cccccccccccccccccccccccccccccccccccccccc",
+          "authorId": 1,
+          "author": {
+            "id": 1,
+            "login": "author",
+            "type": "User"
+          },
+          "mergedBy": null,
+          "githubMergeable": true,
+          "githubMergeState": "clean"
+        },
+        "rules": {
+          "classic": {
+            "state": "AVAILABLE",
+            "value": {
+              "required_status_checks": {
+                "strict": true,
+                "checks": [
+                  {
+                    "context": "test",
+                    "app_id": 10
+                  }
+                ]
+              },
+              "required_pull_request_reviews": {
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews": true
+              }
+            }
+          },
+          "active": {
+            "state": "AVAILABLE",
+            "value": []
+          }
+        },
+        "git": {
+          "state": "AVAILABLE",
+          "value": {
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mergeBase": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "candidateFiles": [
+              "src/feature.js"
+            ],
+            "baseFiles": [],
+            "baseAdvanceCommits": 0,
+            "dates": {
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": "2026-09-10T12:00:00Z",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": "2026-09-10T12:00:00Z"
+            }
+          }
+        },
+        "target": {
+          "state": "AVAILABLE",
+          "value": {
+            "tree": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "kind": "HEAD_CONTAINS_CURRENT_BASE",
+            "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "remote": {
+          "state": "AVAILABLE",
+          "value": {
+            "repositoryId": 1,
+            "ref": "feature",
+            "expectedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "confirmed": true
+          }
+        },
+        "checks": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 10,
+              "name": "test",
+              "appId": 10,
+              "appSlug": "ci",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "startedAt": "2026-09-10T12:00:00Z",
+              "completedAt": "2026-09-10T12:00:00Z",
+              "suiteId": 50
+            }
+          ]
+        },
+        "statuses": {
+          "state": "AVAILABLE",
+          "value": []
+        },
+        "execution": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "runId": 20,
+              "workflowId": 30,
+              "workflowPath": ".github/workflows/ci.yml",
+              "workflowBlob": {
+                "state": "AVAILABLE",
+                "value": {
+                  "sha": "ffffffffffffffffffffffffffffffffffffffff",
+                  "path": ".github/workflows/ci.yml",
+                  "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "trust": "GITHUB_API"
+                }
+              },
+              "event": "pull_request",
+              "pullRequests": [
+                {
+                  "number": 2,
+                  "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "repositoryId": 1
+                }
+              ],
+              "headBranch": "feature",
+              "attempt": 1,
+              "runSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "actor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "triggeringActor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "jobId": 40,
+              "checkId": 10,
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "runStatus": "completed",
+              "runConclusion": "success",
+              "steps": [
+                {
+                  "number": 1,
+                  "status": "completed",
+                  "conclusion": "success",
+                  "startedAt": "2026-09-10T12:00:00Z",
+                  "completedAt": "2026-09-10T12:00:00Z"
+                }
+              ]
+            }
+          ]
+        },
+        "reviews": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 60,
+              "userId": 2,
+              "login": "reviewer",
+              "userType": "User",
+              "state": "APPROVED",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "submittedAt": "2026-09-10T12:00:00Z",
+              "writePermission": {
+                "state": "AVAILABLE",
+                "value": true
+              }
+            }
+          ]
+        },
+        "actors": {
+          "state": "AVAILABLE",
+          "value": {
+            "author": {
+              "id": 1,
+              "login": "author",
+              "type": "User"
+            },
+            "mergedBy": null,
+            "truncated": false,
+            "commits": [
+              {
+                "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "author": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "committer": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "verified": false,
+                "verificationReason": "unsigned"
+              }
+            ]
+          }
+        }
+      },
+      "expect": {
+        "verdict": "NOT_PROVEN",
+        "gap": "CURRENT_STATE_EXECUTION_NOT_PROVEN",
+        "changed": [
+          "CI_EXECUTED"
+        ],
+        "landed": "LANDED_UNRESOLVED"
+      }
+    },
+    {
+      "id": "review-old",
+      "source": "L3 authority scope",
+      "capture": {
+        "source": "github-rest",
+        "startedAt": "2026-09-10T12:00:00Z",
+        "observedAt": "2026-09-10T12:00:00Z",
+        "consistency": "STABLE_OBSERVATION",
+        "identity": {
+          "repository": "fixture/public",
+          "repositoryId": 1,
+          "visibility": "public",
+          "authorization": "PUBLIC_ANONYMOUS",
+          "pr": 1,
+          "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "headRef": "feature",
+          "headRepository": "fixture/public",
+          "headRepositoryId": 1,
+          "baseRef": "main",
+          "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "branchProtected": true,
+          "prState": "open",
+          "merged": false,
+          "mergeCommitSha": "cccccccccccccccccccccccccccccccccccccccc",
+          "authorId": 1,
+          "author": {
+            "id": 1,
+            "login": "author",
+            "type": "User"
+          },
+          "mergedBy": null,
+          "githubMergeable": true,
+          "githubMergeState": "clean"
+        },
+        "rules": {
+          "classic": {
+            "state": "AVAILABLE",
+            "value": {
+              "required_status_checks": {
+                "strict": true,
+                "checks": [
+                  {
+                    "context": "test",
+                    "app_id": 10
+                  }
+                ]
+              },
+              "required_pull_request_reviews": {
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews": true
+              }
+            }
+          },
+          "active": {
+            "state": "AVAILABLE",
+            "value": []
+          }
+        },
+        "git": {
+          "state": "AVAILABLE",
+          "value": {
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mergeBase": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "candidateFiles": [
+              "src/feature.js"
+            ],
+            "baseFiles": [],
+            "baseAdvanceCommits": 0,
+            "dates": {
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": "2026-09-10T12:00:00Z",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": "2026-09-10T12:00:00Z"
+            }
+          }
+        },
+        "target": {
+          "state": "AVAILABLE",
+          "value": {
+            "tree": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "kind": "HEAD_CONTAINS_CURRENT_BASE",
+            "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "remote": {
+          "state": "AVAILABLE",
+          "value": {
+            "repositoryId": 1,
+            "ref": "feature",
+            "expectedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "confirmed": true
+          }
+        },
+        "checks": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 10,
+              "name": "test",
+              "appId": 10,
+              "appSlug": "ci",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "startedAt": "2026-09-10T12:00:00Z",
+              "completedAt": "2026-09-10T12:00:00Z",
+              "suiteId": 50
+            }
+          ]
+        },
+        "statuses": {
+          "state": "AVAILABLE",
+          "value": []
+        },
+        "execution": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "runId": 20,
+              "workflowId": 30,
+              "workflowPath": ".github/workflows/ci.yml",
+              "workflowBlob": {
+                "state": "AVAILABLE",
+                "value": {
+                  "sha": "ffffffffffffffffffffffffffffffffffffffff",
+                  "path": ".github/workflows/ci.yml",
+                  "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "trust": "GITHUB_API"
+                }
+              },
+              "event": "pull_request",
+              "pullRequests": [
+                {
+                  "number": 1,
+                  "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "repositoryId": 1
+                }
+              ],
+              "headBranch": "feature",
+              "attempt": 1,
+              "runSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "actor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "triggeringActor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "jobId": 40,
+              "checkId": 10,
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "runStatus": "completed",
+              "runConclusion": "success",
+              "steps": [
+                {
+                  "number": 1,
+                  "status": "completed",
+                  "conclusion": "success",
+                  "startedAt": "2026-09-10T12:00:00Z",
+                  "completedAt": "2026-09-10T12:00:00Z"
+                }
+              ]
+            }
+          ]
+        },
+        "reviews": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 60,
+              "userId": 2,
+              "login": "reviewer",
+              "userType": "User",
+              "state": "APPROVED",
+              "sha": "dddddddddddddddddddddddddddddddddddddddd",
+              "submittedAt": "2026-09-10T12:00:00Z",
+              "writePermission": {
+                "state": "AVAILABLE",
+                "value": true
+              }
+            }
+          ]
+        },
+        "actors": {
+          "state": "AVAILABLE",
+          "value": {
+            "author": {
+              "id": 1,
+              "login": "author",
+              "type": "User"
+            },
+            "mergedBy": null,
+            "truncated": false,
+            "commits": [
+              {
+                "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "author": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "committer": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "verified": false,
+                "verificationReason": "unsigned"
+              }
+            ]
+          }
+        }
+      },
+      "expect": {
+        "verdict": "NOT_PROVEN",
+        "gap": "INSUFFICIENT_CURRENT_HUMAN_APPROVAL",
+        "changed": [
+          "APPROVAL_CURRENT"
+        ],
+        "landed": "LANDED_UNRESOLVED"
+      }
+    },
+    {
+      "id": "review-permission",
+      "source": "L2 F4",
+      "capture": {
+        "source": "github-rest",
+        "startedAt": "2026-09-10T12:00:00Z",
+        "observedAt": "2026-09-10T12:00:00Z",
+        "consistency": "STABLE_OBSERVATION",
+        "identity": {
+          "repository": "fixture/public",
+          "repositoryId": 1,
+          "visibility": "public",
+          "authorization": "PUBLIC_ANONYMOUS",
+          "pr": 1,
+          "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "headRef": "feature",
+          "headRepository": "fixture/public",
+          "headRepositoryId": 1,
+          "baseRef": "main",
+          "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "branchProtected": true,
+          "prState": "open",
+          "merged": false,
+          "mergeCommitSha": "cccccccccccccccccccccccccccccccccccccccc",
+          "authorId": 1,
+          "author": {
+            "id": 1,
+            "login": "author",
+            "type": "User"
+          },
+          "mergedBy": null,
+          "githubMergeable": true,
+          "githubMergeState": "clean"
+        },
+        "rules": {
+          "classic": {
+            "state": "AVAILABLE",
+            "value": {
+              "required_status_checks": {
+                "strict": true,
+                "checks": [
+                  {
+                    "context": "test",
+                    "app_id": 10
+                  }
+                ]
+              },
+              "required_pull_request_reviews": {
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews": true
+              }
+            }
+          },
+          "active": {
+            "state": "AVAILABLE",
+            "value": []
+          }
+        },
+        "git": {
+          "state": "AVAILABLE",
+          "value": {
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mergeBase": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "candidateFiles": [
+              "src/feature.js"
+            ],
+            "baseFiles": [],
+            "baseAdvanceCommits": 0,
+            "dates": {
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": "2026-09-10T12:00:00Z",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": "2026-09-10T12:00:00Z"
+            }
+          }
+        },
+        "target": {
+          "state": "AVAILABLE",
+          "value": {
+            "tree": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "kind": "HEAD_CONTAINS_CURRENT_BASE",
+            "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "remote": {
+          "state": "AVAILABLE",
+          "value": {
+            "repositoryId": 1,
+            "ref": "feature",
+            "expectedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "confirmed": true
+          }
+        },
+        "checks": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 10,
+              "name": "test",
+              "appId": 10,
+              "appSlug": "ci",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "startedAt": "2026-09-10T12:00:00Z",
+              "completedAt": "2026-09-10T12:00:00Z",
+              "suiteId": 50
+            }
+          ]
+        },
+        "statuses": {
+          "state": "AVAILABLE",
+          "value": []
+        },
+        "execution": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "runId": 20,
+              "workflowId": 30,
+              "workflowPath": ".github/workflows/ci.yml",
+              "workflowBlob": {
+                "state": "AVAILABLE",
+                "value": {
+                  "sha": "ffffffffffffffffffffffffffffffffffffffff",
+                  "path": ".github/workflows/ci.yml",
+                  "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "trust": "GITHUB_API"
+                }
+              },
+              "event": "pull_request",
+              "pullRequests": [
+                {
+                  "number": 1,
+                  "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "repositoryId": 1
+                }
+              ],
+              "headBranch": "feature",
+              "attempt": 1,
+              "runSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "actor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "triggeringActor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "jobId": 40,
+              "checkId": 10,
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "runStatus": "completed",
+              "runConclusion": "success",
+              "steps": [
+                {
+                  "number": 1,
+                  "status": "completed",
+                  "conclusion": "success",
+                  "startedAt": "2026-09-10T12:00:00Z",
+                  "completedAt": "2026-09-10T12:00:00Z"
+                }
+              ]
+            }
+          ]
+        },
+        "reviews": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 60,
+              "userId": 2,
+              "login": "reviewer",
+              "userType": "User",
+              "state": "APPROVED",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "submittedAt": "2026-09-10T12:00:00Z",
+              "writePermission": {
+                "state": "UNAVAILABLE",
+                "reason": "403"
+              }
+            }
+          ]
+        },
+        "actors": {
+          "state": "AVAILABLE",
+          "value": {
+            "author": {
+              "id": 1,
+              "login": "author",
+              "type": "User"
+            },
+            "mergedBy": null,
+            "truncated": false,
+            "commits": [
+              {
+                "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "author": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "committer": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "verified": false,
+                "verificationReason": "unsigned"
+              }
+            ]
+          }
+        }
+      },
+      "expect": {
+        "verdict": "NOT_PROVEN",
+        "gap": "INSUFFICIENT_CURRENT_HUMAN_APPROVAL",
+        "changed": [
+          "APPROVAL_CURRENT"
+        ],
+        "landed": "LANDED_UNRESOLVED"
+      }
+    },
+    {
+      "id": "review-nonwriter-change",
+      "source": "L2 F5",
+      "capture": {
+        "source": "github-rest",
+        "startedAt": "2026-09-10T12:00:00Z",
+        "observedAt": "2026-09-10T12:00:00Z",
+        "consistency": "STABLE_OBSERVATION",
+        "identity": {
+          "repository": "fixture/public",
+          "repositoryId": 1,
+          "visibility": "public",
+          "authorization": "PUBLIC_ANONYMOUS",
+          "pr": 1,
+          "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "headRef": "feature",
+          "headRepository": "fixture/public",
+          "headRepositoryId": 1,
+          "baseRef": "main",
+          "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "branchProtected": true,
+          "prState": "open",
+          "merged": false,
+          "mergeCommitSha": "cccccccccccccccccccccccccccccccccccccccc",
+          "authorId": 1,
+          "author": {
+            "id": 1,
+            "login": "author",
+            "type": "User"
+          },
+          "mergedBy": null,
+          "githubMergeable": true,
+          "githubMergeState": "clean"
+        },
+        "rules": {
+          "classic": {
+            "state": "AVAILABLE",
+            "value": {
+              "required_status_checks": {
+                "strict": true,
+                "checks": [
+                  {
+                    "context": "test",
+                    "app_id": 10
+                  }
+                ]
+              },
+              "required_pull_request_reviews": {
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews": true
+              }
+            }
+          },
+          "active": {
+            "state": "AVAILABLE",
+            "value": []
+          }
+        },
+        "git": {
+          "state": "AVAILABLE",
+          "value": {
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mergeBase": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "candidateFiles": [
+              "src/feature.js"
+            ],
+            "baseFiles": [],
+            "baseAdvanceCommits": 0,
+            "dates": {
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": "2026-09-10T12:00:00Z",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": "2026-09-10T12:00:00Z"
+            }
+          }
+        },
+        "target": {
+          "state": "AVAILABLE",
+          "value": {
+            "tree": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "kind": "HEAD_CONTAINS_CURRENT_BASE",
+            "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "remote": {
+          "state": "AVAILABLE",
+          "value": {
+            "repositoryId": 1,
+            "ref": "feature",
+            "expectedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "confirmed": true
+          }
+        },
+        "checks": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 10,
+              "name": "test",
+              "appId": 10,
+              "appSlug": "ci",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "startedAt": "2026-09-10T12:00:00Z",
+              "completedAt": "2026-09-10T12:00:00Z",
+              "suiteId": 50
+            }
+          ]
+        },
+        "statuses": {
+          "state": "AVAILABLE",
+          "value": []
+        },
+        "execution": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "runId": 20,
+              "workflowId": 30,
+              "workflowPath": ".github/workflows/ci.yml",
+              "workflowBlob": {
+                "state": "AVAILABLE",
+                "value": {
+                  "sha": "ffffffffffffffffffffffffffffffffffffffff",
+                  "path": ".github/workflows/ci.yml",
+                  "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "trust": "GITHUB_API"
+                }
+              },
+              "event": "pull_request",
+              "pullRequests": [
+                {
+                  "number": 1,
+                  "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "repositoryId": 1
+                }
+              ],
+              "headBranch": "feature",
+              "attempt": 1,
+              "runSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "actor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "triggeringActor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "jobId": 40,
+              "checkId": 10,
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "runStatus": "completed",
+              "runConclusion": "success",
+              "steps": [
+                {
+                  "number": 1,
+                  "status": "completed",
+                  "conclusion": "success",
+                  "startedAt": "2026-09-10T12:00:00Z",
+                  "completedAt": "2026-09-10T12:00:00Z"
+                }
+              ]
+            }
+          ]
+        },
+        "reviews": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 60,
+              "userId": 2,
+              "login": "reviewer",
+              "userType": "User",
+              "state": "APPROVED",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "submittedAt": "2026-09-10T12:00:00Z",
+              "writePermission": {
+                "state": "AVAILABLE",
+                "value": true
+              }
+            },
+            {
+              "id": 61,
+              "userId": 3,
+              "login": "reviewer",
+              "userType": "User",
+              "state": "CHANGES_REQUESTED",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "submittedAt": "2026-09-10T12:00:00Z",
+              "writePermission": {
+                "state": "AVAILABLE",
+                "value": false
+              }
+            }
+          ]
+        },
+        "actors": {
+          "state": "AVAILABLE",
+          "value": {
+            "author": {
+              "id": 1,
+              "login": "author",
+              "type": "User"
+            },
+            "mergedBy": null,
+            "truncated": false,
+            "commits": [
+              {
+                "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "author": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "committer": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "verified": false,
+                "verificationReason": "unsigned"
+              }
+            ]
+          }
+        }
+      },
+      "expect": {
+        "verdict": "VERIFIED",
+        "gap": null,
+        "changed": [
+          "APPROVAL_CURRENT"
+        ],
+        "landed": "LANDED_VERIFIED"
+      }
+    },
+    {
+      "id": "writer-change",
+      "source": "L3 authorization",
+      "capture": {
+        "source": "github-rest",
+        "startedAt": "2026-09-10T12:00:00Z",
+        "observedAt": "2026-09-10T12:00:00Z",
+        "consistency": "STABLE_OBSERVATION",
+        "identity": {
+          "repository": "fixture/public",
+          "repositoryId": 1,
+          "visibility": "public",
+          "authorization": "PUBLIC_ANONYMOUS",
+          "pr": 1,
+          "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "headRef": "feature",
+          "headRepository": "fixture/public",
+          "headRepositoryId": 1,
+          "baseRef": "main",
+          "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "branchProtected": true,
+          "prState": "open",
+          "merged": false,
+          "mergeCommitSha": "cccccccccccccccccccccccccccccccccccccccc",
+          "authorId": 1,
+          "author": {
+            "id": 1,
+            "login": "author",
+            "type": "User"
+          },
+          "mergedBy": null,
+          "githubMergeable": true,
+          "githubMergeState": "clean"
+        },
+        "rules": {
+          "classic": {
+            "state": "AVAILABLE",
+            "value": {
+              "required_status_checks": {
+                "strict": true,
+                "checks": [
+                  {
+                    "context": "test",
+                    "app_id": 10
+                  }
+                ]
+              },
+              "required_pull_request_reviews": {
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews": true
+              }
+            }
+          },
+          "active": {
+            "state": "AVAILABLE",
+            "value": []
+          }
+        },
+        "git": {
+          "state": "AVAILABLE",
+          "value": {
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mergeBase": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "candidateFiles": [
+              "src/feature.js"
+            ],
+            "baseFiles": [],
+            "baseAdvanceCommits": 0,
+            "dates": {
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": "2026-09-10T12:00:00Z",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": "2026-09-10T12:00:00Z"
+            }
+          }
+        },
+        "target": {
+          "state": "AVAILABLE",
+          "value": {
+            "tree": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "kind": "HEAD_CONTAINS_CURRENT_BASE",
+            "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "remote": {
+          "state": "AVAILABLE",
+          "value": {
+            "repositoryId": 1,
+            "ref": "feature",
+            "expectedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "confirmed": true
+          }
+        },
+        "checks": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 10,
+              "name": "test",
+              "appId": 10,
+              "appSlug": "ci",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "startedAt": "2026-09-10T12:00:00Z",
+              "completedAt": "2026-09-10T12:00:00Z",
+              "suiteId": 50
+            }
+          ]
+        },
+        "statuses": {
+          "state": "AVAILABLE",
+          "value": []
+        },
+        "execution": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "runId": 20,
+              "workflowId": 30,
+              "workflowPath": ".github/workflows/ci.yml",
+              "workflowBlob": {
+                "state": "AVAILABLE",
+                "value": {
+                  "sha": "ffffffffffffffffffffffffffffffffffffffff",
+                  "path": ".github/workflows/ci.yml",
+                  "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "trust": "GITHUB_API"
+                }
+              },
+              "event": "pull_request",
+              "pullRequests": [
+                {
+                  "number": 1,
+                  "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "repositoryId": 1
+                }
+              ],
+              "headBranch": "feature",
+              "attempt": 1,
+              "runSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "actor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "triggeringActor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "jobId": 40,
+              "checkId": 10,
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "runStatus": "completed",
+              "runConclusion": "success",
+              "steps": [
+                {
+                  "number": 1,
+                  "status": "completed",
+                  "conclusion": "success",
+                  "startedAt": "2026-09-10T12:00:00Z",
+                  "completedAt": "2026-09-10T12:00:00Z"
+                }
+              ]
+            }
+          ]
+        },
+        "reviews": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 60,
+              "userId": 2,
+              "login": "reviewer",
+              "userType": "User",
+              "state": "CHANGES_REQUESTED",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "submittedAt": "2026-09-10T12:00:00Z",
+              "writePermission": {
+                "state": "AVAILABLE",
+                "value": true
+              }
+            }
+          ]
+        },
+        "actors": {
+          "state": "AVAILABLE",
+          "value": {
+            "author": {
+              "id": 1,
+              "login": "author",
+              "type": "User"
+            },
+            "mergedBy": null,
+            "truncated": false,
+            "commits": [
+              {
+                "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "author": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "committer": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "verified": false,
+                "verificationReason": "unsigned"
+              }
+            ]
+          }
+        }
+      },
+      "expect": {
+        "verdict": "FAIL",
+        "gap": "CHANGES_REQUESTED_OBSERVED",
+        "changed": [
+          "APPROVAL_CURRENT"
+        ],
+        "landed": "LANDED_UNRESOLVED"
+      }
+    },
+    {
+      "id": "failed-required",
+      "source": "Ryan canonical FAIL",
+      "capture": {
+        "source": "github-rest",
+        "startedAt": "2026-09-10T12:00:00Z",
+        "observedAt": "2026-09-10T12:00:00Z",
+        "consistency": "STABLE_OBSERVATION",
+        "identity": {
+          "repository": "fixture/public",
+          "repositoryId": 1,
+          "visibility": "public",
+          "authorization": "PUBLIC_ANONYMOUS",
+          "pr": 1,
+          "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "headRef": "feature",
+          "headRepository": "fixture/public",
+          "headRepositoryId": 1,
+          "baseRef": "main",
+          "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "branchProtected": true,
+          "prState": "open",
+          "merged": false,
+          "mergeCommitSha": "cccccccccccccccccccccccccccccccccccccccc",
+          "authorId": 1,
+          "author": {
+            "id": 1,
+            "login": "author",
+            "type": "User"
+          },
+          "mergedBy": null,
+          "githubMergeable": true,
+          "githubMergeState": "clean"
+        },
+        "rules": {
+          "classic": {
+            "state": "AVAILABLE",
+            "value": {
+              "required_status_checks": {
+                "strict": true,
+                "checks": [
+                  {
+                    "context": "test",
+                    "app_id": 10
+                  }
+                ]
+              },
+              "required_pull_request_reviews": {
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews": true
+              }
+            }
+          },
+          "active": {
+            "state": "AVAILABLE",
+            "value": []
+          }
+        },
+        "git": {
+          "state": "AVAILABLE",
+          "value": {
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mergeBase": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "candidateFiles": [
+              "src/feature.js"
+            ],
+            "baseFiles": [],
+            "baseAdvanceCommits": 0,
+            "dates": {
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": "2026-09-10T12:00:00Z",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": "2026-09-10T12:00:00Z"
+            }
+          }
+        },
+        "target": {
+          "state": "AVAILABLE",
+          "value": {
+            "tree": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "kind": "HEAD_CONTAINS_CURRENT_BASE",
+            "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "remote": {
+          "state": "AVAILABLE",
+          "value": {
+            "repositoryId": 1,
+            "ref": "feature",
+            "expectedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "confirmed": true
+          }
+        },
+        "checks": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 10,
+              "name": "test",
+              "appId": 10,
+              "appSlug": "ci",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "failure",
+              "startedAt": "2026-09-10T12:00:00Z",
+              "completedAt": "2026-09-10T12:00:00Z",
+              "suiteId": 50
+            }
+          ]
+        },
+        "statuses": {
+          "state": "AVAILABLE",
+          "value": []
+        },
+        "execution": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "runId": 20,
+              "workflowId": 30,
+              "workflowPath": ".github/workflows/ci.yml",
+              "workflowBlob": {
+                "state": "AVAILABLE",
+                "value": {
+                  "sha": "ffffffffffffffffffffffffffffffffffffffff",
+                  "path": ".github/workflows/ci.yml",
+                  "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "trust": "GITHUB_API"
+                }
+              },
+              "event": "pull_request",
+              "pullRequests": [
+                {
+                  "number": 1,
+                  "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "repositoryId": 1
+                }
+              ],
+              "headBranch": "feature",
+              "attempt": 1,
+              "runSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "actor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "triggeringActor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "jobId": 40,
+              "checkId": 10,
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "runStatus": "completed",
+              "runConclusion": "success",
+              "steps": [
+                {
+                  "number": 1,
+                  "status": "completed",
+                  "conclusion": "success",
+                  "startedAt": "2026-09-10T12:00:00Z",
+                  "completedAt": "2026-09-10T12:00:00Z"
+                }
+              ]
+            }
+          ]
+        },
+        "reviews": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 60,
+              "userId": 2,
+              "login": "reviewer",
+              "userType": "User",
+              "state": "APPROVED",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "submittedAt": "2026-09-10T12:00:00Z",
+              "writePermission": {
+                "state": "AVAILABLE",
+                "value": true
+              }
+            }
+          ]
+        },
+        "actors": {
+          "state": "AVAILABLE",
+          "value": {
+            "author": {
+              "id": 1,
+              "login": "author",
+              "type": "User"
+            },
+            "mergedBy": null,
+            "truncated": false,
+            "commits": [
+              {
+                "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "author": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "committer": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "verified": false,
+                "verificationReason": "unsigned"
+              }
+            ]
+          }
+        }
+      },
+      "expect": {
+        "verdict": "FAIL",
+        "gap": "CURRENT_STATE_EXECUTION_NOT_PROVEN",
+        "changed": [
+          "CI_EXECUTED"
+        ],
+        "landed": "LANDED_UNRESOLVED"
+      }
+    },
+    {
+      "id": "rules-unavailable",
+      "source": "L3 unknown invariant",
+      "capture": {
+        "source": "github-rest",
+        "startedAt": "2026-09-10T12:00:00Z",
+        "observedAt": "2026-09-10T12:00:00Z",
+        "consistency": "STABLE_OBSERVATION",
+        "identity": {
+          "repository": "fixture/public",
+          "repositoryId": 1,
+          "visibility": "public",
+          "authorization": "PUBLIC_ANONYMOUS",
+          "pr": 1,
+          "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "headRef": "feature",
+          "headRepository": "fixture/public",
+          "headRepositoryId": 1,
+          "baseRef": "main",
+          "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "branchProtected": true,
+          "prState": "open",
+          "merged": false,
+          "mergeCommitSha": "cccccccccccccccccccccccccccccccccccccccc",
+          "authorId": 1,
+          "author": {
+            "id": 1,
+            "login": "author",
+            "type": "User"
+          },
+          "mergedBy": null,
+          "githubMergeable": true,
+          "githubMergeState": "clean"
+        },
+        "rules": {
+          "classic": {
+            "state": "AVAILABLE",
+            "value": {
+              "required_status_checks": {
+                "strict": true,
+                "checks": [
+                  {
+                    "context": "test",
+                    "app_id": 10
+                  }
+                ]
+              },
+              "required_pull_request_reviews": {
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews": true
+              }
+            }
+          },
+          "active": {
+            "state": "UNAVAILABLE",
+            "reason": "403"
+          }
+        },
+        "git": {
+          "state": "AVAILABLE",
+          "value": {
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mergeBase": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "candidateFiles": [
+              "src/feature.js"
+            ],
+            "baseFiles": [],
+            "baseAdvanceCommits": 0,
+            "dates": {
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": "2026-09-10T12:00:00Z",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": "2026-09-10T12:00:00Z"
+            }
+          }
+        },
+        "target": {
+          "state": "AVAILABLE",
+          "value": {
+            "tree": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "kind": "HEAD_CONTAINS_CURRENT_BASE",
+            "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "remote": {
+          "state": "AVAILABLE",
+          "value": {
+            "repositoryId": 1,
+            "ref": "feature",
+            "expectedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "confirmed": true
+          }
+        },
+        "checks": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 10,
+              "name": "test",
+              "appId": 10,
+              "appSlug": "ci",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "startedAt": "2026-09-10T12:00:00Z",
+              "completedAt": "2026-09-10T12:00:00Z",
+              "suiteId": 50
+            }
+          ]
+        },
+        "statuses": {
+          "state": "AVAILABLE",
+          "value": []
+        },
+        "execution": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "runId": 20,
+              "workflowId": 30,
+              "workflowPath": ".github/workflows/ci.yml",
+              "workflowBlob": {
+                "state": "AVAILABLE",
+                "value": {
+                  "sha": "ffffffffffffffffffffffffffffffffffffffff",
+                  "path": ".github/workflows/ci.yml",
+                  "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "trust": "GITHUB_API"
+                }
+              },
+              "event": "pull_request",
+              "pullRequests": [
+                {
+                  "number": 1,
+                  "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "repositoryId": 1
+                }
+              ],
+              "headBranch": "feature",
+              "attempt": 1,
+              "runSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "actor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "triggeringActor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "jobId": 40,
+              "checkId": 10,
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "runStatus": "completed",
+              "runConclusion": "success",
+              "steps": [
+                {
+                  "number": 1,
+                  "status": "completed",
+                  "conclusion": "success",
+                  "startedAt": "2026-09-10T12:00:00Z",
+                  "completedAt": "2026-09-10T12:00:00Z"
+                }
+              ]
+            }
+          ]
+        },
+        "reviews": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 60,
+              "userId": 2,
+              "login": "reviewer",
+              "userType": "User",
+              "state": "APPROVED",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "submittedAt": "2026-09-10T12:00:00Z",
+              "writePermission": {
+                "state": "AVAILABLE",
+                "value": true
+              }
+            }
+          ]
+        },
+        "actors": {
+          "state": "AVAILABLE",
+          "value": {
+            "author": {
+              "id": 1,
+              "login": "author",
+              "type": "User"
+            },
+            "mergedBy": null,
+            "truncated": false,
+            "commits": [
+              {
+                "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "author": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "committer": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "verified": false,
+                "verificationReason": "unsigned"
+              }
+            ]
+          }
+        }
+      },
+      "expect": {
+        "verdict": "NOT_PROVEN",
+        "gap": "RULES_UNAVAILABLE",
+        "changed": [
+          "CI_EXECUTED",
+          "APPROVAL_CURRENT",
+          "RULES_SNAPSHOT"
+        ],
+        "landed": "LANDED_UNRESOLVED"
+      }
+    },
+    {
+      "id": "push-time",
+      "source": "L2 F8",
+      "capture": {
+        "source": "github-rest",
+        "startedAt": "2026-09-10T12:00:00Z",
+        "observedAt": "2026-09-10T12:00:00Z",
+        "consistency": "STABLE_OBSERVATION",
+        "identity": {
+          "repository": "fixture/public",
+          "repositoryId": 1,
+          "visibility": "public",
+          "authorization": "PUBLIC_ANONYMOUS",
+          "pr": 1,
+          "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "headRef": "feature",
+          "headRepository": "fixture/public",
+          "headRepositoryId": 1,
+          "baseRef": "main",
+          "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "branchProtected": true,
+          "prState": "open",
+          "merged": false,
+          "mergeCommitSha": "cccccccccccccccccccccccccccccccccccccccc",
+          "authorId": 1,
+          "author": {
+            "id": 1,
+            "login": "author",
+            "type": "User"
+          },
+          "mergedBy": null,
+          "githubMergeable": true,
+          "githubMergeState": "clean"
+        },
+        "rules": {
+          "classic": {
+            "state": "AVAILABLE",
+            "value": {
+              "required_status_checks": {
+                "strict": true,
+                "checks": [
+                  {
+                    "context": "test",
+                    "app_id": 10
+                  }
+                ]
+              },
+              "required_pull_request_reviews": {
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews": true
+              }
+            }
+          },
+          "active": {
+            "state": "AVAILABLE",
+            "value": [
+              {
+                "type": "update"
+              }
+            ]
+          }
+        },
+        "git": {
+          "state": "AVAILABLE",
+          "value": {
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mergeBase": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "candidateFiles": [
+              "src/feature.js"
+            ],
+            "baseFiles": [],
+            "baseAdvanceCommits": 0,
+            "dates": {
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": "2026-09-10T12:00:00Z",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": "2026-09-10T12:00:00Z"
+            }
+          }
+        },
+        "target": {
+          "state": "AVAILABLE",
+          "value": {
+            "tree": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "kind": "HEAD_CONTAINS_CURRENT_BASE",
+            "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "remote": {
+          "state": "AVAILABLE",
+          "value": {
+            "repositoryId": 1,
+            "ref": "feature",
+            "expectedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "confirmed": true
+          }
+        },
+        "checks": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 10,
+              "name": "test",
+              "appId": 10,
+              "appSlug": "ci",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "startedAt": "2026-09-10T12:00:00Z",
+              "completedAt": "2026-09-10T12:00:00Z",
+              "suiteId": 50
+            }
+          ]
+        },
+        "statuses": {
+          "state": "AVAILABLE",
+          "value": []
+        },
+        "execution": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "runId": 20,
+              "workflowId": 30,
+              "workflowPath": ".github/workflows/ci.yml",
+              "workflowBlob": {
+                "state": "AVAILABLE",
+                "value": {
+                  "sha": "ffffffffffffffffffffffffffffffffffffffff",
+                  "path": ".github/workflows/ci.yml",
+                  "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "trust": "GITHUB_API"
+                }
+              },
+              "event": "pull_request",
+              "pullRequests": [
+                {
+                  "number": 1,
+                  "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "repositoryId": 1
+                }
+              ],
+              "headBranch": "feature",
+              "attempt": 1,
+              "runSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "actor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "triggeringActor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "jobId": 40,
+              "checkId": 10,
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "runStatus": "completed",
+              "runConclusion": "success",
+              "steps": [
+                {
+                  "number": 1,
+                  "status": "completed",
+                  "conclusion": "success",
+                  "startedAt": "2026-09-10T12:00:00Z",
+                  "completedAt": "2026-09-10T12:00:00Z"
+                }
+              ]
+            }
+          ]
+        },
+        "reviews": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 60,
+              "userId": 2,
+              "login": "reviewer",
+              "userType": "User",
+              "state": "APPROVED",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "submittedAt": "2026-09-10T12:00:00Z",
+              "writePermission": {
+                "state": "AVAILABLE",
+                "value": true
+              }
+            }
+          ]
+        },
+        "actors": {
+          "state": "AVAILABLE",
+          "value": {
+            "author": {
+              "id": 1,
+              "login": "author",
+              "type": "User"
+            },
+            "mergedBy": null,
+            "truncated": false,
+            "commits": [
+              {
+                "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "author": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "committer": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "verified": false,
+                "verificationReason": "unsigned"
+              }
+            ]
+          }
+        }
+      },
+      "expect": {
+        "verdict": "VERIFIED",
+        "gap": null,
+        "changed": [],
+        "landed": "LANDED_VERIFIED"
+      }
+    },
+    {
+      "id": "non-actions",
+      "source": "L3 unsupported producer",
+      "capture": {
+        "source": "github-rest",
+        "startedAt": "2026-09-10T12:00:00Z",
+        "observedAt": "2026-09-10T12:00:00Z",
+        "consistency": "STABLE_OBSERVATION",
+        "identity": {
+          "repository": "fixture/public",
+          "repositoryId": 1,
+          "visibility": "public",
+          "authorization": "PUBLIC_ANONYMOUS",
+          "pr": 1,
+          "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "headRef": "feature",
+          "headRepository": "fixture/public",
+          "headRepositoryId": 1,
+          "baseRef": "main",
+          "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "branchProtected": true,
+          "prState": "open",
+          "merged": false,
+          "mergeCommitSha": "cccccccccccccccccccccccccccccccccccccccc",
+          "authorId": 1,
+          "author": {
+            "id": 1,
+            "login": "author",
+            "type": "User"
+          },
+          "mergedBy": null,
+          "githubMergeable": true,
+          "githubMergeState": "clean"
+        },
+        "rules": {
+          "classic": {
+            "state": "AVAILABLE",
+            "value": {
+              "required_status_checks": {
+                "strict": true,
+                "checks": [
+                  {
+                    "context": "test",
+                    "app_id": 10
+                  }
+                ]
+              },
+              "required_pull_request_reviews": {
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews": true
+              }
+            }
+          },
+          "active": {
+            "state": "AVAILABLE",
+            "value": []
+          }
+        },
+        "git": {
+          "state": "AVAILABLE",
+          "value": {
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mergeBase": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "candidateFiles": [
+              "src/feature.js"
+            ],
+            "baseFiles": [],
+            "baseAdvanceCommits": 0,
+            "dates": {
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": "2026-09-10T12:00:00Z",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": "2026-09-10T12:00:00Z"
+            }
+          }
+        },
+        "target": {
+          "state": "AVAILABLE",
+          "value": {
+            "tree": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "kind": "HEAD_CONTAINS_CURRENT_BASE",
+            "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "remote": {
+          "state": "AVAILABLE",
+          "value": {
+            "repositoryId": 1,
+            "ref": "feature",
+            "expectedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "confirmed": true
+          }
+        },
+        "checks": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 10,
+              "name": "test",
+              "appId": 10,
+              "appSlug": "ci",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "startedAt": "2026-09-10T12:00:00Z",
+              "completedAt": "2026-09-10T12:00:00Z",
+              "suiteId": 50
+            }
+          ]
+        },
+        "statuses": {
+          "state": "AVAILABLE",
+          "value": []
+        },
+        "execution": {
+          "state": "AVAILABLE",
+          "value": []
+        },
+        "reviews": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 60,
+              "userId": 2,
+              "login": "reviewer",
+              "userType": "User",
+              "state": "APPROVED",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "submittedAt": "2026-09-10T12:00:00Z",
+              "writePermission": {
+                "state": "AVAILABLE",
+                "value": true
+              }
+            }
+          ]
+        },
+        "actors": {
+          "state": "AVAILABLE",
+          "value": {
+            "author": {
+              "id": 1,
+              "login": "author",
+              "type": "User"
+            },
+            "mergedBy": null,
+            "truncated": false,
+            "commits": [
+              {
+                "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "author": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "committer": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "verified": false,
+                "verificationReason": "unsigned"
+              }
+            ]
+          }
+        }
+      },
+      "expect": {
+        "verdict": "NOT_PROVEN",
+        "gap": "EVIDENCE_PRODUCER_UNAVAILABLE",
+        "changed": [
+          "CI_EXECUTED"
+        ],
+        "landed": "LANDED_UNRESOLVED"
+      }
+    },
+    {
+      "id": "codeowners",
+      "source": "L3 boundary",
+      "capture": {
+        "source": "github-rest",
+        "startedAt": "2026-09-10T12:00:00Z",
+        "observedAt": "2026-09-10T12:00:00Z",
+        "consistency": "STABLE_OBSERVATION",
+        "identity": {
+          "repository": "fixture/public",
+          "repositoryId": 1,
+          "visibility": "public",
+          "authorization": "PUBLIC_ANONYMOUS",
+          "pr": 1,
+          "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "headRef": "feature",
+          "headRepository": "fixture/public",
+          "headRepositoryId": 1,
+          "baseRef": "main",
+          "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "branchProtected": true,
+          "prState": "open",
+          "merged": false,
+          "mergeCommitSha": "cccccccccccccccccccccccccccccccccccccccc",
+          "authorId": 1,
+          "author": {
+            "id": 1,
+            "login": "author",
+            "type": "User"
+          },
+          "mergedBy": null,
+          "githubMergeable": true,
+          "githubMergeState": "clean"
+        },
+        "rules": {
+          "classic": {
+            "state": "AVAILABLE",
+            "value": {
+              "required_status_checks": {
+                "strict": true,
+                "checks": [
+                  {
+                    "context": "test",
+                    "app_id": 10
+                  }
+                ]
+              },
+              "required_pull_request_reviews": {
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews": true,
+                "require_code_owner_reviews": true
+              }
+            }
+          },
+          "active": {
+            "state": "AVAILABLE",
+            "value": []
+          }
+        },
+        "git": {
+          "state": "AVAILABLE",
+          "value": {
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mergeBase": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "candidateFiles": [
+              "src/feature.js"
+            ],
+            "baseFiles": [],
+            "baseAdvanceCommits": 0,
+            "dates": {
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": "2026-09-10T12:00:00Z",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": "2026-09-10T12:00:00Z"
+            }
+          }
+        },
+        "target": {
+          "state": "AVAILABLE",
+          "value": {
+            "tree": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "kind": "HEAD_CONTAINS_CURRENT_BASE",
+            "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "remote": {
+          "state": "AVAILABLE",
+          "value": {
+            "repositoryId": 1,
+            "ref": "feature",
+            "expectedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "confirmed": true
+          }
+        },
+        "checks": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 10,
+              "name": "test",
+              "appId": 10,
+              "appSlug": "ci",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "startedAt": "2026-09-10T12:00:00Z",
+              "completedAt": "2026-09-10T12:00:00Z",
+              "suiteId": 50
+            }
+          ]
+        },
+        "statuses": {
+          "state": "AVAILABLE",
+          "value": []
+        },
+        "execution": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "runId": 20,
+              "workflowId": 30,
+              "workflowPath": ".github/workflows/ci.yml",
+              "workflowBlob": {
+                "state": "AVAILABLE",
+                "value": {
+                  "sha": "ffffffffffffffffffffffffffffffffffffffff",
+                  "path": ".github/workflows/ci.yml",
+                  "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "trust": "GITHUB_API"
+                }
+              },
+              "event": "pull_request",
+              "pullRequests": [
+                {
+                  "number": 1,
+                  "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "repositoryId": 1
+                }
+              ],
+              "headBranch": "feature",
+              "attempt": 1,
+              "runSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "actor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "triggeringActor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "jobId": 40,
+              "checkId": 10,
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "runStatus": "completed",
+              "runConclusion": "success",
+              "steps": [
+                {
+                  "number": 1,
+                  "status": "completed",
+                  "conclusion": "success",
+                  "startedAt": "2026-09-10T12:00:00Z",
+                  "completedAt": "2026-09-10T12:00:00Z"
+                }
+              ]
+            }
+          ]
+        },
+        "reviews": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 60,
+              "userId": 2,
+              "login": "reviewer",
+              "userType": "User",
+              "state": "APPROVED",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "submittedAt": "2026-09-10T12:00:00Z",
+              "writePermission": {
+                "state": "AVAILABLE",
+                "value": true
+              }
+            }
+          ]
+        },
+        "actors": {
+          "state": "AVAILABLE",
+          "value": {
+            "author": {
+              "id": 1,
+              "login": "author",
+              "type": "User"
+            },
+            "mergedBy": null,
+            "truncated": false,
+            "commits": [
+              {
+                "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "author": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "committer": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "verified": false,
+                "verificationReason": "unsigned"
+              }
+            ]
+          }
+        }
+      },
+      "expect": {
+        "verdict": "NOT_PROVEN",
+        "gap": "CODE_OWNER_APPROVAL_UNAVAILABLE",
+        "changed": [
+          "APPROVAL_CURRENT",
+          "RULES_SNAPSHOT"
+        ],
+        "landed": "LANDED_UNRESOLVED"
+      }
+    },
+    {
+      "id": "merged-pr",
+      "source": "L3 live scope",
+      "capture": {
+        "source": "github-rest",
+        "startedAt": "2026-09-10T12:00:00Z",
+        "observedAt": "2026-09-10T12:00:00Z",
+        "consistency": "STABLE_OBSERVATION",
+        "identity": {
+          "repository": "fixture/public",
+          "repositoryId": 1,
+          "visibility": "public",
+          "authorization": "PUBLIC_ANONYMOUS",
+          "pr": 1,
+          "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "headRef": "feature",
+          "headRepository": "fixture/public",
+          "headRepositoryId": 1,
+          "baseRef": "main",
+          "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "branchProtected": true,
+          "prState": "closed",
+          "merged": true,
+          "mergeCommitSha": "cccccccccccccccccccccccccccccccccccccccc",
+          "authorId": 1,
+          "author": {
+            "id": 1,
+            "login": "author",
+            "type": "User"
+          },
+          "mergedBy": null,
+          "githubMergeable": true,
+          "githubMergeState": "clean"
+        },
+        "rules": {
+          "classic": {
+            "state": "AVAILABLE",
+            "value": {
+              "required_status_checks": {
+                "strict": true,
+                "checks": [
+                  {
+                    "context": "test",
+                    "app_id": 10
+                  }
+                ]
+              },
+              "required_pull_request_reviews": {
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews": true
+              }
+            }
+          },
+          "active": {
+            "state": "AVAILABLE",
+            "value": []
+          }
+        },
+        "git": {
+          "state": "AVAILABLE",
+          "value": {
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mergeBase": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "candidateFiles": [
+              "src/feature.js"
+            ],
+            "baseFiles": [],
+            "baseAdvanceCommits": 0,
+            "dates": {
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": "2026-09-10T12:00:00Z",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": "2026-09-10T12:00:00Z"
+            }
+          }
+        },
+        "target": {
+          "state": "AVAILABLE",
+          "value": {
+            "tree": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "kind": "HEAD_CONTAINS_CURRENT_BASE",
+            "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "remote": {
+          "state": "AVAILABLE",
+          "value": {
+            "repositoryId": 1,
+            "ref": "feature",
+            "expectedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "confirmed": true
+          }
+        },
+        "checks": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 10,
+              "name": "test",
+              "appId": 10,
+              "appSlug": "ci",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "startedAt": "2026-09-10T12:00:00Z",
+              "completedAt": "2026-09-10T12:00:00Z",
+              "suiteId": 50
+            }
+          ]
+        },
+        "statuses": {
+          "state": "AVAILABLE",
+          "value": []
+        },
+        "execution": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "runId": 20,
+              "workflowId": 30,
+              "workflowPath": ".github/workflows/ci.yml",
+              "workflowBlob": {
+                "state": "AVAILABLE",
+                "value": {
+                  "sha": "ffffffffffffffffffffffffffffffffffffffff",
+                  "path": ".github/workflows/ci.yml",
+                  "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "trust": "GITHUB_API"
+                }
+              },
+              "event": "pull_request",
+              "pullRequests": [
+                {
+                  "number": 1,
+                  "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "repositoryId": 1
+                }
+              ],
+              "headBranch": "feature",
+              "attempt": 1,
+              "runSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "actor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "triggeringActor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "jobId": 40,
+              "checkId": 10,
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "runStatus": "completed",
+              "runConclusion": "success",
+              "steps": [
+                {
+                  "number": 1,
+                  "status": "completed",
+                  "conclusion": "success",
+                  "startedAt": "2026-09-10T12:00:00Z",
+                  "completedAt": "2026-09-10T12:00:00Z"
+                }
+              ]
+            }
+          ]
+        },
+        "reviews": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 60,
+              "userId": 2,
+              "login": "reviewer",
+              "userType": "User",
+              "state": "APPROVED",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "submittedAt": "2026-09-10T12:00:00Z",
+              "writePermission": {
+                "state": "AVAILABLE",
+                "value": true
+              }
+            }
+          ]
+        },
+        "actors": {
+          "state": "AVAILABLE",
+          "value": {
+            "author": {
+              "id": 1,
+              "login": "author",
+              "type": "User"
+            },
+            "mergedBy": null,
+            "truncated": false,
+            "commits": [
+              {
+                "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "author": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "committer": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "verified": false,
+                "verificationReason": "unsigned"
+              }
+            ]
+          }
+        }
+      },
+      "expect": {
+        "verdict": "NOT_PROVEN",
+        "gap": "LIVE_PR_NOT_OPEN",
+        "changed": [
+          "TARGET"
+        ],
+        "landed": "LANDED_UNRESOLVED"
+      }
+    },
+    {
+      "id": "remote-moved",
+      "source": "L3 remote claim",
+      "capture": {
+        "source": "github-rest",
+        "startedAt": "2026-09-10T12:00:00Z",
+        "observedAt": "2026-09-10T12:00:00Z",
+        "consistency": "STABLE_OBSERVATION",
+        "identity": {
+          "repository": "fixture/public",
+          "repositoryId": 1,
+          "visibility": "public",
+          "authorization": "PUBLIC_ANONYMOUS",
+          "pr": 1,
+          "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "headRef": "feature",
+          "headRepository": "fixture/public",
+          "headRepositoryId": 1,
+          "baseRef": "main",
+          "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "branchProtected": true,
+          "prState": "open",
+          "merged": false,
+          "mergeCommitSha": "cccccccccccccccccccccccccccccccccccccccc",
+          "authorId": 1,
+          "author": {
+            "id": 1,
+            "login": "author",
+            "type": "User"
+          },
+          "mergedBy": null,
+          "githubMergeable": true,
+          "githubMergeState": "clean"
+        },
+        "rules": {
+          "classic": {
+            "state": "AVAILABLE",
+            "value": {
+              "required_status_checks": {
+                "strict": true,
+                "checks": [
+                  {
+                    "context": "test",
+                    "app_id": 10
+                  }
+                ]
+              },
+              "required_pull_request_reviews": {
+                "required_approving_review_count": 1,
+                "dismiss_stale_reviews": true
+              }
+            }
+          },
+          "active": {
+            "state": "AVAILABLE",
+            "value": []
+          }
+        },
+        "git": {
+          "state": "AVAILABLE",
+          "value": {
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mergeBase": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "candidateFiles": [
+              "src/feature.js"
+            ],
+            "baseFiles": [],
+            "baseAdvanceCommits": 0,
+            "dates": {
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": "2026-09-10T12:00:00Z",
+              "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": "2026-09-10T12:00:00Z"
+            }
+          }
+        },
+        "target": {
+          "state": "AVAILABLE",
+          "value": {
+            "tree": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "kind": "HEAD_CONTAINS_CURRENT_BASE",
+            "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "baseSha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        },
+        "remote": {
+          "state": "AVAILABLE",
+          "value": {
+            "repositoryId": 1,
+            "ref": "feature",
+            "expectedSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "observedSha": "dddddddddddddddddddddddddddddddddddddddd",
+            "confirmed": false
+          }
+        },
+        "checks": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 10,
+              "name": "test",
+              "appId": 10,
+              "appSlug": "ci",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "startedAt": "2026-09-10T12:00:00Z",
+              "completedAt": "2026-09-10T12:00:00Z",
+              "suiteId": 50
+            }
+          ]
+        },
+        "statuses": {
+          "state": "AVAILABLE",
+          "value": []
+        },
+        "execution": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "runId": 20,
+              "workflowId": 30,
+              "workflowPath": ".github/workflows/ci.yml",
+              "workflowBlob": {
+                "state": "AVAILABLE",
+                "value": {
+                  "sha": "ffffffffffffffffffffffffffffffffffffffff",
+                  "path": ".github/workflows/ci.yml",
+                  "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "trust": "GITHUB_API"
+                }
+              },
+              "event": "pull_request",
+              "pullRequests": [
+                {
+                  "number": 1,
+                  "headSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "repositoryId": 1
+                }
+              ],
+              "headBranch": "feature",
+              "attempt": 1,
+              "runSha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "actor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "triggeringActor": {
+                "id": 1,
+                "login": "author",
+                "type": "User"
+              },
+              "jobId": 40,
+              "checkId": 10,
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "status": "completed",
+              "conclusion": "success",
+              "runStatus": "completed",
+              "runConclusion": "success",
+              "steps": [
+                {
+                  "number": 1,
+                  "status": "completed",
+                  "conclusion": "success",
+                  "startedAt": "2026-09-10T12:00:00Z",
+                  "completedAt": "2026-09-10T12:00:00Z"
+                }
+              ]
+            }
+          ]
+        },
+        "reviews": {
+          "state": "AVAILABLE",
+          "value": [
+            {
+              "id": 60,
+              "userId": 2,
+              "login": "reviewer",
+              "userType": "User",
+              "state": "APPROVED",
+              "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "submittedAt": "2026-09-10T12:00:00Z",
+              "writePermission": {
+                "state": "AVAILABLE",
+                "value": true
+              }
+            }
+          ]
+        },
+        "actors": {
+          "state": "AVAILABLE",
+          "value": {
+            "author": {
+              "id": 1,
+              "login": "author",
+              "type": "User"
+            },
+            "mergedBy": null,
+            "truncated": false,
+            "commits": [
+              {
+                "sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "author": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "committer": {
+                  "id": 1,
+                  "login": "author",
+                  "type": "User"
+                },
+                "verified": false,
+                "verificationReason": "unsigned"
+              }
+            ]
+          }
+        }
+      },
+      "expect": {
+        "verdict": "NOT_PROVEN",
+        "gap": "REMOTE_CANDIDATE_NOT_CONFIRMED",
+        "changed": [
+          "REMOTE_DURABLE"
+        ],
+        "landed": "LANDED_UNRESOLVED"
+      }
+    }
+  ]
+}

@@ -76,7 +76,8 @@ function analyze(options) {
   const result = {
     schemaVersion: SCHEMA_VERSION,
     tool: { name: 'merge-proof', version },
-    verdict: VERDICT.FAIL,
+    verdict: VERDICT.NOT_PROVEN,
+    collectionComplete: false,
     repository: { path: repoPath, shallow: false },
     refs: {},
     metrics: {},
@@ -249,6 +250,7 @@ function analyze(options) {
     });
   }
 
+  result.collectionComplete = true;
   result.verdict = result.findings.length > 0 ? VERDICT.NOT_PROVEN : VERDICT.VERIFIED;
   return result;
 }

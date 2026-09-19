@@ -6,7 +6,7 @@
 const VERDICT_LINE = {
   VERIFIED: 'VERIFIED  - the checks merge-proof implements found the evidence they look for',
   NOT_PROVEN: 'NOT_PROVEN - this merge may be fine, but the available evidence does not prove it',
-  FAIL: 'FAIL      - merge-proof could not establish a result',
+  FAIL: 'FAIL      - a required condition is demonstrably unsatisfied',
 };
 
 function wrap(text, width, indent) {

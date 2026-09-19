@@ -56,6 +56,7 @@ function capture() {
       dates: { [H]: T, [B]: T },
     }),
     target: A({
+      tree: "e".repeat(40),
       kind: "HEAD_CONTAINS_CURRENT_BASE",
       sha: H,
       headSha: H,
@@ -87,6 +88,11 @@ function capture() {
       {
         runId: 20,
         workflowId: 30,
+        workflowPath: ".github/workflows/ci.yml",
+        workflowBlob: A({ sha: "f".repeat(40), path: ".github/workflows/ci.yml", commit: H, trust: "GITHUB_API" }),
+        event: "pull_request",
+        pullRequests: [{ number: 1, headSha: H, repositoryId: 1 }],
+        headBranch: "feature",
         attempt: 1,
         runSha: H,
         actor: { id: 1, login: "author", type: "User" },
@@ -200,7 +206,7 @@ function fixtureFetch({
       v = {
         sha: p.split("/").pop(),
         parents: [{ sha: base }, { sha: head }],
-        commit: { committer: { date: T }, message: "DO NOT STORE" },
+        commit: { tree: { sha: "e".repeat(40) }, committer: { date: T }, message: "DO NOT STORE" },
       };
     else if (p.endsWith("/git/ref/heads/feature"))
       v = { object: { sha: head } };
@@ -226,6 +232,7 @@ function fixtureFetch({
         ],
       };
     else if (p.endsWith("/statuses")) v = [];
+    else if (p.includes("/contents/.github/workflows/")) v = { type: "file", path: p.split("/contents/")[1], sha: "f".repeat(40) };
     else if (p.endsWith("/actions/runs"))
       v = {
         total_count: 1,
@@ -233,6 +240,10 @@ function fixtureFetch({
           {
             id: 20,
             workflow_id: 30,
+            path: ".github/workflows/ci.yml",
+            event: "pull_request",
+            pull_requests: [{ number: 1, head: { sha: head }, base: { repo: { id: 1 } } }],
+            head_branch: "feature",
             run_attempt: 1,
             head_sha: head,
             status: "completed",

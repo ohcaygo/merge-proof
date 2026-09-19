@@ -78,6 +78,31 @@ async function handle(service, req, res, url) {
         send(200, { received: true });
         return true;
       }
+      if (url.pathname === "/proof/v1/decision") {
+        assert(!req.headers.origin || req.headers.origin === service.config.origin, "ORIGIN_DENIED");
+        assert(req.headers["content-type"]?.startsWith("application/json"), "INVALID_CONTENT_TYPE");
+        const token = req.headers.authorization?.match(/^Bearer ([^\s]+)$/)?.[1];
+        assert(token, "ACCESS_DENIED");
+        const input = JSON.parse(raw);
+        const client = service.clientFactory({ token });
+        const repo = await client.authorize(input.repository, input.repositoryId);
+        assert(repo.permissions?.push === true || repo.permissions?.admin === true, "ACCESS_DENIED");
+        const sub = service.data.subscriptions[`${input.repositoryId}:${input.pr}`];
+        if (service.meter) {
+          assert(sub?.installationId && customers, "AUTHORIZED_INSTALLATION_REQUIRED");
+          const installations = await customers.installations({ token });
+          assert(installations.some(i => i.id === sub.installationId), "ACCESS_DENIED");
+          const repositories = await customers.list({ token }, `/user/installations/${sub.installationId}/repositories`, "repositories");
+          assert(repositories.some(r => r.id === input.repositoryId && r.full_name?.toLowerCase() === input.repository.toLowerCase()), "ACCESS_DENIED");
+        }
+        let out;
+        const saved = service.data.receipts[sub?.latestReceiptId];
+        if (saved && ["github-exact-state-v2", "github-exact-state-v3"].includes(saved.receipt.policy))
+          out = await service.read(saved.receipt.receiptId, token, { refresh: true });
+        if (!out || out.current.state !== "CURRENT") out = await service.run(input.repository, input.pr, { client, installationId: sub?.installationId, mergeGroup: sub?.mergeGroup });
+        send(200, require("./decision").decide(out.receipt, out.current, input, service.config.origin));
+        return true;
+      }
       // Browser writes require same origin; non-browser bearer calls have no ambient cookies.
       assert(
         customers
@@ -92,6 +117,19 @@ async function handle(service, req, res, url) {
     }
     let token =
       req.headers.authorization?.match(/^Bearer ([^\s]+)$/)?.[1] || null;
+    if (req.method === "GET" && url.pathname === "/proof/v1/receipts") {
+      assert(token, "ACCESS_DENIED");
+      const repositoryId = Number(url.searchParams.get("repository_id")), commit = url.searchParams.get("commit");
+      assert(Number.isSafeInteger(repositoryId) && require("./common").sha(commit), "INVALID_SCOPE");
+      const records = require("./ledger").area(service.store).records.filter(r => r.repositoryId === repositoryId && r.mergeCommitSha === commit);
+      const pushes = Object.values(service.data.pushObservations).filter(p => p.repositoryId === repositoryId && p.commits.some(c => c.sha === commit));
+      assert(records.length || pushes.length, "NOT_FOUND");
+      await service.clientFactory({ token }).authorize((records[0] || pushes[0]).repository, repositoryId);
+      if (service.meter) for (const r of [...records, ...pushes]) service.meter.account(r.installationId);
+      send(200, { records: records.map(r => ({ receipt: r.proof?.receiptSnapshot || null, landed: service.data.landings[r.recordId] || { state: "LANDED_UNRESOLVED" } })),
+        pushObservations: pushes.map(p => ({ observedAt: p.observedAt, ref: p.ref, commit: p.commits.find(c => c.sha === commit) })) });
+      return true;
+    }
     let session;
     if (customers) {
       session = customers.session(req);
@@ -389,6 +427,13 @@ async function handle(service, req, res, url) {
         publish: input.publish === true,
       });
       send(201, { ...out, url: `/proof/receipts/${out.receipt.receiptId}` });
+      return true;
+    }
+    const bundleMatch = url.pathname.match(/^\/proof\/receipts\/([a-f0-9-]{36})\/bundle$/);
+    if (bundleMatch && req.method === "GET") {
+      const row = await service.access(bundleMatch[1], token);
+      assert(row.artifacts, "HISTORICAL_BUNDLE_UNAVAILABLE");
+      send(200, { ...row.artifacts, receipt: row.receipt });
       return true;
     }
     const match = url.pathname.match(

@@ -117,7 +117,7 @@ function evaluate(receipt, current, stored) {
     blocking.push("PROTECTED_BOUNDARY_APPROVAL_REQUIRED");
 
   if (receipt.verdict === "FAIL" && policy.enforced)
-    blocking.push("PROOF_COULD_NOT_COMPLETE");
+    blocking.push("REQUIRED_CONDITION_FAILED");
   if (currentState !== "CURRENT" && policy.enforced)
     blocking.push(
       currentState === "STALE" ? "RECEIPT_STALE" : "CURRENTNESS_UNAVAILABLE",

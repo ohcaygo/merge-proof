@@ -36,7 +36,7 @@ test('unresolvable records and recorded FAIL are visible without inventing verdi
   ] });
   assert.deepStrictEqual(model.counts, { VERIFIED: 1, NOT_PROVEN: 0, FAIL: 1, unresolvable: 1 });
   const html = renderHtml(model, options);
-  for (const value of ['UNRESOLVABLE', 'pr-head-unavailable', 'MISSING_REF', 'could not safely establish', 'Resolve missing history']) assert.ok(html.includes(value), value);
+  for (const value of ['UNRESOLVABLE', 'pr-head-unavailable', 'MISSING_REF', 'older records may use it for collection failure', 'Resolve the recorded failures or missing collection prerequisites']) assert.ok(html.includes(value), value);
 });
 
 test('full collector dataset retains distinct landed commits for a repeated PR number', () => {
@@ -105,7 +105,7 @@ test('CLI rejects malformed JSON, missing scope, unknown flags and input/output 
 });
 
 test('real analyzer CLI JSON flows to a report for all three verdicts', () => {
-  for (const [repo, expected] of [[h.cleanScenario(), 'VERIFIED'], [h.driftScenario(), 'NOT_PROVEN'], [dir, 'FAIL']]) {
+  for (const [repo, expected] of [[h.cleanScenario(), 'VERIFIED'], [h.driftScenario(), 'NOT_PROVEN'], [dir, 'NOT_PROVEN']]) {
     const collected = h.cli(repo, ['--base', 'main', '--head', 'feature', '--json']);
     assert.strictEqual(collected.status, 0, collected.stderr);
     const data = JSON.parse(collected.stdout);
@@ -118,7 +118,7 @@ test('real analyzer CLI JSON flows to a report for all three verdicts', () => {
     const html = fs.readFileSync(`${prefix}.html`, 'utf8');
     assert.ok(html.includes(`<strong>1</strong><span>${expected}</span>`));
     if (expected === 'VERIFIED') assert.ok(html.includes('Do nothing on the basis of these checks alone'));
-    if (expected === 'FAIL') assert.ok(html.includes('NOT_A_GIT_REPOSITORY'));
+    if (repo === dir) assert.ok(html.includes('NOT_A_GIT_REPOSITORY'));
   }
 });
 

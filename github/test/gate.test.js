@@ -62,6 +62,7 @@ function harness(t, config = {}) {
 }
 function hook(event = "pull_request", extra = {}) {
   const p = {
+    ref: "refs/heads/feature",
     repository: { id: 1, full_name: "fixture/public" },
     installation: { id: 2 },
     pull_request: { number: 1, state: "open" },
@@ -114,7 +115,7 @@ test("an enforcing policy never reports a conclusion GitHub treats as a pass", (
   a.equal(advisory.satisfied, null);
   a.equal(advisory.blocking.length, 0);
   a.equal(advisory.reported.length > 0, true);
-  a.equal(notProven.verdict, "NOT_PROVEN");
+  a.equal(notProven.verdict, "FAIL");
   a.match(advisory.mergeConsequence, /does not block/);
   a.match(blocked.mergeConsequence, /blocks the merge/);
 });
@@ -123,12 +124,12 @@ test("a proof that could not complete blocks an enforcing gate and never passes"
   const c = capture();
   c.git = { state: "UNAVAILABLE", reason: "GITHUB_HTTP_403" };
   const receipt = prove(c);
-  a.equal(receipt.verdict, "FAIL");
+  a.equal(receipt.verdict, "NOT_PROVEN");
   const result = policy.evaluate(receipt, { state: "CURRENT" }, {
     preset: "REPOSITORY_REQUIREMENTS",
   });
   a.equal(result.conclusion, "failure");
-  a.ok(result.blocking.includes("PROOF_COULD_NOT_COMPLETE"));
+  a.ok(result.blocking.includes("GIT_HISTORY_UNAVAILABLE"));
 });
 
 test("an unrecognised gap blocks by default rather than becoming advisory", () => {
@@ -175,7 +176,7 @@ test("a superseded published check is retracted with a blocking conclusion", asy
   await h.service.drain();
   const patch = h.writes.find((w) => w.kind === "PATCH");
   a.equal(patch.o.body.conclusion, "failure");
-  a.match(patch.o.body.output.title, /STALE/);
+  a.match(patch.o.body.output.title, /Evidence refresh pending/);
 });
 
 // ---------------------------------------------------------------------- 4
@@ -206,6 +207,7 @@ test("a merge group is reported on the group commit as well as the pull request 
     state: "AVAILABLE",
     value: {
       kind: "MERGE_GROUP",
+      tree: "e".repeat(40),
       sha: "e".repeat(40),
       headSha: H,
       baseSha: "b".repeat(40),
@@ -476,9 +478,9 @@ test("the published check body carries the plain explanation and the consequence
     result,
   );
   a.equal(call[1].body.conclusion, "failure");
-  a.match(call[1].body.output.title, /policy reports failure/);
-  a.match(call[1].body.output.summary, /NOT PROVEN/);
-  a.match(call[1].body.output.summary, /Action:/);
+  a.match(call[1].body.output.title, /merge blocked/);
+  a.match(call[1].body.output.summary, /FAIL/);
+  a.match(call[1].body.output.summary, /What to do:/);
   a.ok(call[1].body.output.summary.length <= 60000);
   a.ok(call[1].body.output.title.length <= 255);
 });
@@ -588,7 +590,7 @@ test("a completed merge is preserved immutably with what was known at the time",
   a.equal(row.proof.gate.conclusion, "success");
   a.deepEqual(row.proof.requiredChecks, [{ name: "test", appId: 10 }]);
   a.equal(row.proof.actors.agentIdentity, "NONE_OBSERVED");
-  a.equal(h.service.data.receipts[receiptId].current.state, "STALE");
+  a.equal(h.service.data.receipts[receiptId].current.state, "UNAVAILABLE");
 
   const before = JSON.stringify(row);
   // Later evidence, a later proof and a repeated delivery must not rewrite it.
@@ -859,7 +861,7 @@ test("a signed event during publication immediately retracts the returned check"
   await h.service.webhook(...hook()); await h.service.drain();
   a.equal(h.writes.at(-1).kind, "PATCH");
   a.equal(h.writes.at(-1).o.body.conclusion, "failure");
-  a.equal(Object.values(h.service.data.receipts)[0].current.state, "STALE");
+  a.equal(Object.values(h.service.data.receipts)[0].current.state, "UNAVAILABLE");
   a.equal(h.service.data.queue.length, 1);
 });
 

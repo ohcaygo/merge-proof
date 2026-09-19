@@ -100,7 +100,7 @@ class Factory {
       try {
         scope = await this.github.scope(repo, pr);
         const local = await this.runner.run(scope, hash(random()));
-        ensure(local.verdict !== "FAIL", "UNSUPPORTED_HISTORY");
+        ensure(local.verdict !== "FAIL" && local.collectionComplete !== false, "UNSUPPORTED_HISTORY");
       } catch (e) {
         return {
           eligibility: [
@@ -300,7 +300,7 @@ class Factory {
         "AMBIGUOUS_SHA",
       );
       const local = await this.runner.run(scope, runId);
-      ensure(local.verdict !== "FAIL", "RUN_FAILED");
+      ensure(local.verdict !== "FAIL" && local.collectionComplete !== false, "RUN_FAILED");
       const capture = await this.github.capture(scope);
       const result = integrate(local, capture, scope.required);
       phase = "REPORT_FAILED";

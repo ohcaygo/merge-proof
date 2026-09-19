@@ -9,7 +9,7 @@ function harness(t){
  const service=new ProofService({store,config:{hosted:true,appId:42,publishChecks:true,origin:"https://example.test",webhookSecret:"s".repeat(40)},appClient:async()=>{
   const c=new Client(fixtureFetch({head})); const list=c.list.bind(c),request=c.request.bind(c);
   c.list=async(p,k)=>p.endsWith("/pulls?state=open") ? [{number:1,state:"open",user:{id:9,type:"User",login:"owner"},created_at:new Date().toISOString()}] : list(p,k);
-  c.request=async(p,o)=>{if(o?.method){writes.push({p,...o});return {id:check++};} return request(p,o);};
+  c.request=async(p,o)=>{if(o?.method && p !== "/graphql"){writes.push({p,...o});return {id:check++};} return request(p,o);};
   return c;
  },clientFactory:()=>new Client(fixtureFetch({head}))});
  t.after(()=>{store.close();fs.rmSync(root,{recursive:true,force:true});});
@@ -29,7 +29,7 @@ test("install discovers existing PR, starts one durable trial only after proof a
  const first=Object.values(s.data.receipts)[0];
  a.ok(first.checkId);a.equal(s.data.subscriptions["1:1"].latestReceiptId,first.receipt.receiptId);
  h.head("2".repeat(40));
- await h.hook("push",{installation:{id:2},repository:{id:1,full_name:"fixture/public"}});
+ await h.hook("push",{ref:"refs/heads/feature",installation:{id:2},repository:{id:1,full_name:"fixture/public"}});
  await s.drain();
  a.equal(first.current.state,"STALE");a.deepEqual(s.meter.account(2).trial,trial);
  const persisted=JSON.parse(fs.readFileSync(h.store.file));
@@ -48,7 +48,7 @@ test("scheduled day 5/6/7 notices, expiry, same-head pause, immutable receipt an
  const trial=s.meter.account(2).trial,first=Object.values(s.data.receipts)[0],body=JSON.stringify(first.receipt);
  let now=trial.startedAt;t.mock.method(Date,"now",()=>now);
  for(const day of [5,6,7]){now=trial.startedAt+(day-1)*86400000;await s.drain();a.equal(s.data.subscriptions["1:1"].noticeDay,day);
- const reminder=h.writes.at(-1).body;
+ const reminder=[...h.writes].reverse().find(w=>w.body?.output?.title?.startsWith("Trial ends") && w.p.endsWith("/"+first.checkId)).body;
  a.equal(reminder.conclusion,undefined,"reminder preserves native conclusion");
  a.ok(reminder.output.summary.endsWith(require("../check").summary(first.receipt,first.current,s.gateFor(first.receipt,first.current),s.remediationFor(first.receipt,first.current))),"reminder retains proof/remediation summary");
  a.equal(JSON.stringify(first.receipt),body);const n=h.writes.length;await s.drain();a.equal(h.writes.length,n);}

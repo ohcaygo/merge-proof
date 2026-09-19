@@ -10,6 +10,7 @@ const {
 const { requirements } = require("./rules");
 const commitMeta = (c) => ({
   sha: c.sha,
+  tree: c.commit?.tree?.sha || c.tree?.sha || null,
   parents: (c.parents || []).map((p) => p.sha),
   date: c.commit?.committer?.date || null,
 });
@@ -141,18 +142,17 @@ async function identity(client, repo, pr) {
     // strings and are never stored.
     author: account(p.user),
     mergedBy: account(p.merged_by),
-    githubMergeable: p.mergeable ?? "UNKNOWN",
-    githubMergeState: p.mergeable_state || "UNKNOWN",
   };
 }
 async function collectOnce(
   client,
   repo,
   pr,
-  { mergeGroup = null, historical = false } = {},
+  { mergeGroup = null, historical = false, previous = null, areas = null } = {},
 ) {
   assert(repoName(repo) && Number.isSafeInteger(pr) && pr > 0, "INVALID_SCOPE");
-  const i = await identity(client, repo, pr),
+  const keep = (key) => previous && areas && !areas.includes(key);
+  const i = keep("identity") ? structuredClone(previous.identity) : await identity(client, repo, pr),
     root = `/repos/${repo}`;
   if (historical) {
     assert(i.merged && sha(i.mergeCommitSha), "UNSUPPORTED_HISTORICAL_SHAPE");
@@ -170,9 +170,10 @@ async function collectOnce(
     i.observedCurrentBaseSha = i.baseSha;
     i.baseSha = landed.parents[0];
   }
-  const rules = await collectRules(client, repo, i.baseRef, i.branchProtected);
+  const rules = keep("rules") ? previous.rules : await collectRules(client, repo, i.baseRef, i.branchProtected);
+  if (!keep("rules")) rules.executionProtections = await require("./rules").executionProtections(client, repo);
   const req = requirements(rules);
-  const git = await client.observe(async () => {
+  const git = keep("git") ? previous.git : await client.observe(async () => {
     const d = await client.get(
       `${root}/compare/${i.baseSha}...${i.headSha}?per_page=1`,
     );
@@ -204,6 +205,8 @@ async function collectOnce(
     assert(hc.sha === i.headSha && bc.sha === i.baseSha);
     return {
       headSha: i.headSha,
+      headTree: hc.tree,
+      baseTree: bc.tree,
       baseSha: i.baseSha,
       mergeBase: m,
       candidateFiles: h.files,
@@ -216,7 +219,7 @@ async function collectOnce(
       },
     };
   });
-  let target = unavailable("CURRENT_COMBINED_STATE_UNAVAILABLE");
+  let target = keep("target") ? previous.target : unavailable("CURRENT_COMBINED_STATE_UNAVAILABLE");
   if (historical)
     target = available({
       kind: "LANDED_TWO_PARENT_MERGE",
@@ -224,7 +227,7 @@ async function collectOnce(
       headSha: i.headSha,
       baseSha: i.baseSha,
     });
-  if (i.prState === "open" && !i.merged) {
+  if (!keep("target") && i.prState === "open" && !i.merged) {
     // GitHub requires passing PR checks before it creates a merge group.
     // Without a group, prove only the ordinary PR target for queue admission.
     // A signed group event selects the separate queue commit for final checks.
@@ -292,6 +295,7 @@ async function collectOnce(
           };
         });
         return {
+          tree: commitMeta(await client.get(`${root}/commits/${mergeGroup.head_sha}`)).tree,
           kind: "MERGE_GROUP",
           sha: mergeGroup.head_sha,
           headSha: i.headSha,
@@ -302,6 +306,7 @@ async function collectOnce(
       });
     } else if (git.state === "AVAILABLE" && git.value.mergeBase === i.baseSha) {
       target = available({
+        tree: git.value.headTree,
         kind: "HEAD_CONTAINS_CURRENT_BASE",
         sha: i.headSha,
         headSha: i.headSha,
@@ -323,6 +328,7 @@ async function collectOnce(
           "TEST_MERGE_NOT_CURRENT",
         );
         return {
+          tree: m.tree,
           kind: "PR_TEST_MERGE",
           sha: m.sha,
           headSha: i.headSha,
@@ -332,7 +338,7 @@ async function collectOnce(
       });
     }
   }
-  const remote = await client.observe(async () => {
+  const remote = keep("remote") ? previous.remote : await client.observe(async () => {
     assert(
       repoName(i.headRepository) && Number.isSafeInteger(i.headRepositoryId),
       "HEAD_REPOSITORY_UNAVAILABLE",
@@ -350,7 +356,7 @@ async function collectOnce(
       confirmed: ref.object?.sha === i.headSha,
     };
   });
-  const checks = await client.observe(async () => {
+  const checks = keep("checks") ? previous.checks : await client.observe(async () => {
     const all = [];
     for (const s of [
       ...new Set([i.headSha, target.value?.sha].filter(Boolean)),
@@ -385,7 +391,7 @@ async function collectOnce(
       (a, b) => a.id - b.id,
     );
   });
-  const statuses = await client.observe(async () => {
+  const statuses = keep("statuses") ? previous.statuses : await client.observe(async () => {
     const all = [];
     for (const s of [
       ...new Set([i.headSha, target.value?.sha].filter(Boolean)),
@@ -403,20 +409,32 @@ async function collectOnce(
     }
     return all.sort((a, b) => a.id - b.id);
   });
-  const execution = await client.observe(async () => {
+  const execution = keep("execution") ? previous.execution : await client.observe(async () => {
     assert(target.state === "AVAILABLE", "TARGET_UNAVAILABLE");
     const runs = await client.list(
       `${root}/actions/runs?head_sha=${target.value.sha}`,
       "workflow_runs",
     );
-    assert(runs.length <= 20, "WORKFLOW_LIMIT");
     const all = [];
+    const blobs = new Map();
+    const relevantSuites = new Set((checks.value || []).filter(x => req.checks.some(rule => rule.name === x.name && (rule.appId === null || rule.appId === x.appId))).map(x => x.suiteId));
     for (const r of runs) {
+      if (Number.isSafeInteger(r.check_suite_id) && !relevantSuites.has(r.check_suite_id)) continue;
       assert(
         sha(r.head_sha) &&
           Number.isSafeInteger(r.id) &&
           Number.isSafeInteger(r.run_attempt),
       );
+      const path = r.path;
+      const blobKey = `${r.head_sha}:${path}`;
+      if (!blobs.has(blobKey)) blobs.set(blobKey, await client.observe(async () => {
+        assert(typeof path === "string" && /^\.github\/workflows\/[^/]+\.ya?ml$/.test(path), "WORKFLOW_PATH_UNAVAILABLE");
+        const file = await client.get(`${root}/contents/${path}?ref=${r.head_sha}`);
+        assert(file.type === "file" && file.path === path && sha(file.sha), "WORKFLOW_BLOB_UNAVAILABLE");
+        const text = file.encoding === "base64" && typeof file.content === "string" ? Buffer.from(file.content, "base64").toString("utf8") : null;
+        const unpinnedUses = text == null ? null : [...text.matchAll(/^\s*(?:-\s*)?uses:\s*["']?([^\s"'#]+)/gm)].map(m => m[1]).filter(x => !x.startsWith("./") && !/@[a-f0-9]{40}$/.test(x) && !/@sha256:[a-f0-9]{64}$/.test(x));
+        return { sha: file.sha, path, commit: r.head_sha, trust: "GITHUB_API", advisories: unpinnedUses == null ? ["USES_PINNING_NOT_OBSERVED"] : unpinnedUses.length ? ["UNPINNED_USES_OBSERVED"] : [], unpinnedUses };
+      }));
       for (const j of await client.list(
         `${root}/actions/runs/${r.id}/attempts/${r.run_attempt}/jobs`,
         "jobs",
@@ -427,6 +445,12 @@ async function collectOnce(
         all.push({
           runId: r.id,
           workflowId: r.workflow_id,
+          workflowPath: r.path || null,
+          workflowBlob: blobs.get(blobKey),
+          event: r.event || null,
+          pullRequests: (r.pull_requests || []).map(p => ({ number: p.number, headSha: p.head?.sha || null, repositoryId: p.base?.repo?.id || null })),
+          headBranch: r.head_branch || null,
+          suiteId: r.check_suite_id || null,
           attempt: r.run_attempt,
           runSha: r.head_sha,
           // actor started the run; triggeringActor started the latest attempt.
@@ -451,7 +475,7 @@ async function collectOnce(
     }
     return all.sort((a, b) => a.jobId - b.jobId);
   });
-  const reviews = await client.observe(async () => {
+  const reviews = keep("reviews") ? previous.reviews : await client.observe(async () => {
     const rows = await client.list(`${root}/pulls/${pr}/reviews`);
     assert(
       new Set(rows.map((r) => r.user?.login)).size <= 30,
@@ -493,7 +517,7 @@ async function collectOnce(
   });
   // Who and what GitHub records as having produced this change. One bounded
   // page; a longer branch is marked truncated rather than silently cut.
-  const actors = await client.observe(async () => {
+  const actors = keep("actors") ? previous.actors : await client.observe(async () => {
     const rows = await client.get(`${root}/pulls/${pr}/commits?per_page=100`);
     assert(Array.isArray(rows), "COMMIT_ACTORS_UNAVAILABLE");
     return {
@@ -509,7 +533,9 @@ async function collectOnce(
       })),
     };
   });
+  const authority = keep("reviews") ? previous.authority : await require("./authority").collect(client, i);
   return {
+    authority,
     identity: i,
     rules,
     git,
@@ -532,7 +558,7 @@ async function collect(client, repo, pr, options) {
     startedAt,
     observedAt: new Date().toISOString(),
     consistency:
-      hash(first) === hash(second)
+      hash(require("./bindings").fingerprints(first)) === hash(require("./bindings").fingerprints(second))
         ? "STABLE_OBSERVATION"
         : "CHANGED_DURING_COLLECTION",
   };

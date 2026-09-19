@@ -37,6 +37,7 @@ function harness(t) {
 }
 function hook(event = "pull_request", extra = {}) {
   const p = {
+    ref: "refs/heads/feature",
     repository: { id: 1, full_name: "fixture/public" },
     installation: { id: 2 },
     pull_request: { number: 1, state: "open" },
@@ -125,7 +126,7 @@ test("signed webhook automatically queues and completes receipt; duplicate is id
   const id = h.service.data.subscriptions["1:1"].latestReceiptId;
   a.equal(h.service.data.receipts[id].receipt.verdict, "VERIFIED");
   await h.service.webhook(...hook("push"));
-  a.equal(h.service.data.receipts[id].current.state, "STALE");
+  a.equal(h.service.data.receipts[id].current.state, "UNAVAILABLE");
   a.equal(h.service.data.receipts[id].receipt.verdict, "VERIFIED");
 });
 test("failed App refresh preserves history, bounded retries and no completed event", async (t) => {
@@ -244,7 +245,7 @@ test("optional App check delivery stales the previous check and ignores its own 
   await h.service.drain();
   a.equal(writes[1].o.method, "PATCH");
   a.equal(writes[1].o.body.conclusion, "neutral");
-  a.match(writes[1].o.body.output.title, /STALE/);
+  a.match(writes[1].o.body.output.title, /Evidence refresh pending/);
   const own = hook("check_run", { check_run: { app: { id: 42 } } });
   a.equal((await h.service.webhook(...own)).ignored, true);
   a.equal(h.service.data.queue.length, 0);
@@ -342,7 +343,7 @@ test("failed stale-check update does not prevent core re-proof", async (t) => {
   await h.service.webhook(...hook("push"));
   await h.service.drain();
   a.equal(Object.keys(h.service.data.receipts).length, 2);
-  a.equal(first.current.state, "STALE");
+  a.equal(first.current.state, "UNAVAILABLE");
   a.equal(first.receipt.verdict, "VERIFIED");
   a.equal(first.checkDelivery, "UNAVAILABLE");
   a.equal(h.service.data.queue.length, 0);

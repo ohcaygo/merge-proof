@@ -1,6 +1,6 @@
 {
   "name": "merge-proof",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Before an AI-authored PR merges, determine whether the available evidence actually proves the candidate against the repository state being merged.",
   "keywords": [
     "git",
@@ -24,7 +24,8 @@
   "type": "commonjs",
   "bin": {
     "merge-proof": "bin/merge-proof.js",
-    "merge-proof-report": "bin/merge-proof-report.js"
+    "merge-proof-report": "bin/merge-proof-report.js",
+    "gh-merge-proof": "bin/gh-merge-proof.js"
   },
   "main": "src/analyze.js",
   "files": [
@@ -34,7 +35,10 @@
     "README.md",
     "STUDY.md",
     "LICENSE",
-    ".mergeproofignore.example"
+    ".mergeproofignore.example",
+    "github/*.js",
+    "github/*.schema.json",
+    "github/verifier/"
   ],
   "engines": {
     "node": ">=18"

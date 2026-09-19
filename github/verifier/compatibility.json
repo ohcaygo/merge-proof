@@ -1,0 +1,10 @@
+{
+  "66ee2dfede39592ec03838d01b208cbbbad25367be17091b238a9b8471f73f3d": {
+    "engine": "v2",
+    "policies": [
+      "github-exact-state-v2",
+      "github-exact-state-v3"
+    ],
+    "version": "0.2.0"
+  }
+}

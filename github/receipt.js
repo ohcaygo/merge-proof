@@ -53,11 +53,11 @@ function lines(r, current = UNREFRESHED) {
   const s = r.summary;
   return [
     ["Candidate", r.identity.headSha],
+    ["Candidate tree", r.summary?.target?.value?.tree || "UNAVAILABLE"],
+    ["Expected tree", r.expectedTree?.tree || "Independent reconstruction unavailable"],
+    ["Evidence subject", r.subject?.id || "UNAVAILABLE"],
+    ["Changed claims", current?.changed?.join(", ") || current?.touched?.join(", ") || "None recorded at this observation"],
     ["Current base at proof", r.identity.baseSha],
-    [
-      "GitHub mergeability",
-      `${r.identity.githubMergeable ?? "UNKNOWN"} (${r.identity.githubMergeState || "UNKNOWN"})`,
-    ],
     [
       "Applicable validation state",
       s.target.value
@@ -102,7 +102,7 @@ function lines(r, current = UNREFRESHED) {
     [current.reason === "REFRESH_REQUIRED" ? "Live recheck" : "Current receipt status", current.reason === "REFRESH_REQUIRED" ? "Not requested; see saved observation freshness above" : current.state],
     [
       "Protected boundary",
-      r.local.verdict === "FAIL"
+      r.local.collectionComplete === false || r.local.findings.some(f => f.id === "GIT_HISTORY_UNAVAILABLE")
         ? "UNAVAILABLE"
         : r.local.findings.find((f) => f.id === "PROTECTED_BOUNDARY")
             ?.whatHappened ||

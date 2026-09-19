@@ -50,7 +50,7 @@ function normalize(data, options = {}) {
     requireInput(data.verdict === 'VERIFIED' ? data.findings.length === 0 : data.findings.length > 0, 'verdict contradicts findings');
     requireInput(text(data.repository?.path), 'CLI repository.path is required');
     requireInput(Array.isArray(data.notChecked) && data.notChecked.every((item) => text(item?.id) && text(item.reason)), 'CLI coverage list is required');
-    if (data.verdict !== 'FAIL') {
+    if (data.verdict !== 'FAIL' && !(data.verdict === 'NOT_PROVEN' && data.collectionComplete === false)) {
       requireInput(['base', 'head', 'forkPoint'].every((key) => sha(data.refs?.[key]?.sha)), 'CLI result needs base, head and fork-point SHAs');
     }
     rows = [{ ...data, ...data.metrics, repo: data.repository.path, label: data.repository.path,
@@ -73,7 +73,7 @@ function explanation(row, finding) {
     return `The candidate changed ${categories}. The implemented path checks request closer validation of this boundary; they do not establish that code is defective or that existing CI failed.`;
   }
   return row.verdict === 'FAIL'
-    ? 'The verifier could not safely establish a result. Consult the recorded finding ID and source evidence, restore missing prerequisites, and rerun.'
+    ? 'The recorded policy reported FAIL. Inspect its finding and policy version: current policies use FAIL for a demonstrated unmet requirement; older records may use it for collection failure.'
     : 'The source records this evidence-gap condition without a detailed explanation. Inspect the original evidence before deciding what to do.';
 }
 
@@ -85,7 +85,7 @@ function renderHtml(model, { scope, source, sha256 }) {
   const prLink = (row) => row.pr
     ? `<a href="https://github.com/${e(row.repo)}/pull/${row.pr}">${e(row.label)}</a>` : e(row.label);
   const recommendation = counts.FAIL || counts.unresolvable
-    ? 'Resolve missing history or collection prerequisites first, then rerun the same scope. Until then, leave those records unresolved; this report cannot support a clean evidence conclusion for them.'
+    ? 'Resolve the recorded failures or missing collection prerequisites, then rerun the same scope. Until then, leave those records unresolved; this report cannot support a clean evidence conclusion for them.'
     : counts.NOT_PROVEN
       ? 'Inspect the flagged records and any existing validation of the combined state. If evidence is insufficient for the risk, validate that state and repeat the assessment. Start with the small flagged set rather than changing every merge workflow.'
       : 'Do nothing on the basis of these checks alone. No implemented evidence-gap condition was recorded in this scope. Keep normal CI and review practices.';
@@ -116,7 +116,7 @@ li { margin-bottom: 6px; } footer { border-top: 1px solid #c6d2ce; margin-top: 2
 ${repoNames.includes('microsoft/kiota') ? '<p class="muted">Public Kiota methodology sample. Microsoft is not a customer; no customer relationship or endorsement is implied.</p>' : ''}
 <div class="counts">${verdicts.map((v) => `<div class="count"><strong>${counts[v]}</strong><span>${v}</span></div>`).join('')}</div>
 <p>${counts.VERIFIED + counts.NOT_PROVEN + counts.FAIL} verdict(s) recorded; ${counts.unresolvable} unresolvable record(s), excluded from verdict counts. Counts are per record, not per finding.</p>
-<div class="notice"><strong>NOT_PROVEN != bad code.</strong> NOT_PROVEN means missing evidence under implemented checks, not defective code. VERIFIED means those checks found no blocking evidence gap; it is not proof of correctness. FAIL means the verifier could not safely establish a result.</div>
+<div class="notice"><strong>NOT_PROVEN != bad code.</strong> NOT_PROVEN means missing evidence under implemented checks, not defective code. VERIFIED means those checks found no blocking evidence gap; it is not proof of correctness. FAIL means current bound evidence demonstrates an unmet required condition. Historical inputs retain their recorded verdict and policy meaning.</div>
 <h2>Recommendation</h2><p>${e(recommendation)}</p>
 <p><strong>Do nothing is an option.</strong> If the recorded limitation is acceptable for this scope, document that decision and leave the workflow unchanged. Accepting a gap does not change a NOT_PROVEN, FAIL or unresolvable record into VERIFIED. No action is executed by this report.</p>
 <h2>Notable NOT_PROVEN / FAIL records</h2>${details || '<p>None in this scope. Normal CI and review remain necessary.</p>'}

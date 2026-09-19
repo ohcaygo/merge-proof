@@ -24,7 +24,7 @@ test("real collector projects REST metadata into a complete proof with no source
   a.equal(prove(c).verdict, "VERIFIED");
   a.equal(c.consistency, "STABLE_OBSERVATION");
   a.doesNotMatch(JSON.stringify(c), /NEVER STORE|DO NOT STORE/);
-  a.ok(f.calls.every((x) => x.method === "GET"));
+  a.ok(f.calls.every((x) => x.method === "GET" || x.path === "/graphql"));
 });
 test("classic protection 404 on protected branch is unavailable, never absent", async () => {
   const c = await collect(
@@ -67,7 +67,7 @@ test("300-file compare boundary fails closed", async () => {
     1,
   );
   a.equal(c.git.state, "UNAVAILABLE");
-  a.equal(prove(c).verdict, "FAIL");
+  a.equal(prove(c).verdict, "NOT_PROVEN");
 });
 test("changed check between collections is detected", async () => {
   let round = 0;
