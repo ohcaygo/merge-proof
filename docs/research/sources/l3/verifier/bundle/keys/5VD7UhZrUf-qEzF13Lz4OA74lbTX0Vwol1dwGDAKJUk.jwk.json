@@ -1,0 +1,11 @@
+{
+  "kty": "EC",
+  "x": "S6G49J6fnvyMxqSRPAtd8_3auPo86YMaE7PGQanYKOE",
+  "y": "rzrbAwT78GnGsUHeJffFmxUpV6ScRmuhfo_L5I0uSW8",
+  "crv": "P-256",
+  "kid": "5VD7UhZrUf-qEzF13Lz4OA74lbTX0Vwol1dwGDAKJUk",
+  "alg": "ES256",
+  "use": "sig",
+  "mp:nbf": "2026-09-10T12:00:00Z",
+  "mp:exp": null
+}

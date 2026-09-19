@@ -1,0 +1,61 @@
+{
+  "policy": "github-exact-state-v1",
+  "schemaVersion": 2,
+  "predicateType": "https://merge-proof.ohcaygo.com/attestation/receipt/v2",
+  "toolVersion": "0.1.0",
+  "appId": null,
+  "supportedRuleTypes": [
+    "required_status_checks",
+    "pull_request",
+    "merge_queue",
+    "deletion",
+    "non_fast_forward",
+    "creation"
+  ],
+  "classicFields": [
+    "required_status_checks",
+    "required_pull_request_reviews",
+    "required_conversation_resolution",
+    "required_signatures",
+    "required_linear_history"
+  ],
+  "acceptedConclusions": [
+    "success",
+    "neutral",
+    "skipped"
+  ],
+  "executionConclusions": [
+    "success"
+  ],
+  "approvalStatesConsidered": [
+    "APPROVED",
+    "DISMISSED",
+    "CHANGES_REQUESTED"
+  ],
+  "approvalEligibility": [
+    "userType=User",
+    "userId!=authorId",
+    "writePermission=true",
+    "sha=identity.headSha"
+  ],
+  "targetKinds": [
+    "HEAD_CONTAINS_CURRENT_BASE",
+    "PR_TEST_MERGE",
+    "MERGE_GROUP",
+    "LANDED_TWO_PARENT_MERGE"
+  ],
+  "notChecked": [
+    "CODE_CORRECTNESS",
+    "SECURITY",
+    "WORKFLOW_CHECKOUT_CONTENTS",
+    "SCOPE_CREEP_VS_DECLARED_SCOPE",
+    "FUTURE_REMOTE_RETENTION",
+    "WHICH_TOOL_OR_MODEL_PRODUCED_THE_CODE"
+  ],
+  "requiredCheckContextName": "Merge Proof exact-state receipt",
+  "localAnalysis": {
+    "staleCommits": 100,
+    "staleDays": 30,
+    "evidenceSource": "github-rest-git-metadata"
+  }
+}

@@ -1,0 +1,1 @@
+Raw projected observations are embedded in receipt.json#/evidence; no separate copy in this prototype.

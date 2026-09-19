@@ -1,0 +1,2 @@
+merge-proof-verify/0.1.0-prototype
+schema=2 policy=github-exact-state-v1 predicateType=https://merge-proof.ohcaygo.com/attestation/receipt/v2
