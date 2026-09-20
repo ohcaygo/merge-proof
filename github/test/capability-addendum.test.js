@@ -100,3 +100,8 @@ test('collector discovers policy details read-only and refuses unknown coverage 
 test('portable receipt replays policy, producer and coverage claims without promoting provider trust',async()=>{
  const bundle=require('../bundle'),r=prove(covered()),b=await bundle.create(r);a.equal(bundle.verify(b,{allowUnsigned:true}).exitCode,0);b.receipt.evidence.coverage.value.aggregate.covered=99;a.equal(bundle.verify(b,{allowUnsigned:true}).exitCode,3);
 });
+
+test('policy snapshot does not assert completeness when required policy discovery is missing or malformed',()=>{
+ const c=protectedCapture();c.rules.executionProtections=U('403');a.equal(prove(c).claims.find(x=>x.name==='RULES_SNAPSHOT').state,'UNKNOWN');
+ const malformed=covered({minimum_coverage:'80'});a.equal(prove(malformed).claims.find(x=>x.name==='RULES_SNAPSHOT').state,'UNKNOWN');
+});
