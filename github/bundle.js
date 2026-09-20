@@ -3,7 +3,7 @@ const crypto = require("node:crypto"), fs = require("node:fs"), path = require("
 const { hash, canonical, assert } = require("./common");
 const TYPE = "application/vnd.in-toto+json";
 const PREDICATE = "https://merge-proof.ohcaygo.com/attestation/receipt/v3";
-const CODE = ["package.json", "github/common.js", "github/reconstruct.js","github/proof.js", "github/claims.js", "github/rules.js", "github/subject.js", "github/bindings.js", "github/actors.js", "github/authority.js", "github/setup.js", "github/local-evidence.js", "github/wording.js", "github/check.js", "src/analyze.js", "src/rules.js"];
+const CODE = ["package.json", "github/common.js", "github/queue-order.js", "github/reconstruct.js","github/proof.js", "github/claims.js", "github/rules.js", "github/subject.js", "github/bindings.js", "github/actors.js", "github/authority.js", "github/setup.js", "github/local-evidence.js", "github/wording.js", "github/check.js", "src/analyze.js", "src/rules.js"];
 const codeDigest = () => hash(CODE.map(f => [f, crypto.createHash("sha256").update(fs.readFileSync(path.join(__dirname, "..", f))).digest("hex")]));
 function pae(type, bytes) { const t = Buffer.from(type); return Buffer.concat([Buffer.from(`DSSEv1 ${t.length} `), t, Buffer.from(` ${bytes.length} `), bytes]); }
 const stripNull = v => Array.isArray(v) ? v.map(stripNull) : v && typeof v === "object" ? Object.fromEntries(Object.entries(v).filter(([, x]) => x != null).map(([k, x]) => [k, stripNull(x)])) : v;
@@ -88,7 +88,10 @@ function verifyLanding(value, receipt, {trustedKeys=[],allowUnsigned=false}={}) 
     assert(record.repositoryId===receipt.identity.repositoryId && record.repository===receipt.identity.repository && record.pr===receipt.identity.pr && record.mergedHeadSha===receipt.identity.headSha,"LANDED_REPOSITORY_BINDING_MISMATCH");
     assert(statement._type==="https://in-toto.io/Statement/v1" && statement.predicateType==="https://merge-proof.ohcaygo.com/attestation/landed-binding/v1" && statement.predicate.receiptDigest===hash(receipt) && statement.predicate.repositoryId===receipt.identity.repositoryId,"LANDED_RECEIPT_BINDING_MISMATCH");
     const binding=statement.predicate.binding;
-    assert(statement.subject.length===1 && statement.subject[0].name===record.repository && statement.subject[0].digest.gitCommit===binding.landed?.sha && record.mergeCommitSha===binding.landed?.sha,"LANDED_SUBJECT_MISMATCH");
+    const resolved=binding.commitResolution?.value||record.mergeCommitSha||null;
+    if(resolved)assert(statement.subject.length===1&&statement.subject[0].name===record.repository&&statement.subject[0].digest.gitCommit===resolved&&record.mergeCommitSha===resolved,"LANDED_SUBJECT_MISMATCH");
+    else assert(!binding.landed&&["LANDED_UNRESOLVED","NO_PROOF_RECORDED"].includes(binding.state)&&(statement.subject.length===0||statement.subject.length===1&&statement.subject[0].name===record.repository&&statement.subject[0].digest.gitCommit==null),"LANDED_SUBJECT_MISMATCH");
+    if(binding.landed)assert(binding.landed.sha===resolved,"LANDED_SUBJECT_MISMATCH");
     const {attestation:ignored,envelope:ignoredEnvelope,observationId:ignoredId,...body}=observation;
     assert(hash(body)===hash(binding),"LANDED_OBSERVATION_MISMATCH");
     const computed=require("./landing").compare({...record,proof:{receiptSnapshot:receipt}},binding.landed);
@@ -101,7 +104,7 @@ function verifyLanding(value, receipt, {trustedKeys=[],allowUnsigned=false}={}) 
 }
 function attachLandings(bundle,values) {
   return {...bundle,landings:values.map(({record,observation})=>({record:{repository:record.repository,repositoryId:record.repositoryId,pr:record.pr,
-    mergedHeadSha:record.mergedHeadSha,mergeCommitSha:observation.landed?.sha||record.mergeCommitSha},observation}))};
+    mergedHeadSha:record.mergedHeadSha,mergeCommitSha:observation.commitResolution?.value||observation.landed?.sha||record.mergeCommitSha},observation}))};
 }
 function components(bundle){
   return {"bundle.json":bundle,"receipt.json":bundle.receipt,"policy.json":bundle.policy,"verdict-info.json":bundle.verdictInfo,

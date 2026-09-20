@@ -81,3 +81,34 @@ test('private differential runner flags unexpected positive verdicts and reads s
  // A refused authorization is an explicit unavailable alarm, not fixture success.
  const report=await require('../lab/run').run(config,{clientFactory:()=>new Client(fixtureFetch())});a.equal(report.alarms.unavailable,1);a.equal(report.alarms.reconciliationSupersessions,1);a.equal(report.alarms.ruleSuiteDisagreements,1);
 });
+test('review regression: later HEADGREEN prefix binds proof and landed predecessor without transferring subject',()=>{
+ const c=capture(),prior='d'.repeat(40);c.target.value={...c.target.value,kind:'MERGE_GROUP',sha:M,selection:{state:'AVAILABLE',value:{headSha:M,baseSha:prior,candidateSha:H,order:{providerOrderConfirmed:true,repositoryId:1,base:B,entries:[{pr:2,head:'f'.repeat(40),candidate:prior,base:B},{pr:1,head:H,candidate:M,base:prior}]}}}};
+ c.checks.value[0].sha=M;Object.assign(c.execution.value[0],{sha:M,runSha:M,event:'merge_group'});c.execution.value[0].workflowBlob.value.commit=M;
+ const receipt=prove(c);a.equal(receipt.verdict,'VERIFIED');const record={proof:{receiptSnapshot:receipt},mergedHeadSha:H,mergeCommitSha:M};a.equal(require('../landing').compare(record,{sha:M,tree:c.target.value.tree,parents:[prior,H]}).state,'LANDED_VERIFIED');
+ for(const change of [o=>o.repositoryId=2,o=>o.base=H,o=>o.entries[0].candidate=H,o=>o.entries[1].head=B,o=>o.entries[1].candidate=H,o=>o.entries.shift()]){const wrong=structuredClone(c);change(wrong.target.value.selection.value.order);a.equal(prove(wrong).verdict,'NOT_PROVEN');}
+ a.equal(require('../landing').compare(record,{sha:M,tree:c.target.value.tree,parents:[B,H]}).state,'LANDED_UNRESOLVED');
+});
+test('review regression: signed unresolved landing history and later resolved chain both verify without upgrading history',async()=>{
+ const k=keys(),receipt=prove(capture()),record={repository:receipt.identity.repository,repositoryId:1,pr:1,mergedHeadSha:H,mergeCommitSha:M},observations=[];
+ for(const landed of [null,{sha:M,tree:receipt.summary.target.value.tree,parents:[B]}]){
+  const binding={...require('../landing').compare({...record,proof:{receiptSnapshot:receipt}},landed),commitResolution:{state:'AVAILABLE',value:M},recordedAt:new Date().toISOString()};const attestation={_type:'https://in-toto.io/Statement/v1',subject:[{name:record.repository,digest:{gitCommit:M}}],predicateType:'https://merge-proof.ohcaygo.com/attestation/landed-binding/v1',predicate:{receiptDigest:hash(receipt),repositoryId:1,binding}};const bytes=Buffer.from(JSON.stringify(canonical(attestation)));observations.push({record,observation:{...binding,attestation,envelope:{payloadType:'application/vnd.in-toto+json',payload:bytes.toString('base64'),signatures:[await k.signer(bundle.pae('application/vnd.in-toto+json',bytes))]}}});
+ }
+ const portable=bundle.attachLandings(await bundle.create(receipt,{signer:k.signer}),observations),result=bundle.verify(portable,{trustedKeys:[k.jwk]});a.equal(result.exitCode,0);a.deepEqual(result.landings.map(x=>x.landedState),['LANDED_UNRESOLVED','LANDED_VERIFIED']);
+});
+test('review regression: duplicate signed delivery retries failed durability before acknowledgement and survives restart',async()=>{
+ const {ProofService}=require('../service');let attempts=0,durable;const store={data:{},save(){if(++attempts===1)throw Object.assign(Error(),{code:'ENOSPC'});durable=structuredClone(this.data);}};
+ const config={webhookSecret:'s'.repeat(40)},service=new ProofService({store,config}),raw=Buffer.from(JSON.stringify({repository:{id:1,full_name:'fixture/public'},installation:{id:2},pull_request:{number:1,state:'open'}})),headers={'x-github-event':'pull_request','x-github-delivery':'durability-retry','x-hub-signature-256':'sha256='+crypto.createHmac('sha256',config.webhookSecret).update(raw).digest('hex')};
+ await a.rejects(service.webhook(raw,headers),{code:'ENOSPC'});a.deepEqual(await service.webhook(raw,headers),{duplicate:true});a.equal(attempts,2);const restarted=new ProofService({store:{data:durable,save(){}},config});a.ok(restarted.data.events['durability-retry']);a.equal(restarted.data.queue.length,1);
+});
+test('review regression: public hosted JWKS and bearer bundle retain live installation/repository authorization after eviction',async()=>{
+ const {handle}=require('../http'),receipt=prove(capture()),artifacts=await bundle.create(receipt),k=keys();let allowed=true;const service={config:{origin:'http://localhost'},receiptSigner:k.signer,customers:{session(){throw Object.assign(Error(),{code:'LOGIN_REQUIRED'});},installations:async()=>[{id:7}],list:async()=>allowed?[{id:1,full_name:'fixture/public'}]:[]},access:async()=>({receipt,artifacts,installationId:7,archived:true}),portable:row=>({...row.artifacts,receipt:row.receipt})};
+ async function request(url,token){let status,value;const res={setHeader(){},writeHead(s){status=s;},end(b){value=JSON.parse(b);}};await handle(service,{method:'GET',headers:token?{authorization:'Bearer test'}:{}},res,new URL(url,'http://localhost'));return {status,value};}
+ a.equal((await request('/proof/.well-known/jwks.json')).status,200);const route='/proof/receipts/'+receipt.receiptId+'/bundle';a.equal((await request(route,'test')).status,200);allowed=false;a.equal((await request(route,'test')).status,403);a.equal((await request(route)).status,403);
+});
+test('drain retries transient durability failures without permanently locking the worker',async()=>{
+ const {ProofService}=require('../service');let fail=true,saves=0;const store={data:{},save(){saves++;if(fail)throw Object.assign(Error(),{code:'ENOSPC'});}};
+ const service=new ProofService({store});service.savePending=true;await a.rejects(service.drain(),{code:'ENOSPC'});a.equal(service.draining,false);a.equal(service.savePending,true);
+ fail=false;await service.drain();a.equal(service.draining,false);a.equal(service.savePending,false);a.ok(saves>=2);
+ service.data.retractionQueue.push({receiptId:'unavailable',repo:'fixture/public',repositoryId:1,installationId:2,pr:1});fail=true;await a.rejects(service.drain(),{code:'ENOSPC'});a.equal(service.draining,false);a.equal(service.data.retractionQueue.length,1);
+ fail=false;await service.drain();a.equal(service.draining,false);a.equal(service.savePending,false);
+});

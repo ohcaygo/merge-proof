@@ -14,7 +14,10 @@ function compare(record, landed) {
     return { ...out, reason: "LANDED_CONTENT_UNAVAILABLE" };
   const parents = landed.parents || [];
   const method = parents.length === 2 ? "merge" : parents.length === 1 ? "squash-or-single-rebase" : "unknown";
-  const parentsConsistent = parents[0] === base && (parents.length === 1 || parents.length === 2 && parents[1] === head);
+  const selection=target.kind==='MERGE_GROUP'?target.selection?.value:null;
+  const ordered=selection&&require('./queue-order').bound(selection.order,receipt.identity,selection);
+  const parentBase=ordered?selection.baseSha:base;
+  const parentsConsistent = parents[0] === parentBase && (parents.length === 1 || parents.length === 2 && parents[1] === head);
   if (landed.tree !== target.tree) return { ...out, state: "LANDED_MISMATCH", method, parentsConsistent, reason: "LANDED_TREE_DIFFERS_FROM_PROVEN_TREE" };
   if (!parentsConsistent) return { ...out, method, parentsConsistent, reason: "LANDED_PARENTAGE_UNRESOLVED" };
   if (receipt.expectedTree?.status === "RECONSTRUCTED" && !(receipt.expectedTree.flags || []).length && receipt.expectedTree.tree !== landed.tree)
@@ -50,7 +53,7 @@ async function resolve(client, record) {
     authorityLimitation: "Rule suites record observed evaluations. Exempt actors and decision-time authorization may remain unobservable.",
     recordedAt: new Date().toISOString() };
   return { ...result, attestation: { _type: "https://in-toto.io/Statement/v1",
-    subject: [{ name: record.repository, digest: { gitCommit: record.mergeCommitSha } }],
+    subject: sha(record.mergeCommitSha)?[{ name: record.repository, digest: { gitCommit: record.mergeCommitSha } }]:[],
     predicateType: "https://merge-proof.ohcaygo.com/attestation/landed-binding/v1",
     predicate: { receiptDigest: binding.receiptDigest, repositoryId: record.repositoryId, binding: result } } };
 }

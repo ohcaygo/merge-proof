@@ -56,6 +56,7 @@ class ProofService {
     this.data.landingRetries ||= {};
     this.data.landingQueue ||= [];
     this.data.groupQueue ||= [];
+    this.data.retractionQueue ||= [];
     this.data.pushQueue ||= [];
     this.data.pushObservations ||= {};
     this.data.frontierMetrics ||= {reconciliationSupersessions:0,ruleSuiteDisagreements:0};
@@ -87,7 +88,7 @@ class ProofService {
   }
   save() {
     if(this.saveDepth){this.savePending=true;return;}
-    this.savePending=false;
+    this.savePending=true;
     if(this.archive)for(const record of ledger.area(this.store).records){
       if(!this.archivedMerges.has(record.recordId)){this.archive.merge(record);this.archivedMerges.add(record.recordId);}
     }
@@ -101,6 +102,7 @@ class ProofService {
     for (const record of ledger.area(this.store).records) if (record.proof?.receiptSnapshot?.observationId) used.add(record.proof.receiptSnapshot.observationId);
     for (const id of Object.keys(this.data.observations || {})) if (!used.has(id)) delete this.data.observations[id];
     this.store.save();
+    this.savePending=false;
   }
   // Per repository, owner-chosen, defaulting to report-only.
   policyFor(repositoryId) {
@@ -122,6 +124,7 @@ class ProofService {
     for (const row of Object.values(this.data.receipts)) {
       if (row.receipt.identity.repositoryId !== repositoryId) continue;
       row.current = { state: "STALE", reason: "POLICY_CHANGED" };
+      if(!this.data.subscriptions[`${repositoryId}:${row.receipt.identity.pr}`])this.queueRetraction(row);
     }
     for (const sub of Object.values(this.data.subscriptions)) {
       if (sub.repositoryId !== repositoryId) continue;
@@ -230,7 +233,7 @@ class ProofService {
       );
       if (Object.keys(this.data.receipts).length >= 1000 && this.archive) {
         this.save();
-        const protectedIds = new Set(Object.values(this.data.subscriptions).map(s=>s.latestReceiptId));
+        const protectedIds = new Set([...Object.values(this.data.subscriptions).map(s=>s.latestReceiptId),...this.data.retractionQueue.map(q=>q.receiptId)]);
         for (const [id,row] of Object.entries(this.data.receipts)) {
           if (Object.keys(this.data.receipts).length < 900) break;
           if (!protectedIds.has(id) && !row.pendingPublication) delete this.data.receipts[id];
@@ -373,6 +376,10 @@ class ProofService {
       } catch {} // Revoked installations stay stopped.
     }
   }
+  queueRetraction(row) {
+    if(this.config.publishChecks&&(row.checkIds?.length||row.checkId)&&!this.data.retractionQueue.some(q=>q.receiptId===row.receipt.receiptId))
+      this.data.retractionQueue.push({receiptId:row.receipt.receiptId,repo:row.receipt.identity.repository,repositoryId:row.receipt.identity.repositoryId,installationId:row.installationId,pr:row.receipt.identity.pr});
+  }
   async read(id, token, { refresh = false } = {}) {
     const row = await this.access(id, token);
     if (refresh) {
@@ -404,6 +411,7 @@ class ProofService {
               ? { ...row.current, refreshState: "UNAVAILABLE" }
               : freshness(row.receipt, null);
         }
+        if(row.current.state!=="CURRENT")this.queueRetraction(row);
         this.save();
       });
     }
@@ -655,6 +663,7 @@ class ProofService {
       const touched = currentness.touches(event, payload, row.receipt.evidence);
       if (!touched.length) continue;
       row.current = { ...row.current, state: "UNAVAILABLE", reason: "RECHECK_PENDING", touched, historicalVerdict: row.receipt.verdict };
+      if(!this.data.subscriptions[`${repositoryId}:${row.receipt.identity.pr}`])this.queueRetraction(row);
     }
     for (const sub of Object.values(this.data.subscriptions)) {
       if (sub.repositoryId !== repositoryId || (onlyPR && sub.pr !== onlyPR)) continue;
@@ -793,6 +802,7 @@ class ProofService {
     }
     this.save();
     assert(!failed || !policies.normalize(this.policyFor(repositoryId)).enforced, "CHECK_RECONCILIATION_PENDING");
+    return !failed;
   }
   activate(installationId, repo) {
     assert(Number.isSafeInteger(repo.id) && repoName(repo.full_name), "INVALID_WEBHOOK_SCOPE");
@@ -854,6 +864,15 @@ class ProofService {
   async drain() {
     if (this.busy || this.draining) return;
     this.draining = true;
+    try {
+    if(this.savePending)this.save();
+    const retraction=this.data.retractionQueue[0];
+    if(retraction&&(!retraction.retryAt||retraction.retryAt<=Date.now())){
+      try{const client=await this.appClient(retraction.installationId,retraction.repositoryId);await client.authorize(retraction.repo,retraction.repositoryId);
+        if(await this.retractChecks(client,retraction.repositoryId,retraction.pr,retraction.receiptId))this.data.retractionQueue.shift();else retraction.retryAt=Date.now()+30000;
+      }catch{retraction.retryAt=Date.now()+30000;}
+      this.save();
+    }
     await this.resolveGroup();
     await this.reconcileDeliveries();
     this.reconcile();
@@ -902,9 +921,9 @@ class ProofService {
     if (!this.data.queue.length) { this.draining=false; return; }
     const job = this.data.queue[0];
     if (job.retryAt && Date.now() < job.retryAt) { this.draining = false; return; }
-    job.processing = true;
-    this.save();
     try {
+      job.processing = true;
+      this.save();
       const client = await this.appClient(job.installationId, job.repositoryId);
       await client.authorize(job.repo, job.repositoryId);
       if (this.meter && !this.meter.usage(job.installationId).automationAllowed) {
@@ -939,6 +958,7 @@ class ProofService {
           return;
         }
         previousRow.current = current;
+        await this.retractChecks(client,job.repositoryId,job.pr,previousRow.receipt.receiptId);
       }
 
       const out = await this.run(job.repo, job.pr, {
@@ -1008,6 +1028,7 @@ class ProofService {
       this.save();
       this.draining = false;
     }
+    } finally { this.draining = false; }
   }
 }
 module.exports = { ProofService };

@@ -15,6 +15,11 @@ async function handle(service, req, res, url) {
   );
   try {
     const customers = service.customers;
+    if (req.method === "GET" && url.pathname === "/proof/.well-known/jwks.json") {
+      assert(service.receiptSigner?.keys,"SIGNING_NOT_CONFIGURED");
+      send(200,service.receiptSigner.keys);return true;
+    }
+
     if (customers && req.method === "GET" && url.pathname === "/proof/login") {
       const login = customers.start(url.searchParams.get("source"));
       res.setHeader("Set-Cookie", login.cookie);
@@ -133,6 +138,18 @@ async function handle(service, req, res, url) {
       send(200, { records: records.map(r => ({ receipt: r.proof?.receiptSnapshot || null, landed: landedFor(r) })),
         pushObservations: pushes.map(p => ({ observedAt: p.observedAt, ref: p.ref, commit: p.commits.find(c => c.sha === commit) })) });
       return true;
+    }
+    const machineBundle=url.pathname.match(/^\/proof\/receipts\/([a-f0-9-]{36})\/bundle$/);
+    if(req.method==='GET'&&machineBundle&&token){
+      const row=await service.access(machineBundle[1],token);
+      if(customers){
+        const credential={token};
+        const installations=await customers.installations(credential);
+        assert(installations.some(i=>i.id===row.installationId),'ACCESS_DENIED');
+        const repositories=await customers.list(credential,`/user/installations/${row.installationId}/repositories`,'repositories');
+        assert(repositories.some(r=>r.id===row.receipt.identity.repositoryId&&r.full_name?.toLowerCase()===row.receipt.identity.repository.toLowerCase()),'ACCESS_DENIED');
+      }
+      assert(row.artifacts,'HISTORICAL_BUNDLE_UNAVAILABLE');send(200,service.portable(row));return true;
     }
     let session;
     if (customers) {
@@ -415,7 +432,7 @@ async function handle(service, req, res, url) {
         /^\/proof\/receipts\/([a-f0-9-]{36})/,
       )?.[1];
       if (receiptId) {
-        const row = service.data.receipts[receiptId];
+        const row = service.data.receipts[receiptId] || service.archive?.get(receiptId);
         assert(row, "NOT_FOUND");
         await customers.repository(
           session,
@@ -432,10 +449,6 @@ async function handle(service, req, res, url) {
       });
       send(201, { ...out, url: `/proof/receipts/${out.receipt.receiptId}` });
       return true;
-    }
-    if (req.method === "GET" && url.pathname === "/proof/.well-known/jwks.json") {
-      assert(service.receiptSigner?.keys,"SIGNING_NOT_CONFIGURED");
-      send(200,service.receiptSigner.keys);return true;
     }
     const bundleMatch = url.pathname.match(/^\/proof\/receipts\/([a-f0-9-]{36})\/bundle$/);
     if (bundleMatch && req.method === "GET") {
@@ -455,7 +468,7 @@ async function handle(service, req, res, url) {
       const out = await service.read(match[1], token, {
         refresh: Boolean(match[2]),
       });
-      const receiptRow = service.data.receipts[match[1]];
+      const receiptRow = service.data.receipts[match[1]] || service.archive?.get(match[1]);
       const receiptUsage = customers ? service.meter.usage(receiptRow.installationId) : null;
       const notice = receiptUsage?.notice || "";
       if (customers) { out.entitlementNotice = notice; service.save(); }
