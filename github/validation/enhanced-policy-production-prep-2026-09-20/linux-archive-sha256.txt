@@ -1,0 +1,1 @@
+098a695d1c05062badaf6fa4ce6de6537ce56a9eb96a94bd33e59349fc753111  fixture/candidate.tar.gz

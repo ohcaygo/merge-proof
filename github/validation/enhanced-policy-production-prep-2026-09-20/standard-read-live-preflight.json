@@ -1,0 +1,32 @@
+{
+  "at": "2026-09-20T19:54:11.606Z",
+  "appId": 4899448,
+  "installationId": 160648161,
+  "appPermissions": {
+    "actions": "read",
+    "administration": "read",
+    "checks": "write",
+    "contents": "read",
+    "merge_queues": "read",
+    "metadata": "read",
+    "pull_requests": "read",
+    "statuses": "read"
+  },
+  "installationPermissions": {
+    "checks": "write",
+    "actions": "read",
+    "contents": "read",
+    "metadata": "read",
+    "statuses": "read",
+    "merge_queues": "read",
+    "pull_requests": "read",
+    "administration": "read"
+  },
+  "repositorySelection": "selected",
+  "executionPolicy": {
+    "state": "UNAVAILABLE",
+    "reason": "GITHUB_HTTP_403"
+  },
+  "sourceCommit": "4f14f772838e9a5e40fd401c388efd7d11010053",
+  "limitation": "Standard development App read-only preflight; no Enhanced or new signed queue acceptance claimed."
+}

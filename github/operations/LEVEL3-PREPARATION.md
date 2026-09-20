@@ -2,7 +2,7 @@
 
 Owner direction (2026-09-20): EC2 single writer, two-account/region KMS and recovery, encrypted gp3, S3/versioned backups plus snapshots, independent JWKS hosting/mirror, separate roots repository, process-separated optional policy App, private GitHub Team validation organization, monitoring and private recurring lab. **$110/month total ceiling.** No production deployment/cutover, public trust/checkpoint publication, production companion registration, or irreversible production Compliance retention is authorized by this preparation.
 
-`7953ecd` remains the last accepted live signed queue candidate. `5fd27e1` is the prior local companion-library candidate. The next product SHA must identify enrollment, lifecycle, process isolation, retained Git and operational changes together; it inherits no live status. The frozen proof-engine digest remains `b770fe7f5dac86730095e768e4c3c4b4e1856eae909b3757acfc756069e47b76`.
+`7953ecd` remains the last accepted live signed queue candidate. `5fd27e1` is the prior local companion-library candidate. Current product candidate `838ed8f422605bc814c0a7d9d0140dabbe78fedb` includes enrollment, lifecycle, process isolation, retained Git and operational changes together; it inherits no live queue status. See [candidate validation](../validation/enhanced-policy-production-prep-2026-09-20/README.md). The frozen proof-engine digest remains `b770fe7f5dac86730095e768e4c3c4b4e1856eae909b3757acfc756069e47b76`.
 
 ## Implemented preparation
 

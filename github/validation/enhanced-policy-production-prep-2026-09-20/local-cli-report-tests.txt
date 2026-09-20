@@ -1,0 +1,44 @@
+
+> merge-proof@0.2.0 test
+> node test/run.js && node test/pilot-report.js
+
+  PASS  CLI help lists usage, verdicts and exit codes
+  PASS  CLI rejects an unknown option with exit code 1
+  PASS  CLI rejects an invalid --fail-on value
+  PASS  VERIFIED when the base moved only in files the candidate did not touch
+  PASS  NOT_PROVEN on base drift in an overlapping file
+  PASS  base drift finding answers all four output-quality questions
+  PASS  NOT_PROVEN when the base ref cannot be resolved
+  PASS  NOT_PROVEN when no merge base exists between the two refs
+  PASS  NOT_PROVEN when the path is not a git repository
+  PASS  shallow clone fails closed and never returns VERIFIED
+  PASS  NOT_PROVEN when the candidate changes a migration
+  PASS  each blocking protected category is detected
+  PASS  ci-deploy is advisory only and does not change the verdict
+  PASS  a stale base alone is advisory and does not produce NOT_PROVEN
+  PASS  generated artifacts are excluded from drift overlap
+  PASS  .mergeproofignore suppresses drift in ignored paths
+  PASS  .mergeproofignore negation re-includes a path
+  PASS  --json emits a parseable result with schema, verdict and coverage
+  PASS  default run is diagnostic: NOT_PROVEN still exits 0
+  PASS  --fail-on not-proven exits 2 on NOT_PROVEN and 0 on VERIFIED
+  PASS  --fail-on fail does not misclassify missing history as a failed requirement
+  PASS  human output always states what is not checked
+  PASS  action.yml is valid composite-action metadata with minimal permissions
+  PASS  action.yml pins third-party actions and requests no write scope beyond pull-requests
+  PASS  package declares no runtime or dev dependencies
+  PASS  source makes no network, model or telemetry calls
+
+26/26 tests passed
+  PASS  public Kiota sample counts and all 77 records survive rendering
+  PASS  unresolvable records and recorded FAIL are visible without inventing verdicts
+  PASS  full collector dataset retains distinct landed commits for a repeated PR number
+  PASS  invalid, empty, duplicate and contradictory evidence is rejected
+  PASS  CLI writes HTML to paths with spaces and preserves source bytes
+  PASS  missing browser fails visibly and removes an older PDF
+  PASS  export closes a browser that stays alive after completing the PDF
+  PASS  export closes owned browser descendants that retain the error pipe
+  PASS  CLI rejects malformed JSON, missing scope, unknown flags and input/output collision
+  PASS  real analyzer CLI JSON flows to a report for all three verdicts
+
+10/10 pilot report tests passed

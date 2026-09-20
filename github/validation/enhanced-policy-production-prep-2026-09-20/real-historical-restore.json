@@ -1,0 +1,50 @@
+{
+  "at": "2026-09-20T20:02:50.393Z",
+  "state": "RESTORED_PORTABLE_TRUST_VERIFIED",
+  "operationsCandidate": "838ed8f422605bc814c0a7d9d0140dabbe78fedb",
+  "historicalReceiptCandidate": "7953ecdbd849c8afe0379bfec1b4a61133292c62",
+  "sourceStateUnchanged": true,
+  "files": 48,
+  "bytes": 490684,
+  "manifestDigest": "4eb8b392801cea72ce40a74e95223606dedf3bfd56ea4ce1c1a87f1ec37818f9",
+  "currentness": "NOT_PROVEN",
+  "elapsedMs": 3477,
+  "results": [
+    {
+      "receiptId": "4275b81a-3f68-46ee-9fe4-6542d03c82c0",
+      "signature": "VALID_TRUSTED_KEY",
+      "replay": "CONSISTENT_OFFLINE",
+      "landings": 0,
+      "reconstruction": "NO_RECONSTRUCTION_CLAIM"
+    },
+    {
+      "receiptId": "920c0f03-8304-4b47-820a-eeadfa73e278",
+      "signature": "VALID_TRUSTED_KEY",
+      "replay": "CONSISTENT_OFFLINE",
+      "landings": 0,
+      "reconstruction": "INDEPENDENTLY_RECOMPUTED"
+    },
+    {
+      "receiptId": "c0e96f25-60fe-478d-bfb1-e142b99125ea",
+      "signature": "VALID_TRUSTED_KEY",
+      "replay": "CONSISTENT_OFFLINE",
+      "landings": 0,
+      "reconstruction": "INDEPENDENTLY_RECOMPUTED"
+    },
+    {
+      "receiptId": "df91f650-7660-48b6-9eac-86ee304b595b",
+      "signature": "VALID_TRUSTED_KEY",
+      "replay": "CONSISTENT_OFFLINE",
+      "landings": 1,
+      "reconstruction": "INDEPENDENTLY_RECOMPUTED"
+    },
+    {
+      "receiptId": "dfe9a2be-5715-419c-977e-936a5674e582",
+      "signature": "VALID_TRUSTED_KEY",
+      "replay": "CONSISTENT_OFFLINE",
+      "landings": 0,
+      "reconstruction": "INDEPENDENTLY_RECOMPUTED"
+    }
+  ],
+  "limitation": "Local restore of previously accepted genuine provider evidence using independent retained lab trust and recorded Git binary. No new provider queue run, AWS recovery, production key, production RPO or cold-host RTO is claimed."
+}
