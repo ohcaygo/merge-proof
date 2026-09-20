@@ -1,0 +1,11 @@
+{
+  "source": "8882acd2acccf9ef1ff44c34de74de9cf25790ba",
+  "repository": "ohcaygo/merge-proof-l3-lab-classic",
+  "repositoryId": 1377343115,
+  "branch": "l3-addendum-complete-8882acd",
+  "fixtureSha": "6765d3a5422022c96eafa9848f4eec73e9cf397b",
+  "archiveSha256": "db6790b0fda2a5208854d9c1c460ab6287dd05910ebd2323d05ce9f1d4945f17",
+  "archiveBytes": 906992,
+  "files": 262,
+  "mainBefore": "d8a5e85dbcb8a3d6691ca0da19252a1488ae3268"
+}

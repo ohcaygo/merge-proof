@@ -1,0 +1,46 @@
+{
+  "source": "8882acd2acccf9ef1ff44c34de74de9cf25790ba",
+  "scope": "Current packaged engine replays retained real-provider observations; no new live observation or present currentness claim.",
+  "rows": [
+    {
+      "case": "eligible",
+      "originalSource": "7492959d9ae5ef5bb9c889edb3bcfe3b410d8f69",
+      "originalObservedAt": "2026-09-20T16:05:05.284Z",
+      "originalVerdict": "VERIFIED",
+      "currentVerdict": "VERIFIED"
+    },
+    {
+      "case": "policy-changed",
+      "originalSource": "7492959d9ae5ef5bb9c889edb3bcfe3b410d8f69",
+      "originalObservedAt": "2026-09-20T16:05:19.075Z",
+      "originalVerdict": "NOT_PROVEN",
+      "currentVerdict": "NOT_PROVEN"
+    },
+    {
+      "case": "wrong-event",
+      "originalSource": "7492959d9ae5ef5bb9c889edb3bcfe3b410d8f69",
+      "originalObservedAt": "2026-09-20T16:05:38.625Z",
+      "originalVerdict": "NOT_PROVEN",
+      "currentVerdict": "NOT_PROVEN"
+    },
+    {
+      "case": "wrong-actor",
+      "originalSource": "7492959d9ae5ef5bb9c889edb3bcfe3b410d8f69",
+      "originalObservedAt": "2026-09-20T16:05:58.358Z",
+      "originalVerdict": "NOT_PROVEN",
+      "currentVerdict": "NOT_PROVEN"
+    },
+    {
+      "case": "eligible-restored",
+      "originalSource": "7492959d9ae5ef5bb9c889edb3bcfe3b410d8f69",
+      "originalObservedAt": "2026-09-20T16:06:28.517Z",
+      "originalVerdict": "VERIFIED",
+      "currentVerdict": "VERIFIED"
+    }
+  ],
+  "signedReplay": {
+    "state": "CONSISTENT_OFFLINE",
+    "signature": "VALID_TRUSTED_KEY",
+    "engineDigest": "b770fe7f5dac86730095e768e4c3c4b4e1856eae909b3757acfc756069e47b76"
+  }
+}

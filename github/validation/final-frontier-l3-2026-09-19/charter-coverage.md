@@ -1,6 +1,6 @@
 # Level 3 §43 implementation and acceptance coverage
 
-Pre-addendum product code `a6800e68f4c1e03d0cd0de28fe7febe5864bcdc4`; current addendum candidate `7492959d9ae5ef5bb9c889edb3bcfe3b410d8f69`. Research §43 says “twenty” but enumerates 22 items. All are accounted for below; code presence does not close an owner/provider validation gate. Full evidence and limitations are in [productionization](productionization.md).
+Pre-addendum product code `a6800e68f4c1e03d0cd0de28fe7febe5864bcdc4`; current addendum candidate `7953ecdbd849c8afe0379bfec1b4a61133292c62`. Research §43 says “twenty” but enumerates 22 items. All are accounted for below; code presence does not close an owner/provider validation gate. Full evidence and limitations are in [productionization](productionization.md).
 
 | Item | Implementation | Acceptance boundary |
 | --- | --- | --- |
@@ -9,7 +9,7 @@ Pre-addendum product code `a6800e68f4c1e03d0cd0de28fe7febe5864bcdc4`; current ad
 | 0.3 Per-claim currentness | `bindings`, `currentness`, targeted service queues, ETags, TTL deliveries | Model/local/live head/base/policy/permission/noise; org-only live enforcement plan gate |
 | 0.4 False-NOT_PROVEN triage | Rule classification, writer-scoped reviews, paginated runs, specific gaps | Expanded live repository policy matrix; 22-run fixture; explicit provider limits retained |
 | 0.5 Titles/stages | `check`, enforcing/admission titles and exact group subject | Local check/queue publication; live signed group publication timing pending owner |
-| 0.6 Model/corpus/version | Real-service seeded world/fetch simulator, shrinking, recorded corpus, frozen policy | 1,000 sequences; 314-test suite under two minutes locally; hosted final-harness CI pending normal release |
+| 0.6 Model/corpus/version | Real-service seeded world/fetch simulator, shrinking, recorded corpus, frozen policy | Every one of 1,000 seeds retained in isolated workers; final suite 331/331 locally in 40.892 seconds, model 27.802 seconds; CI model passed in 68.147 seconds with its 120-second limit enforced |
 | 1.1 ESI | `subject`, exact repository/commit/tree/base/group binding | Local cross-subject negatives; live currentness/queue observations |
 | 1.2 Workflow blob | Bound workflow blob and advisory pin observations | Local and live source-change refusal; caller-only reusable workflow boundary |
 | 1.3 Authorization graph | `authority`, actors, reviews, permissions, dismissal/activity and bot rules | Live account approval/revocation and permission loss; distinct human principals remain unproven |

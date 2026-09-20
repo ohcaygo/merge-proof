@@ -1,0 +1,34 @@
+{
+  "source": "7953ecdbd849c8afe0379bfec1b4a61133292c62",
+  "repository": "ohcaygo/merge-proof-l3-lab-classic",
+  "repositoryId": 1377343115,
+  "branch": "l3-addendum-complete-7953ecd",
+  "fixtureSha": "940e74de4ad46f2d994933f52f7a0e94e6cb91de",
+  "archiveSha256": "0f057964d8dc67927e7c0091e4f3601936a5f77ffca1caf06070af4dec8e7638",
+  "archiveBytes": 907644,
+  "files": 263,
+  "mainBefore": "d8a5e85dbcb8a3d6691ca0da19252a1488ae3268",
+  "runId": 35522968961,
+  "url": "https://github.com/ohcaygo/merge-proof-l3-lab-classic/actions/runs/35522968961",
+  "conclusion": "success",
+  "engineDigest": "b770fe7f5dac86730095e768e4c3c4b4e1856eae909b3757acfc756069e47b76",
+  "node": "v22.23.2",
+  "chrome": "Google Chrome 152.0.7977.82",
+  "tests": {
+    "github": 331,
+    "factory": 37,
+    "staticGitReconstruction": 20,
+    "cli": 26,
+    "report": 10
+  },
+  "model": {
+    "sequences": 1000,
+    "actions": 28578,
+    "invariants": 17,
+    "workers": 4,
+    "elapsedMs": 68147.25908799999,
+    "ciBudgetMs": 120000,
+    "allCountersEqualSerialAndLocal": true
+  },
+  "staticGitBinarySha256": "3d2b9bc579af799be2f88ed81c01cec14e4f469dbf6fef377322c29710e66d2b"
+}

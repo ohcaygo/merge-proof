@@ -1,0 +1,236 @@
+
+> merge-proof@0.2.0 test:factory
+> node --test factory/test/*.test.js
+
+TAP version 13
+# Subtest: Stripe raw signature rejects modified, expired, unsigned and live-mode events
+ok 1 - Stripe raw signature rejects modified, expired, unsigned and live-mode events
+  ---
+  duration_ms: 2.313517
+  type: 'test'
+  ...
+# Subtest: Stripe retrieves authoritative amount/contact/transaction; ignores webhook amount
+ok 2 - Stripe retrieves authoritative amount/contact/transaction; ignores webhook amount
+  ---
+  duration_ms: 0.845542
+  type: 'test'
+  ...
+# Subtest: Stripe rejects wrong SKU, mode, quantity, link, pending payment
+ok 3 - Stripe rejects wrong SKU, mode, quantity, link, pending payment
+  ---
+  duration_ms: 0.869687
+  type: 'test'
+  ...
+# Subtest: offer price comes from Payment Link and rejects adjustable or recurring SKU
+ok 4 - offer price comes from Payment Link and rejects adjustable or recurring SKU
+  ---
+  duration_ms: 24.282346
+  type: 'test'
+  ...
+# Subtest: repository input is public GitHub only; no token, query, fragment, local path or other host
+ok 5 - repository input is public GitHub only; no token, query, fragment, local path or other host
+  ---
+  duration_ms: 0.493443
+  type: 'test'
+  ...
+# Subtest: public repo scope is exact; private adapter fails eligibility without requesting token
+ok 6 - public repo scope is exact; private adapter fails eligibility without requesting token
+  ---
+  duration_ms: 1.814314
+  type: 'test'
+  ...
+# Subtest: merged history requires explicit parent relationship and landed CI SHA
+ok 7 - merged history requires explicit parent relationship and landed CI SHA
+  ---
+  duration_ms: 0.70576
+  type: 'test'
+  ...
+# Subtest: GitHub pagination exhaustion fails closed
+ok 8 - GitHub pagination exhaustion fails closed
+  ---
+  duration_ms: 2.579464
+  type: 'test'
+  ...
+# Subtest: secret scrub covers tokens and does not retain review bodies
+ok 9 - secret scrub covers tokens and does not retain review bodies
+  ---
+  duration_ms: 0.710168
+  type: 'test'
+  ...
+# Subtest: restricted API keys preserve strict live/test separation
+ok 10 - restricted API keys preserve strict live/test separation
+  ---
+  duration_ms: 751.331424
+  type: 'test'
+  ...
+# Subtest: exact SHA and expected App success can meet CI
+ok 11 - exact SHA and expected App success can meet CI
+  ---
+  duration_ms: 1.323997
+  type: 'test'
+  ...
+# Subtest: wrong SHA never verifies, even when same check succeeds
+ok 12 - wrong SHA never verifies, even when same check succeeds
+  ---
+  duration_ms: 0.628416
+  type: 'test'
+  ...
+# Subtest: wrong App, missing, failed, neutral, skipped, in-progress CI all block
+ok 13 - wrong App, missing, failed, neutral, skipped, in-progress CI all block
+  ---
+  duration_ms: 0.531935
+  type: 'test'
+  ...
+# Subtest: latest failed attempt overrides old success
+ok 14 - latest failed attempt overrides old success
+  ---
+  duration_ms: 0.225763
+  type: 'test'
+  ...
+# Subtest: unresolved or empty CI policy cannot infer not-applicable
+ok 15 - unresolved or empty CI policy cannot infer not-applicable
+  ---
+  duration_ms: 0.255938
+  type: 'test'
+  ...
+# Subtest: approval is exact candidate bound
+ok 16 - approval is exact candidate bound
+  ---
+  duration_ms: 0.305782
+  type: 'test'
+  ...
+# Subtest: dismissed, changes-requested, bot, author and outsider cannot be current approval
+ok 17 - dismissed, changes-requested, bot, author and outsider cannot be current approval
+  ---
+  duration_ms: 0.340456
+  type: 'test'
+  ...
+# Subtest: later comment does not erase an approval but latest decision does
+ok 18 - later comment does not erase an approval but latest decision does
+  ---
+  duration_ms: 0.194815
+  type: 'test'
+  ...
+# Subtest: outstanding changes requested from another reviewer blocks
+ok 19 - outstanding changes requested from another reviewer blocks
+  ---
+  duration_ms: 0.382736
+  type: 'test'
+  ...
+# Subtest: unresolvable approval remains unknown
+ok 20 - unresolvable approval remains unknown
+  ---
+  duration_ms: 0.427029
+  type: 'test'
+  ...
+# Subtest: existing FAIL or blocking local finding is never upgraded
+ok 21 - existing FAIL or blocking local finding is never upgraded
+  ---
+  duration_ms: 0.268182
+  type: 'test'
+  ...
+# Subtest: reassessment preserves original, reports resolved remaining and new gaps
+ok 22 - reassessment preserves original, reports resolved remaining and new gaps
+  ---
+  duration_ms: 0.939097
+  type: 'test'
+  ...
+# Subtest: complete HTTP journey: eligibility -> signed fixture webhook -> authorization -> real Git/PDF -> download -> one reassessment
+ok 23 - complete HTTP journey: eligibility -> signed fixture webhook -> authorization -> real Git/PDF -> download -> one reassessment
+  ---
+  duration_ms: 8189.647433
+  type: 'test'
+  ...
+# Subtest: eligibility blocks inaccessible or unsupported scope without taking payment
+ok 24 - eligibility blocks inaccessible or unsupported scope without taking payment
+  ---
+  duration_ms: 53.305414
+  type: 'test'
+  ...
+# Subtest: report failure is honest, retryable, preserves cleanup, escalates refund to Ryan
+ok 25 - report failure is honest, retryable, preserves cleanup, escalates refund to Ryan
+  ---
+  duration_ms: 486.587234
+  type: 'test'
+  ...
+# Subtest: post-payment auth and unsupported history have explicit states
+ok 26 - post-payment auth and unsupported history have explicit states
+  ---
+  duration_ms: 178.222791
+  type: 'test'
+  ...
+# Subtest: expired access is denied and artifacts are purged; unknown paid reference escalates
+ok 27 - expired access is denied and artifacts are purged; unknown paid reference escalates
+  ---
+  duration_ms: 159.868393
+  type: 'test'
+  ...
+# Subtest: isolated runner has hard timeout and removes its working directory
+ok 28 - isolated runner has hard timeout and removes its working directory
+  ---
+  duration_ms: 51.126757
+  type: 'test'
+  ...
+# Subtest: new visitors see Pro, retired checkout fails closed, historical access still routes
+ok 29 - new visitors see Pro, retired checkout fails closed, historical access still routes
+  ---
+  duration_ms: 184.610214
+  type: 'test'
+  ...
+# Subtest: hosted sandbox isolates provider credentials and accounting from historical live orders
+ok 30 - hosted sandbox isolates provider credentials and accounting from historical live orders
+  ---
+  duration_ms: 41.009833
+  type: 'test'
+  ...
+# Subtest: authenticated proxy preserves per-client eligibility limits and rejects direct forwarding
+ok 31 - authenticated proxy preserves per-client eligibility limits and rejects direct forwarding
+  ---
+  duration_ms: 123.33546
+  type: 'test'
+  ...
+# Subtest: Pages proxy preserves webhook bytes, origin, cookie and protected response without exposing its key
+ok 32 - Pages proxy preserves webhook bytes, origin, cookie and protected response without exposing its key
+  ---
+  duration_ms: 20.763207
+  type: 'test'
+  ...
+# Subtest: undelivered expired payment escalates once to Ryan instead of disappearing
+ok 33 - undelivered expired payment escalates once to Ryan instead of disappearing
+  ---
+  duration_ms: 6.873907
+  type: 'test'
+  ...
+# Subtest: delivered expired pack retains reconciliation but does not invent a refund on later sweeps
+ok 34 - delivered expired pack retains reconciliation but does not invent a refund on later sweeps
+  ---
+  duration_ms: 2.937043
+  type: 'test'
+  ...
+# Subtest: expired failed reassessment also escalates while unused reassessment does not
+ok 35 - expired failed reassessment also escalates while unused reassessment does not
+  ---
+  duration_ms: 3.164288
+  type: 'test'
+  ...
+# Subtest: one thousand expired paid records do not permanently block new eligibility
+ok 36 - one thousand expired paid records do not permanently block new eligibility
+  ---
+  duration_ms: 8.636883
+  type: 'test'
+  ...
+# Subtest: factory merge report labels and shows the real landed state
+ok 37 - factory merge report labels and shows the real landed state
+  ---
+  duration_ms: 5.322915
+  type: 'test'
+  ...
+1..37
+# tests 37
+# suites 0
+# pass 37
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 9310.670173

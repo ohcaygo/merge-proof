@@ -1,0 +1,80 @@
+{
+  "at": "2026-09-20T16:34:34.683Z",
+  "source": "7953ecdbd849c8afe0379bfec1b4a61133292c62",
+  "queue": {
+    "state": "UNAVAILABLE",
+    "status": 404,
+    "reason": "GITHUB_UNAVAILABLE"
+  },
+  "devApp": {
+    "state": "AVAILABLE",
+    "value": {
+      "id": 4899448,
+      "permissions": {
+        "actions": "read",
+        "administration": "read",
+        "checks": "write",
+        "contents": "read",
+        "merge_queues": "read",
+        "metadata": "read",
+        "pull_requests": "read",
+        "statuses": "read"
+      },
+      "events": [
+        "branch_protection_configuration",
+        "branch_protection_rule",
+        "check_run",
+        "check_suite",
+        "merge_group",
+        "pull_request",
+        "pull_request_review",
+        "push",
+        "repository",
+        "repository_ruleset",
+        "status",
+        "workflow_run"
+      ]
+    }
+  },
+  "org": {
+    "state": "AVAILABLE",
+    "value": {
+      "plan": "free"
+    }
+  },
+  "fixture": {
+    "state": "AVAILABLE",
+    "value": {
+      "id": 4836,
+      "enforcement": "disabled"
+    }
+  },
+  "productMain": {
+    "state": "AVAILABLE",
+    "value": {
+      "sha": "e76a8677aa3dfd935376981ad4b99d3444e0441d"
+    }
+  },
+  "openFixtures": {
+    "state": "AVAILABLE",
+    "value": [
+      {
+        "repository": "ohcaygo/merge-proof-l3-lab-classic",
+        "openPulls": []
+      },
+      {
+        "repository": "ohcaygo/merge-proof-l3-lab-rules",
+        "openPulls": []
+      },
+      {
+        "repository": "ohcaygo/merge-proof-l3-lab-queue-headgreen",
+        "openPulls": []
+      },
+      {
+        "repository": "ohcaygo/merge-proof-l3-lab-queue-allgreen",
+        "openPulls": []
+      }
+    ],
+    "observedAt": "2026-09-20T16:26:52.394Z"
+  }
+}

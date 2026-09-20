@@ -1,0 +1,23 @@
+{
+  "artifact": "merge-proof-0.2.0.tgz",
+  "integrity": "sha512-dj9wAGrlrp7OL4btoKN91ldfFRel5yOJ1BmejRSTCEwXlT7IKVquf1YWC3QHFHFaYO4nLz9+we9wFGSJwZGuUA==",
+  "files": 165,
+  "offline": "CONSISTENT_OFFLINE",
+  "signature": "VALID_TRUSTED_KEY",
+  "independent": "INDEPENDENTLY_RECOMPUTED",
+  "mcpTool": "merge_proof_decision",
+  "readOnly": true,
+  "ghShim": "PASS",
+  "v6": {
+    "state": "CONSISTENT_OFFLINE",
+    "signature": "VALID_TRUSTED_KEY"
+  },
+  "v7": {
+    "state": "CONSISTENT_OFFLINE",
+    "signature": "VALID_TRUSTED_KEY"
+  },
+  "source": "7953ecdbd849c8afe0379bfec1b4a61133292c62",
+  "engine": "v7",
+  "codeDigest": "b770fe7f5dac86730095e768e4c3c4b4e1856eae909b3757acfc756069e47b76",
+  "runtimePackageUnchangedFrom": "8882acd2acccf9ef1ff44c34de74de9cf25790ba"
+}
