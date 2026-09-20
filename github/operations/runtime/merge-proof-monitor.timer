@@ -1,0 +1,10 @@
+[Unit]
+Description=Minute-level backup and storage health
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=1min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

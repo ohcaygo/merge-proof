@@ -7,6 +7,13 @@ function authEnvironment(token) {
   return token ? { GIT_CONFIG_COUNT: "1", GIT_CONFIG_KEY_0: "http.https://github.com/.extraheader",
     GIT_CONFIG_VALUE_0: `AUTHORIZATION: basic ${Buffer.from(`x-access-token:${token}`).toString("base64")}` } : {};
 }
+function fetchAndRetain(git,input){
+  const retained=[...new Set([input.base,input.head,input.candidate,...(input.entries||[]).flatMap(x=>[x.head,x.candidate])].filter(Boolean))];
+  assert(retained.length&&retained.every(sha),"EXACT_INPUT_COMMITS_REQUIRED");
+  git(["fetch","--no-auto-maintenance","--no-tags","--filter=blob:none","origin",...retained]);
+  for(const commit of retained)git(["update-ref",`refs/merge-proof/retained/${commit}`,commit]);
+  return retained;
+}
 function work({ config, repository, repositoryId, token, input }) {
   assert(repoName(repository) && Number.isSafeInteger(repositoryId) && repositoryId > 0, "INVALID_SCOPE");
   assert(sha(input.base) && sha(input.head), "EXACT_INPUT_COMMITS_REQUIRED");
@@ -28,7 +35,9 @@ function work({ config, repository, repositoryId, token, input }) {
     git(["config", "remote.origin.url", remote]);
     git(["config", "remote.origin.promisor", "true"]);
     git(["config", "remote.origin.partialclonefilter", "blob:none"]);
-    git(["fetch", "--no-tags", "--filter=blob:none", "origin", ...new Set([input.base, input.head, ...(input.entries || []).flatMap(x => [x.head,x.candidate].filter(Boolean))])]);
+    // Each retained receipt must remain independently reconstructable after
+    // later fetches overwrite FETCH_HEAD and ordinary Git GC runs.
+    fetchAndRetain(git,input);
     return require("./reconstruct").reconstruct(dir, input, { ...config, authEnvironment: authEnvironment(token) });
   } finally { /* Lock lifetime is owned by the parent, including termination. */ }
 }
@@ -66,4 +75,4 @@ if (!isMainThread) {
   try { parentPort.postMessage(work(workerData)); }
   catch (e) { parentPort.postMessage({ status: "NOT_RECONSTRUCTABLE", tree: null, reason: e.code || "MIRROR_UNAVAILABLE" }); }
 }
-module.exports = { reconstruct, authEnvironment };
+module.exports = { reconstruct, authEnvironment, fetchAndRetain };

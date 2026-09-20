@@ -78,6 +78,9 @@ async function handle(service, req, res, url) {
         send(202, await service.webhook(raw, req.headers));
         return true;
       }
+      if (url.pathname === "/proof/enhanced/webhook") {
+        send(202, await service.enhanced.webhook(raw, req.headers)); return true;
+      }
       if (url.pathname === "/proof/stripe-webhook" && service.billing) {
         await service.billing.webhook(raw, req.headers["stripe-signature"]);
         send(200, { received: true });
@@ -155,6 +158,11 @@ async function handle(service, req, res, url) {
     if (customers) {
       session = customers.session(req);
       token = session.token;
+      if (url.pathname === "/proof/enhanced/callback" && req.method === "GET") {
+        const scope = await service.enhanced.callback(session, url.searchParams.get("state"));
+        res.writeHead(303, {Location: `/proof/?view=account&enhanced=returned&installation=${scope.primaryInstallationId}&repository=${scope.repositoryId}`});
+        res.end(); return true;
+      }
       if (url.pathname === "/proof/logout" && req.method === "POST") {
         res.setHeader("Set-Cookie", customers.logout(req));
         send(200, { disconnected: true });
@@ -200,6 +208,7 @@ async function handle(service, req, res, url) {
           "/proof/portal",
           "/proof/quantity",
           "/proof/gate",
+          "/proof/enhanced",
           "/proof/merges",
         ].includes(url.pathname)
       ) {
@@ -213,6 +222,19 @@ async function handle(service, req, res, url) {
           installationId,
           repositoryId,
         );
+        if (url.pathname === "/proof/enhanced") {
+          assert(["GET", "POST"].includes(req.method), "METHOD_DENIED");
+          let status;
+          if (req.method === "POST") {
+            assert(["enable", "disable"].includes(input.action), "INVALID_ACTION");
+            status = input.action === "enable"
+              ? await service.enhanced.enable(session, repo, installation, input.consent)
+              : service.enhanced.disable(session, repo, installation);
+            const client = await service.appClient(installationId, repositoryId);
+            await service.retractChecks(client, repositoryId);
+          } else status = await service.enhanced.checkStatus(installationId, repo);
+          send(200, status); return true;
+        }
         if (url.pathname === "/proof/account" && req.method === "GET") {
           const receipts = Object.values(service.data.receipts)
             .filter(
@@ -264,6 +286,7 @@ async function handle(service, req, res, url) {
             billingOwner,
             pulls: pulls.map((p) => ({ number: p.number, title: p.title })),
             billingAvailable: !!service.billing,
+            enhancedPolicy: service.enhanced.status(installationId, repositoryId, repo.permissions?.admin === true),
           });
           return true;
         }

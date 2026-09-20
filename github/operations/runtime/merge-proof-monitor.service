@@ -1,0 +1,18 @@
+[Unit]
+Description=Merge-Proof private operational health metrics
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/opt/merge-proof/current
+ExecStart=/usr/local/bin/node github/operations/monitor.js /etc/merge-proof/monitor.json
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+RestrictNamespaces=true
+CapabilityBoundingSet=CAP_DAC_READ_SEARCH
+InaccessiblePaths=/run/merge-proof-credentials

@@ -1,0 +1,36 @@
+[Unit]
+Description=Merge-Proof isolated Enhanced execution-policy reader
+After=network-online.target merge-proof-credentials.service
+Requires=merge-proof-credentials.service
+
+[Service]
+User=mp-policy
+Group=mp-policy
+WorkingDirectory=/opt/merge-proof/current
+ExecStart=/usr/local/bin/node github/policy-broker.js /run/merge-proof-credentials/policy/config.json
+RuntimeDirectory=merge-proof-policy
+RuntimeDirectoryMode=0750
+UMask=0077
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectProc=invisible
+ProcSubset=pid
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+CapabilityBoundingSet=
+IPAddressDeny=169.254.169.254/32
+IPAddressDeny=fd00:ec2::254/128
+InaccessiblePaths=/run/merge-proof-credentials/proof /run/merge-proof-credentials/backup /etc/merge-proof/bootstrap.json /srv/merge-proof
+ReadWritePaths=/run/merge-proof-policy
+ReadOnlyPaths=/var/lib/merge-proof-grants /run/merge-proof-credentials/policy
+
+[Install]
+WantedBy=multi-user.target

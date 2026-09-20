@@ -1,0 +1,28 @@
+[Unit]
+Description=Isolated recovery-account restore and portable replay
+After=merge-proof-credentials.service
+RequiresMountsFor=/srv/merge-proof
+ConditionPathIsMountPoint=/srv/merge-proof
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/opt/merge-proof/current
+Environment=AWS_SHARED_CREDENTIALS_FILE=/run/merge-proof-credentials/backup/aws
+Environment=AWS_CONFIG_FILE=/etc/merge-proof/backup-aws-config
+Environment=AWS_EC2_METADATA_DISABLED=true
+ExecStart=/usr/local/bin/node github/operations/restore-drill.js /etc/merge-proof/restore-drill.json
+TimeoutStartSec=4h
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+RestrictNamespaces=true
+CapabilityBoundingSet=CAP_DAC_OVERRIDE
+IPAddressDeny=169.254.169.254/32
+IPAddressDeny=fd00:ec2::254/128
+InaccessiblePaths=/etc/shadow /etc/gshadow /var/lib/amazon /run/merge-proof-credentials/policy /run/merge-proof-credentials/proof /etc/merge-proof/bootstrap.json
+ReadOnlyPaths=/srv/merge-proof/proof /srv/merge-proof/factory
+ReadWritePaths=/srv/merge-proof/backup-work /srv/merge-proof/mirrors /var/lib/merge-proof-operations

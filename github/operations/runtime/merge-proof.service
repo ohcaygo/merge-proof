@@ -1,0 +1,43 @@
+[Unit]
+Description=Merge-Proof single writer (staged nonproduction acceptance)
+After=network-online.target merge-proof-policy.service
+Requires=merge-proof-credentials.service
+RequiresMountsFor=/srv/merge-proof
+ConditionPathIsMountPoint=/srv/merge-proof
+
+[Service]
+User=mp-proof
+Group=mp-proof
+SupplementaryGroups=mp-policy
+WorkingDirectory=/opt/merge-proof/current
+Environment=FACTORY_CONFIG=/run/merge-proof-credentials/proof/factory.json
+Environment=MP_GITHUB_APP_CONFIG=/run/merge-proof-credentials/proof/app.json
+Environment=AWS_SHARED_CREDENTIALS_FILE=/run/merge-proof-credentials/proof/aws
+Environment=AWS_EC2_METADATA_DISABLED=true
+Environment=FACTORY_HOST=127.0.0.1
+EnvironmentFile=/etc/merge-proof/release.env
+ExecStart=/usr/local/bin/node factory/server.js
+UMask=0077
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectProc=invisible
+ProcSubset=pid
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+CapabilityBoundingSet=
+IPAddressDeny=169.254.169.254/32
+IPAddressDeny=fd00:ec2::254/128
+InaccessiblePaths=/run/merge-proof-credentials/policy /run/merge-proof-credentials/backup /etc/merge-proof/bootstrap.json
+ReadWritePaths=/srv/merge-proof /var/lib/merge-proof-grants
+ReadOnlyPaths=/run/merge-proof-credentials/proof
+
+[Install]
+WantedBy=multi-user.target

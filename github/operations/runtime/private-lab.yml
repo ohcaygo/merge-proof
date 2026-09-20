@@ -1,0 +1,57 @@
+# Copy to the protected private validation control repository after its first
+# manual acceptance. This file is intentionally not an active product workflow.
+name: Level 3 private differential lab
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 14 * * 0'
+permissions:
+  contents: read
+concurrency:
+  group: level3-private-lab
+  cancel-in-progress: false
+jobs:
+  observe:
+    if: github.repository == 'ohcaygo-merge-proof-validation/merge-proof-lab-control' && github.event.repository.private == true
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          path: control
+          persist-credentials: false
+      - name: Validate immutable candidate pin
+        env:
+          CANDIDATE: ${{ vars.MP_SOURCE_COMMIT }}
+        run: '[[ "$CANDIDATE" =~ ^[a-f0-9]{40}$ ]]'
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: ohcaygo/merge-proof
+          ref: ${{ vars.MP_SOURCE_COMMIT }}
+          path: product
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.12.0'
+      - name: Regression, model and reconstruction corpus
+        working-directory: product
+        run: npm run test:github
+      - name: Disposable separate-UID broker acceptance
+        working-directory: product
+        run: sudo "$(command -v node)" github/operations/isolation-acceptance.js
+      - name: Observe owned provider fixtures
+        working-directory: product
+        env:
+          MP_LAB_APP_ID: ${{ vars.MP_LAB_APP_ID }}
+          MP_LAB_APP_PRIVATE_KEY: ${{ secrets.MP_LAB_APP_PRIVATE_KEY }}
+          MP_SOURCE_COMMIT: ${{ vars.MP_SOURCE_COMMIT }}
+        run: |
+          node -e 'const fs=require("fs"),path=require("path"),c=JSON.parse(fs.readFileSync("../control/lab.json"));c.output=path.resolve("../private-results");fs.writeFileSync("../lab-run.json",JSON.stringify(c),{mode:0o600});'
+          node github/lab/scheduled.js ../lab-run.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: private-provider-observations-${{ github.run_id }}
+          path: private-results/
+          retention-days: 30
+          if-no-files-found: error

@@ -1,0 +1,11 @@
+[Unit]
+Description=Five-minute Merge-Proof recovery cadence
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+AccuracySec=10s
+Persistent=true
+
+[Install]
+WantedBy=timers.target

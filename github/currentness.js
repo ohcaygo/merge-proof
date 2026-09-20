@@ -6,6 +6,7 @@ function touches(event, p, c) {
   if (!c) return ALL;
   const i = c.identity, target = c.target?.value;
   const samePR = p.pull_request?.number === i.pr || p.number === i.pr;
+  if (event === "enhanced_policy") return ["RULES_SNAPSHOT", "CI_EXECUTED", "CODE_COVERAGE"];
   if (event === "repository_ruleset" && (p.ruleset?.target === "actions" || p.repository_ruleset?.target === "actions")) return ["RULES_SNAPSHOT", "CI_EXECUTED"];
   if (RULE_EVENTS.includes(event)) return ["RULES_SNAPSHOT", "CI_EXECUTED", "APPROVAL_CURRENT"];
   if (PERMISSION_EVENTS.includes(event)) return ["APPROVAL_CURRENT"];

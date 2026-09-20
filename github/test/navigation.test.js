@@ -73,3 +73,11 @@ test('expired or denied repository lookup gives an actionable state without a po
   a.match(h.get('status').textContent,error==='LOGIN_REQUIRED'?/Connect GitHub again/:/authorization could not be verified/);
  }
 });
+test('companion return selects only currently authorized installation and repository; never auto-consents',async()=>{
+ for(const repository of ['4','999']) {
+  const h=harness('?view=account&installation=3&repository='+repository,async url=>({ok:true,json:async()=>url.endsWith('installations')?{installations:[{id:2,account:'first'},{id:3,account:'second'}]}:url.includes('repositories?')?{repositories:[{id:4,name:'second/one'},{id:5,name:'second/two'}]}:{error:'TEST_STOP_AFTER_AUTHORIZED_SELECTION'}}));
+  await h.settle();a.equal(h.get('installation').value,3);
+  a.equal(h.calls.some(c=>c.url.includes('account?installation=3&repository=4')),repository==='4');
+  a.ok(h.calls.every(c=>!c.init.method));a.equal(h.location.href,'original');
+ }
+});

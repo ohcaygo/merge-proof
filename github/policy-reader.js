@@ -119,4 +119,21 @@ function executionPolicyReader(options) {
     }
   };
 }
-module.exports = { withPolicyReader, executionPolicyReader };
+// Installation redirects are untrusted. Discover the companion server-side for
+// the already authorized repository; the subsequent token read binds its ID.
+async function discoverInstallation({app, repository, accountId, fetchImpl = fetch}) {
+  assert(repoName(repository) && positive(accountId), "INVALID_SCOPE");
+  const jwt = require("./app").appClient(app).token;
+  const response = await fetchImpl(`https://api.github.com/repos/${repository.toLowerCase()}/installation`, {
+    method: "GET", redirect: "error", signal: AbortSignal.timeout(15000),
+    headers: {Authorization: `Bearer ${jwt}`, Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2026-03-10"},
+  });
+  assert(response.ok && !response.redirected, "COMPANION_INSTALLATION_UNAVAILABLE");
+  let size = 0; const chunks = [];
+  for await (const chunk of response.body || []) { size += chunk.length; assert(size <= 1024 * 1024, "RESPONSE_LIMIT"); chunks.push(chunk); }
+  const value = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+  assert(positive(value.id) && value.app_id === app.appId && value.account?.id === accountId &&
+    value.suspended_at === null && value.repository_selection === "selected" && permissions(value.permissions), "COMPANION_INSTALLATION_NOT_BOUND");
+  return {installationId: value.id, appId: value.app_id, accountId};
+}
+module.exports = { withPolicyReader, executionPolicyReader, discoverInstallation };

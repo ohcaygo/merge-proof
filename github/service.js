@@ -17,6 +17,7 @@ class ProofService {
     clientFactory = (o) => new Client(o),
     appClient = (installationId, repositoryId) =>
       installationClient(config, installationId, repositoryId),
+    policyBroker = null,
   }) {
     this.store = store;
     this.config = config;
@@ -71,6 +72,7 @@ class ProofService {
     this.customers = this.meter
       ? new (require("./customer").Customers)(this)
       : null;
+    this.enhanced = new (require("./enhanced-policy").EnhancedPolicy)(this, {broker: policyBroker});
     if (this.meter)
       for (const a of Object.values(this.meter.data.accounts))
         if (a.scan?.state === "RUNNING") a.scan.state = "INTERRUPTED";
@@ -253,12 +255,12 @@ class ProofService {
       }
       const eventStart = this.activeEvents;
       const policyBefore = structuredClone(this.data.policies);
-      const capture = await collect(client, repo, pr, { mergeGroup });
+      const capture = await collect(client, repo, pr, { mergeGroup, executionPolicyReader: this.enhanced.reader(installationId, client) });
       if (this.config.reconstruction && capture.target.state === "AVAILABLE") {
         const t = capture.target.value;
         capture.expectedTree = await require("./mirror").reconstruct({ config: this.config.reconstruction,
           repository: repo, repositoryId: capture.identity.repositoryId, token: client.token,
-          input: { base: capture.identity.baseSha, head: capture.identity.headSha, method: t.kind === "MERGE_GROUP" ? "queue" : "merge", providerTree: t.tree, ...(t.selection?.value?.order || {}) } });
+          input: { base: capture.identity.baseSha, head: capture.identity.headSha, candidate: t.sha, method: t.kind === "MERGE_GROUP" ? "queue" : "merge", providerTree: t.tree, ...(t.selection?.value?.order || {}) } });
       }
       const receipt = prove(capture, { appId: this.config.appId });
       assert(
@@ -391,6 +393,7 @@ class ProofService {
             row.receipt.identity.repository,
             row.receipt.identity.pr,
             {
+              executionPolicyReader: this.enhanced.reader(row.installationId, this.clientFactory({token})),
               mergeGroup:
                 row.receipt.summary.target.value?.kind === "MERGE_GROUP"
                   ? {
@@ -467,6 +470,7 @@ class ProofService {
       assert(Number.isSafeInteger(installationId) && installationId > 0,
         "INVALID_WEBHOOK_SCOPE");
       if (["deleted", "suspend"].includes(p.action)) {
+        this.enhanced.primaryRevoked(installationId);
         this.meter.disconnect(installationId);
         this.data.queue = this.data.queue.filter(
           (q) => q.installationId !== installationId,
@@ -496,6 +500,7 @@ class ProofService {
       this.meter.account(installationId);
       for (const repo of p.repositories_added || []) this.activate(installationId, repo);
       for (const removed of p.repositories_removed || []) {
+        this.enhanced.primaryRevoked(installationId, removed.id);
         delete this.data.activation[`${installationId}:${removed.id}`];
         this.data.queue = this.data.queue.filter(
           (q) =>
@@ -941,7 +946,9 @@ class ProofService {
       const areas = job.claims ? currentness.areas(job.claims) : null;
       if (previousRow && previousRow.artifacts?.policy?.codeDigest === require("./bundle").codeDigest()) {
         const eventStart = this.activeEvents;
-        const c = await this.exclusive(() => collect(client, job.repo, job.pr, { previous: previousRow.receipt.evidence, areas, mergeGroup: job.mergeGroup }));
+        const c = await this.exclusive(() => collect(client, job.repo, job.pr, { previous: previousRow.receipt.evidence,
+          areas: this.config.enhancedPolicy && areas ? [...new Set([...areas, "rules"])] : areas,
+          mergeGroup: job.mergeGroup, executionPolicyReader: this.enhanced.reader(job.installationId, client) }));
         const current = freshness(previousRow.receipt, c);
         if (current.state === "CURRENT" && previousRow.receipt.evidence.consistency === "STABLE_OBSERVATION" && !eventStart.some(e => e.repo === job.repo.toLowerCase() && currentness.touches(e.event, e.payload, c).length)) {
           previousRow.current = current;

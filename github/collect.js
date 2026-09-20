@@ -557,7 +557,7 @@ async function collectOnce(
     };
   });
   const authority = keep("reviews") ? previous.authority : await require("./authority").collect(client, i);
-  return {
+  const captured = {
     authority,
     identity: i,
     rules,
@@ -571,6 +571,10 @@ async function collectOnce(
     reviews,
     actors,
   };
+  const provenance = rules.executionProtections?.provenance || (keep("rules") && previous.executionPolicyProvenance);
+  if (provenance && rules.executionProtections?.state === "AVAILABLE" && require("./rules").relevantJobs(captured).length)
+    captured.executionPolicyProvenance = provenance;
+  return captured;
 }
 async function collect(client, repo, pr, options) {
   const startedAt = new Date().toISOString();
