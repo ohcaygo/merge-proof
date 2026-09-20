@@ -60,6 +60,7 @@ async function recover(config,make=client){
  await aws.call("s3api","get-object",[...base,"--key",config.manifestKey,"--version-id",config.recoveryVersionId,temp]);assert(backup.digestFile(temp)===config.manifestSha256,"BACKUP_MANIFEST_READBACK_FAILED");
  const remote=JSON.parse(fs.readFileSync(temp));assert(remote.schema==="urn:merge-proof:remote-backup:1"&&hash(remote.backupManifest)===remote.manifestDigest,"BACKUP_MANIFEST_INVALID");
  assert(hash(remote.recovery)===hash({accountId:config.recovery.accountId,region:config.recovery.region,bucket:config.recovery.bucket}),"RECOVERY_ACCOUNT_MISMATCH");
+ backup.restoreDirectories(config.destination,remote.backupManifest);
  const seen=new Set();for(const row of remote.backupManifest.files){assert(typeof row.path==="string"&&!path.isAbsolute(row.path)&&row.path.split("/").every(n=>n&&n!=="."&&n!=="..")&&!seen.has(row.path)&&/^[a-f0-9]{64}$/.test(row.sha256),"BACKUP_MANIFEST_INVALID");seen.add(row.path);
   const list=remote.segments?.[row.sha256];assert(Array.isArray(list)&&list.length>0&&list.every(p=>/^[a-f0-9]{64}$/.test(p.sha256)&&Number.isInteger(p.size)&&p.size>=0&&p.size<=64*1024*1024&&remote.objects[p.sha256]?.recoveryVersionId)&&list.reduce((n,p)=>n+p.size,0)===row.size,"BACKUP_SEGMENTS_INVALID");
   const file=path.join(config.destination,row.path);fs.mkdirSync(path.dirname(file),{recursive:true,mode:0o700});const fd=fs.openSync(file,"wx",0o600),chunk=path.join(config.destination,".restore-chunk");

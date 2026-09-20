@@ -28,11 +28,12 @@ function provider(){
 const accounts=prefix=>({primary:{accountId:"111111111111",region:"us-east-1",bucket:prefix+"111111111111-us-east-1"},recovery:{accountId:"222222222222",region:"us-west-2",bucket:prefix+"222222222222-us-west-2"}});
 test("cross-account backup only succeeds after recovery readback; recovery needs no primary identity",async t=>{
  const root=fs.mkdtempSync(path.join(os.tmpdir(),"mp-cloud-backup-")),store=new Store(path.join(root,"state"));t.after(()=>{store.close();fs.rmSync(root,{recursive:true,force:true});});const service=new ProofService({store,clientFactory:()=>new Client(fixtureFetch())});await service.run("fixture/public",1,{token:"fixture"});
+ const mirror=path.join(root,"mirrors/1");fs.mkdirSync(mirror,{recursive:true});require("node:child_process").execFileSync("git",["init","--bare","-q",mirror]);
  const local=path.join(root,"local");backup.create({stateDir:store.root,mirrorRoot:path.join(root,"mirrors"),output:local,sourceCommit:"a".repeat(40)});
  const c={environment:"nonproduction",backup:local,record:path.join(root,"confirmed.json"),...accounts("merge-proof-backup-")},p=provider();
  p.state.copyFailure=true;await a.rejects(cloud.upload(c,p.make));a.equal(fs.existsSync(c.record),false);
  p.state.copyFailure=false;const result=await cloud.upload(c,p.make,{chunkBytes:1024});a.equal(result.state,"RECOVERY_MANIFEST_CONFIRMED");
- const start=p.calls.length,restored=await cloud.recover({...c,...result,writerFenced:true,destination:path.join(root,"restored")},p.make);a.equal(restored.receipts,1);a.equal(restored.currentness,"NOT_PROVEN");a.ok(p.calls.slice(start).every(x=>x.account===c.recovery.accountId));
+ const start=p.calls.length,restored=await cloud.recover({...c,...result,writerFenced:true,destination:path.join(root,"restored")},p.make);a.equal(restored.receipts,1);a.equal(restored.currentness,"NOT_PROVEN");a.equal(require("node:child_process").execFileSync("git",["-C",path.join(root,"restored/mirrors/1"),"rev-parse","--is-bare-repository"],{encoding:"utf8"}).trim(),"true");a.ok(p.calls.slice(start).every(x=>x.account===c.recovery.accountId));
  await a.rejects(cloud.upload({...c,environment:"production"},p.make),{code:"OWNER_PRODUCTION_ACTIVATION_REQUIRED"});
  const mutationCount=p.calls.filter(x=>/^(put|copy|delete)/.test(x.op)).length;await a.rejects(cloud.upload({...c,environment:"production",productionActivationAuthorized:true},p.make),{code:"OWNER_PRODUCTION_RETENTION_REQUIRED"});a.equal(p.calls.filter(x=>/^(put|copy|delete)/.test(x.op)).length,mutationCount);
  const tampered={...result,manifestSha256:"b".repeat(64)};await a.rejects(cloud.recover({...c,...tampered,writerFenced:true,destination:path.join(root,"bad")},p.make),{code:"RECOVERY_CONFIG_INVALID"});

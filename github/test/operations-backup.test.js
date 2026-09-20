@@ -31,3 +31,10 @@ test("isolated recovery checks independently supplied signature trust and retain
  const trust=path.join(h.root,"trusted.json");fs.writeFileSync(trust,JSON.stringify(signer.keys));const c={backup:h.config.output,trustedKeysFile:trust};a.equal(require("../operations/verify-restored").verify(c).state,"RESTORED_PORTABLE_TRUST_VERIFIED");
  fs.writeFileSync(trust,JSON.stringify(require("./model-seeds").signer().keys));a.throws(()=>require("../operations/verify-restored").verify(c),{code:"RESTORED_SIGNATURE_OR_REPLAY_FAILED"});
 });
+test("historical bare mirrors with empty refs remain real Git repositories after restore",async t=>{
+ const h=await fixture(t),mirror=path.join(h.config.mirrorRoot,"1"),cp=require("node:child_process");fs.mkdirSync(mirror,{recursive:true});cp.execFileSync("git",["init","--bare","-q",mirror]);
+ backup.create(h.config);const destination=path.join(h.root,"restored");backup.restore({backup:h.config.output,destination,writerFenced:true});
+ a.equal(cp.execFileSync("git",["-C",path.join(destination,"mirrors/1"),"rev-parse","--is-bare-repository"],{encoding:"utf8"}).trim(),"true");a.deepEqual(fs.readdirSync(path.join(destination,"mirrors/1/refs/heads")),[]);
+ const outside=path.join(h.root,"outside");fs.mkdirSync(outside);fs.symlinkSync(outside,path.join(destination,"mirrors/2"));a.throws(()=>backup.restoreDirectories(destination,{directories:["mirrors/2/refs"]}),{code:"BACKUP_SYMLINK_DENIED"});a.deepEqual(fs.readdirSync(outside),[]);
+ for(const name of ["mirrors/1/../../outside","/absolute","proof/config"]){a.throws(()=>backup.restoreDirectories(destination,{directories:[name]}),{code:"BACKUP_DIRECTORY_INVALID"});}
+});
