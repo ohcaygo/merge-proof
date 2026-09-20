@@ -32,7 +32,7 @@
     "linux-chrome-version.txt": "fb6bdaf3a279ab7814b5325970658139601e8c65d5e30f52acacf95273189a0f",
     "linux-engine-digest.txt": "4ec5550ddb5831542b18f15a10e3a47ddf4740e2474ce9d0d3bb0bd690a8d2c9",
     "linux-factory-tests.txt": "2a542fc831121b96ce054a54b842d7ad4593ef045c92773a3b86a508cf8a8a70",
-    "README.md": "9eb133c32ce3d778097051fac0fc303721f3f815fd3ae15b55bd7ef4c3c7a85f",
+    "README.md": "b4e2423d5f3af259abc1d36dcaa8ebf5c3449c896b92573ad99d79c2f10725e3",
     "linux-fixture.json": "29c61f401a575791a1a52d9c9a2616c1430c043dd3b9dac96d41d474785c381c",
     "local-cli-report-tests.txt": "2905fd03eff578eec49b83e5e4d00c18c3c62d928e9d5e9ab5778b12f222b665",
     "local-factory-tests.txt": "06d9d8f39d7c343008ab7ac3eb05d1b9165eb7b6fd12ac460ddcc2ea5cfa522e",
@@ -43,6 +43,8 @@
     "linux-node-version.txt": "e38e4d731392482b901fbedb7e5d7c97762d1769b314b0e333756b03be496bf1",
     "linux-github-tests.txt": "e947255c4db88f8953dcf16636ee70afa30c7c3264f1b1199b9013e173d251da",
     "infrastructure-lint.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "independent-review-62c2f97.md": "376363bcd626c044b2e1545a62add52e29a94f53cdf4d2db9d08f52b584a8d1b"
+    "independent-review-62c2f97.md": "376363bcd626c044b2e1545a62add52e29a94f53cdf4d2db9d08f52b584a8d1b",
+    "owner-prerequisites.json": "cbde2b1e5a1ffd5eea68bcb68acc22495a5a35c29f38810c1037a3100b1ec4cb",
+    "standard-read-preflight-2320.json": "4feef536f3401c85e5c5e64acde26ca4151016d85c24800438af2f34c7009217"
   }
 }

@@ -46,15 +46,19 @@ The real historical restore acceptance uses actual retained `7953ecd` provider r
 - **Positive provider coverage collection remains unimplemented and provider-blocked.** Existing rule ingestion, bound arithmetic, failure semantics and per-claim currentness are implemented/tested. Until qualifying aggregate/provenance exists, the live result remains NOT_PROVEN. This is not removed from the frontier.
 - No other required source implementation gap was established by the complete independent review. Optional log INFER, the alternative OIDC branch and later Quint work remain absent as previously accounted for in the [22-item charter](../final-frontier-l3-2026-09-19/charter-coverage.md), without being claimed as shipped.
 
-## Exact next owner inputs
+## Authorized prerequisites and remaining account inputs
 
 Architecture and the $110 ceiling are already approved and are not being resubmitted.
 
-1. Provide an authenticated AWS primary and separate recovery account context and identify their account IDs/administrator roles. No static production keys. Neither available browser nor local CLI had an authenticated AWS context.
-2. Explicitly approve GitHub Terms acceptance for the prepared monthly Team organization `ohcaygo-merge-proof-validation`; the browser's action-time confirmation requirement is the reason this checkbox was left untouched. Two functional identities are forecast at $8/month within the existing ceiling.
-3. Resolve the rejected non-production companion registration. Recommended: an **ohcaygo-owned private development App**, installed only on `ohcaygo/merge-proof-l3-lab-queue-headgreen`, Administration Write plus mandatory Metadata Read only. The pending alternative is the personally owned development App with “Any account” installability. No production companion is requested here.
+Ryan explicitly authorized all three preparation actions: AWS preparation after authentication; applicable GitHub Terms and the monthly Team organization; and an **ohcaygo-owned private development companion App** with Administration Write and Metadata Read only, installed only on `ohcaygo/merge-proof-l3-lab-queue-headgreen`. No further permission approval is needed for those actions. The personally owned “Any account” draft is abandoned.
 
-Automatic approval review rejected creation of the personal development companion App because registration was consequential and the draft allowed installation on any account; it judged that authorization insufficient. No registration occurred and the rejection was not bypassed.
+The [2026-09-20 prerequisite record](owner-prerequisites.json) distinguishes authorization from execution:
+
+1. AWS primary/recovery account sign-in remains necessary. No account IDs or administrator roles are inferred. Official signed AWS CLI 2.36.49 is prepared in a task-only temporary directory; no account profiles, static keys or cloud resources were created.
+2. GitHub Terms were accepted and Team checkout advanced with monthly billing and two functional seats ($8/month before any tax). The owner must complete the billing email/payment fields directly in GitHub. No successful purchase or organization creation is claimed.
+3. GitHub requires its “Confirm access” authentication before the private organization-owned App registration form can be completed. The owner must complete that verification directly in GitHub. No App or key has been created.
+
+The [fresh standard Read API preflight](standard-read-preflight-2320.json) confirms unchanged Administration Read at App and installation, selected-repository mode, and execution-policy HTTP 403. The prior exact two-repository UI readback remains dated evidence; the refreshed installation UI now also requires authentication. The preflight checkout HEAD is documentation-only above the pinned product candidate. Fresh companion-backed signed queue acceptance remains NOT_PROVEN.
 
 After these inputs: provision and validate approved non-production AWS preparation; observe the disposable Object Lock lifecycle through actual expiration; complete Team/ruleset and companion lifecycle acceptance; rerun the full real signed queue→exact bindings/currentness→landed-content→portable replay journey on the current candidate; measure independent recovery and alert delivery; accept the private recurring lab. Continue directly along the approved sequence.
 

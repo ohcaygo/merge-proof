@@ -66,7 +66,7 @@ The implemented AWS KMS P-256 signer checks the exact key ARN, algorithm and ret
 
 ## Remaining owner and environment gates
 
-- Architecture and the $110/month preparation ceiling are approved. AWS primary/recovery authentication, GitHub Team Terms acceptance and non-production companion registration confirmation are the current inputs. See [the exact pending gates](operations/LEVEL3-PREPARATION.md).
+- Architecture and the $110/month preparation ceiling are approved. Ryan also explicitly authorized Team Terms/monthly purchase and the ohcaygo-owned private development companion. Terms were accepted; AWS authentication, GitHub “Confirm access” and Team billing fields remain account inputs. See [the exact pending gates](operations/LEVEL3-PREPARATION.md). These are execution prerequisites, not renewed approval requests.
 - Repeat real signed queue/currentness/landed/portable acceptance on the current candidate using the separate companion, without the old injected Write helper. The standard App still has exactly two selected repositories and Administration Read; its current policy-read preflight is UNAVAILABLE (403).
 - Complete approved Team organization-wide ruleset functional acceptance with `thatguyrw-boop` where permitted. This is second-account validation, never independent-human validation. Feature-specific plan/API limits remain named gates.
 - Perform actual non-production AWS signer, EC2 systemd/IMDS, cross-account backup/restore, disposable Object Lock lifecycle and monitoring/scheduler acceptance. RPO/RTO are targets until measured.

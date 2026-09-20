@@ -1,0 +1,72 @@
+{
+  "at": "2026-09-20T23:20:01.863Z",
+  "productCandidate": "838ed8f422605bc814c0a7d9d0140dabbe78fedb",
+  "lastLiveSignedQueueCandidate": "7953ecdbd849c8afe0379bfec1b4a61133292c62",
+  "newCandidateSignedQueue": "NOT_PROVEN",
+  "authority": {
+    "monthlyBudgetUsd": 110,
+    "awsPreparation": "AUTHORIZED_AFTER_ACCOUNT_AUTHENTICATION",
+    "teamTermsAndMonthlyPurchase": "AUTHORIZED",
+    "developmentCompanion": {
+      "owner": "ohcaygo",
+      "installability": "PRIVATE_OWNER_ONLY",
+      "permissions": {
+        "administration": "write",
+        "metadata": "read"
+      },
+      "repositories": [
+        "ohcaygo/merge-proof-l3-lab-queue-headgreen"
+      ],
+      "administrationMutations": "PROHIBITED"
+    },
+    "reserved": [
+      "production deployment and cutover",
+      "production companion registration",
+      "public JWKS and checkpoint publication",
+      "irreversible production COMPLIANCE retention"
+    ]
+  },
+  "observations": {
+    "team": {
+      "name": "ohcaygo-merge-proof-validation",
+      "terms": "ACCEPTED",
+      "billing": "MONTHLY",
+      "seats": 2,
+      "quotedMonthlySubtotalUsd": 8,
+      "tax": "NOT_YET_DETERMINED",
+      "state": "CHECKOUT_INCOMPLETE",
+      "ownerInput": "Billing email and payment fields in GitHub",
+      "created": false
+    },
+    "companion": {
+      "state": "GITHUB_CONFIRM_ACCESS_REQUIRED",
+      "created": false,
+      "personalAnyAccountDraft": "ABANDONED"
+    },
+    "aws": {
+      "browser": "SIGNED_OUT",
+      "configuredCliProfiles": [],
+      "cliVersion": "2.36.49",
+      "cliPath": "/private/tmp/merge-proof-aws-runtime/bin/aws",
+      "installerUrl": "https://awscli.amazonaws.com/v2/install.sh",
+      "installerSha256": "80f4b79b35bb5c427261e8e9f0fd6959ad3513a697f6e37d823959a72cb654dc",
+      "packageSignature": "Official installer verified Apple Developer ID team 94KV3E626L before successful installation",
+      "resourcesCreated": false,
+      "longLivedCredentialsCreated": false
+    },
+    "standardApp": {
+      "appId": 4899448,
+      "installationId": 160648161,
+      "administration": "read",
+      "repositorySelection": "selected",
+      "executionPolicy": "UNAVAILABLE/GITHUB_HTTP_403",
+      "evidence": "standard-read-preflight-2320.json",
+      "exactRepositoryList": "Prior UI evidence retained; fresh UI readback requires GitHub Confirm access"
+    }
+  },
+  "limitations": [
+    "No live prerequisite is inferred from owner authorization",
+    "No live acceptance transferred from 7953ecd",
+    "Positive coverage remains NOT_PROVEN without qualifying provider evidence"
+  ]
+}
