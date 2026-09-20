@@ -113,3 +113,12 @@ test('lossless delivery parsing preserves quoted text and safe numeric fields',a
  a.equal(row.id,'3843641202479988736');a.equal(row.status_code,200);a.equal(row.duration,0.5);
  a.equal(row.message,'id 3843641202479988736 and "id":1234567890123456789');
 });
+test('a raced initial collection automatically retries and issues a stable successor without changing history',async t=>{
+ const h=harness(t);let reads=0;
+ h.set({override:url=>new URL(url).pathname.endsWith('/reviews')&&++reads===1?Promise.resolve(Response.json([])):null});
+ await h.hook('pull_request',{pull_request:{number:1,state:'open'}});await h.service.drain();
+ const first=Object.values(h.service.data.receipts)[0],immutable=JSON.stringify(first.receipt);
+ a.equal(first.receipt.evidence.consistency,'CHANGED_DURING_COLLECTION');a.equal(first.receipt.verdict,'NOT_PROVEN');a.ok(h.service.data.queue.length);
+ await h.service.drain();const latest=Object.values(h.service.data.receipts).at(-1);
+ a.equal(latest.receipt.verdict,'VERIFIED');a.equal(latest.receipt.evidence.consistency,'STABLE_OBSERVATION');a.equal(latest.receipt.supersedes.receiptId,first.receipt.receiptId);a.equal(JSON.stringify(first.receipt),immutable);a.equal(h.service.data.queue.length,0);
+});

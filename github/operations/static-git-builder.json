@@ -1,0 +1,9 @@
+{
+  "image": "alpine:3.22@sha256:5291449c3df73caf6ed85e649dec1b9e818b39a5d8c871e97afc13e9cd5e8fa8",
+  "gitVersion": "2.50.1",
+  "source": "https://www.kernel.org/pub/software/scm/git/git-2.50.1.tar.xz",
+  "sourceSha256": "7e3e6c36decbd8f1eedd14d42db6674be03671c2204864befa2a41756c5c8fc4",
+  "checksumSource": "https://www.kernel.org/pub/software/scm/git/sha256sums.asc",
+  "runtimePrefix": "/opt/merge-proof-git",
+  "limitation": "Source and builder image are pinned. Alpine package versions and output binary hashes are recorded per build; byte-reproducible rebuilds are not claimed. Deployment must use the exact tested artifact and digest. Git and its linked libraries retain their upstream licenses."
+}

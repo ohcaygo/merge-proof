@@ -241,7 +241,7 @@ async function collectOnce(
         assert(
           mergeGroup &&
             sha(mergeGroup.head_sha) &&
-            mergeGroup.base_sha === i.baseSha &&
+            sha(mergeGroup.base_sha) &&
             mergeGroup.base_ref === `refs/heads/${i.baseRef}`,
           "MERGE_GROUP_UNAVAILABLE",
         );
@@ -275,7 +275,7 @@ async function collectOnce(
             method: "POST",
             body: {
               query:
-                "query($owner:String!,$name:String!,$pr:Int!){repository(owner:$owner,name:$name){databaseId pullRequest(number:$pr){headRefOid mergeQueueEntry{id state baseCommit{oid} headCommit{oid}}}}}",
+                "query($owner:String!,$name:String!,$pr:Int!){repository(owner:$owner,name:$name){databaseId pullRequest(number:$pr){headRefOid mergeQueueEntry{id state position baseCommit{oid} headCommit{oid} mergeQueue{entries(first:100){nodes{position state pullRequest{number headRefOid} headCommit{oid} baseCommit{oid}} pageInfo{hasNextPage}}}}}}}",
               variables: { owner, name, pr },
             },
           });
@@ -287,11 +287,16 @@ async function collectOnce(
               repository?.databaseId === i.repositoryId &&
               p?.headRefOid === i.headSha &&
               q?.headCommit?.oid === mergeGroup.head_sha &&
-              q?.baseCommit?.oid === i.baseSha &&
+              q?.baseCommit?.oid === mergeGroup.base_sha &&
               ["AWAITING_CHECKS", "MERGEABLE", "LOCKED"].includes(q.state),
             "CURRENT_QUEUE_SELECTION_UNAVAILABLE",
           );
+          let order=null,orderReason=null;
+          try { order=require("./queue-order").prefix(repository,i,mergeGroup); }
+          catch(e) { orderReason=e.code||"QUEUE_MEMBERSHIP_ORDER_UNAVAILABLE"; }
+          assert(q.baseCommit.oid===i.baseSha || order?.providerOrderConfirmed,"CURRENT_QUEUE_SELECTION_UNAVAILABLE");
           return {
+            order,orderReason,
             id: q.id,
             state: q.state,
             headSha: q.headCommit.oid,
@@ -299,6 +304,7 @@ async function collectOnce(
             candidateSha: p.headRefOid,
           };
         });
+        assert(mergeGroup.base_sha === i.baseSha || selection.value?.order?.providerOrderConfirmed, "CURRENT_QUEUE_SELECTION_UNAVAILABLE");
         return {
           tree: commitMeta(await client.get(`${root}/commits/${mergeGroup.head_sha}`)).tree,
           kind: "MERGE_GROUP",

@@ -1,13 +1,23 @@
 "use strict";
 const fs = require("node:fs"), path = require("node:path");
 const { assert } = require("./common");
+function validateRequest(input) {
+  const {sha,repoName}=require("./common");
+  assert(input && repoName(input.repository) && Number.isSafeInteger(input.repositoryId) && input.repositoryId>0 && Number.isSafeInteger(input.pr) && input.pr>0 && [input.expectedHeadSha,input.expectedBaseSha,input.expectedTargetSha].every(sha),"INVALID_ARGUMENT");
+  return input;
+}
 function validateDecision(d, input) {
   const { sha } = require("./common");
   const valid = condition => assert(condition, "INVALID_DECISION_CONTRACT");
+  validateRequest(input);
   valid(d && d.$schema === "urn:merge-proof:decision:1" && d.schemaVersion === 1);
   valid(["PROCEED", "HOLD", "REFUSE", "UNAVAILABLE"].includes(d.outcome) && typeof d.proceed === "boolean");
   valid(["VERIFIED", "NOT_PROVEN", "FAIL"].includes(d.verdict) && ["CURRENT", "STALE", "UNAVAILABLE"].includes(d.currentness));
   valid((d.outcome === "PROCEED") === d.proceed);
+  valid(["VERIFIED","NOT_PROVEN","FAIL"].includes(d.historicalVerdict) && Number.isFinite(Date.parse(d.observedAt)));
+  if(d.verdict === "FAIL") valid(d.outcome === "REFUSE" && d.currentness === "CURRENT");
+  if(d.currentness !== "CURRENT") valid(d.verdict === "NOT_PROVEN" && !d.proceed);
+  if(d.outcome === "UNAVAILABLE") valid(d.currentness === "UNAVAILABLE");
   valid(d.request && ["repository", "repositoryId", "pr", "expectedHeadSha", "expectedBaseSha", "expectedTargetSha"].every(k => d.request[k] === input[k]));
   valid(typeof d.request.matched === "boolean" && Array.isArray(d.request.mismatch));
   valid(d.subject && ["AVAILABLE", "UNAVAILABLE"].includes(d.subject.state));
@@ -25,6 +35,7 @@ function validateDecision(d, input) {
   return d;
 }
 async function remote(input) {
+  validateRequest(input);
   const origin = new URL(process.env.MP_ORIGIN || "https://merge-proof.ohcaygo.com");
   assert(origin.protocol === "https:" || origin.protocol === "http:" && ["127.0.0.1", "localhost"].includes(origin.hostname), "INVALID_ORIGIN");
   assert(process.env.MP_GITHUB_TOKEN, "GITHUB_TOKEN_REQUIRED");
@@ -36,7 +47,7 @@ async function remote(input) {
 }
 function lines(d) { return [d.outcome + " · " + d.verdict + " · " + d.currentness,
   ...["expected", "candidate", "tested", "authorized", "landed"].map(k => `${k.toUpperCase()}: ${d.bindings[k] ?? "NOT_YET_APPLICABLE"}`),
-  ...d.reasons.map(r => r.code), `Receipt: ${d.receipt.url}`].join("\n"); }
+  ...(d.reasons.length ? [`Reason: ${d.reasons[0].code}`, `Next: ${d.nextAction.text}`] : []), `Receipt: ${d.receipt.url}`].join("\n"); }
 async function main(args) {
   if (args.includes("--help")) { console.log("merge-proof verify --repo OWNER/REPO --repository-id ID --pr N --head SHA --base SHA --target SHA [--json] [--wait SECONDS]\nmerge-proof verify --bundle DIRECTORY [--trusted-keys JWKS.json] [--allow-unsigned] [--online] [--git-dir BARE_REPO] [--git-binary PATH]\nmerge-proof mcp\nUses MP_GITHUB_TOKEN and optional MP_ORIGIN; never merges."); return 0; }
   const opts = {};
@@ -46,7 +57,7 @@ async function main(args) {
     opts[flag] = ["--json", "--allow-unsigned", "--online"].includes(flag) ? true : args[++n];
   }
   if (opts["--bundle"]) {
-    const bundle = JSON.parse(fs.readFileSync(path.join(opts["--bundle"], "bundle.json"), "utf8"));
+    const bundle = require("./bundle").read(opts["--bundle"]);
     const trustedKeys = opts["--trusted-keys"] ? JSON.parse(fs.readFileSync(opts["--trusted-keys"], "utf8")).keys : [];
     const result = require("./bundle").verify(bundle, { trustedKeys, allowUnsigned: opts["--allow-unsigned"] === true });
     const checks = { offline: result };
@@ -100,7 +111,7 @@ async function mcp(input = process.stdin, output = process.stdout) {
       let result;
       if (r.method === "initialize") result = { protocolVersion: "2025-06-18", capabilities: { tools: {} }, serverInfo: { name: "merge-proof", version: "1" } };
       else if (r.method === "tools/list") result = { tools: [{ name: "merge_proof_decision", description: "Read current evidence bound to caller SHAs. Never merges.", inputSchema: INPUT,
-        outputSchema: { type: "object", required: ["outcome", "proceed", "verdict", "subject"], properties: { outcome: { enum: ["PROCEED", "HOLD", "REFUSE", "UNAVAILABLE"] }, proceed: { type: "boolean" }, verdict: { enum: ["VERIFIED", "NOT_PROVEN", "FAIL"] }, subject: { type: "object" } } },
+        outputSchema: require("./decision.schema.json"),
         annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: false, openWorldHint: true } }] };
       else if (r.method === "tools/call" && r.params?.name === "merge_proof_decision") {
         const decision = await remote(r.params.arguments); result = { content: [{ type: "text", text: JSON.stringify(decision) }], structuredContent: decision };
@@ -109,4 +120,4 @@ async function mcp(input = process.stdin, output = process.stdout) {
     } catch (e) { output.write(JSON.stringify({ jsonrpc: "2.0", id: r.id, error: { code: -32000, message: e.code || "DECISION_UNAVAILABLE" } }) + "\n"); }
   }
 }
-module.exports = { main, mcp, remote, lines, validateDecision };
+module.exports = { main, mcp, remote, lines, validateDecision, validateRequest };

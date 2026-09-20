@@ -20,7 +20,12 @@ class ProofService {
   }) {
     this.store = store;
     this.config = config;
-    this.receiptSigner = receiptSigner;
+    this.receiptSigner = receiptSigner || require("./signing").configured(config.signing);
+    this.archive = store.root ? new (require("./archive").Archive)(require("node:path").join(store.root,"receipt-archive")) : null;
+    this.archived = new Map();
+    this.archivedMerges = new Set();
+    this.saveDepth = 0;
+    this.savePending = false;
     this.deliveryClient = deliveryClient;
     this.clientFactory = clientFactory;
     this.caches = new Map();
@@ -53,6 +58,7 @@ class ProofService {
     this.data.groupQueue ||= [];
     this.data.pushQueue ||= [];
     this.data.pushObservations ||= {};
+    this.data.frontierMetrics ||= {reconciliationSupersessions:0,ruleSuiteDisagreements:0};
     for (const row of Object.values(this.data.receipts)) row.observationId = this.observe(row.receipt);
 
     // Existing installations keep reporting-only behavior. A blocking gate is
@@ -70,8 +76,27 @@ class ProofService {
     for (const job of this.data.queue) job.processing = false;
     if (!this.data.lastActivityAt || Date.now() - this.data.lastActivityAt > 3600000) this.data.deliveryScanAt = 0;
     this.data.lastBootAt = Date.now();
+    for(const sub of Object.values(this.data.subscriptions)) {
+      const row=this.data.receipts[sub.latestReceiptId];
+      if(row?.receipt.evidence.consistency !== "STABLE_OBSERVATION" && row && !this.data.queue.some(q=>q.repositoryId===sub.repositoryId&&q.pr===sub.pr)) this.enqueue(sub,currentness.ALL);
+    }
+    if(this.archive) for(const record of ledger.area(store).records) {
+      const observation=this.data.landings[record.recordId];
+      if(observation) this.archive.landing(record,observation);
+    }
   }
   save() {
+    if(this.saveDepth){this.savePending=true;return;}
+    this.savePending=false;
+    if(this.archive)for(const record of ledger.area(this.store).records){
+      if(!this.archivedMerges.has(record.recordId)){this.archive.merge(record);this.archivedMerges.add(record.recordId);}
+    }
+    if (this.archive) for (const row of Object.values(this.data.receipts)) {
+      const digest = require("./common").hash([row.receipt,row.artifacts || null]);
+      const previous = this.archived.get(row.receipt.receiptId);
+      assert(!previous || previous === digest,"ARCHIVE_IMMUTABILITY_VIOLATION");
+      if (!previous) { this.archive.receipt(row); this.archived.set(row.receipt.receiptId,digest); }
+    }
     const used = new Set(Object.values(this.data.receipts).map(r => r.observationId).filter(Boolean));
     for (const record of ledger.area(this.store).records) if (record.proof?.receiptSnapshot?.observationId) used.add(record.proof.receiptSnapshot.observationId);
     for (const id of Object.keys(this.data.observations || {})) if (!used.has(id)) delete this.data.observations[id];
@@ -203,6 +228,14 @@ class ProofService {
         repoName(repo) && Number.isSafeInteger(pr) && pr > 0,
         "INVALID_SCOPE",
       );
+      if (Object.keys(this.data.receipts).length >= 1000 && this.archive) {
+        this.save();
+        const protectedIds = new Set(Object.values(this.data.subscriptions).map(s=>s.latestReceiptId));
+        for (const [id,row] of Object.entries(this.data.receipts)) {
+          if (Object.keys(this.data.receipts).length < 900) break;
+          if (!protectedIds.has(id) && !row.pendingPublication) delete this.data.receipts[id];
+        }
+      }
       assert(Object.keys(this.data.receipts).length < 1000, "RECEIPT_CAPACITY");
       client ||= this.clientFactory({ token });
       if (this.meter) {
@@ -222,7 +255,7 @@ class ProofService {
         const t = capture.target.value;
         capture.expectedTree = await require("./mirror").reconstruct({ config: this.config.reconstruction,
           repository: repo, repositoryId: capture.identity.repositoryId, token: client.token,
-          input: { base: capture.identity.baseSha, head: capture.identity.headSha, method: t.kind === "MERGE_GROUP" ? "queue" : "merge", providerTree: t.tree } });
+          input: { base: capture.identity.baseSha, head: capture.identity.headSha, method: t.kind === "MERGE_GROUP" ? "queue" : "merge", providerTree: t.tree, ...(t.selection?.value?.order || {}) } });
       }
       const receipt = prove(capture, { appId: this.config.appId });
       assert(
@@ -231,7 +264,7 @@ class ProofService {
       );
       const prior = Object.values(this.data.receipts).filter(r => r.receipt.identity.repositoryId === receipt.identity.repositoryId && r.receipt.identity.pr === receipt.identity.pr).pop();
       receipt.supersedes = prior ? { receiptId: prior.receipt.receiptId, digest: require("./common").hash(prior.receipt) } : null;
-      const { receipt: bundledReceipt, ...artifacts } = await require("./bundle").create(receipt, { signer: this.receiptSigner });
+      const { receipt: bundledReceipt, ...artifacts } = await require("./bundle").create(receipt, { signer: this.receiptSigner, keys: this.receiptSigner?.keys || null });
       const current = freshness(receipt, capture);
       if (require("./common").hash(policyBefore[capture.identity.repositoryId] || null) !== require("./common").hash(this.policyFor(capture.identity.repositoryId)) || eventStart.some(e => e.repo === repo.toLowerCase() && currentness.touches(e.event, e.payload, capture).length))
         Object.assign(current, {
@@ -295,7 +328,7 @@ class ProofService {
     });
   }
   async access(id, token) {
-    const row = this.data.receipts[id];
+    const row = this.data.receipts[id] || this.archive?.get(id);
     assert(row, "NOT_FOUND");
     if (this.meter) this.meter.account(row.installationId);
     // Every read rechecks visibility/access against immutable repository ID.
@@ -307,6 +340,21 @@ class ProofService {
     );
     assert(token || (row.published && repo.private === false), "ACCESS_DENIED");
     return row;
+  }
+  portable(row) {
+    const id=row.receipt.receiptId;
+    const values = this.archive ? this.archive.byReceipt(id) : ledger.area(this.store).records.filter(r=>r.proof?.receiptSnapshot?.receiptId===id && this.data.landings[r.recordId]).map(record=>({record,observation:this.data.landings[record.recordId]}));
+    let result=require("./bundle").attachLandings({...row.artifacts,receipt:row.receipt},values);
+    const checkpoint=this.data.logCheckpoints?.at(-1);
+    if(checkpoint && row.artifacts?.operatorLog?.index < checkpoint.size) result.tlog=require("./operator-log").inclusion(this.data,row.artifacts.operatorLog.index,checkpoint);
+    return result;
+  }
+  async checkpoint(day) {
+    const existing=(this.data.logCheckpoints||[]).find(c=>c.day===day);
+    if(existing)return existing;
+    assert(day < new Date().toISOString().slice(0,10),"CHECKPOINT_DAY_NOT_CLOSED");
+    const checkpoint=await require("./operator-log").checkpoint(this.data,day,this.receiptSigner);
+    this.data.logCheckpoints||=[];this.data.logCheckpoints.push(checkpoint);this.save();return checkpoint;
   }
   resumeEntitled() {
     if (!this.meter) return;
@@ -341,7 +389,7 @@ class ProofService {
                   ? {
                       head_sha: row.receipt.summary.target.value.sha,
                       head_ref: row.receipt.summary.target.value.ref,
-                      base_sha: row.receipt.identity.baseSha,
+                      base_sha: row.receipt.summary.target.value.selection?.value?.baseSha || row.receipt.identity.baseSha,
                       base_ref: `refs/heads/${row.receipt.identity.baseRef}`,
                     }
                   : null,
@@ -383,6 +431,13 @@ class ProofService {
     };
   }
   async webhook(raw, headers) {
+    // This transaction contains no await: nested state saves coalesce, and the
+    // final fsync completes before the signed delivery is acknowledged.
+    this.saveDepth++;
+    try{return this.acceptWebhook(raw,headers);}
+    finally{if(!--this.saveDepth&&this.savePending)this.save();}
+  }
+  acceptWebhook(raw, headers) {
     verifyWebhook(
       raw,
       headers["x-hub-signature-256"],
@@ -583,9 +638,10 @@ class ProofService {
     return id;
   }
   replayStored(receiptId) {
-    const row = this.data.receipts[receiptId];
-    assert(row?.artifacts && row.observationId && this.data.observations[row.observationId], "OBSERVATION_UNAVAILABLE");
-    return require("./bundle").replay({ ...row.receipt, evidence: this.data.observations[row.observationId] }, row.artifacts.policy);
+    const row = this.data.receipts[receiptId] || this.archive?.get(receiptId);
+    const evidence=this.data.observations[row?.observationId] || (row?.archived && row.receipt.evidence);
+    assert(row?.artifacts && evidence && row.observationId===require('./common').hash({evidence,startedAt:evidence.startedAt}), "OBSERVATION_UNAVAILABLE");
+    return require("./bundle").replay({ ...row.receipt, evidence }, row.artifacts.policy);
   }
   enqueue(sub, claims) {
     const queued = this.data.queue.find(q => !q.processing && q.repositoryId === sub.repositoryId && q.pr === sub.pr);
@@ -678,6 +734,7 @@ class ProofService {
   // the one that landed is recorded as exactly that, never as proof of it.
   recordMerge(repo, repositoryId, installationId, pull) {
     const mergedHeadSha = pull.head?.sha || null;
+    if(this.archive?.mergeIdentity(`${repositoryId}:${pull.number}:${pull.merge_commit_sha||"UNKNOWN"}`))return null;
     const rows = Object.values(this.data.receipts).filter(
       (r) =>
         r.receipt.identity.repositoryId === repositoryId &&
@@ -696,7 +753,7 @@ class ProofService {
             Date.parse(a.receipt.issuedAt) - Date.parse(b.receipt.issuedAt),
         )
         .pop() || null;
-    return ledger.record(this.store, {
+    const record = ledger.record(this.store, {
       repository: repo,
       repositoryId,
       pr: pull.number,
@@ -713,6 +770,8 @@ class ProofService {
         pull.merge_commit_sha,
       ),
     });
+    if(record)this.archive?.merge(record);
+    return record;
   }
   async retractChecks(client, repositoryId, pr = null, receiptId = null) {
     if (!this.config.publishChecks) return;
@@ -799,6 +858,11 @@ class ProofService {
     await this.reconcileDeliveries();
     this.reconcile();
     this.data.lastActivityAt = Date.now();
+    if(this.receiptSigner && this.data.operatorLog?.length) {
+      const day=new Date(Date.now()-86400000).toISOString().slice(0,10);
+      try {await this.checkpoint(day);this.data.operatorLogHealth="DAILY_ROOT_PREPARED";}
+      catch {this.data.operatorLogHealth="CHECKPOINT_UNAVAILABLE";}
+    }
     if (this.data.pushQueue.length) {
       const job = this.data.pushQueue[0];
       try {
@@ -810,18 +874,18 @@ class ProofService {
     }
     if (this.data.landingQueue.length && Date.now() >= (this.data.landingRetries[this.data.landingQueue[0]]?.retryAt || 0)) {
       const id = this.data.landingQueue[0];
-      const record = ledger.area(this.store).records.find(r => r.recordId === id);
+      const record = ledger.area(this.store).records.find(r => r.recordId === id) || this.archive?.mergeRecord(id);
       try {
         if (record) {
           const client = await this.appClient(record.installationId, record.repositoryId);
           await client.authorize(record.repository, record.repositoryId);
           const observation = await require("./landing").resolve(client, record);
-          if (this.receiptSigner) {
-            const payload = Buffer.from(JSON.stringify(require("./common").canonical(observation.attestation)));
-            observation.envelope = { payloadType: "application/vnd.in-toto+json", payload: payload.toString("base64"), signatures: [await this.receiptSigner(require("./bundle").pae("application/vnd.in-toto+json", payload))] };
-          }
+          const payload = Buffer.from(JSON.stringify(require("./common").canonical(observation.attestation)));
+          observation.envelope = { payloadType: "application/vnd.in-toto+json", payload: payload.toString("base64"), signatures: this.receiptSigner ? [await this.receiptSigner(require("./bundle").pae("application/vnd.in-toto+json", payload))] : [] };
+          this.archive?.landing(record,observation);
           const observationId = require("./common").hash(observation);
           this.data.landingObservations[observationId] = observation;
+          if(!this.data.landings[id] && record.proof?.receiptSnapshot?.verdict === "VERIFIED" && observation.ruleSuite.value?.result === "fail") this.data.frontierMetrics.ruleSuiteDisagreements++;
           this.data.landings[id] = { ...observation, observationId };
           if (observation.ruleSuite.state !== "AVAILABLE" || observation.reason === "LANDED_CONTENT_UNAVAILABLE") {
             const retry = this.data.landingRetries[id] ||= { attempts: 0 };
@@ -860,7 +924,7 @@ class ProofService {
         const eventStart = this.activeEvents;
         const c = await this.exclusive(() => collect(client, job.repo, job.pr, { previous: previousRow.receipt.evidence, areas, mergeGroup: job.mergeGroup }));
         const current = freshness(previousRow.receipt, c);
-        if (current.state === "CURRENT" && !eventStart.some(e => e.repo === job.repo.toLowerCase() && currentness.touches(e.event, e.payload, c).length)) {
+        if (current.state === "CURRENT" && previousRow.receipt.evidence.consistency === "STABLE_OBSERVATION" && !eventStart.some(e => e.repo === job.repo.toLowerCase() && currentness.touches(e.event, e.payload, c).length)) {
           previousRow.current = current;
           const reconciledSub = this.data.subscriptions[`${job.repositoryId}:${job.pr}`];
           if (reconciledSub) { reconciledSub.reconciledAt = Date.now(); reconciledSub.refreshState = "CURRENT"; }
@@ -876,12 +940,13 @@ class ProofService {
         }
         previousRow.current = current;
       }
+
       const out = await this.run(job.repo, job.pr, {
         client,
         mergeGroup: job.mergeGroup,
         installationId: job.installationId,
       });
-      if (job.reconciled) this.data.receipts[out.receipt.receiptId].issuanceReason = "RECONCILED";
+      if (job.reconciled) { this.data.receipts[out.receipt.receiptId].issuanceReason = "RECONCILED"; this.data.frontierMetrics.reconciliationSupersessions++; }
       if (this.config.publishChecks) {
         try {
           const check = await require("./check").publish(
@@ -921,6 +986,7 @@ class ProofService {
       const sub = this.data.subscriptions[`${job.repositoryId}:${job.pr}`];
       if (sub) { sub.latestReceiptId = out.receipt.receiptId; sub.refreshState="CURRENT"; sub.reconciledAt=Date.now(); }
       if(this.meter) require("./events").record(this.store,"automatic_proof",out.receipt.receiptId,{account:this.meter.data.installations[job.installationId].account,receiptId:out.receipt.receiptId,verdict:out.receipt.verdict});
+      if(out.receipt.evidence.consistency !== "STABLE_OBSERVATION") throw Object.assign(Error("Stable observation required"),{code:"EVIDENCE_RECHECK_REQUIRED"});
       this.data.queue.shift();
     } catch (error) {
       if (["ALLOWANCE_EXHAUSTED", "TRIAL_EXPIRED"].includes(error.code)) {

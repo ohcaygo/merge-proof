@@ -83,7 +83,7 @@ async function handle(service, req, res, url) {
         assert(req.headers["content-type"]?.startsWith("application/json"), "INVALID_CONTENT_TYPE");
         const token = req.headers.authorization?.match(/^Bearer ([^\s]+)$/)?.[1];
         assert(token, "ACCESS_DENIED");
-        const input = JSON.parse(raw);
+        const input = require("./verify-cli").validateRequest(JSON.parse(raw));
         const client = service.clientFactory({ token });
         const repo = await client.authorize(input.repository, input.repositoryId);
         assert(repo.permissions?.push === true || repo.permissions?.admin === true, "ACCESS_DENIED");
@@ -121,13 +121,16 @@ async function handle(service, req, res, url) {
       assert(token, "ACCESS_DENIED");
       const repositoryId = Number(url.searchParams.get("repository_id")), commit = url.searchParams.get("commit");
       assert(Number.isSafeInteger(repositoryId) && require("./common").sha(commit), "INVALID_SCOPE");
-      const records = require("./ledger").area(service.store).records.filter(r => r.repositoryId === repositoryId &&
+      let records = require("./ledger").area(service.store).records.filter(r => r.repositoryId === repositoryId &&
         (r.mergeCommitSha === commit || service.data.landings[r.recordId]?.landed?.sha === commit));
+      const archived=service.archive?.byCommit(repositoryId,commit)||[];
+      for(const item of archived) if(!records.some(r=>r.recordId===item.record.recordId))records.push(item.record);
+      const landedFor=r=>service.data.landings[r.recordId] || archived.filter(x=>x.record.recordId===r.recordId).sort((a,b)=>a.observation.recordedAt.localeCompare(b.observation.recordedAt)).at(-1)?.observation || {state:"LANDED_UNRESOLVED"};
       const pushes = Object.values(service.data.pushObservations).filter(p => p.repositoryId === repositoryId && p.commits.some(c => c.sha === commit));
       assert(records.length || pushes.length, "NOT_FOUND");
       await service.clientFactory({ token }).authorize((records[0] || pushes[0]).repository, repositoryId);
       if (service.meter) for (const r of [...records, ...pushes]) service.meter.account(r.installationId);
-      send(200, { records: records.map(r => ({ receipt: r.proof?.receiptSnapshot || null, landed: service.data.landings[r.recordId] || { state: "LANDED_UNRESOLVED" } })),
+      send(200, { records: records.map(r => ({ receipt: r.proof?.receiptSnapshot || null, landed: landedFor(r) })),
         pushObservations: pushes.map(p => ({ observedAt: p.observedAt, ref: p.ref, commit: p.commits.find(c => c.sha === commit) })) });
       return true;
     }
@@ -303,7 +306,7 @@ async function handle(service, req, res, url) {
               ledger.get(service.store, recordId, {
                 installationId,
                 repositoryId,
-              }),
+              }, service.archive),
             );
             return true;
           }
@@ -430,11 +433,15 @@ async function handle(service, req, res, url) {
       send(201, { ...out, url: `/proof/receipts/${out.receipt.receiptId}` });
       return true;
     }
+    if (req.method === "GET" && url.pathname === "/proof/.well-known/jwks.json") {
+      assert(service.receiptSigner?.keys,"SIGNING_NOT_CONFIGURED");
+      send(200,service.receiptSigner.keys);return true;
+    }
     const bundleMatch = url.pathname.match(/^\/proof\/receipts\/([a-f0-9-]{36})\/bundle$/);
     if (bundleMatch && req.method === "GET") {
       const row = await service.access(bundleMatch[1], token);
       assert(row.artifacts, "HISTORICAL_BUNDLE_UNAVAILABLE");
-      send(200, { ...row.artifacts, receipt: row.receipt });
+      send(200, service.portable(row));
       return true;
     }
     const match = url.pathname.match(

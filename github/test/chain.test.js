@@ -115,7 +115,7 @@ test("frozen pure engine matches current policy across passing and failing captu
 test("online verifier distinguishes provider divergence from record retention uncertainty",async()=>{
   const b=await bundle.create(prove(capture()));
   const missing={authorize:async()=>{},get:async()=>{throw Object.assign(Error(),{status:404});}};
-  const r=await require('../reverify').online(b,missing);a.equal(r.state,'PARTIALLY_REVERIFIED');a.ok(r.rows.every(x=>x.state==='RECORD_UNAVAILABLE_RETENTION_POSSIBLE'));
+  const r=await require('../reverify').online(b,missing);a.equal(r.state,'PARTIALLY_REVERIFIED');a.ok(r.rows.every(x=>['RECORD_UNAVAILABLE_RETENTION_POSSIBLE','UNAVAILABLE'].includes(x.state)));
   const changed=await require('../reverify').online(b,{authorize:async()=>{},get:async()=>({})});a.equal(changed.exitCode,5);
 });
 test("MCP advertises only a read-only decision tool and bounds incoming messages",async()=>{

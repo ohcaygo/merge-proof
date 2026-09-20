@@ -22,6 +22,26 @@ async function online(bundle, client) {
     x => x.id === r.id && x.commit_id === r.sha && x.user?.id === r.userId, x => x.state === r.state);
   for (const [kind, commit, tree] of [["CANDIDATE", c.target.value?.sha, c.target.value?.tree], ["HEAD", c.identity.headSha, c.git.value?.headTree]])
     if (commit) await inspect(kind, commit, `${root}/git/commits/${commit}`, x => x.sha === commit && (!tree || x.tree?.sha === tree));
+  for (const j of c.execution.value || []) {
+    await inspect("WORKFLOW_JOB",j.jobId,`${root}/actions/jobs/${j.jobId}`,
+      x=>x.id===j.jobId&&x.run_id===j.runId&&x.head_sha===j.sha,
+      x=>x.status===j.status&&x.conclusion===j.conclusion&&require("./common").hash((x.steps||[]).map(s=>({number:s.number,status:s.status,conclusion:s.conclusion,startedAt:s.started_at,completedAt:s.completed_at})))===require("./common").hash(j.steps));
+  }
+  for(const j of new Map((c.execution.value||[]).filter(j=>j.workflowBlob?.state==="AVAILABLE").map(j=>[`${j.workflowPath}:${j.workflowBlob.value.commit}`,j])).values())
+    await inspect("WORKFLOW_BLOB",j.workflowBlob.value.sha,`${root}/contents/${j.workflowPath.split("/").map(encodeURIComponent).join("/")}?ref=${j.workflowBlob.value.commit}`,
+      x=>x.sha===j.workflowBlob.value.sha&&x.path===j.workflowPath);
+  await inspect("HEAD_REF",c.identity.headRef,`/repos/${c.identity.headRepository}/git/ref/heads/${c.identity.headRef.split("/").map(encodeURIComponent).join("/")}`,
+    x=>x.ref===`refs/heads/${c.identity.headRef}`,x=>x.object?.sha===c.identity.headSha);
+  await inspect("BASE_REF",c.identity.baseRef,`${root}/git/ref/heads/${c.identity.baseRef.split("/").map(encodeURIComponent).join("/")}`,
+    x=>x.ref===`refs/heads/${c.identity.baseRef}`,x=>x.object?.sha===c.identity.baseSha);
+  if(c.target.value?.ref)await inspect("TARGET_REF",c.target.value.ref,`${root}/git/ref/${c.target.value.ref.slice(5).split("/").map(encodeURIComponent).join("/")}`,
+    x=>x.ref===c.target.value.ref,x=>x.object?.sha===c.target.value.sha);
+  try {
+    const rules=await require("./collect").collectRules(client,c.identity.repository,c.identity.baseRef,c.identity.branchProtected);
+    rows.push({kind:"CURRENT_RULES",state:rules.classic.state!=="AVAILABLE"||rules.active.state!=="AVAILABLE"?"UNAVAILABLE":require("./common").hash(rules)===require("./common").hash({classic:c.rules.classic,active:c.rules.active})?"MATCH":"EXPECTED_CHANGE"});
+  }catch{rows.push({kind:"CURRENT_RULES",state:"UNAVAILABLE"});}
+  for(const l of bundle.landings||[])if(l.observation.landed?.sha)await inspect("LANDED_COMMIT",l.observation.landed.sha,`${root}/git/commits/${l.observation.landed.sha}`,
+    x=>x.sha===l.observation.landed.sha&&x.tree?.sha===l.observation.landed.tree&&require("./common").hash((x.parents||[]).map(p=>p.sha))===require("./common").hash(l.observation.landed.parents));
   const divergence = rows.some(x => x.state === "DIVERGED");
   return { state: divergence ? "REVERIFICATION_DIVERGED" : rows.every(x => x.state === "MATCH") ? "CONSISTENT_AND_REVERIFIED_ONLINE" : "PARTIALLY_REVERIFIED",
     rows, exitCode: divergence ? 5 : 0,
@@ -55,6 +75,12 @@ function independent(bundle, directory, binary = "/usr/bin/git") {
       providerTree:c.target.value?.tree, ...(expected.method==='queue'?{entries:expected.steps.map(x=>({head:x.head,tree:x.providerTree})),providerOrderConfirmed:true}:{})},config);
     if(recomputed.status==='RECONSTRUCTED') rows.push({kind:'EXPECTED_TREE',state:recomputed.tree===expected.tree?'MATCH':'DIVERGED',expected:expected.tree,actual:recomputed.tree});
     else rows.push({kind:'EXPECTED_TREE',state:'OBJECT_OR_RECONSTRUCTION_UNAVAILABLE',reason:recomputed.reason});
+    for(const value of bundle.landings||[]) {
+      const landed=value.observation.landed;
+      if(!landed?.sha){rows.push({kind:'LANDED_TREE',state:'OBJECT_UNAVAILABLE'});continue;}
+      inspect('LANDED_TREE',landed.tree,()=>g.tree(landed.sha));
+      inspect('LANDED_PARENTS',landed.parents,()=>g.get(['rev-list','--parents','-n','1',landed.sha]).split(' ').slice(1));
+    }
     const diverged=rows.some(x=>x.state==='DIVERGED'), complete=rows.every(x=>x.state==='MATCH');
     return {state:diverged?'INDEPENDENT_VERIFICATION_DIVERGED':complete?'INDEPENDENTLY_RECOMPUTED':'INDEPENDENT_VERIFICATION_UNAVAILABLE',rows,recomputed,
       flags:recomputed.flags,exitCode:diverged?5:complete?0:2,

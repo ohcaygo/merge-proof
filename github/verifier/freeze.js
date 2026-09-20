@@ -2,8 +2,14 @@
 // Release-time tool, never invoked by the service or verifier. Existing policy
 // archives must not be replaced after publication; mint a new archive instead.
 const fs = require("node:fs"), path = require("node:path");
-const root = path.join(__dirname, "../.."), destination = path.join(__dirname, "v2");
-fs.mkdirSync(destination, { recursive: true });
+const archive=process.argv[2];
+if(!/^v[0-9]+$/.test(archive||""))throw Error("Usage: node github/verifier/freeze.js NEW_ARCHIVE (for example v3)");
+const root=path.join(__dirname,"../.."),destination=path.join(__dirname,archive);
+if(fs.existsSync(destination))throw Error("Existing verifier archives are immutable; choose a new archive name.");
+const table=JSON.parse(fs.readFileSync(path.join(__dirname,"compatibility.json"),"utf8"));
+const digest=require("../bundle").codeDigest();
+if(table[digest])throw Error("Existing engine digest already has an immutable archive");
+fs.mkdirSync(destination);
 const version = require("../../package.json").version;
 for (const name of ["proof", "rules", "subject", "bindings", "claims", "common", "authority", "actors", "setup", "local-evidence", "wording"]) {
   let body = fs.readFileSync(path.join(root, "github", name + ".js"), "utf8")
@@ -19,6 +25,5 @@ for (const name of ["analyze", "rules"]) {
     .replace("const rules = require('./rules');", "const rules = require('./src-rules');");
   fs.writeFileSync(path.join(destination,"src-"+name+".js"),body);
 }
-fs.writeFileSync(path.join(__dirname,"compatibility.json"), JSON.stringify({
-  [require("../bundle").codeDigest()]: { engine: "v2", policies: ["github-exact-state-v2", "github-exact-state-v3"], version },
-},null,2)+"\n");
+table[digest]={engine:archive,policies:["github-exact-state-v2","github-exact-state-v3"],version};
+fs.writeFileSync(path.join(__dirname,"compatibility.json"),JSON.stringify(table,null,2)+"\n");

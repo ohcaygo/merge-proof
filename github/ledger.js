@@ -192,8 +192,8 @@ function list(store, { installationId, repositoryId, ...filter } = {}) {
   };
 }
 
-function get(store, recordId, { installationId, repositoryId } = {}) {
-  const row = area(store).records.find((r) => r.recordId === recordId);
+function get(store, recordId, { installationId, repositoryId } = {}, archive = null) {
+  const row = area(store).records.find((r) => r.recordId === recordId) || archive?.mergeRecord(recordId);
   assert(row, "NOT_FOUND");
   assert(
     row.repositoryId === repositoryId &&

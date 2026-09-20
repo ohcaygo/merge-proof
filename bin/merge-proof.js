@@ -166,7 +166,7 @@ if (require.main === module) {
   if (argv[0] === 'verify' || argv[0] === 'mcp') {
     const cli = require('../github/verify-cli');
     (argv[0] === 'mcp' ? cli.mcp() : cli.main(argv.slice(1))).then(code => { process.exitCode = code || 0; }).catch(e => {
-      console.error(JSON.stringify({ outcome: 'HOLD', proceed: false, verdict: 'NOT_PROVEN', reason: e.code || 'DECISION_UNAVAILABLE' })); process.exitCode = ['ACCESS_DENIED', 'GITHUB_TOKEN_REQUIRED'].includes(e.code) ? 4 : e.code === 'INVALID_ARGUMENT' ? 1 : 9;
+      console.error(JSON.stringify({ outcome: 'HOLD', proceed: false, verdict: 'NOT_PROVEN', reason: e.code || 'DECISION_UNAVAILABLE' })); process.exitCode = argv.includes('--bundle') && /^(MANIFEST_|BUNDLE_|ARCHIVE_)/.test(e.code || '') ? 3 : ['ACCESS_DENIED', 'GITHUB_TOKEN_REQUIRED'].includes(e.code) ? 4 : e.code === 'INVALID_ARGUMENT' ? 1 : 9;
     });
   } else process.exitCode = main(argv);
 }

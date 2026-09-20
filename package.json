@@ -38,7 +38,9 @@
     ".mergeproofignore.example",
     "github/*.js",
     "github/*.schema.json",
-    "github/verifier/"
+    "github/verifier/",
+    "github/operations/",
+    "github/lab/"
   ],
   "engines": {
     "node": ">=18"

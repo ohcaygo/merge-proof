@@ -29,6 +29,7 @@ async function installationClient(
           statuses: "read",
           actions: "read",
           administration: "read",
+          ...(config.mergeQueues === true ? { merge_queues: "read" } : {}),
         },
       },
     },

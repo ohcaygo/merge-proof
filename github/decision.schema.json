@@ -1,0 +1,22 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"urn:merge-proof:decision:1",
+  "type":"object",
+  "required":["$schema","schemaVersion","outcome","proceed","verdict","historicalVerdict","currentness","subject","request","bindings","reasons","missingEvidence","exceptions","nextAction","receipt","observedAt"],
+  "properties":{
+    "$schema":{"const":"urn:merge-proof:decision:1"},"schemaVersion":{"const":1},
+    "outcome":{"enum":["PROCEED","HOLD","REFUSE","UNAVAILABLE"]},"proceed":{"type":"boolean"},
+    "verdict":{"enum":["VERIFIED","NOT_PROVEN","FAIL"]},"historicalVerdict":{"enum":["VERIFIED","NOT_PROVEN","FAIL"]},
+    "currentness":{"enum":["CURRENT","STALE","UNAVAILABLE"]},
+    "subject":{"type":"object","required":["state"],"properties":{"state":{"enum":["AVAILABLE","UNAVAILABLE"]},"value":{"type":"object","required":["platform","repositoryId","kind","commit","tree","base","group"]}}},
+    "request":{"type":"object","required":["repository","repositoryId","pr","expectedHeadSha","expectedBaseSha","expectedTargetSha","matched","mismatch"],"properties":{"repository":{"type":"string"},"repositoryId":{"type":"integer","minimum":1},"pr":{"type":"integer","minimum":1},"expectedHeadSha":{"$ref":"#/$defs/sha"},"expectedBaseSha":{"$ref":"#/$defs/sha"},"expectedTargetSha":{"$ref":"#/$defs/sha"},"matched":{"type":"boolean"},"mismatch":{"type":"array","items":{"type":"string"}}}},
+    "bindings":{"type":"object","required":["expected","candidate","tested","authorized","landed"],"additionalProperties":false,"properties":{"expected":{"$ref":"#/$defs/binding"},"candidate":{"$ref":"#/$defs/binding"},"tested":{"$ref":"#/$defs/binding"},"authorized":{"$ref":"#/$defs/binding"},"landed":{"$ref":"#/$defs/binding"}}},
+    "reasons":{"type":"array","items":{"type":"object","required":["code","blocking"],"properties":{"code":{"type":"string"},"blocking":{"type":"boolean"}}}},
+    "missingEvidence":{"type":"array","items":{"type":"string"}},"exceptions":{"type":"array","items":{"type":"string"}},
+    "nextAction":{"type":"object","required":["kind","text"],"properties":{"kind":{"enum":["MERGE_WITH_SHA","RESOLVE_EVIDENCE"]},"text":{"type":"string"},"mergeArguments":{"type":"object","required":["sha"],"properties":{"sha":{"$ref":"#/$defs/sha"}}}}},
+    "receipt":{"type":"object","required":["receiptId","digest","url"],"properties":{"receiptId":{"type":"string"},"digest":{"type":"string","pattern":"^[a-f0-9]{64}$"},"url":{"type":"string"}}},
+    "observedAt":{"type":"string","format":"date-time"}
+  },
+  "$defs":{"sha":{"type":"string","pattern":"^[a-f0-9]{40}$"},"binding":{"anyOf":[{"$ref":"#/$defs/sha"},{"enum":[null,"UNAVAILABLE"]}]}},
+  "allOf":[{"if":{"properties":{"proceed":{"const":true}}},"then":{"properties":{"outcome":{"const":"PROCEED"},"verdict":{"const":"VERIFIED"},"currentness":{"const":"CURRENT"},"reasons":{"maxItems":0},"missingEvidence":{"maxItems":0},"exceptions":{"maxItems":0},"request":{"properties":{"matched":{"const":true},"mismatch":{"maxItems":0}}}}}}]
+}
