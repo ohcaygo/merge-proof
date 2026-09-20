@@ -1,0 +1,11 @@
+{
+  "artifact": "merge-proof-0.2.0.tgz",
+  "integrity": "sha512-i3YZs1D3iBDo0dPaHKZ59ewGYbahE4gAo5+29jTVCjgjFeG1KJ3CjKD33jI4mCwSvmQIqjQkogXfvrSe2iSJJg==",
+  "files": 149,
+  "offline": "CONSISTENT_OFFLINE",
+  "signature": "VALID_TRUSTED_KEY",
+  "independent": "INDEPENDENTLY_RECOMPUTED",
+  "mcpTool": "merge_proof_decision",
+  "readOnly": true,
+  "ghShim": "PASS"
+}

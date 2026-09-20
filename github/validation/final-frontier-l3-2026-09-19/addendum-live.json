@@ -1,0 +1,64 @@
+{
+  "source": "7492959d9ae5ef5bb9c889edb3bcfe3b410d8f69",
+  "at": "2026-09-20T16:06:29.995Z",
+  "rows": [
+    {
+      "name": "eligible-actor-event-live",
+      "pass": true,
+      "verdict": "VERIFIED",
+      "gaps": [],
+      "head": "128378a9b7653c05e8b2a120769df3f1ae52d7e7"
+    },
+    {
+      "name": "portable-live-policy-replay",
+      "pass": true
+    },
+    {
+      "name": "policy-change-after-evidence-live",
+      "pass": true,
+      "verdict": "NOT_PROVEN",
+      "gaps": [
+        "CURRENT_STATE_EXECUTION_NOT_PROVEN",
+        "EXECUTION_POLICY_CHANGED_AFTER_EVIDENCE"
+      ]
+    },
+    {
+      "name": "policy-dependent-currentness-live",
+      "pass": true,
+      "changed": [
+        "CI_EXECUTED",
+        "RULES_SNAPSHOT"
+      ]
+    },
+    {
+      "name": "wrong-event-no-positive-live",
+      "pass": true,
+      "verdict": "NOT_PROVEN",
+      "gaps": [
+        "CURRENT_STATE_EXECUTION_NOT_PROVEN"
+      ],
+      "providerConclusion": "startup_failure"
+    },
+    {
+      "name": "wrong-actor-no-positive-live",
+      "pass": true,
+      "verdict": "NOT_PROVEN",
+      "gaps": [
+        "CURRENT_STATE_EXECUTION_NOT_PROVEN"
+      ],
+      "providerConclusion": "startup_failure"
+    },
+    {
+      "name": "eligible-restored-live",
+      "pass": true,
+      "verdict": "VERIFIED",
+      "gaps": []
+    },
+    {
+      "name": "fixture-main-unchanged",
+      "pass": true
+    }
+  ],
+  "policyRestored": true,
+  "prClosed": true
+}

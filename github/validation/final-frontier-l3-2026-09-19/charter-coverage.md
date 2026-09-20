@@ -1,6 +1,6 @@
 # Level 3 §43 implementation and acceptance coverage
 
-Product code `a6800e68f4c1e03d0cd0de28fe7febe5864bcdc4`. Research §43 says “twenty” but enumerates 22 items. All are accounted for below; code presence does not close an owner/provider validation gate. Full evidence and limitations are in [productionization](productionization.md).
+Pre-addendum product code `a6800e68f4c1e03d0cd0de28fe7febe5864bcdc4`; current addendum candidate `7492959d9ae5ef5bb9c889edb3bcfe3b410d8f69`. Research §43 says “twenty” but enumerates 22 items. All are accounted for below; code presence does not close an owner/provider validation gate. Full evidence and limitations are in [productionization](productionization.md).
 
 | Item | Implementation | Acceptance boundary |
 | --- | --- | --- |
@@ -28,3 +28,5 @@ Product code `a6800e68f4c1e03d0cd0de28fe7febe5864bcdc4`. Research §43 says “t
 | 5.3 Differential lab | Private owned fixture drivers, bounded allowlisted observer, diff/drift alarms, runtime metrics | Extensive one-off live matrix and read-only runner smoke; weekly activation and blocked environments require owner |
 
 The selected required §43 code is implemented. Optional log inference, alternative OIDC authentication and the later Quint model are not represented as shipped. Unsupported-evidence boundaries explicitly retained by the charter (such as CODEOWNERS, last-push attribution, org required workflows and incomplete ALLGREEN evidence) remain NOT_PROVEN; a refusal test is not positive capability validation. Production key publication, anchoring, weekly activation and deployment are unexecuted owner operations, not removed requirements. Level 3 remains open until its required acceptance and owner gates are resolved.
+
+The September addendum strengthens items 0.1–0.4, 1.4 and 4.1. Execution-policy discovery, actor/event/time binding, fine claim currentness, relevant-policy receipts, coverage rule ingestion and bound numeric evaluation are implemented. Positive coverage collection is not implemented: the documented provider API does not expose the complete qualifying aggregate/provenance. Its fixture-tested evaluator and explicit NOT_PROVEN live boundary do not close that item. See [the separate four-category addendum report](capability-addendum.md). No established Level 3 acceptance criterion is removed, and all owner gates continue to apply to the final product candidate.

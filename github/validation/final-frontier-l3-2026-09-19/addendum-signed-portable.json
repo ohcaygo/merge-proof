@@ -1,0 +1,9 @@
+{
+  "source": "7492959d9ae5ef5bb9c889edb3bcfe3b410d8f69",
+  "receiptId": "6cd6ab39-c114-4229-b8ed-ad9cdca6ff12",
+  "historicalVerdict": "VERIFIED",
+  "signature": "VALID_TRUSTED_KEY",
+  "replay": "CONSISTENT_OFFLINE",
+  "keyKind": "ephemeral fixture only",
+  "productionSigning": false
+}
