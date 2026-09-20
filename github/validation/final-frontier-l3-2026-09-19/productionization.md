@@ -1,6 +1,8 @@
 # Level 3 productionization evidence — 2026-09-20
 
-**Outcome: implementation advanced; Level 3 remains OPEN at live-validation and owner gates. Not deployed.**
+**Outcome: final-candidate isolated signed queue acceptance passed; Level 3 remains OPEN at provider, implementation and production owner gates. Not deployed.**
+
+The current [signed queue acceptance](signed-queue-final.md) supersedes historical pending queue statements below. Product candidate 7953ecd passed 13 real signed-delivery-to-landed assertions, independent Git replay and archive restart under a temporary one-repository development-App Write token. Administration is restored to Read. The production policy-evidence permission model remains an explicit owner/product-security decision; the positive coverage aggregate adapter is still unimplemented.
 
 Current product candidate: **`7953ecdbd849c8afe0379bfec1b4a61133292c62`**. The [capability addendum report](capability-addendum.md) records its current acceptance and remaining implementation gap. The historical pre-addendum evidence below belongs to baseline **`a6800e68f4c1e03d0cd0de28fe7febe5864bcdc4`**, which superseded `e3984f6`. `d162d37727876ea259a407edb42914012483ddcd` was the intermediate independently reviewed candidate. Later documentation commits do not replace product identity. Remote product `main` remains `e76a8677aa3dfd935376981ad4b99d3444e0441d`; the candidate has not been integrated or deployed. Exact source snapshots were exported only to the owned synthetic acceptance fixture.
 

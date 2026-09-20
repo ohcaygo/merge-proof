@@ -1,5 +1,7 @@
 # Signed queue owner resume — 2026-09-20
 
+**Historical preflight.** The later owner-authorized temporary permission elevation and [final-candidate signed queue acceptance](signed-queue-final.md) supersede the pending live gate below. Read was restored; the production permission decision remains open.
+
 Product candidate remains **`7953ecdbd849c8afe0379bfec1b4a61133292c62`**. All tracked runtime files were compared with that commit. This resume changes documentation only; the prior complete candidate regression/factory/model/reconstruction evidence remains applicable and is not substituted for live acceptance.
 
 **Result: repository-selection gate closed; required policy-read preflight is NOT_PROVEN. Positive signed merge_group queue-to-landed acceptance did not start.**

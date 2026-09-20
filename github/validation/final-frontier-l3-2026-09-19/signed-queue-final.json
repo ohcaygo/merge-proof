@@ -1,0 +1,990 @@
+{
+  "at": "2026-09-20T17:49:05.578Z",
+  "productCandidate": "7953ecdbd849c8afe0379bfec1b4a61133292c62",
+  "engineCodeDigest": "b770fe7f5dac86730095e768e4c3c4b4e1856eae909b3757acfc756069e47b76",
+  "repository": "ohcaygo/merge-proof-l3-lab-queue-headgreen",
+  "repositoryId": 1377343185,
+  "pr": 10,
+  "url": "https://github.com/ohcaygo/merge-proof-l3-lab-queue-headgreen/pull/10",
+  "baseRef": "l3-isolated-signed-queue-20260920",
+  "credentialMode": "Real one-repository development App token supplied through existing ProofService appClient injection; stock 7953ecd token issuer remains Administration Read",
+  "permission": {
+    "before": {
+      "at": "2026-09-20T17:36:18.218Z",
+      "source": "7953ecdbd849c8afe0379bfec1b4a61133292c62",
+      "app": {
+        "id": 4899448,
+        "permissions": {
+          "actions": "read",
+          "administration": "read",
+          "checks": "write",
+          "contents": "read",
+          "merge_queues": "read",
+          "metadata": "read",
+          "pull_requests": "read",
+          "statuses": "read"
+        },
+        "events": [
+          "branch_protection_configuration",
+          "branch_protection_rule",
+          "check_run",
+          "check_suite",
+          "merge_group",
+          "pull_request",
+          "pull_request_review",
+          "push",
+          "repository",
+          "repository_ruleset",
+          "status",
+          "workflow_run"
+        ],
+        "requestId": "C90A:2683A5:8DF0970:1DF8D5F3:6AB01992"
+      },
+      "installation": {
+        "id": 160648161,
+        "appId": 4899448,
+        "permissions": {
+          "checks": "write",
+          "actions": "read",
+          "contents": "read",
+          "metadata": "read",
+          "statuses": "read",
+          "merge_queues": "read",
+          "pull_requests": "read",
+          "administration": "read"
+        },
+        "events": [
+          "branch_protection_configuration",
+          "branch_protection_rule",
+          "check_run",
+          "check_suite",
+          "merge_group",
+          "pull_request",
+          "pull_request_review",
+          "push",
+          "repository",
+          "repository_ruleset",
+          "status",
+          "workflow_run"
+        ],
+        "repositorySelection": "selected",
+        "requestId": "C909:309A22:8FA2A79:1E49B9C4:6AB01992"
+      }
+    },
+    "approved": {
+      "at": "2026-09-20T17:41:26.356Z",
+      "source": "7953ecdbd849c8afe0379bfec1b4a61133292c62",
+      "app": {
+        "id": 4899448,
+        "permissions": {
+          "actions": "read",
+          "administration": "write",
+          "checks": "write",
+          "contents": "read",
+          "merge_queues": "read",
+          "metadata": "read",
+          "pull_requests": "read",
+          "statuses": "read"
+        },
+        "events": [
+          "branch_protection_configuration",
+          "branch_protection_rule",
+          "check_run",
+          "check_suite",
+          "merge_group",
+          "pull_request",
+          "pull_request_review",
+          "push",
+          "repository",
+          "repository_ruleset",
+          "status",
+          "workflow_run"
+        ],
+        "requestId": "C9DE:2AB0BD:90553BE:1E64B82D:6AB01AC6"
+      },
+      "installation": {
+        "id": 160648161,
+        "appId": 4899448,
+        "permissions": {
+          "checks": "write",
+          "actions": "read",
+          "contents": "read",
+          "metadata": "read",
+          "statuses": "read",
+          "merge_queues": "read",
+          "pull_requests": "read",
+          "administration": "write"
+        },
+        "events": [
+          "branch_protection_configuration",
+          "branch_protection_rule",
+          "check_run",
+          "check_suite",
+          "merge_group",
+          "pull_request",
+          "pull_request_review",
+          "push",
+          "repository",
+          "repository_ruleset",
+          "status",
+          "workflow_run"
+        ],
+        "repositorySelection": "selected",
+        "requestId": "C9DF:34E4D9:91EB925:1EDD1413:6AB01AC6"
+      }
+    },
+    "restored": {
+      "at": "2026-09-20T17:47:37.684Z",
+      "source": "7953ecdbd849c8afe0379bfec1b4a61133292c62",
+      "app": {
+        "id": 4899448,
+        "permissions": {
+          "actions": "read",
+          "administration": "read",
+          "checks": "write",
+          "contents": "read",
+          "merge_queues": "read",
+          "metadata": "read",
+          "pull_requests": "read",
+          "statuses": "read"
+        },
+        "events": [
+          "branch_protection_configuration",
+          "branch_protection_rule",
+          "check_run",
+          "check_suite",
+          "merge_group",
+          "pull_request",
+          "pull_request_review",
+          "push",
+          "repository",
+          "repository_ruleset",
+          "status",
+          "workflow_run"
+        ],
+        "requestId": "CB06:DDAA8:6B812DD:169B0F61:6AB01C39"
+      },
+      "installation": {
+        "id": 160648161,
+        "appId": 4899448,
+        "permissions": {
+          "checks": "write",
+          "actions": "read",
+          "contents": "read",
+          "metadata": "read",
+          "statuses": "read",
+          "merge_queues": "read",
+          "pull_requests": "read",
+          "administration": "read"
+        },
+        "events": [
+          "branch_protection_configuration",
+          "branch_protection_rule",
+          "check_run",
+          "check_suite",
+          "merge_group",
+          "pull_request",
+          "pull_request_review",
+          "push",
+          "repository",
+          "repository_ruleset",
+          "status",
+          "workflow_run"
+        ],
+        "repositorySelection": "selected",
+        "requestId": "CB05:C4EC8:6B65800:169B4710:6AB01C39"
+      }
+    },
+    "selectedRepositories": [
+      "ohcaygo/merge-proof",
+      "ohcaygo/merge-proof-l3-lab-queue-headgreen"
+    ],
+    "selectionEvidence": "GitHub installation UI after saved approval and restoration; Save disabled",
+    "onlyAdministrationChanged": true,
+    "restoredExactly": true,
+    "writeTokens": [
+      {
+        "at": "2026-09-20T17:42:06.142Z",
+        "expiresAt": "2026-09-20T18:42:06Z",
+        "repositoryIds": [
+          1377343185
+        ],
+        "permissions": {
+          "actions": "read",
+          "administration": "write",
+          "checks": "write",
+          "contents": "read",
+          "merge_queues": "read",
+          "metadata": "read",
+          "pull_requests": "read",
+          "statuses": "read"
+        }
+      },
+      {
+        "revokedAt": "2026-09-20T17:42:06.491Z",
+        "status": 204
+      },
+      {
+        "at": "2026-09-20T17:42:33.929Z",
+        "expiresAt": "2026-09-20T18:42:33Z",
+        "repositoryIds": [
+          1377343185
+        ],
+        "permissions": {
+          "actions": "read",
+          "administration": "write",
+          "checks": "write",
+          "contents": "read",
+          "merge_queues": "read",
+          "metadata": "read",
+          "pull_requests": "read",
+          "statuses": "read"
+        }
+      },
+      {
+        "revokedAt": "2026-09-20T17:46:28.701Z",
+        "status": 204
+      }
+    ]
+  },
+  "preflight": {
+    "at": "2026-09-20T17:42:06.318Z",
+    "productCandidate": "7953ecdbd849c8afe0379bfec1b4a61133292c62",
+    "credentialMode": "REAL_REPOSITORY_SCOPED_APP_TOKEN_VIA_EXISTING_SERVICE_APPCLIENT_INJECTION",
+    "read": {
+      "state": "UNAVAILABLE",
+      "reason": "GITHUB_HTTP_403"
+    },
+    "write": {
+      "state": "AVAILABLE",
+      "value": []
+    },
+    "requests": [
+      {
+        "at": "2026-09-20T17:42:05.640Z",
+        "method": "POST",
+        "path": "/app/installations/160648161/access_tokens",
+        "status": 201,
+        "acceptedPermissions": null,
+        "requestId": "C9F6:2683A5:8E4057D:1E098895:6AB01AED"
+      },
+      {
+        "at": "2026-09-20T17:42:05.936Z",
+        "method": "GET",
+        "path": "/repos/ohcaygo/merge-proof-l3-lab-queue-headgreen/actions/policies?has_parents=true&per_page=100&page=1",
+        "status": 403,
+        "acceptedPermissions": "administration=write",
+        "requestId": "C9F8:C55E:90090AD:1E57CC9F:6AB01AED"
+      },
+      {
+        "at": "2026-09-20T17:42:06.135Z",
+        "method": "POST",
+        "path": "/app/installations/160648161/access_tokens",
+        "status": 201,
+        "acceptedPermissions": null,
+        "requestId": "C9F6:2683A5:8E40742:1E098E9E:6AB01AED"
+      },
+      {
+        "at": "2026-09-20T17:42:06.314Z",
+        "method": "GET",
+        "path": "/repos/ohcaygo/merge-proof-l3-lab-queue-headgreen/actions/policies?has_parents=true&per_page=100&page=1",
+        "status": 200,
+        "acceptedPermissions": "administration=write",
+        "requestId": "C9F8:C55E:900920A:1E57D0F4:6AB01AED"
+      }
+    ]
+  },
+  "readProof": {
+    "verdict": "NOT_PROVEN",
+    "gaps": [
+      "CURRENT_STATE_EXECUTION_NOT_PROVEN",
+      "EXECUTION_PROTECTIONS_UNAVAILABLE"
+    ],
+    "claims": [
+      {
+        "name": "TARGET",
+        "state": "TRUE",
+        "reason": null
+      },
+      {
+        "name": "CI_EXECUTED:l3 signed queue validation",
+        "state": "UNKNOWN",
+        "reason": "SUCCESS_ASSERTED_EXECUTION_UNAVAILABLE"
+      },
+      {
+        "name": "APPROVAL_CURRENT",
+        "state": "TRUE",
+        "reason": null
+      },
+      {
+        "name": "RULES_SNAPSHOT",
+        "state": "UNKNOWN",
+        "reason": "EXECUTION_PROTECTIONS_UNAVAILABLE"
+      },
+      {
+        "name": "REMOTE_DURABLE",
+        "state": "TRUE",
+        "reason": null
+      }
+    ]
+  },
+  "signedTransport": {
+    "deliveries": 80,
+    "reverifiedAllHmacAndHashes": true,
+    "events": [
+      {
+        "guid": "c9dc4830-b51a-11f1-8770-0dd9a65d626a",
+        "event": "merge_group",
+        "action": "checks_requested",
+        "signatureVerified": true,
+        "rawSha256": "d13f5a25dc9ff1f9673060abf26549cd4f5c47dc609077bc5d6a06d29828a80b",
+        "group": "b7022dfa3f86a9877b6cb8e67cc9d0c43ad38840",
+        "handler": {
+          "accepted": true
+        },
+        "at": "2026-09-20T17:43:29.375Z"
+      },
+      {
+        "guid": "e1139490-b51a-11f1-8dd0-8bf868e42823",
+        "event": "merge_group",
+        "action": "destroyed",
+        "signatureVerified": true,
+        "rawSha256": "68f2b418a3c84630fb227ee49086b09a1be3860a77d628b9850848d573876383",
+        "group": "b7022dfa3f86a9877b6cb8e67cc9d0c43ad38840",
+        "handler": {
+          "accepted": true
+        },
+        "at": "2026-09-20T17:44:08.347Z"
+      },
+      {
+        "guid": "fde92c10-b51a-11f1-8625-fc8e2d8bed6d",
+        "event": "merge_group",
+        "action": "checks_requested",
+        "signatureVerified": true,
+        "rawSha256": "fa3f8ffc1c9a96eb137d630fc003471e09294fd855b861288a0b7b0ae539c18b",
+        "group": "d8e8f20681903e3f53f25fb3f3e6470effaf4bd0",
+        "handler": {
+          "accepted": true
+        },
+        "at": "2026-09-20T17:44:56.683Z"
+      },
+      {
+        "guid": "27ed17b0-b51b-11f1-9553-834101b7f65c",
+        "event": "merge_group",
+        "action": "destroyed",
+        "signatureVerified": true,
+        "rawSha256": "835c5c718e0e66c59ccd6660db2dce8bcbdf890a953d2681f5dafbb7b9cd2dcc",
+        "group": "d8e8f20681903e3f53f25fb3f3e6470effaf4bd0",
+        "handler": {
+          "accepted": true
+        },
+        "at": "2026-09-20T17:46:07.112Z"
+      },
+      {
+        "guid": "28735eb0-b51b-11f1-87e6-40068b9b0c13",
+        "event": "pull_request",
+        "action": "closed",
+        "signatureVerified": true,
+        "rawSha256": "984795a42066af994153348171cb880f4fe48eb6edbe9bee3a26dccce2f43fb1",
+        "handler": {
+          "accepted": true
+        },
+        "at": "2026-09-20T17:46:08.257Z"
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "S01-signed-PR-admission",
+      "pass": true
+    },
+    {
+      "name": "S02-real-signed-merge-group",
+      "pass": true
+    },
+    {
+      "name": "S03-group-exact-binding",
+      "pass": true
+    },
+    {
+      "name": "S04-independent-group-tree",
+      "pass": true,
+      "comparison": "MATCH"
+    },
+    {
+      "name": "S05-signed-portable-group",
+      "pass": true
+    },
+    {
+      "name": "S06-destroyed-group-no-current-authority",
+      "pass": true
+    },
+    {
+      "name": "S07-immutable-group-history",
+      "pass": true
+    },
+    {
+      "name": "S08-rebuilt-group-bound",
+      "pass": true
+    },
+    {
+      "name": "S09-landed-tree",
+      "pass": true
+    },
+    {
+      "name": "S10-full-portable-landed-chain",
+      "pass": true
+    },
+    {
+      "name": "S11-artifact-commit-lookup",
+      "pass": true
+    },
+    {
+      "name": "S12-app-permissions-unchanged",
+      "pass": true
+    },
+    {
+      "name": "S13-fixture-main-unchanged",
+      "pass": true
+    }
+  ],
+  "chain": {
+    "receiptId": "df91f650-7660-48b6-9eac-86ee304b595b",
+    "receiptDigest": "e00fa1bc970aecdfec16c6fa7c71868b872b3ee1922849e6cfb25e5b80578b3a",
+    "head": "9765cb4141415d956d078d89c5b101f6db32b5c0",
+    "base": "31d5b01bc299874a1017909219711bf462dd4c8f",
+    "firstGroup": "b7022dfa3f86a9877b6cb8e67cc9d0c43ad38840",
+    "rebuiltGroup": "d8e8f20681903e3f53f25fb3f3e6470effaf4bd0",
+    "expectedTree": "7cef7ea28e28de0614933013f24e99c9db146142",
+    "candidateTree": "7cef7ea28e28de0614933013f24e99c9db146142",
+    "landedCommit": "d8e8f20681903e3f53f25fb3f3e6470effaf4bd0",
+    "landedTree": "7cef7ea28e28de0614933013f24e99c9db146142",
+    "landedState": "LANDED_VERIFIED",
+    "parentsConsistent": true,
+    "policySnapshot": "bc2b64084c4345765f9dcee0f8b395551be1891309747f001a1e6e7702ba53d0",
+    "executionPolicies": {
+      "state": "AVAILABLE",
+      "value": []
+    },
+    "claims": [
+      {
+        "name": "TARGET",
+        "state": "TRUE",
+        "trust": "GITHUB_API"
+      },
+      {
+        "name": "CI_EXECUTED:l3 signed queue validation",
+        "state": "TRUE",
+        "trust": "GITHUB_API"
+      },
+      {
+        "name": "APPROVAL_CURRENT",
+        "state": "TRUE",
+        "trust": "GITHUB_API"
+      },
+      {
+        "name": "RULES_SNAPSHOT",
+        "state": "TRUE",
+        "trust": "GITHUB_API"
+      },
+      {
+        "name": "REMOTE_DURABLE",
+        "state": "TRUE",
+        "trust": "GITHUB_API"
+      }
+    ],
+    "ci": [
+      {
+        "name": "l3 signed queue validation",
+        "appId": 15368,
+        "checkId": 106120392518,
+        "executionRecorded": true,
+        "producerBound": true,
+        "jobs": [
+          {
+            "runId": 35526846536,
+            "workflowId": 362153164,
+            "event": "merge_group",
+            "sha": "d8e8f20681903e3f53f25fb3f3e6470effaf4bd0",
+            "attempt": 1,
+            "jobId": 106120392518,
+            "workflowBlob": "7de02e15a4ec93b3c829cdf4595c5c53ffa798a3"
+          }
+        ]
+      }
+    ],
+    "requiredApprovals": 0,
+    "currentnessAtMerge": "UNAVAILABLE",
+    "bypass": "UNKNOWN_EXEMPT_OR_UNREADABLE"
+  },
+  "portable": {
+    "state": "CONSISTENT_OFFLINE",
+    "landings": [
+      {
+        "state": "LANDED_CHAIN_CONSISTENT",
+        "landedState": "LANDED_VERIFIED",
+        "signature": "VALID_TRUSTED_KEY",
+        "currentnessAtMerge": "UNAVAILABLE",
+        "exitCode": 0
+      }
+    ],
+    "log": {
+      "state": "NOT_INCLUDED"
+    },
+    "signature": "VALID_TRUSTED_KEY",
+    "coverage": {
+      "offline": [
+        "receipt digest",
+        "subject binding",
+        "verdict replay",
+        "policy and engine identity",
+        "supplied landed binding"
+      ],
+      "providerTrusted": [
+        "historical observations",
+        "provider truth",
+        "permissions at observation"
+      ],
+      "unavailable": [
+        "what CI actually checked out",
+        "unobserved exempt bypasses",
+        "atomic currentness at merge"
+      ]
+    },
+    "limitation": "Consistency does not establish provider truth or present currentness.",
+    "exitCode": 0
+  },
+  "independent": {
+    "offline": {
+      "state": "CONSISTENT_OFFLINE",
+      "landings": [
+        {
+          "state": "LANDED_CHAIN_CONSISTENT",
+          "landedState": "LANDED_VERIFIED",
+          "signature": "VALID_TRUSTED_KEY",
+          "currentnessAtMerge": "UNAVAILABLE",
+          "exitCode": 0
+        }
+      ],
+      "log": {
+        "state": "NOT_INCLUDED"
+      },
+      "signature": "VALID_TRUSTED_KEY",
+      "coverage": {
+        "offline": [
+          "receipt digest",
+          "subject binding",
+          "verdict replay",
+          "policy and engine identity",
+          "supplied landed binding"
+        ],
+        "providerTrusted": [
+          "historical observations",
+          "provider truth",
+          "permissions at observation"
+        ],
+        "unavailable": [
+          "what CI actually checked out",
+          "unobserved exempt bypasses",
+          "atomic currentness at merge"
+        ]
+      },
+      "limitation": "Consistency does not establish provider truth or present currentness.",
+      "exitCode": 0
+    },
+    "independent": {
+      "state": "INDEPENDENTLY_RECOMPUTED",
+      "rows": [
+        {
+          "kind": "HEAD_TREE",
+          "state": "MATCH",
+          "expected": "7cef7ea28e28de0614933013f24e99c9db146142",
+          "actual": "7cef7ea28e28de0614933013f24e99c9db146142"
+        },
+        {
+          "kind": "BASE_TREE",
+          "state": "MATCH",
+          "expected": "8be846737c0343573d026ff27b378ca10cb96041",
+          "actual": "8be846737c0343573d026ff27b378ca10cb96041"
+        },
+        {
+          "kind": "CANDIDATE_TREE",
+          "state": "MATCH",
+          "expected": "7cef7ea28e28de0614933013f24e99c9db146142",
+          "actual": "7cef7ea28e28de0614933013f24e99c9db146142"
+        },
+        {
+          "kind": "MERGE_BASE_CONTAINMENT",
+          "state": "MATCH",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "kind": "GROUP_HEAD_ANCESTRY",
+          "state": "MATCH",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "kind": "GROUP_BASE_ANCESTRY",
+          "state": "MATCH",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "kind": "EXPECTED_TREE",
+          "state": "MATCH",
+          "expected": "7cef7ea28e28de0614933013f24e99c9db146142",
+          "actual": "7cef7ea28e28de0614933013f24e99c9db146142"
+        },
+        {
+          "kind": "QUEUE_CANDIDATE_TREE",
+          "state": "MATCH",
+          "expected": "7cef7ea28e28de0614933013f24e99c9db146142",
+          "actual": "7cef7ea28e28de0614933013f24e99c9db146142"
+        },
+        {
+          "kind": "QUEUE_EXPECTED_STEP",
+          "state": "MATCH",
+          "candidate": "d8e8f20681903e3f53f25fb3f3e6470effaf4bd0"
+        },
+        {
+          "kind": "LANDED_TREE",
+          "state": "MATCH",
+          "expected": "7cef7ea28e28de0614933013f24e99c9db146142",
+          "actual": "7cef7ea28e28de0614933013f24e99c9db146142"
+        },
+        {
+          "kind": "LANDED_PARENTS",
+          "state": "MATCH",
+          "expected": [
+            "31d5b01bc299874a1017909219711bf462dd4c8f",
+            "9765cb4141415d956d078d89c5b101f6db32b5c0"
+          ],
+          "actual": [
+            "31d5b01bc299874a1017909219711bf462dd4c8f",
+            "9765cb4141415d956d078d89c5b101f6db32b5c0"
+          ]
+        }
+      ],
+      "recomputed": {
+        "status": "RECONSTRUCTED",
+        "method": "queue",
+        "base": "31d5b01bc299874a1017909219711bf462dd4c8f",
+        "head": "9765cb4141415d956d078d89c5b101f6db32b5c0",
+        "tree": "7cef7ea28e28de0614933013f24e99c9db146142",
+        "flags": [],
+        "strategy": "ort",
+        "config": [
+          "core.hooksPath=/dev/null",
+          "core.attributesFile=/dev/null",
+          "merge.renameLimit=7000",
+          "merge.directoryRenames=conflict",
+          "merge.renormalize=false",
+          "protocol.file.allow=never"
+        ],
+        "attributes": "EMPTY_TREE",
+        "submoduleObjects": "ABSENT",
+        "replaceRefs": "DISABLED",
+        "steps": [
+          {
+            "head": "9765cb4141415d956d078d89c5b101f6db32b5c0",
+            "candidate": "d8e8f20681903e3f53f25fb3f3e6470effaf4bd0",
+            "tree": "7cef7ea28e28de0614933013f24e99c9db146142",
+            "providerTree": "7cef7ea28e28de0614933013f24e99c9db146142",
+            "comparison": "MATCH"
+          }
+        ],
+        "gitVersion": "git version 2.50.1 (Apple Git-155)",
+        "gitBinaryDigest": "a961f78075d8e7621ef4f5d764c64ef8a41bf66c0a98ab5cb6ca39b85ce31c93",
+        "mergeBases": [
+          "31d5b01bc299874a1017909219711bf462dd4c8f"
+        ],
+        "comparison": "MATCH"
+      },
+      "flags": [],
+      "exitCode": 0,
+      "limitation": "Recomputes the recorded inputs with the pinned Git. Provider queue membership/order, checks, reviews and permissions remain provider-trusted; caveats are preserved."
+    }
+  },
+  "archiveReplay": {
+    "at": "2026-09-20T17:48:14.941Z",
+    "receiptId": "df91f650-7660-48b6-9eac-86ee304b595b",
+    "productCandidate": "7953ecdbd849c8afe0379bfec1b4a61133292c62",
+    "archived": true,
+    "currentness": "UNAVAILABLE",
+    "receiptUnchanged": true,
+    "verification": {
+      "state": "CONSISTENT_OFFLINE",
+      "landings": [
+        {
+          "state": "LANDED_CHAIN_CONSISTENT",
+          "landedState": "LANDED_VERIFIED",
+          "signature": "VALID_TRUSTED_KEY",
+          "currentnessAtMerge": "UNAVAILABLE",
+          "exitCode": 0
+        }
+      ],
+      "log": {
+        "state": "NOT_INCLUDED"
+      },
+      "signature": "VALID_TRUSTED_KEY",
+      "coverage": {
+        "offline": [
+          "receipt digest",
+          "subject binding",
+          "verdict replay",
+          "policy and engine identity",
+          "supplied landed binding"
+        ],
+        "providerTrusted": [
+          "historical observations",
+          "provider truth",
+          "permissions at observation"
+        ],
+        "unavailable": [
+          "what CI actually checked out",
+          "unobserved exempt bypasses",
+          "atomic currentness at merge"
+        ]
+      },
+      "limitation": "Consistency does not establish provider truth or present currentness.",
+      "exitCode": 0
+    }
+  },
+  "cleanup": {
+    "at": "2026-09-20T17:46:44.273Z",
+    "repository": "ohcaygo/merge-proof-l3-lab-queue-headgreen",
+    "pr": 10,
+    "merged": true,
+    "ruleset": {
+      "id": 23733299,
+      "enforcement": "disabled",
+      "scope": {
+        "ref_name": {
+          "exclude": [],
+          "include": [
+            "refs/heads/l3-isolated-signed-queue-20260920"
+          ]
+        }
+      }
+    },
+    "mainUnchanged": true
+  },
+  "shutdown": {
+    "at": "2026-09-20T17:46:28.702Z",
+    "receiverStopped": true,
+    "relayStopped": true,
+    "pr": 10,
+    "ruleset": 23733299
+  },
+  "scopeAudit": {
+    "appNonReadRequests": 52,
+    "appNonReadRequestsOnlyReceiptChecks": true,
+    "productionEndpointsAccessed": 0
+  },
+  "narrowerApi": [
+    {
+      "path": "/repos/ohcaygo/merge-proof-l3-lab-queue-headgreen/actions/policies?has_parents=true",
+      "status": 401,
+      "authenticated": false,
+      "acceptedPermissions": null
+    },
+    {
+      "path": "/repos/ohcaygo/merge-proof-l3-lab-queue-headgreen/rulesets?includes_parents=true&per_page=100",
+      "status": 200,
+      "authenticated": true,
+      "acceptedPermissions": "metadata=read"
+    },
+    {
+      "path": "/repos/ohcaygo/merge-proof-l3-lab-queue-headgreen/actions/permissions",
+      "status": 200,
+      "authenticated": true,
+      "acceptedPermissions": "administration=read"
+    },
+    {
+      "path": "/repos/ohcaygo/merge-proof-l3-lab-queue-headgreen/rules/branches/l3-isolated-signed-queue-20260920",
+      "status": 200,
+      "authenticated": true,
+      "acceptedPermissions": "metadata=read"
+    },
+    {
+      "path": "/graphql",
+      "status": 200,
+      "authenticated": true,
+      "acceptedPermissions": null,
+      "targets": {
+        "enumValues": [
+          {
+            "name": "BRANCH"
+          },
+          {
+            "name": "TAG"
+          },
+          {
+            "name": "PUSH"
+          },
+          {
+            "name": "REPOSITORY"
+          }
+        ]
+      },
+      "ruleTypes": {
+        "enumValues": [
+          {
+            "name": "CREATION"
+          },
+          {
+            "name": "UPDATE"
+          },
+          {
+            "name": "DELETION"
+          },
+          {
+            "name": "REQUIRED_LINEAR_HISTORY"
+          },
+          {
+            "name": "MERGE_QUEUE"
+          },
+          {
+            "name": "REQUIRED_REVIEW_THREAD_RESOLUTION"
+          },
+          {
+            "name": "REQUIRED_DEPLOYMENTS"
+          },
+          {
+            "name": "REQUIRED_SIGNATURES"
+          },
+          {
+            "name": "PULL_REQUEST"
+          },
+          {
+            "name": "REQUIRED_STATUS_CHECKS"
+          },
+          {
+            "name": "REQUIRED_WORKFLOW_STATUS_CHECKS"
+          },
+          {
+            "name": "NON_FAST_FORWARD"
+          },
+          {
+            "name": "AUTHORIZATION"
+          },
+          {
+            "name": "TAG"
+          },
+          {
+            "name": "MERGE_QUEUE_LOCKED_REF"
+          },
+          {
+            "name": "LOCK_BRANCH"
+          },
+          {
+            "name": "MAX_REF_UPDATES"
+          },
+          {
+            "name": "COMMIT_MESSAGE_PATTERN"
+          },
+          {
+            "name": "COMMIT_AUTHOR_EMAIL_PATTERN"
+          },
+          {
+            "name": "COMMITTER_EMAIL_PATTERN"
+          },
+          {
+            "name": "BRANCH_NAME_PATTERN"
+          },
+          {
+            "name": "TAG_NAME_PATTERN"
+          },
+          {
+            "name": "WORKFLOWS"
+          },
+          {
+            "name": "WORKFLOW_UPDATES"
+          },
+          {
+            "name": "CODE_SCANNING"
+          },
+          {
+            "name": "CODE_QUALITY"
+          },
+          {
+            "name": "CODE_COVERAGE"
+          },
+          {
+            "name": "COPILOT_CODE_REVIEW"
+          },
+          {
+            "name": "LICENSE_COMPLIANCE_SCANNING"
+          },
+          {
+            "name": "FILE_PATH_RESTRICTION"
+          },
+          {
+            "name": "MAX_FILE_PATH_LENGTH"
+          },
+          {
+            "name": "FILE_EXTENSION_RESTRICTION"
+          },
+          {
+            "name": "MAX_FILE_SIZE"
+          },
+          {
+            "name": "SECRET_SCANNING"
+          }
+        ]
+      },
+      "conditions": {
+        "fields": [
+          {
+            "name": "organizationProperty"
+          },
+          {
+            "name": "refName"
+          },
+          {
+            "name": "repositoryId"
+          },
+          {
+            "name": "repositoryName"
+          },
+          {
+            "name": "repositoryProperty"
+          }
+        ]
+      },
+      "repositoryPolicyFields": [
+        {
+          "name": "branchProtectionRules"
+        },
+        {
+          "name": "isSecurityPolicyEnabled"
+        },
+        {
+          "name": "issueCreationPolicy"
+        },
+        {
+          "name": "pullRequestCreationPolicy"
+        },
+        {
+          "name": "ruleset"
+        },
+        {
+          "name": "rulesets"
+        },
+        {
+          "name": "securityPolicyUrl"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Local P-256 fixture trust, not production KMS or public trust bootstrap",
+    "No applicable execution policy in this queue fixture; nonempty actor/event policy cases remain separately recorded live acceptance",
+    "Zero required reviews; not independent-human approval acceptance",
+    "Provider policy/queue/permission observations remain GitHub-trusted",
+    "Atomic currentness at merge and exempt bypass absence remain unavailable",
+    "Positive coverage collection adapter still unimplemented; org-wide enforcement remains plan-gated"
+  ]
+}

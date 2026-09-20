@@ -1,6 +1,6 @@
 # GitHub capability addendum acceptance — 2026-09-20
 
-Product candidate: `7953ecdbd849c8afe0379bfec1b4a61133292c62`, built on pre-addendum Level 3 baseline `a6800e68f4c1e03d0cd0de28fe7febe5864bcdc4`. Documentation commits do not supersede this product identity. No production deployment, App permission change, paid upgrade or public receipt anchoring occurred in this addendum run.
+Product candidate: `7953ecdbd849c8afe0379bfec1b4a61133292c62`, built on pre-addendum Level 3 baseline `a6800e68f4c1e03d0cd0de28fe7febe5864bcdc4`. Documentation commits do not supersede this product identity. The original addendum run made no production deployment, App permission change, paid upgrade or public receipt anchor. The subsequent owner-authorized temporary development Administration Write run passed the [final signed queue acceptance](signed-queue-final.md) and restored Read; the production permission model remains undecided.
 
 ## 1. Implemented and live-validated
 
@@ -37,8 +37,8 @@ Organization-wide ruleset enforcement remains a separate Team/Enterprise validat
 
 ## 3. Owner gates
 
-- **Repository-selection owner gate closed.** Exactly the approved product and queue fixture are saved. The App now resolves the fixture installation and obtains a repository-scoped token successfully; permissions remain unchanged. [Current live preflight](signed-queue-owner-resume.md).
-- **Actions-policy read gate demonstrated.** The actual installation token receives HTTP 403, `Resource not accessible by integration`, with GitHub's `administration=write` accepted-permissions header. Current grants remain Administration read, as instructed. The full signed queue-to-landed runner did not start; no fixture or alternate evidence was used to manufacture success. Its source remains pinned to `7953ecd`. Further repository selection is not needed, and no permission expansion is authorized.
+- **Repository selection and isolated signed queue gate closed.** Exactly the approved product and queue fixture remain saved. The final candidate passed all 13 real signed queue-to-landed assertions, independent Git replay and archive restart under the temporarily approved lab credential. [Current acceptance and exact boundary](signed-queue-final.md).
+- **Production policy-evidence permission decision remains open.** Real Read tokens receive policy-list 403; temporary Write received 200. Both App and installation were restored exactly to Read after acceptance. Stock `7953ecd` explicitly requests Read tokens; the lab supplied a real one-repository Write token through its existing App-client hook. No equivalent complete narrower API was established, and no production permission model or code change is approved. [Claims, alternatives and owner decision](signed-queue-final.md#production-permission-finding).
 - Choose an existing Team/Enterprise test organization or explicitly approve a paid plan change for organization-wide ruleset enforcement and eligible Code Quality validation. Do not infer enforcement from a Free-plan ruleset API accepting parameters.
 - Existing production gates remain: KMS/JWKS identity and live signer acceptance; independent public-key/root publication and anchoring authority; production credentials, persistent runtime/storage and deployment; private weekly differential-lab scheduler and credential identity. Their implementation is retained from the Level 3 baseline and their activation remains unperformed.
 
