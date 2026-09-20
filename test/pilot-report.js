@@ -92,6 +92,19 @@ setInterval(() => {}, 1000);\n`, { mode: 0o755 });
   assert.ok(fs.readFileSync(`${prefix}.pdf`, 'utf8').endsWith('%%EOF\n'));
 });
 
+test('export closes owned browser descendants that retain the error pipe', () => {
+  if (process.platform === 'win32') return;
+  const browser = path.join(dir, 'fixture-browser-descendants');
+  fs.writeFileSync(browser, `#!/usr/bin/env node\nconst fs = require('fs'), { spawn } = require('child_process');
+const output = process.argv.find((arg) => arg.startsWith('--print-to-pdf=')).slice(15);
+fs.writeFileSync(output, '%PDF-1.4\\n' + 'fixture '.repeat(30) + '\\n%%EOF\\n');
+spawn(process.execPath, ['-e', 'setTimeout(() => {}, 8000)'], { stdio: ['ignore', 'ignore', 'inherit'] });
+setInterval(() => {}, 1000);\n`, { mode: 0o755 });
+  const start = Date.now(), result = run([...args, '--chrome', browser]);
+  assert.strictEqual(result.status, 0, result.stderr);
+  assert.ok(Date.now() - start < 6000, 'a descendant must not keep PDF delivery waiting');
+});
+
 test('CLI rejects malformed JSON, missing scope, unknown flags and input/output collision', () => {
   const bad = path.join(dir, 'bad.json');
   fs.writeFileSync(bad, '{');

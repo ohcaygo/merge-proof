@@ -25,6 +25,7 @@ async function printPdf(htmlPath, pdfPath, chrome) {
   const executable = findChrome(chrome);
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'merge-proof-pdf-'));
   const temporaryPdf = path.join(temp, 'report.pdf');
+  const ownProcessGroup = process.platform !== 'win32';
   let browser;
   let closed;
   try {
@@ -34,7 +35,7 @@ async function printPdf(htmlPath, pdfPath, chrome) {
       '--no-first-run', '--no-default-browser-check',
       `--user-data-dir=${path.join(temp, 'profile')}`, '--no-pdf-header-footer',
       `--print-to-pdf=${temporaryPdf}`, pathToFileURL(htmlPath).href,
-    ], { stdio: ['ignore', 'ignore', 'pipe'], windowsHide: true });
+    ], { stdio: ['ignore', 'ignore', 'pipe'], windowsHide: true, detached: ownProcessGroup });
     closed = new Promise((resolve) => browser.once('close', resolve));
     let stderr = '';
     browser.stderr.on('data', (data) => { stderr = (stderr + data).slice(-1200); });
@@ -70,9 +71,18 @@ async function printPdf(htmlPath, pdfPath, chrome) {
   } catch (error) {
     throw new Error(`PDF export failed: ${error.message}. HTML remains available; check --chrome / CHROME_BIN.`);
   } finally {
-    if (browser && browser.exitCode === null && browser.signalCode === null) {
-      browser.kill('SIGTERM');
-      const forceClose = setTimeout(() => browser.kill('SIGKILL'), 2000);
+    // Chrome descendants can retain stderr after the parent exits, preventing
+    // ChildProcess.close forever. Terminate only the group created by this
+    // invocation; never signal a user's existing Chrome process or profile.
+    if (browser?.pid && (ownProcessGroup || browser.exitCode === null && browser.signalCode === null)) {
+      const terminate = signal => {
+        try {
+          if (ownProcessGroup) process.kill(-browser.pid, signal);
+          else browser.kill(signal);
+        } catch (error) { if (error.code !== 'ESRCH') throw error; }
+      };
+      terminate('SIGTERM');
+      const forceClose = setTimeout(() => terminate('SIGKILL'), 2000);
       await closed;
       clearTimeout(forceClose);
     }
