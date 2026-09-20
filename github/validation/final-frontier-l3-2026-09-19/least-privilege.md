@@ -1,5 +1,7 @@
 # Execution-policy least privilege — 2026-09-20
 
+Follow-on owner decision: the separate companion boundary is approved in principle. A restricted reader component and collector seam now exist in `5fd27e1`; complete customer enrollment, lifecycle, process isolation and service integration remain unimplemented. See the [new local validation record](../enhanced-policy-boundary-2026-09-20/README.md) and [concrete production recommendation](../../operations/LEVEL3-RECOMMENDED-PRODUCTION.md). The investigation and `7953ecd` live evidence below retain their original candidate identity.
+
 **Conclusion: no equivalent trustworthy source was established in the documented GitHub surfaces examined. Administration Read remains the production default. Enhanced Policy Proof is an optional, explicitly authorized design, not a shipped mode in `7953ecd`.** The accepted signed queue result is unchanged. This investigation made no permission, repository, policy, production, or public-publication changes. Both short-lived Read tokens were revoked. Installation permissions and subscriptions matched before and after.
 
 Candidate: `7953ecdbd849c8afe0379bfec1b4a61133292c62`. [Sanitized observations and source hashes](least-privilege.json); [accepted signed queue chain](signed-queue-final.md); [production acceptance packet](../../operations/LEVEL3-RELEASE-PACKET.md).

@@ -1,0 +1,71 @@
+
+> merge-proof@0.2.0 test:factory
+> node --test factory/test/*.test.js
+
+✔ Stripe raw signature rejects modified, expired, unsigned and live-mode events (4.155084ms)
+✔ Stripe retrieves authoritative amount/contact/transaction; ignores webhook amount (1.71375ms)
+✔ Stripe rejects wrong SKU, mode, quantity, link, pending payment (0.790583ms)
+✔ offer price comes from Payment Link and rejects adjustable or recurring SKU (100.6585ms)
+✔ repository input is public GitHub only; no token, query, fragment, local path or other host (0.299ms)
+✔ public repo scope is exact; private adapter fails eligibility without requesting token (1.7795ms)
+✔ merged history requires explicit parent relationship and landed CI SHA (1.203166ms)
+✔ GitHub pagination exhaustion fails closed (3.726083ms)
+✔ secret scrub covers tokens and does not retain review bodies (13.1075ms)
+✔ restricted API keys preserve strict live/test separation (1218.414667ms)
+✔ exact SHA and expected App success can meet CI (0.771292ms)
+✔ wrong SHA never verifies, even when same check succeeds (1.120917ms)
+✔ wrong App, missing, failed, neutral, skipped, in-progress CI all block (0.576542ms)
+✔ latest failed attempt overrides old success (0.1505ms)
+✔ unresolved or empty CI policy cannot infer not-applicable (0.213791ms)
+✔ approval is exact candidate bound (0.183709ms)
+✔ dismissed, changes-requested, bot, author and outsider cannot be current approval (0.126083ms)
+✔ later comment does not erase an approval but latest decision does (0.361667ms)
+✔ outstanding changes requested from another reviewer blocks (0.076416ms)
+✔ unresolvable approval remains unknown (0.101542ms)
+✔ existing FAIL or blocking local finding is never upgraded (0.788416ms)
+✔ reassessment preserves original, reports resolved remaining and new gaps (0.578459ms)
+✖ complete HTTP journey: eligibility -> signed fixture webhook -> authorization -> real Git/PDF -> download -> one reassessment (24559.202583ms)
+✔ eligibility blocks inaccessible or unsupported scope without taking payment (605.798667ms)
+✔ report failure is honest, retryable, preserves cleanup, escalates refund to Ryan (6131.014541ms)
+✔ post-payment auth and unsupported history have explicit states (2056.419375ms)
+✔ expired access is denied and artifacts are purged; unknown paid reference escalates (1773.145042ms)
+✔ isolated runner has hard timeout and removes its working directory (523.591ms)
+✔ new visitors see Pro, retired checkout fails closed, historical access still routes (215.272458ms)
+✔ hosted sandbox isolates provider credentials and accounting from historical live orders (502.678541ms)
+✔ authenticated proxy preserves per-client eligibility limits and rejects direct forwarding (172.215083ms)
+✔ Pages proxy preserves webhook bytes, origin, cookie and protected response without exposing its key (3.979791ms)
+✔ undelivered expired payment escalates once to Ryan instead of disappearing (253.141ms)
+✔ delivered expired pack retains reconciliation but does not invent a refund on later sweeps (203.178667ms)
+✔ expired failed reassessment also escalates while unused reassessment does not (221.087667ms)
+✔ one thousand expired paid records do not permanently block new eligibility (149.615333ms)
+✔ factory merge report labels and shows the real landed state (146.621125ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 36
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 35799.044
+
+✖ failing tests:
+
+test at factory/test/journey.test.js:230:1
+✖ complete HTTP journey: eligibility -> signed fixture webhook -> authorization -> real Git/PDF -> download -> one reassessment (24559.202583ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'RETRY'
+  - 'DELIVERED'
+  
+      at TestContext.<anonymous> (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/factory/test/journey.test.js:295:5)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'RETRY',
+    expected: 'DELIVERED',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,49 @@
+{
+  "productCandidate": "5fd27e130a1bd098f89ba3f30d07bf27d1fd5b3b",
+  "lastLiveAcceptedCandidate": "7953ecdbd849c8afe0379bfec1b4a61133292c62",
+  "localOnly": true,
+  "newCandidateLiveSignedAcceptance": "NOT_RUN",
+  "productionChanges": false,
+  "externalResourcesCreated": false,
+  "repositoryAdministrationMutations": false,
+  "productAndTestChanges": [
+    "github/collect.js",
+    "github/policy-reader.js",
+    "github/test/policy-reader.test.js"
+  ],
+  "checkedRelativeLinks": 30,
+  "logs": {
+    "cli-tests.txt": {
+      "bytes": 2547,
+      "sha256": "2905fd03eff578eec49b83e5e4d00c18c3c62d928e9d5e9ab5778b12f222b665"
+    },
+    "factory-diagnostic.txt": {
+      "bytes": 3402,
+      "sha256": "fed1491b29bad0db56db424936cf33b68c9c7bc3309485a529c34cada6fb4fcc"
+    },
+    "factory-first-failure.txt": {
+      "bytes": 4355,
+      "sha256": "01148620b395138d5538689fcf13b38c2ec0cafab95b935bd70e3e6109a3e975"
+    },
+    "factory-tests.txt": {
+      "bytes": 3473,
+      "sha256": "16bf2173225d052620664463d59a15b21b4a0441b455a0bccff4d7ba252b6be9"
+    },
+    "github-tests-sandbox-denied.txt": {
+      "bytes": 34113,
+      "sha256": "9250d002704abec5f47a9cd586afade79d4e412fb06838181e0a811ab5321d1d"
+    },
+    "github-tests.txt": {
+      "bytes": 30954,
+      "sha256": "7377c31a26d681bb4857e10c69ce529d9cbddefcbdd0e1c348c8ad240b29f38a"
+    }
+  },
+  "remainingImplementation": [
+    "Enhanced enrollment and authenticated consent/UI",
+    "Companion lifecycle and service/currentness routing",
+    "OS credential isolation and narrow IPC",
+    "Positive provider coverage collection: source unavailable, no fabricated adapter",
+    "Approved new test-org runner allowlist",
+    "Selected-host backup and deployment configuration/automation"
+  ]
+}
