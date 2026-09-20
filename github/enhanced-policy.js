@@ -155,7 +155,10 @@ class EnhancedPolicy {
       event: headers["x-github-event"], delivery: headers["x-github-delivery"]});
     if (event.ignored) return {ignored: true};
     const key = `companion:${event.delivery}`;
-    if (this.service.data.events[key]) return {duplicate: true};
+    if (this.service.data.events[key]) {
+      if (this.service.savePending) this.service.save();
+      return {duplicate: true};
+    }
     for (const grant of Object.values(this.grants)) {
       if (grant.companionInstallationId !== event.installationId) continue;
       if (event.event === "installation" || event.event === "installation_repositories" && event.repositoryIds.includes(grant.repositoryId)) {

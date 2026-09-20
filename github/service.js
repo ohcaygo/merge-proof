@@ -87,6 +87,20 @@ class ProofService {
       const observation=this.data.landings[record.recordId];
       if(observation) this.archive.landing(record,observation);
     }
+    if(this.receiptSigner) {
+      const signer=this.receiptSigner;
+      this.receiptSigner=async bytes=>{
+        try {
+          const signature=await signer(bytes);
+          this.data.signingHealth={...this.data.signingHealth,state:"AVAILABLE",reason:null,lastSuccessAt:new Date().toISOString()};
+          return signature;
+        } catch(error) {
+          this.data.signingHealth={...this.data.signingHealth,state:"UNAVAILABLE",reason:/^[A-Z][A-Z_]+$/.test(error.code||"")?error.code:"SIGNING_UNAVAILABLE",lastFailureAt:new Date().toISOString()};
+          this.save();throw error;
+        }
+      };
+      this.receiptSigner.keys=signer.keys;
+    }
   }
   save() {
     if(this.saveDepth){this.savePending=true;return;}
@@ -1028,7 +1042,7 @@ class ProofService {
       if (job.attempts >= 3) {
         this.data.queue.shift();
         const sub = this.data.subscriptions[`${job.repositoryId}:${job.pr}`];
-        if (sub) sub.refreshState = "UNAVAILABLE";
+        if (sub) {sub.refreshState = "UNAVAILABLE";sub.refreshReason = error.code || "PROOF_PROCESSING_UNAVAILABLE";}
       }
     } finally {
       job.processing = false;

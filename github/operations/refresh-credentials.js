@@ -3,16 +3,31 @@
 // Root-only bootstrap boundary. Individual workloads receive only their own
 // Secrets Manager material and temporary role credentials in private tmpfs dirs.
 const fs=require("node:fs"),path=require("node:path"),{assert}=require("../common"),{client}=require("./aws");
+function secureDirectory(dir,gid,mode){
+ try{fs.mkdirSync(dir,{mode});}catch(e){if(e.code!=="EEXIST")throw e;}
+ const st=fs.lstatSync(dir);
+ assert(st.isDirectory()&&st.uid===process.getuid()&&!(st.mode&0o022),"CREDENTIAL_DIRECTORY_UNSAFE");
+ fs.chmodSync(dir,mode);fs.chownSync(dir,process.getuid(),gid);
+}
 function atomic(file,body,uid,gid){
- const temp=file+".tmp",fd=fs.openSync(temp,"w",0o600);try{fs.fchmodSync(fd,0o600);fs.fchownSync(fd,uid,gid);fs.writeFileSync(fd,body);fs.fsyncSync(fd);}finally{fs.closeSync(fd);}fs.renameSync(temp,file);
+ const dir=path.dirname(file),st=fs.lstatSync(dir);
+ assert(st.isDirectory()&&st.uid===process.getuid()&&!(st.mode&0o022),"CREDENTIAL_DIRECTORY_UNSAFE");
+ const temp=file+"."+require("node:crypto").randomUUID()+".tmp";
+ const fd=fs.openSync(temp,fs.constants.O_WRONLY|fs.constants.O_CREAT|fs.constants.O_EXCL|fs.constants.O_NOFOLLOW,0o600);
+ try{
+  try{fs.writeFileSync(fd,body);fs.fchownSync(fd,uid,gid);fs.fchmodSync(fd,0o600);fs.fsyncSync(fd);}finally{fs.closeSync(fd);}
+  fs.renameSync(temp,file);const parent=fs.openSync(dir,"r");try{fs.fsyncSync(parent);}finally{fs.closeSync(parent);}
+ }finally{if(fs.existsSync(temp))fs.unlinkSync(temp);}
 }
 async function refresh(config,aws=client(config.aws)){
  assert(process.getuid?.()===0,"ROOT_BOOTSTRAP_REQUIRED");
  require("./authority").environment(config);
  assert([config.proofUid,config.policyUid,config.backupUid].every(n=>Number.isInteger(n)&&n>0)&&new Set([config.proofUid,config.policyUid,config.backupUid]).size===3,"SEPARATE_WORKLOAD_IDENTITIES_REQUIRED");
  assert([config.proofGid,config.policyGid,config.backupGid].every(n=>Number.isInteger(n)&&n>0),"SEPARATE_WORKLOAD_IDENTITIES_REQUIRED");
- await aws.checkIdentity();const root="/run/merge-proof-credentials";fs.mkdirSync(root,{recursive:true,mode:0o711});fs.chmodSync(root,0o711);
- for(const [name,uid,gid] of [["proof",config.proofUid,config.proofGid],["policy",config.policyUid,config.policyGid],["backup",config.backupUid,config.backupGid]]){const dir=path.join(root,name);fs.mkdirSync(dir,{mode:0o700,recursive:true});fs.chmodSync(dir,0o700);fs.chownSync(dir,uid,gid);}
+ await aws.checkIdentity();const root="/run/merge-proof-credentials";secureDirectory(root,0,0o711);
+ // Recipients can traverse/read their material but cannot replace directory
+ // entries used by this privileged writer, including while refresh is running.
+ for(const [name,gid] of [["proof",config.proofGid],["policy",config.policyGid],["backup",config.backupGid]])secureDirectory(path.join(root,name),gid,0o710);
  const secret=async arn=>{assert(new RegExp(`^arn:aws:secretsmanager:${config.aws.region}:${config.aws.accountId}:secret:merge-proof/preparation/`).test(arn),"EXACT_PREPARATION_SECRET_REQUIRED");const r=await aws.call("secretsmanager","get-secret-value",["--secret-id",arn]);assert(r.ARN===arn&&typeof r.SecretString==="string","SECRET_IDENTITY_MISMATCH");return r.SecretString;};
  const primary=JSON.parse(await secret(config.primarySecretArn)),policy=JSON.parse(await secret(config.companionSecretArn)),key=await secret(config.companionKeyArn);
  assert(primary.app&&primary.factory&&primary.app.appId!==policy.appId&&!primary.app.enhancedPolicy?.privateKey,"CREDENTIAL_BOUNDARY_INVALID");
@@ -31,4 +46,4 @@ async function refresh(config,aws=client(config.aws)){
  return {state:"SEPARATE_TEMPORARY_CREDENTIALS_WRITTEN",at:new Date().toISOString()};
 }
 if(require.main===module){try{const file=process.argv[2],st=fs.lstatSync(file);assert(st.isFile()&&st.uid===0&&(st.mode&0o077)===0,"ROOT_BOOTSTRAP_CONFIG_REQUIRED");refresh(JSON.parse(fs.readFileSync(file))).then(r=>console.log(JSON.stringify(r))).catch(e=>{console.error(e.code||"CREDENTIAL_REFRESH_UNAVAILABLE");process.exitCode=2;});}catch(e){console.error(e.code||"CREDENTIAL_REFRESH_UNAVAILABLE");process.exitCode=2;}}
-module.exports={refresh};
+module.exports={refresh,atomic,secureDirectory};

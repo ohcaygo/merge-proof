@@ -133,3 +133,12 @@ test("broker executable refuses a shared proof UID instead of silently losing pr
   const file = path.join(root, "config.json"); fs.writeFileSync(file, JSON.stringify({proofUid: process.getuid(), socketPath: path.join(root, "p.sock"), grantsPath: path.join(root, "grants.json")}), {mode: 0o600});
   a.throws(() => require("../policy-broker").start(file), {code: "POLICY_CREDENTIAL_ISOLATION_REQUIRED"});
 });
+test("companion delivery retry flushes an earlier failed durable save before duplicate acknowledgement",async t=>{
+ const h=await harness(t);await h.enable();const payload=Buffer.from(JSON.stringify({action:"edited",installation:{id:3,app_id:77},repository:{id:1}}));
+ const headers={"x-github-delivery":"companion-retry-durability","x-github-event":"repository_ruleset","x-hub-signature-256":"sha256="+crypto.createHmac("sha256",h.webhookSecret).update(payload).digest("hex")};
+ const save=h.store.save.bind(h.store);let failed=false;h.store.save=()=>{if(!failed){failed=true;throw Object.assign(Error("fixture disk full"),{code:"ENOSPC"});}return save();};
+ await a.rejects(h.service.enhanced.webhook(payload,headers),{code:"ENOSPC"});a.equal(h.service.savePending,true);
+ const before=JSON.parse(fs.readFileSync(path.join(h.root,"state.json")));a.equal(before.github.events["companion:companion-retry-durability"],undefined);
+ a.equal((await h.service.enhanced.webhook(payload,headers)).duplicate,true);a.equal(h.service.savePending,false);
+ const after=JSON.parse(fs.readFileSync(path.join(h.root,"state.json")));a.ok(after.github.events["companion:companion-retry-durability"]);
+});

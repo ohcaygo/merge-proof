@@ -16,8 +16,9 @@ class Client {
     this.deadline = Date.now() + maxDurationMs;
   }
   async request(endpoint, { method = "GET", body } = {}) {
+    const installationRead = /^\/app\/installations\/[1-9]\d*$/.test(endpoint);
     assert(
-      /^\/(repos\/[\w.-]+\/[\w.-]+(?:[/?]|$)|(?:orgs|enterprises)\/[\w.-]+\/actions\/policies\/\d+$|app\/installations\/\d+\/access_tokens$|app\/hook\/deliveries(?:[/?]|$)|graphql$)/.test(
+      installationRead ? method === "GET" && body === undefined : /^\/(repos\/[\w.-]+\/[\w.-]+(?:[/?]|$)|(?:orgs|enterprises)\/[\w.-]+\/actions\/policies\/\d+$|app\/installations\/\d+\/access_tokens$|app\/hook\/deliveries(?:[/?]|$)|graphql$)/.test(
         endpoint,
       ),
       "INVALID_ENDPOINT",

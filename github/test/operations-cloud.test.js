@@ -58,3 +58,12 @@ test("preparatory infrastructure has no product deployment/publication or produc
  for(const t of [primary,recovery]){a.equal(t.Resources.Backups.Properties.ObjectLockEnabled,undefined);a.equal(t.Resources.RetentionLab.Properties.ObjectLockEnabled,true);a.equal(t.Resources.SigningKey.Properties.KeySpec,"ECC_NIST_P256");a.equal(t.Resources.SignerPolicy.Properties.PolicyDocument.Statement[0].Action,"kms:Sign");a.ok(!JSON.stringify(t.Resources.BackupRole).includes("DeleteObject"));}
  a.equal(recovery.Resources.Instance,undefined);a.deepEqual(recovery.Resources.SignerRole.Properties.AssumeRolePolicyDocument.Statement[0].Principal,{AWS:{Ref:"KeyAdministratorArn"}});
 });
+test("a completed daily checkpoint cannot hide a later receipt signing outage; real success clears its alarm",async t=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),"mp-sign-health-")),store=new Store(root);t.after(()=>{store.close();fs.rmSync(root,{recursive:true,force:true});});
+ let fail=false;const key=crypto.generateKeyPairSync("ec",{namedCurve:"P-256"}),signer=async bytes=>{if(fail)throw Object.assign(Error("fixture signer refused"),{code:"KMS_SIGNATURE_INVALID"});return {keyid:"health-fixture",sig:crypto.sign("sha256",bytes,key.privateKey).toString("base64")};};
+ const service=new ProofService({store,receiptSigner:signer,clientFactory:()=>new Client(fixtureFetch())});await service.run("fixture/public",1,{token:"fixture"});await service.checkpoint(new Date(Date.now()-86400000).toISOString().slice(0,10));
+ fail=true;await a.rejects(service.run("fixture/public",1,{token:"fixture"}),{code:"KMS_SIGNATURE_INVALID"});await service.drain();service.save();
+ a.equal(service.data.operatorLogHealth,"DAILY_ROOT_PREPARED");a.equal(service.data.signingHealth.state,"UNAVAILABLE");
+ const config={stateDir:root,backupRecord:path.join(root,"missing-backup")};a.ok(require("../operations/monitor").inspect(config).alarms.some(x=>x.code==="RECEIPT_SIGNING_UNAVAILABLE"));
+ fail=false;await service.run("fixture/public",1,{token:"fixture"});a.equal(service.data.signingHealth.state,"AVAILABLE");a.ok(!require("../operations/monitor").inspect(config).alarms.some(x=>x.code==="RECEIPT_SIGNING_UNAVAILABLE"));
+});
