@@ -12,11 +12,14 @@ async function online(bundle, client) {
     } catch (e) { rows.push({ kind, id, state: e.status === 404 || e.status === 410 ? "RECORD_UNAVAILABLE_RETENTION_POSSIBLE" : "UNAVAILABLE" }); }
   };
   for (const check of c.checks.value || []) await inspect("CHECK", check.id, `${root}/check-runs/${check.id}`,
-    x => x.id === check.id && x.head_sha === check.sha && x.app?.id === check.appId,
+    x => x.id === check.id && x.head_sha === check.sha && x.app?.id === check.appId && x.name === check.name,
     x => x.status === check.status && x.conclusion === check.conclusion);
   for (const j of new Map((c.execution.value || []).map(x => [`${x.runId}:${x.attempt}`, x])).values())
     await inspect("WORKFLOW_ATTEMPT", `${j.runId}:${j.attempt}`, `${root}/actions/runs/${j.runId}/attempts/${j.attempt}`,
-      x => x.id === j.runId && x.run_attempt === j.attempt && x.head_sha === j.runSha && x.workflow_id === j.workflowId && x.event === j.event,
+      x => x.id === j.runId && x.run_attempt === j.attempt && x.head_sha === j.runSha && x.workflow_id === j.workflowId && x.event === j.event &&
+        (!j.actor || x.actor?.id === j.actor.id && x.actor?.type === j.actor.type) &&
+        (!j.triggeringActor || x.triggering_actor?.id === j.triggeringActor.id && x.triggering_actor?.type === j.triggeringActor.type) &&
+        (!j.runStartedAt || x.run_started_at === j.runStartedAt),
       x => x.conclusion === j.runConclusion);
   for (const r of c.reviews.value || []) await inspect("REVIEW", r.id, `${root}/pulls/${c.identity.pr}/reviews/${r.id}`,
     x => x.id === r.id && x.commit_id === r.sha && x.user?.id === r.userId, x => x.state === r.state);
@@ -40,6 +43,16 @@ async function online(bundle, client) {
     const rules=await require("./collect").collectRules(client,c.identity.repository,c.identity.baseRef,c.identity.branchProtected);
     rows.push({kind:"CURRENT_RULES",state:rules.classic.state!=="AVAILABLE"||rules.active.state!=="AVAILABLE"?"UNAVAILABLE":require("./common").hash(rules)===require("./common").hash({classic:c.rules.classic,active:c.rules.active})?"MATCH":"EXPECTED_CHANGE"});
   }catch{rows.push({kind:"CURRENT_RULES",state:"UNAVAILABLE"});}
+  if (c.rules.executionProtections) {
+    let observed;
+    const policy = require("./rules");
+    try { observed = await policy.executionProtections(client,c.identity.repository); }
+    catch { observed = {state:"UNAVAILABLE"}; }
+    const fresh = { ...c, rules: { ...c.rules, executionProtections: observed } }, jobs = policy.relevantJobs(c);
+    rows.push({kind:"CURRENT_EXECUTION_PROTECTIONS",state:observed.state!=="AVAILABLE"?"UNAVAILABLE":
+      require("./common").hash(policy.executionPolicyBinding(fresh,jobs))===require("./common").hash(policy.executionPolicyBinding(c,jobs))?"MATCH":"EXPECTED_CHANGE"});
+  }
+  if (receipt.summary.coverage?.some(x=>x.provenance)) rows.push({kind:"CODE_COVERAGE",state:"UNAVAILABLE",reason:"GITHUB_COVERAGE_BOUND_AGGREGATE_API_UNAVAILABLE"});
   for(const l of bundle.landings||[])if(l.observation.landed?.sha)await inspect("LANDED_COMMIT",l.observation.landed.sha,`${root}/git/commits/${l.observation.landed.sha}`,
     x=>x.sha===l.observation.landed.sha&&x.tree?.sha===l.observation.landed.tree&&require("./common").hash((x.parents||[]).map(p=>p.sha))===require("./common").hash(l.observation.landed.parents));
   const divergence = rows.some(x => x.state === "DIVERGED");

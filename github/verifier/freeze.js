@@ -11,7 +11,7 @@ const digest=require("../bundle").codeDigest();
 if(table[digest])throw Error("Existing engine digest already has an immutable archive");
 fs.mkdirSync(destination);
 const version = require("../../package.json").version;
-for (const name of ["proof", "queue-order", "rules", "subject", "bindings", "claims", "common", "authority", "actors", "setup", "local-evidence", "wording"]) {
+for (const name of ["proof", "queue-order", "rules", "coverage", "subject", "bindings", "claims", "common", "authority", "actors", "setup", "local-evidence", "wording"]) {
   let body = fs.readFileSync(path.join(root, "github", name + ".js"), "utf8")
     .replaceAll('require("../package.json").version', JSON.stringify(version))
     .replaceAll('require("./check")', 'require("./check-name")')

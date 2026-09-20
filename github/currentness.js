@@ -20,6 +20,7 @@ function touches(event, p, c) {
     const ref = event === "delete" ? `refs/heads/${p.ref}` : p.ref;
     if (ref === `refs/heads/${i.headRef}`) return ALL;
     if (ref === `refs/heads/${i.baseRef}`) return ["TARGET", "CI_EXECUTED"];
+    if (ref === `refs/heads/${i.defaultBranch}` && require("./rules").requirements(c.rules).coverage.some(r => r.parameters?.max_coverage_drop > 0)) return ["CODE_COVERAGE"];
     return [];
   }
   if (event === "merge_group") return target?.sha === p.merge_group?.head_sha ? ["TARGET", "CI_EXECUTED"] : [];
@@ -35,9 +36,10 @@ function touches(event, p, c) {
 function areas(claims) {
   if (claims.includes("TARGET")) return null;
   const out = new Set();
-  if (claims.includes("CI_EXECUTED")) for (const k of ["checks", "statuses", "execution"]) out.add(k);
+  if (claims.includes("CI_EXECUTED")) for (const k of ["checks", "statuses", "execution", "rules", "coverage"]) out.add(k);
   if (claims.includes("APPROVAL_CURRENT")) out.add("reviews");
-  if (claims.includes("RULES_SNAPSHOT")) out.add("rules");
+  if (claims.includes("RULES_SNAPSHOT")) { out.add("rules"); out.add("coverage"); }
+  if (claims.includes("CODE_COVERAGE")) { out.add("coverage"); out.add("rules"); }
   if (claims.includes("REMOTE_DURABLE")) out.add("remote");
   return [...out];
 }

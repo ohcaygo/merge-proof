@@ -21,6 +21,7 @@ function capture() {
       headRef: "feature",
       headRepository: "fixture/public",
       headRepositoryId: 1,
+      defaultBranch: "main",
       baseRef: "main",
       baseSha: B,
       branchProtected: true,
@@ -45,6 +46,7 @@ function capture() {
         },
       }),
       active: A([]),
+      executionProtections: A([]),
     },
     git: A({
       headSha: H,
@@ -95,6 +97,7 @@ function capture() {
         headBranch: "feature",
         attempt: 1,
         runSha: H,
+        runStartedAt: T,
         actor: { id: 1, login: "author", type: "User" },
         triggeringActor: { id: 1, login: "author", type: "User" },
         jobId: 40,
@@ -161,7 +164,7 @@ function fixtureFetch({
     calls.push({ path: p, method: init.method || "GET" });
     if (deny || p === failPath) return new Response("{}", { status: 403 });
     let v;
-    const info = { id: 1, full_name: "fixture/public", private: privateRepo };
+    const info = { id: 1, full_name: "fixture/public", private: privateRepo, default_branch: "main" };
     if (p === "/repos/fixture/public") v = info;
     else if (p === "/repos/fixture/public/pulls/1")
       v = {
@@ -231,6 +234,7 @@ function fixtureFetch({
           },
         ],
       };
+    else if (p.endsWith("/actions/policies")) v = {total_count: 0, policies: []};
     else if (p.endsWith("/statuses")) v = [];
     else if (p.includes("/contents/.github/workflows/")) v = { type: "file", path: p.split("/contents/")[1], sha: "f".repeat(40) };
     else if (p.endsWith("/actions/runs"))
@@ -246,6 +250,7 @@ function fixtureFetch({
             head_branch: "feature",
             run_attempt: 1,
             head_sha: head,
+            run_started_at: T,
             status: "completed",
             conclusion: "success",
             actor: { id: 1, login: "author", type: "User" },

@@ -38,7 +38,7 @@ function ciEvidence(c, r, options = {}) {
     // The collector drops every check run carrying Merge Proof's own name, so
     // a requirement using that name but bound to a different App can never be
     // satisfied here. Say that, rather than reporting it as simply missing.
-    if (rule.name === require("./check").NAME) {
+    if (rule.name === require("./check-name").NAME) {
       out.required.push({
         ...rule,
         state: "NAME_COLLIDES_WITH_MERGE_PROOF_CHECK",
@@ -327,7 +327,7 @@ function prove(c, options = {}) {
   return {
     schemaVersion: 2,
     receiptId: randomUUID(),
-    tool: { name: "merge-proof", version: require("../package.json").version },
+    tool: { name: "merge-proof", version: "0.2.0" },
     policy: expected ? "github-exact-state-v3" : "github-exact-state-v2",
     expectedTree: expected || { status: "NOT_RECONSTRUCTABLE", tree: null, reason: "MIRROR_NOT_CONFIGURED" },
     proofOptions: { appId: options.appId ?? null },

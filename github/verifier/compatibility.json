@@ -30,5 +30,13 @@
       "github-exact-state-v3"
     ],
     "version": "0.2.0"
+  },
+  "197b30e84416c5d5153d4822b0c13499fd659d45aaa3bb574e208155cd8109a7": {
+    "engine": "v6",
+    "policies": [
+      "github-exact-state-v2",
+      "github-exact-state-v3"
+    ],
+    "version": "0.2.0"
   }
 }

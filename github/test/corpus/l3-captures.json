@@ -1,5 +1,5 @@
 {
-  "description": "Synthetic recorded API projections derived from cited L2/L3 cases. No production records.",
+  "description": "Synthetic recorded API projections derived from cited L2/L3 cases. No production records. Synthetic execution-policy discovery and run timestamps updated for the September addendum; historical portable receipts remain frozen.",
   "cases": [
     {
       "id": "clean",
@@ -55,6 +55,10 @@
             }
           },
           "active": {
+            "state": "AVAILABLE",
+            "value": []
+          },
+          "executionProtections": {
             "state": "AVAILABLE",
             "value": []
           }
@@ -169,7 +173,8 @@
                   "startedAt": "2026-09-10T12:00:00Z",
                   "completedAt": "2026-09-10T12:00:00Z"
                 }
-              ]
+              ],
+              "runStartedAt": "2026-09-10T12:00:00Z"
             }
           ]
         },
@@ -282,6 +287,10 @@
             }
           },
           "active": {
+            "state": "AVAILABLE",
+            "value": []
+          },
+          "executionProtections": {
             "state": "AVAILABLE",
             "value": []
           }
@@ -408,7 +417,8 @@
                   "startedAt": "2026-09-10T12:00:00Z",
                   "completedAt": "2026-09-10T12:00:00Z"
                 }
-              ]
+              ],
+              "runStartedAt": "2026-09-10T12:00:00Z"
             },
             {
               "runId": 20,
@@ -459,7 +469,8 @@
                   "startedAt": "2026-09-10T12:00:00Z",
                   "completedAt": "2026-09-10T12:00:00Z"
                 }
-              ]
+              ],
+              "runStartedAt": "2026-09-10T12:00:00Z"
             }
           ]
         },
@@ -576,6 +587,10 @@
           "active": {
             "state": "AVAILABLE",
             "value": []
+          },
+          "executionProtections": {
+            "state": "AVAILABLE",
+            "value": []
           }
         },
         "git": {
@@ -689,7 +704,8 @@
                   "startedAt": "2026-09-10T12:00:00Z",
                   "completedAt": "2026-09-10T12:00:00Z"
                 }
-              ]
+              ],
+              "runStartedAt": "2026-09-10T12:00:00Z"
             }
           ]
         },
@@ -807,6 +823,10 @@
           "active": {
             "state": "AVAILABLE",
             "value": []
+          },
+          "executionProtections": {
+            "state": "AVAILABLE",
+            "value": []
           }
         },
         "git": {
@@ -919,7 +939,8 @@
                   "startedAt": "2026-09-10T12:00:00Z",
                   "completedAt": "2026-09-10T12:00:00Z"
                 }
-              ]
+              ],
+              "runStartedAt": "2026-09-10T12:00:00Z"
             }
           ]
         },
@@ -1036,6 +1057,10 @@
           "active": {
             "state": "AVAILABLE",
             "value": []
+          },
+          "executionProtections": {
+            "state": "AVAILABLE",
+            "value": []
           }
         },
         "git": {
@@ -1148,7 +1173,8 @@
                   "startedAt": "2026-09-10T12:00:00Z",
                   "completedAt": "2026-09-10T12:00:00Z"
                 }
-              ]
+              ],
+              "runStartedAt": "2026-09-10T12:00:00Z"
             }
           ]
         },
@@ -1265,6 +1291,10 @@
           "active": {
             "state": "AVAILABLE",
             "value": []
+          },
+          "executionProtections": {
+            "state": "AVAILABLE",
+            "value": []
           }
         },
         "git": {
@@ -1377,7 +1407,8 @@
                   "startedAt": "2026-09-10T12:00:00Z",
                   "completedAt": "2026-09-10T12:00:00Z"
                 }
-              ]
+              ],
+              "runStartedAt": "2026-09-10T12:00:00Z"
             }
           ]
         },
@@ -1494,6 +1525,10 @@
           "active": {
             "state": "AVAILABLE",
             "value": []
+          },
+          "executionProtections": {
+            "state": "AVAILABLE",
+            "value": []
           }
         },
         "git": {
@@ -1606,7 +1641,8 @@
                   "startedAt": "2026-09-10T12:00:00Z",
                   "completedAt": "2026-09-10T12:00:00Z"
                 }
-              ]
+              ],
+              "runStartedAt": "2026-09-10T12:00:00Z"
             }
           ]
         },
@@ -1721,6 +1757,10 @@
             }
           },
           "active": {
+            "state": "AVAILABLE",
+            "value": []
+          },
+          "executionProtections": {
             "state": "AVAILABLE",
             "value": []
           }
@@ -1900,6 +1940,10 @@
           "active": {
             "state": "AVAILABLE",
             "value": []
+          },
+          "executionProtections": {
+            "state": "AVAILABLE",
+            "value": []
           }
         },
         "git": {
@@ -2012,7 +2056,8 @@
                   "startedAt": "2026-09-10T12:00:00Z",
                   "completedAt": "2026-09-10T12:00:00Z"
                 }
-              ]
+              ],
+              "runStartedAt": "2026-09-10T12:00:00Z"
             }
           ]
         },
@@ -2129,6 +2174,10 @@
           "active": {
             "state": "AVAILABLE",
             "value": []
+          },
+          "executionProtections": {
+            "state": "AVAILABLE",
+            "value": []
           }
         },
         "git": {
@@ -2241,7 +2290,8 @@
                   "startedAt": "2026-09-10T12:00:00Z",
                   "completedAt": "2026-09-10T12:00:00Z"
                 }
-              ]
+              ],
+              "runStartedAt": "2026-09-10T12:00:00Z"
             }
           ]
         },
@@ -2358,6 +2408,10 @@
           "active": {
             "state": "AVAILABLE",
             "value": []
+          },
+          "executionProtections": {
+            "state": "AVAILABLE",
+            "value": []
           }
         },
         "git": {
@@ -2470,7 +2524,8 @@
                   "startedAt": "2026-09-10T12:00:00Z",
                   "completedAt": "2026-09-10T12:00:00Z"
                 }
-              ]
+              ],
+              "runStartedAt": "2026-09-10T12:00:00Z"
             }
           ]
         },
@@ -2587,6 +2642,10 @@
           "active": {
             "state": "AVAILABLE",
             "value": []
+          },
+          "executionProtections": {
+            "state": "AVAILABLE",
+            "value": []
           }
         },
         "git": {
@@ -2699,7 +2758,8 @@
                   "startedAt": "2026-09-10T12:00:00Z",
                   "completedAt": "2026-09-10T12:00:00Z"
                 }
-              ]
+              ],
+              "runStartedAt": "2026-09-10T12:00:00Z"
             }
           ]
         },
@@ -2829,6 +2889,10 @@
           "active": {
             "state": "AVAILABLE",
             "value": []
+          },
+          "executionProtections": {
+            "state": "AVAILABLE",
+            "value": []
           }
         },
         "git": {
@@ -2941,7 +3005,8 @@
                   "startedAt": "2026-09-10T12:00:00Z",
                   "completedAt": "2026-09-10T12:00:00Z"
                 }
-              ]
+              ],
+              "runStartedAt": "2026-09-10T12:00:00Z"
             }
           ]
         },
@@ -3058,6 +3123,10 @@
           "active": {
             "state": "AVAILABLE",
             "value": []
+          },
+          "executionProtections": {
+            "state": "AVAILABLE",
+            "value": []
           }
         },
         "git": {
@@ -3170,7 +3239,8 @@
                   "startedAt": "2026-09-10T12:00:00Z",
                   "completedAt": "2026-09-10T12:00:00Z"
                 }
-              ]
+              ],
+              "runStartedAt": "2026-09-10T12:00:00Z"
             }
           ]
         },
@@ -3287,6 +3357,10 @@
           "active": {
             "state": "UNAVAILABLE",
             "reason": "403"
+          },
+          "executionProtections": {
+            "state": "AVAILABLE",
+            "value": []
           }
         },
         "git": {
@@ -3399,7 +3473,8 @@
                   "startedAt": "2026-09-10T12:00:00Z",
                   "completedAt": "2026-09-10T12:00:00Z"
                 }
-              ]
+              ],
+              "runStartedAt": "2026-09-10T12:00:00Z"
             }
           ]
         },
@@ -3522,6 +3597,10 @@
                 "type": "update"
               }
             ]
+          },
+          "executionProtections": {
+            "state": "AVAILABLE",
+            "value": []
           }
         },
         "git": {
@@ -3634,7 +3713,8 @@
                   "startedAt": "2026-09-10T12:00:00Z",
                   "completedAt": "2026-09-10T12:00:00Z"
                 }
-              ]
+              ],
+              "runStartedAt": "2026-09-10T12:00:00Z"
             }
           ]
         },
@@ -3747,6 +3827,10 @@
             }
           },
           "active": {
+            "state": "AVAILABLE",
+            "value": []
+          },
+          "executionProtections": {
             "state": "AVAILABLE",
             "value": []
           }
@@ -3927,6 +4011,10 @@
           "active": {
             "state": "AVAILABLE",
             "value": []
+          },
+          "executionProtections": {
+            "state": "AVAILABLE",
+            "value": []
           }
         },
         "git": {
@@ -4039,7 +4127,8 @@
                   "startedAt": "2026-09-10T12:00:00Z",
                   "completedAt": "2026-09-10T12:00:00Z"
                 }
-              ]
+              ],
+              "runStartedAt": "2026-09-10T12:00:00Z"
             }
           ]
         },
@@ -4157,6 +4246,10 @@
           "active": {
             "state": "AVAILABLE",
             "value": []
+          },
+          "executionProtections": {
+            "state": "AVAILABLE",
+            "value": []
           }
         },
         "git": {
@@ -4269,7 +4362,8 @@
                   "startedAt": "2026-09-10T12:00:00Z",
                   "completedAt": "2026-09-10T12:00:00Z"
                 }
-              ]
+              ],
+              "runStartedAt": "2026-09-10T12:00:00Z"
             }
           ]
         },
@@ -4386,6 +4480,10 @@
           "active": {
             "state": "AVAILABLE",
             "value": []
+          },
+          "executionProtections": {
+            "state": "AVAILABLE",
+            "value": []
           }
         },
         "git": {
@@ -4498,7 +4596,8 @@
                   "startedAt": "2026-09-10T12:00:00Z",
                   "completedAt": "2026-09-10T12:00:00Z"
                 }
-              ]
+              ],
+              "runStartedAt": "2026-09-10T12:00:00Z"
             }
           ]
         },

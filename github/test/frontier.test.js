@@ -119,14 +119,14 @@ test("event routing touches only the relevant PR, subject and claim", () => {
 
 test("execution protection snapshots bind only relevant workflows; evaluate mode does not enforce", async () => {
   const c = capture();
-  const policy = { id: 1, source: "fixture/public", sourceType: "Repository", enforcement: "active", conditions: { workflow_path: { include: [".github/workflows/ci.yml"], exclude: [] } },
+  const policy = { id: 1, source: "fixture/public", sourceType: "Repository", enforcement: "active", updatedAt: "2026-09-09T00:00:00Z", conditions: { workflow_path: { include: [".github/workflows/ci.yml"], exclude: [] } },
     rules: [{ type: "restrict_action_events", parameters: { allowed_events: ["pull_request"] } }, { type: "restrict_actions_actors", parameters: { allowed_actors: [{ type: "User", id: 1 }] } }] };
   c.rules.executionProtections = A([policy]);
   a.equal(prove(c).verdict, "VERIFIED"); const r = prove(c);
   const unrelated = structuredClone(policy); unrelated.id = 2; unrelated.conditions.workflow_path.include = [".github/workflows/deploy.yml"];
   c.rules.executionProtections.value.push(unrelated); a.equal(freshness(r, c).state, "CURRENT");
   policy.rules[0].parameters.allowed_events = ["push"];
-  a.equal(prove(c).verdict, "NOT_PROVEN"); a.ok(prove(c).gaps.includes("EXECUTION_EVENT_DENIED"));
+  a.equal(prove(c).verdict, "FAIL"); a.ok(prove(c).gaps.includes("EXECUTION_EVENT_DENIED"));
   a.deepEqual(freshness(r,c).changed, ["CI_EXECUTED", "RULES_SNAPSHOT"]);
   policy.enforcement = "evaluate"; a.equal(prove(c).verdict, "VERIFIED");
   policy.enforcement = "active"; policy.rules[0].parameters.allowed_events = ["pull_request"];
@@ -138,7 +138,7 @@ test("execution protection snapshots bind only relevant workflows; evaluate mode
   const f = async (url, init) => {
     const p = new URL(url).pathname;
     if (p.endsWith("/actions/policies")) return Response.json({total_count:1,policies:[{id:1}]});
-    if (p.endsWith("/actions/policies/1")) return Response.json({...policy,target:"actions",source_type:"Repository"});
+    if (p.endsWith("/actions/policies/1")) return Response.json({...policy,target:"actions",source_type:"Repository",updated_at:policy.updatedAt});
     return fixture.fetchImpl(url,init);
   };
   const observed = await collect(new Client({fetchImpl:f}),"fixture/public",1);
@@ -151,7 +151,7 @@ test("coverage rules retain thresholds without pretending a generic CI success p
   const p=prove(c); a.equal(p.verdict,"NOT_PROVEN"); a.equal(p.summary.rules.unsupported.length,0);
   a.ok(p.gaps.includes("CODE_COVERAGE_EVIDENCE_UNAVAILABLE"));
   a.deepEqual(p.summary.rules.coverage[0].parameters,{minimum_coverage:80,max_coverage_drop:2});
-  a.deepEqual(freshness(r,c).changed,["RULES_SNAPSHOT"]);
+  a.deepEqual(freshness(r,c).changed,["RULES_SNAPSHOT","CODE_COVERAGE"]);
   c.rules.active.value[0].parameters.minimum_coverage="80";
   a.ok(prove(c).gaps.includes("CODE_COVERAGE_RULE_MALFORMED"));
 });

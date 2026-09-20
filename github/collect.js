@@ -136,6 +136,7 @@ async function identity(client, repo, pr) {
     headRef: p.head.ref,
     headRepository: p.head.repo?.full_name || null,
     headRepositoryId: p.head.repo?.id || null,
+    defaultBranch: r.default_branch || null,
     baseRef: p.base.ref,
     baseSha: branch.commit.sha,
     branchProtected: branch.protected,
@@ -467,6 +468,7 @@ async function collectOnce(
           suiteId: r.check_suite_id || null,
           attempt: r.run_attempt,
           runSha: r.head_sha,
+          runStartedAt: r.run_started_at || null,
           // actor started the run; triggeringActor started the latest attempt.
           actor: account(r.actor),
           triggeringActor: account(r.triggering_actor),
@@ -489,6 +491,11 @@ async function collectOnce(
     }
     return all.sort((a, b) => a.jobId - b.jobId);
   });
+  // GitHub currently exposes thresholds and upload processing status, but no
+  // documented complete aggregate with exact producer/candidate provenance.
+  // This is a provider capability gap, never an invitation to parse a comment
+  // or treat a successful upload job as a coverage measurement.
+  const coverage = req.coverage.length ? unavailable("GITHUB_COVERAGE_BOUND_AGGREGATE_API_UNAVAILABLE") : available(null);
   const reviews = keep("reviews") ? previous.reviews : await client.observe(async () => {
     const rows = await client.list(`${root}/pulls/${pr}/reviews`);
     assert(
@@ -558,6 +565,7 @@ async function collectOnce(
     checks,
     statuses,
     execution,
+    coverage,
     reviews,
     actors,
   };

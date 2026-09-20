@@ -105,7 +105,9 @@ test("both-sided gitlinks retain the researched refusal boundary",t=>{
   a.equal(r.reason,"BOTH_SIDES_GITLINK_CHANGED");a.equal(r.tree,null);
 });
 test("frozen pure engine matches current policy across passing and failing captures",()=>{
-  const old=require("../verifier/v2/proof");
+  const archive=require("../verifier/compatibility.json")[bundle.codeDigest()];
+  a.ok(archive,"current engine must have a frozen portable verifier");
+  const old=require(`../verifier/${archive.engine}/proof`);
   for(const change of [c=>{},c=>c.execution.value[0].event="schedule",c=>c.checks.value[0].conclusion="failure",c=>c.reviews.value[0].sha=B]) {
     const c=capture();change(c);const now=prove(c),archived=old.prove(c);
     for(const key of ["verdict","gaps","claims","summary","bindings","local","expectedTree"])

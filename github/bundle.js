@@ -3,7 +3,7 @@ const crypto = require("node:crypto"), fs = require("node:fs"), path = require("
 const { hash, canonical, assert } = require("./common");
 const TYPE = "application/vnd.in-toto+json";
 const PREDICATE = "https://merge-proof.ohcaygo.com/attestation/receipt/v3";
-const CODE = ["package.json", "github/common.js", "github/queue-order.js", "github/reconstruct.js","github/proof.js", "github/claims.js", "github/rules.js", "github/subject.js", "github/bindings.js", "github/actors.js", "github/authority.js", "github/setup.js", "github/local-evidence.js", "github/wording.js", "github/check.js", "src/analyze.js", "src/rules.js"];
+const CODE = ["package.json", "github/common.js", "github/queue-order.js", "github/reconstruct.js","github/proof.js", "github/claims.js", "github/rules.js", "github/coverage.js", "github/subject.js", "github/bindings.js", "github/actors.js", "github/authority.js", "github/setup.js", "github/local-evidence.js", "github/wording.js", "github/check.js", "src/analyze.js", "src/rules.js"];
 const codeDigest = () => hash(CODE.map(f => [f, crypto.createHash("sha256").update(fs.readFileSync(path.join(__dirname, "..", f))).digest("hex")]));
 function pae(type, bytes) { const t = Buffer.from(type); return Buffer.concat([Buffer.from(`DSSEv1 ${t.length} `), t, Buffer.from(` ${bytes.length} `), bytes]); }
 const stripNull = v => Array.isArray(v) ? v.map(stripNull) : v && typeof v === "object" ? Object.fromEntries(Object.entries(v).filter(([, x]) => x != null).map(([k, x]) => [k, stripNull(x)])) : v;
