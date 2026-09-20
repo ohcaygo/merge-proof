@@ -1,0 +1,96 @@
+{
+  "source": "7953ecdbd849c8afe0379bfec1b4a61133292c62",
+  "at": "2026-09-20T17:01:44.000Z",
+  "repository": "ohcaygo/merge-proof-l3-lab-queue-headgreen",
+  "repositoryId": 1377343185,
+  "installationId": 160648161,
+  "appId": 4899448,
+  "selection": {
+    "state": "GITHUB_UI_OBSERVED",
+    "repositories": [
+      "ohcaygo/merge-proof",
+      "ohcaygo/merge-proof-l3-lab-queue-headgreen"
+    ],
+    "saved": true,
+    "source": "Installation settings success message, selected 2 repositories, Save disabled"
+  },
+  "fixtureAppAccess": "API_CONFIRMED_REPOSITORY_SCOPED",
+  "permissions": {
+    "checks": "write",
+    "actions": "read",
+    "contents": "read",
+    "metadata": "read",
+    "statuses": "read",
+    "merge_queues": "read",
+    "pull_requests": "read",
+    "administration": "read"
+  },
+  "mergeGroupSubscribed": true,
+  "policyRead": {
+    "state": "UNAVAILABLE",
+    "reason": "GITHUB_HTTP_403"
+  },
+  "state": "NOT_PROVEN",
+  "productCodeUnchanged": true,
+  "productionAccess": "Selection metadata only; no production repository endpoint or write",
+  "fixtureMutations": 0,
+  "audit": [
+    {
+      "method": "GET",
+      "path": "/app/installations/160648161",
+      "status": 200,
+      "requestId": "DDDF:20C77:823EEE8:1B83AF7F:6AB01177",
+      "acceptedPermissions": null
+    },
+    {
+      "method": "GET",
+      "path": "/app",
+      "status": 200,
+      "requestId": "DDE0:C55E:8DC6B93:1DDEF163:6AB01177",
+      "acceptedPermissions": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/ohcaygo/merge-proof-l3-lab-queue-headgreen/installation",
+      "status": 200,
+      "requestId": "DDE0:C55E:8DC6C36:1DDEF348:6AB01177",
+      "acceptedPermissions": null
+    },
+    {
+      "method": "POST",
+      "path": "/app/installations/160648161/access_tokens",
+      "status": 201,
+      "requestId": "DDE0:C55E:8DC6CC9:1DDEF571:6AB01177",
+      "acceptedPermissions": null
+    },
+    {
+      "method": "GET",
+      "path": "/repos/ohcaygo/merge-proof-l3-lab-queue-headgreen",
+      "status": 200,
+      "requestId": "DDDF:20C77:823F0B6:1B83B551:6AB01177",
+      "acceptedPermissions": "metadata=read"
+    },
+    {
+      "method": "GET",
+      "path": "/repos/ohcaygo/merge-proof-l3-lab-queue-headgreen/actions/policies?has_parents=true&per_page=100&page=1",
+      "status": 403,
+      "requestId": "DDE0:C55E:8DC6E93:1DDEFBAF:6AB01177",
+      "acceptedPermissions": "administration=write",
+      "error": {
+        "message": "Resource not accessible by integration",
+        "documentationUrl": "https://docs.github.com/rest/actions/policies#list-repository-actions-policies"
+      }
+    }
+  ],
+  "acceptance": {
+    "state": "NOT_PROVEN",
+    "queueFixtureStarted": false,
+    "newPullRequests": 0,
+    "repositoryPolicyWrites": 0,
+    "checkWrites": 0,
+    "queueMutations": 0,
+    "merges": 0,
+    "receiptsIssued": 0,
+    "syntheticEvidenceSubstituted": false
+  }
+}

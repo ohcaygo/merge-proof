@@ -5,10 +5,10 @@ Pre-addendum product code `a6800e68f4c1e03d0cd0de28fe7febe5864bcdc4`; current ad
 | Item | Implementation | Acceptance boundary |
 | --- | --- | --- |
 | 0.1 Producer binding | `collect`, `proof`, `claims`; exact App/workflow, ambiguity and producer edits | Local negatives and live producer/workflow substitution |
-| 0.2 Event binding | Eligible event by exact subject kind | Local and live wrong-event controls; positive signed queue chain pending owner installation |
+| 0.2 Event binding | Eligible event by exact subject kind | Local and live wrong-event controls; positive signed queue chain blocked by observed App-policy read 403; installation selected |
 | 0.3 Per-claim currentness | `bindings`, `currentness`, targeted service queues, ETags, TTL deliveries | Model/local/live head/base/policy/permission/noise; org-only live enforcement plan gate |
 | 0.4 False-NOT_PROVEN triage | Rule classification, writer-scoped reviews, paginated runs, specific gaps | Expanded live repository policy matrix; 22-run fixture; explicit provider limits retained |
-| 0.5 Titles/stages | `check`, enforcing/admission titles and exact group subject | Local check/queue publication; live signed group publication timing pending owner |
+| 0.5 Titles/stages | `check`, enforcing/admission titles and exact group subject | Local check/queue publication; live signed group publication timing blocked by observed App-policy read 403 |
 | 0.6 Model/corpus/version | Real-service seeded world/fetch simulator, shrinking, recorded corpus, frozen policy | Every one of 1,000 seeds retained in isolated workers; final suite 331/331 locally in 40.892 seconds, model 27.802 seconds; CI model passed in 68.147 seconds with its 120-second limit enforced |
 | 1.1 ESI | `subject`, exact repository/commit/tree/base/group binding | Local cross-subject negatives; live currentness/queue observations |
 | 1.2 Workflow blob | Bound workflow blob and advisory pin observations | Local and live source-change refusal; caller-only reusable workflow boundary |
@@ -19,7 +19,7 @@ Pre-addendum product code `a6800e68f4c1e03d0cd0de28fe7febe5864bcdc4`; current ad
 | 2.1 Landed content | `landing`, bound commit/tree/parents, push observations, ordered queue predecessor | Live merge/squash/rebase and stale-tree mismatch; exact final squash journey; signed queue gate |
 | 2.2 Attestation/SHA lookup | Signed landed statements, archive indexes, authorized HTTP commit lookup | Final live signed portable chain and lookup; production signing gate |
 | 3.1 Mirror/pinned Git | Isolated bare mirrors and pinned static build/runtime artifact | Linux static build/TLS and 20 final reconstruction tests; final production-host install gate |
-| 3.2 Expected tree | Merge/squash/provider-ordered queue reconstruction and mismatch refusal | Final live ordered prefix, every candidate tree, landed chain and offline recomputation passed; signed transport acceptance pending owner |
+| 3.2 Expected tree | Merge/squash/provider-ordered queue reconstruction and mismatch refusal | Final live ordered prefix, every candidate tree, landed chain and offline recomputation passed; final signed acceptance blocked by observed App-policy read 403 |
 | 3.3 Rebase | First-parent replay with explicit conflict/merge/empty/duplicate boundaries | Local corpus and live clean single-commit rebase; complex shapes unresolved by design |
 | 4.1 Signed portable verifier | KMS adapter, public JWKS endpoint, manifests, DSSE/subjects, frozen versions, optional offline Git and online checks | Final ephemeral-key live bundle verified; real KMS/JWKS mirror and production receipt acceptance require owner |
 | 4.2 Operator log/public root | Hash chain, signed daily cumulative Merkle checkpoint/inclusion and explicit immutable publisher | Local positive/negative signature/inclusion tests; public publication not performed |
