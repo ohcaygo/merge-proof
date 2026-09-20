@@ -1,0 +1,20 @@
+name: L3 signed queue fixture
+on:
+  pull_request:
+    branches: [l3-signed-queue-fixture-20260920]
+  merge_group:
+    types: [checks_requested]
+permissions:
+  contents: read
+jobs:
+  validate:
+    name: l3 signed queue validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate exact fixture content
+        run: |
+          git init fixture
+          cd fixture
+          git remote add origin https://github.com/ohcaygo/merge-proof.git
+          git fetch --depth=1 origin "$GITHUB_SHA"
+          test "$(git show FETCH_HEAD:case.txt)" != FAIL
