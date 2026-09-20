@@ -1,0 +1,30 @@
+# Level 3 §43 implementation and acceptance coverage
+
+Product code `a6800e68f4c1e03d0cd0de28fe7febe5864bcdc4`. Research §43 says “twenty” but enumerates 22 items. All are accounted for below; code presence does not close an owner/provider validation gate. Full evidence and limitations are in [productionization](productionization.md).
+
+| Item | Implementation | Acceptance boundary |
+| --- | --- | --- |
+| 0.1 Producer binding | `collect`, `proof`, `claims`; exact App/workflow, ambiguity and producer edits | Local negatives and live producer/workflow substitution |
+| 0.2 Event binding | Eligible event by exact subject kind | Local and live wrong-event controls; positive signed queue chain pending owner installation |
+| 0.3 Per-claim currentness | `bindings`, `currentness`, targeted service queues, ETags, TTL deliveries | Model/local/live head/base/policy/permission/noise; org-only live enforcement plan gate |
+| 0.4 False-NOT_PROVEN triage | Rule classification, writer-scoped reviews, paginated runs, specific gaps | Expanded live repository policy matrix; 22-run fixture; explicit provider limits retained |
+| 0.5 Titles/stages | `check`, enforcing/admission titles and exact group subject | Local check/queue publication; live signed group publication timing pending owner |
+| 0.6 Model/corpus/version | Real-service seeded world/fetch simulator, shrinking, recorded corpus, frozen policy | 1,000 sequences; 314-test suite under two minutes locally; hosted final-harness CI pending normal release |
+| 1.1 ESI | `subject`, exact repository/commit/tree/base/group binding | Local cross-subject negatives; live currentness/queue observations |
+| 1.2 Workflow blob | Bound workflow blob and advisory pin observations | Local and live source-change refusal; caller-only reusable workflow boundary |
+| 1.3 Authorization graph | `authority`, actors, reviews, permissions, dismissal/activity and bot rules | Live account approval/revocation and permission loss; distinct human principals remain unproven |
+| 1.4 Policy/rule suite | Raw/normalized snapshots, bound suite after landing | Live bypass/failed CI/exempt cases and repository policy; org plan gate |
+| 1.5 Immutable observations | Observation references, immutable receipt/merge/landing archive, coalesced durable saves | Restart/eviction, write failure, duplicate recovery, immutable history and portable replay |
+| 1.6 Reconciliation | Six-hour observation, four-hour delivery recovery, boot/retry, drift counter | Signed App recovery and model missed-delivery cases; optional INFER log parser absent |
+| 2.1 Landed content | `landing`, bound commit/tree/parents, push observations, ordered queue predecessor | Live merge/squash/rebase and stale-tree mismatch; exact final squash journey; signed queue gate |
+| 2.2 Attestation/SHA lookup | Signed landed statements, archive indexes, authorized HTTP commit lookup | Final live signed portable chain and lookup; production signing gate |
+| 3.1 Mirror/pinned Git | Isolated bare mirrors and pinned static build/runtime artifact | Linux static build/TLS and 20 final reconstruction tests; final production-host install gate |
+| 3.2 Expected tree | Merge/squash/provider-ordered queue reconstruction and mismatch refusal | Final live ordered prefix, every candidate tree, landed chain and offline recomputation passed; signed transport acceptance pending owner |
+| 3.3 Rebase | First-parent replay with explicit conflict/merge/empty/duplicate boundaries | Local corpus and live clean single-commit rebase; complex shapes unresolved by design |
+| 4.1 Signed portable verifier | KMS adapter, public JWKS endpoint, manifests, DSSE/subjects, frozen versions, optional offline Git and online checks | Final ephemeral-key live bundle verified; real KMS/JWKS mirror and production receipt acceptance require owner |
+| 4.2 Operator log/public root | Hash chain, signed daily cumulative Merkle checkpoint/inclusion and explicit immutable publisher | Local positive/negative signature/inclusion tests; public publication not performed |
+| 5.1 Machine contract | JSON schema, bearer-authorized decision, CLI/gh, exit codes and check machine line | Live exact PROCEED/wrong-head REFUSE and guarded synthetic merge; OIDC alternative absent |
+| 5.2 MCP | Read-only stdio tool with output schema | Actual tools/call fixture-agent stop/proceed/head-race acceptance; no product merge capability |
+| 5.3 Differential lab | Private owned fixture drivers, bounded allowlisted observer, diff/drift alarms, runtime metrics | Extensive one-off live matrix and read-only runner smoke; weekly activation and blocked environments require owner |
+
+The selected required §43 code is implemented. Optional log inference, alternative OIDC authentication and the later Quint model are not represented as shipped. Unsupported-evidence boundaries explicitly retained by the charter (such as CODEOWNERS, last-push attribution, org required workflows and incomplete ALLGREEN evidence) remain NOT_PROVEN; a refusal test is not positive capability validation. Production key publication, anchoring, weekly activation and deployment are unexecuted owner operations, not removed requirements. Level 3 remains open until its required acceptance and owner gates are resolved.

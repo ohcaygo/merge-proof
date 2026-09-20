@@ -1,0 +1,25 @@
+{
+  "at": "2026-09-20T04:53:24.447Z",
+  "fixtures": [
+    {
+      "repository": "ohcaygo/merge-proof-l3-lab-classic",
+      "openPRs": 0,
+      "activeRuns": []
+    },
+    {
+      "repository": "ohcaygo/merge-proof-l3-lab-rules",
+      "openPRs": 0,
+      "activeRuns": []
+    },
+    {
+      "repository": "ohcaygo/merge-proof-l3-lab-queue-headgreen",
+      "openPRs": 0,
+      "activeRuns": []
+    },
+    {
+      "repository": "ohcaygo/merge-proof-l3-lab-queue-allgreen",
+      "openPRs": 0,
+      "activeRuns": []
+    }
+  ]
+}

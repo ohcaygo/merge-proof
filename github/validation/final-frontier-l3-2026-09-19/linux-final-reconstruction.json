@@ -1,0 +1,17 @@
+{
+  "source": "a6800e68f4c1e03d0cd0de28fe7febe5864bcdc4",
+  "repository": "ohcaygo/merge-proof-l3-lab-classic",
+  "branch": "l3-static-queue-recheck-20260920",
+  "fixtureSha": "bb9ce50f12cf069f3f46956bb41e69b6b861d984",
+  "runId": 35490087078,
+  "url": "https://github.com/ohcaygo/merge-proof-l3-lab-classic/actions/runs/35490087078",
+  "conclusion": "success",
+  "testsPassed": 20,
+  "runtimeFromRun": 35489128375,
+  "runtimeSha256": "3d2b9bc579af799be2f88ed81c01cec14e4f469dbf6fef377322c29710e66d2b",
+  "scope": "Published e93c94b corpus checkout with exact current reconstruct.js and chain.test.js overlay; not the complete final service suite on Linux",
+  "sourceDigests": {
+    "github/reconstruct.js": "c50baeb40286c1d031e948f0efa684a698f0ad8fdd7377a16067feedc684649f",
+    "github/test/chain.test.js": "ffa38038a275f0d2b543ba627e72357e555ac671302a8b26798e4fc7ebe248a7"
+  }
+}

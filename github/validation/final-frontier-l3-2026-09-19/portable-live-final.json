@@ -1,0 +1,131 @@
+{
+  "provenance": {
+    "candidate": "6fc94f22e28d9780fc3d9f8fb9a8829dda45f83f",
+    "at": "2026-09-20T04:39:20.831Z",
+    "repository": "ohcaygo/merge-proof-l3-lab-rules",
+    "pr": 12,
+    "mergedCommit": "8d87dc2bcf71341ae529d15c1a00205bd42bd993",
+    "signing": "ephemeral local fixture key",
+    "transport": "GitHub REST and GraphQL; this journey does not claim signed merge webhook delivery",
+    "production": false
+  },
+  "cases": [
+    {
+      "name": "P01-live-exact-expected-candidate",
+      "pass": true,
+      "gaps": []
+    },
+    {
+      "name": "P02-live-machine-PROCEED",
+      "pass": true
+    },
+    {
+      "name": "P03-wrong-head-REFUSE",
+      "pass": true
+    },
+    {
+      "name": "P04-final-exact-head-guard",
+      "pass": true
+    },
+    {
+      "name": "P05-live-squash-landed-tree",
+      "pass": true
+    },
+    {
+      "name": "P06-historical-receipt-immutable",
+      "pass": true
+    },
+    {
+      "name": "P07-merged-receipt-not-current",
+      "pass": true,
+      "currentness": "STALE"
+    },
+    {
+      "name": "P08-live-commit-lookup",
+      "pass": true
+    },
+    {
+      "name": "P09-archive-restart-historical-only",
+      "pass": true
+    },
+    {
+      "name": "P10-signed-portable-landed-chain",
+      "pass": true
+    },
+    {
+      "name": "P11-independent-Git-portable-CLI",
+      "pass": true
+    }
+  ],
+  "receiptId": "f638c6dc-f868-40c4-b339-a91f939c4e22",
+  "codeDigest": "bd1d7b8d5cf6e92c61a112a94bf3b0146ca69d8b26834186673f7548474fa145",
+  "sourceCommit": "6fc94f22e28d9780fc3d9f8fb9a8829dda45f83f",
+  "head": "f1e9f85ce5dc49a56d96b924742232577a7ce41f",
+  "base": "26d6c1c1fdf8bb7c45b84318f2e379586e56e41f",
+  "expectedTree": {
+    "status": "RECONSTRUCTED",
+    "method": "merge",
+    "base": "26d6c1c1fdf8bb7c45b84318f2e379586e56e41f",
+    "head": "f1e9f85ce5dc49a56d96b924742232577a7ce41f",
+    "tree": "3dea69223a5558f512058ac30e4b38da8f4d6816",
+    "flags": [],
+    "strategy": "ort",
+    "config": [
+      "core.hooksPath=/dev/null",
+      "core.attributesFile=/dev/null",
+      "merge.renameLimit=7000",
+      "merge.directoryRenames=conflict",
+      "merge.renormalize=false",
+      "protocol.file.allow=never"
+    ],
+    "attributes": "EMPTY_TREE",
+    "submoduleObjects": "ABSENT",
+    "replaceRefs": "DISABLED",
+    "steps": [],
+    "gitVersion": "git version 2.50.1 (Apple Git-155)",
+    "gitBinaryDigest": "a961f78075d8e7621ef4f5d764c64ef8a41bf66c0a98ab5cb6ca39b85ce31c93",
+    "mergeBases": [
+      "26d6c1c1fdf8bb7c45b84318f2e379586e56e41f"
+    ],
+    "comparison": "MATCH"
+  },
+  "offline": {
+    "state": "CONSISTENT_OFFLINE",
+    "landings": [
+      {
+        "state": "LANDED_CHAIN_CONSISTENT",
+        "landedState": "LANDED_VERIFIED",
+        "signature": "VALID_TRUSTED_KEY",
+        "currentnessAtMerge": "UNAVAILABLE",
+        "exitCode": 0
+      }
+    ],
+    "log": {
+      "state": "NOT_INCLUDED"
+    },
+    "signature": "VALID_TRUSTED_KEY",
+    "coverage": {
+      "offline": [
+        "receipt digest",
+        "subject binding",
+        "verdict replay",
+        "policy and engine identity",
+        "supplied landed binding"
+      ],
+      "providerTrusted": [
+        "historical observations",
+        "provider truth",
+        "permissions at observation"
+      ],
+      "unavailable": [
+        "what CI actually checked out",
+        "unobserved exempt bypasses",
+        "atomic currentness at merge"
+      ]
+    },
+    "limitation": "Consistency does not establish provider truth or present currentness.",
+    "exitCode": 0
+  },
+  "bundleSha256": "8684485ef9dcc93e00929d6c29a0ce9871a500e1a86e2b0afadec2fb2157ab5c",
+  "privateCapture": "merge-proof-l3-live-lab-2026-09-19/frontier-resume/portable-final/"
+}

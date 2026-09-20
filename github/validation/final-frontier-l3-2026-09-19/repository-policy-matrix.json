@@ -1,0 +1,459 @@
+{
+  "summary": {
+    "initial": {
+      "cases": 40,
+      "assertionsPassed": 33,
+      "providerRejectedInitialPayload": 7
+    },
+    "correctedPayloads": [
+      {
+        "name": "RR-deployment-valid-environment",
+        "expected": "NOT_PROVEN",
+        "actual": "NOT_PROVEN",
+        "pass": true,
+        "gaps": [
+          "UNSUPPORTED_REPOSITORY_REQUIREMENTS"
+        ]
+      },
+      {
+        "name": "RR-code-quality",
+        "expected": "NOT_PROVEN",
+        "actual": "NOT_PROVEN",
+        "pass": true,
+        "gaps": [
+          "EVIDENCE_CHANGED_DURING_COLLECTION",
+          "UNSUPPORTED_REPOSITORY_REQUIREMENTS"
+        ]
+      },
+      {
+        "name": "RR-license-compliance",
+        "state": "PROVIDER_UNAVAILABLE",
+        "status": 422,
+        "message": {
+          "message": "Validation Failed",
+          "errors": [
+            "Invalid rule 'license_compliance_scanning': "
+          ],
+          "documentation_url": "https://docs.github.com/rest/repos/rules#update-a-repository-ruleset",
+          "status": "422"
+        }
+      },
+      {
+        "name": "RR-required-workflow-pinned",
+        "state": "PROVIDER_UNAVAILABLE",
+        "status": 422,
+        "message": {
+          "message": "Validation Failed",
+          "errors": [
+            "Invalid rule 'workflows': Invalid parameter workflows: Workflow error at index 0: "
+          ],
+          "documentation_url": "https://docs.github.com/rest/repos/rules#update-a-repository-ruleset",
+          "status": "422"
+        }
+      },
+      {
+        "name": "RR-tag-scope",
+        "state": "CREATED",
+        "id": 23717638,
+        "target": "tag"
+      },
+      {
+        "name": "RR-push-file_path_restriction",
+        "state": "PROVIDER_UNAVAILABLE",
+        "status": 422,
+        "message": {
+          "message": "Validation Failed",
+          "errors": [
+            "Source public repos cannot have push rules"
+          ],
+          "documentation_url": "https://docs.github.com/rest/repos/rules#create-a-repository-ruleset",
+          "status": "422"
+        }
+      },
+      {
+        "name": "RR-push-max_file_path_length",
+        "state": "PROVIDER_UNAVAILABLE",
+        "status": 422,
+        "message": {
+          "message": "Validation Failed",
+          "errors": [
+            "Source public repos cannot have push rules"
+          ],
+          "documentation_url": "https://docs.github.com/rest/repos/rules#create-a-repository-ruleset",
+          "status": "422"
+        }
+      },
+      {
+        "name": "RR-push-file_extension_restriction",
+        "state": "PROVIDER_UNAVAILABLE",
+        "status": 422,
+        "message": {
+          "message": "Validation Failed",
+          "errors": [
+            "Source public repos cannot have push rules"
+          ],
+          "documentation_url": "https://docs.github.com/rest/repos/rules#create-a-repository-ruleset",
+          "status": "422"
+        }
+      },
+      {
+        "name": "RR-push-max_file_size",
+        "state": "PROVIDER_UNAVAILABLE",
+        "status": 422,
+        "message": {
+          "message": "Validation Failed",
+          "errors": [
+            "Source public repos cannot have push rules"
+          ],
+          "documentation_url": "https://docs.github.com/rest/repos/rules#create-a-repository-ruleset",
+          "status": "422"
+        }
+      },
+      {
+        "name": "RR-tag-does-not-apply-to-branch",
+        "expected": "VERIFIED",
+        "actual": "VERIFIED",
+        "pass": true,
+        "gaps": []
+      }
+    ],
+    "note": "Initial malformed tag, deployment and push-rule payloads are superseded by the corrected payload results; initial failures remain in private audit records."
+  },
+  "initialCases": [
+    {
+      "name": "RP00-baseline",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "gaps": []
+    },
+    {
+      "name": "RP-creation",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "gaps": []
+    },
+    {
+      "name": "RP-deletion",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "gaps": []
+    },
+    {
+      "name": "RP-non_fast_forward",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "gaps": []
+    },
+    {
+      "name": "RP-update",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "gaps": []
+    },
+    {
+      "name": "RP-branch_name_pattern",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "gaps": []
+    },
+    {
+      "name": "RP-tag_name_pattern",
+      "state": "PROVIDER_UNAVAILABLE",
+      "httpStatus": 422,
+      "message": "Validation Failed",
+      "errors": [
+        "Invalid rule 'tag_name_pattern': "
+      ]
+    },
+    {
+      "name": "RP-commit_message_pattern",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "gaps": []
+    },
+    {
+      "name": "RP-commit_author_email_pattern",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "gaps": []
+    },
+    {
+      "name": "RP-committer_email_pattern",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "gaps": []
+    },
+    {
+      "name": "RP-required_linear_history",
+      "expected": "NOT_PROVEN",
+      "actual": "NOT_PROVEN",
+      "pass": true,
+      "gaps": [
+        "UNSUPPORTED_REPOSITORY_REQUIREMENTS"
+      ]
+    },
+    {
+      "name": "RP-required_signatures",
+      "expected": "NOT_PROVEN",
+      "actual": "NOT_PROVEN",
+      "pass": true,
+      "gaps": [
+        "UNSUPPORTED_REPOSITORY_REQUIREMENTS"
+      ]
+    },
+    {
+      "name": "RP-deployments",
+      "state": "PROVIDER_UNAVAILABLE",
+      "httpStatus": 422,
+      "message": "Validation Failed",
+      "errors": [
+        "Invalid rule 'required_deployments': Invalid parameter required_deployment_environments: Invalid deployment environments"
+      ]
+    },
+    {
+      "name": "RP-require_code_owner_review",
+      "expected": "NOT_PROVEN",
+      "actual": "NOT_PROVEN",
+      "pass": true,
+      "gaps": [
+        "CODE_OWNER_APPROVAL_UNAVAILABLE"
+      ]
+    },
+    {
+      "name": "RP-require_last_push_approval",
+      "expected": "NOT_PROVEN",
+      "actual": "NOT_PROVEN",
+      "pass": true,
+      "gaps": [
+        "LAST_PUSH_ACTOR_APPROVAL_UNAVAILABLE"
+      ]
+    },
+    {
+      "name": "RP-required_review_thread_resolution",
+      "expected": "NOT_PROVEN",
+      "actual": "NOT_PROVEN",
+      "pass": true,
+      "gaps": [
+        "UNSUPPORTED_REPOSITORY_REQUIREMENTS"
+      ]
+    },
+    {
+      "name": "RP-review-count",
+      "expected": "NOT_PROVEN",
+      "actual": "NOT_PROVEN",
+      "pass": true,
+      "gaps": [
+        "INSUFFICIENT_CURRENT_HUMAN_APPROVAL"
+      ]
+    },
+    {
+      "name": "RP-review-zero",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "gaps": []
+    },
+    {
+      "name": "RP-coverage-minimum_coverage",
+      "expected": "NOT_PROVEN",
+      "actual": "NOT_PROVEN",
+      "pass": true,
+      "gaps": [
+        "CODE_COVERAGE_EVIDENCE_UNAVAILABLE"
+      ]
+    },
+    {
+      "name": "RP-coverage-max_coverage_drop",
+      "expected": "NOT_PROVEN",
+      "actual": "NOT_PROVEN",
+      "pass": true,
+      "gaps": [
+        "CODE_COVERAGE_EVIDENCE_UNAVAILABLE"
+      ]
+    },
+    {
+      "name": "RP-coverage-minimum_coverage-max_coverage_drop",
+      "expected": "NOT_PROVEN",
+      "actual": "NOT_PROVEN",
+      "pass": true,
+      "gaps": [
+        "CODE_COVERAGE_EVIDENCE_UNAVAILABLE"
+      ]
+    },
+    {
+      "name": "RP-copilot",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "gaps": []
+    },
+    {
+      "name": "RP-code-scanning",
+      "expected": "NOT_PROVEN",
+      "actual": "NOT_PROVEN",
+      "pass": true,
+      "gaps": [
+        "UNSUPPORTED_REPOSITORY_REQUIREMENTS"
+      ]
+    },
+    {
+      "name": "RP-required-workflows",
+      "state": "PROVIDER_UNAVAILABLE",
+      "httpStatus": 422,
+      "message": "Validation Failed",
+      "errors": [
+        "Invalid rule 'workflows': Invalid parameter workflows: Workflow error at index 0: "
+      ]
+    },
+    {
+      "name": "RP-disabled",
+      "expected": "NOT_PROVEN",
+      "actual": "NOT_PROVEN",
+      "pass": true,
+      "gaps": [
+        "NO_REQUIRED_VALIDATION_CONFIGURED"
+      ]
+    },
+    {
+      "name": "RP-excluded",
+      "expected": "NOT_PROVEN",
+      "actual": "NOT_PROVEN",
+      "pass": true,
+      "gaps": [
+        "NO_REQUIRED_VALIDATION_CONFIGURED"
+      ]
+    },
+    {
+      "name": "RP-evaluate",
+      "expected": "NOT_PROVEN",
+      "actual": "NOT_PROVEN",
+      "pass": true,
+      "gaps": [
+        "NO_REQUIRED_VALIDATION_CONFIGURED"
+      ]
+    },
+    {
+      "name": "RP-push-file_path_restriction",
+      "state": "PROVIDER_UNAVAILABLE",
+      "httpStatus": 422,
+      "message": "Validation Failed",
+      "errors": [
+        "Rule configurations contain invalid rule with type required_status_checks: Rule type required_status_checks is not supported on rulesets that target pushes.",
+        "Conditions contain invalid condition with target ref_name: Target ref_name is not supported for push rulesets",
+        "Source public repos cannot have push rules"
+      ]
+    },
+    {
+      "name": "RP-push-max_file_path_length",
+      "state": "PROVIDER_UNAVAILABLE",
+      "httpStatus": 422,
+      "message": "Validation Failed",
+      "errors": [
+        "Rule configurations contain invalid rule with type required_status_checks: Rule type required_status_checks is not supported on rulesets that target pushes.",
+        "Conditions contain invalid condition with target ref_name: Target ref_name is not supported for push rulesets",
+        "Source public repos cannot have push rules"
+      ]
+    },
+    {
+      "name": "RP-push-file_extension_restriction",
+      "state": "PROVIDER_UNAVAILABLE",
+      "httpStatus": 422,
+      "message": "Validation Failed",
+      "errors": [
+        "Invalid rule 'file_extension_restriction': Invalid parameter restricted_file_extensions: File extension must start with *."
+      ]
+    },
+    {
+      "name": "RP-push-max_file_size",
+      "state": "PROVIDER_UNAVAILABLE",
+      "httpStatus": 422,
+      "message": "Validation Failed",
+      "errors": [
+        "Rule configurations contain invalid rule with type required_status_checks: Rule type required_status_checks is not supported on rulesets that target pushes.",
+        "Conditions contain invalid condition with target ref_name: Target ref_name is not supported for push rulesets",
+        "Source public repos cannot have push rules"
+      ]
+    },
+    {
+      "name": "AP-events-allow",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "gaps": []
+    },
+    {
+      "name": "AP-events-deny",
+      "expected": "NOT_PROVEN",
+      "actual": "NOT_PROVEN",
+      "pass": true,
+      "gaps": [
+        "CURRENT_STATE_EXECUTION_NOT_PROVEN",
+        "EXECUTION_EVENT_DENIED"
+      ]
+    },
+    {
+      "name": "AP-disabled",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "gaps": []
+    },
+    {
+      "name": "AP-evaluate",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "gaps": []
+    },
+    {
+      "name": "AP-path-excluded",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "gaps": []
+    },
+    {
+      "name": "AP-path-not-matched",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "gaps": []
+    },
+    {
+      "name": "AP-actor-exact",
+      "expected": "VERIFIED",
+      "actual": "VERIFIED",
+      "pass": true,
+      "gaps": []
+    },
+    {
+      "name": "AP-actor-unmatched",
+      "expected": "NOT_PROVEN",
+      "actual": "NOT_PROVEN",
+      "pass": true,
+      "gaps": [
+        "CURRENT_STATE_EXECUTION_NOT_PROVEN",
+        "EXECUTION_ACTOR_POLICY_UNPROVEN"
+      ]
+    },
+    {
+      "name": "AP-role-unobservable",
+      "expected": "NOT_PROVEN",
+      "actual": "NOT_PROVEN",
+      "pass": true,
+      "gaps": [
+        "CURRENT_STATE_EXECUTION_NOT_PROVEN",
+        "EXECUTION_ACTOR_POLICY_UNPROVEN"
+      ]
+    }
+  ]
+}

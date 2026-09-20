@@ -1,0 +1,60 @@
+{
+  "exitCode": 0,
+  "offline": "CONSISTENT_OFFLINE",
+  "online": {
+    "state": "PARTIALLY_REVERIFIED",
+    "rows": [
+      {
+        "kind": "CHECK",
+        "id": 106022224820,
+        "state": "MATCH"
+      },
+      {
+        "kind": "WORKFLOW_ATTEMPT",
+        "id": "35489632853:1",
+        "state": "MATCH"
+      },
+      {
+        "kind": "CANDIDATE",
+        "id": "f1e9f85ce5dc49a56d96b924742232577a7ce41f",
+        "state": "MATCH"
+      },
+      {
+        "kind": "HEAD",
+        "id": "f1e9f85ce5dc49a56d96b924742232577a7ce41f",
+        "state": "MATCH"
+      },
+      {
+        "kind": "WORKFLOW_JOB",
+        "id": 106022224820,
+        "state": "MATCH"
+      },
+      {
+        "kind": "WORKFLOW_BLOB",
+        "id": "8ec8dd9a4fccbc87c75136265e965755b22ac3fd",
+        "state": "MATCH"
+      },
+      {
+        "kind": "HEAD_REF",
+        "id": "portable-1789879079078",
+        "state": "MATCH"
+      },
+      {
+        "kind": "BASE_REF",
+        "id": "main",
+        "state": "EXPECTED_CHANGE"
+      },
+      {
+        "kind": "CURRENT_RULES",
+        "state": "MATCH"
+      },
+      {
+        "kind": "LANDED_COMMIT",
+        "id": "8d87dc2bcf71341ae529d15c1a00205bd42bd993",
+        "state": "MATCH"
+      }
+    ],
+    "exitCode": 0,
+    "limitation": "Provider records are assertions. Missing records do not prove retention expiry; changed mutable state does not impeach a historical receipt. Rules and permissions at issue cannot be re-observed."
+  }
+}

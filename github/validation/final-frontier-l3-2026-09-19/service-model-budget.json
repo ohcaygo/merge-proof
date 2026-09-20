@@ -1,0 +1,10 @@
+{
+  "trackedPRs": 30,
+  "events": 200,
+  "measuredOneFullRescan": 1440,
+  "fullRescanBaselineFor200": 288000,
+  "targetedCounted": 300,
+  "targetedNetworkRequests": 11350,
+  "baselineKind": "Measured unconditional full scan of 30 PRs multiplied by 200 events; ETag-conditioned targeted reads are counted separately",
+  "savedFraction": 0.9989583333333333
+}

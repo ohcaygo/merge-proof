@@ -1,0 +1,32 @@
+{
+  "schema": "urn:merge-proof:service-model-run:1",
+  "sequences": 1000,
+  "actions": 28578,
+  "requests": 458798,
+  "counted": 50254,
+  "notModified": 306371,
+  "faults": 705,
+  "deliveries": 28600,
+  "duplicates": 949,
+  "checks": 6090,
+  "reconciliationSupersessions": 1498,
+  "invariants": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ]
+}

@@ -1,0 +1,536 @@
+{
+  "provenance": {
+    "candidate": "a6800e68f4c1e03d0cd0de28fe7febe5864bcdc4",
+    "at": "2026-09-20T04:52:03.918Z",
+    "repository": "ohcaygo/merge-proof-l3-lab-queue-headgreen",
+    "prs": [
+      7,
+      8,
+      9
+    ],
+    "beforeMain": "949731827585313f77f8fe40904b1ac1b2b5690c",
+    "group": {
+      "head_sha": "452e87034372202cc0f450a505d9ea976efcb0d1",
+      "head_ref": "refs/heads/gh-readonly-queue/main/pr-8-4b11ad205b1bc2835cd33db7bd0c85a2ec17c0bc",
+      "base_sha": "4b11ad205b1bc2835cd33db7bd0c85a2ec17c0bc",
+      "base_ref": "refs/heads/main"
+    },
+    "transport": "Real REST/GraphQL only; signed webhook propagation NOT_PROVEN",
+    "signing": "ephemeral local fixture key"
+  },
+  "cases": [
+    {
+      "name": "O01-provider-reported-two-entry-prefix",
+      "pass": true,
+      "selection": {
+        "state": "AVAILABLE",
+        "value": {
+          "order": {
+            "providerOrderConfirmed": true,
+            "repositoryId": 1377343185,
+            "base": "949731827585313f77f8fe40904b1ac1b2b5690c",
+            "entries": [
+              {
+                "pr": 7,
+                "head": "24c82a4a622f942e74ad0fd8317bfd80c8cb97d7",
+                "candidate": "4b11ad205b1bc2835cd33db7bd0c85a2ec17c0bc",
+                "base": "949731827585313f77f8fe40904b1ac1b2b5690c"
+              },
+              {
+                "pr": 8,
+                "head": "8c22f0b135258cd8ef3b3d5dcbc30687c0d1fcda",
+                "candidate": "452e87034372202cc0f450a505d9ea976efcb0d1",
+                "base": "4b11ad205b1bc2835cd33db7bd0c85a2ec17c0bc"
+              }
+            ]
+          },
+          "orderReason": null,
+          "id": "MQE_lQDOUhiW0c8AAAABESITFs4ABDv2zgLl4Xk",
+          "state": "MERGEABLE",
+          "headSha": "452e87034372202cc0f450a505d9ea976efcb0d1",
+          "baseSha": "4b11ad205b1bc2835cd33db7bd0c85a2ec17c0bc",
+          "candidateSha": "8c22f0b135258cd8ef3b3d5dcbc30687c0d1fcda"
+        }
+      }
+    },
+    {
+      "name": "O02-exact-later-group-VERIFIED",
+      "pass": true,
+      "verdict": "VERIFIED",
+      "current": "CURRENT",
+      "gaps": []
+    },
+    {
+      "name": "O03-independent-ordered-expected-tree",
+      "pass": true,
+      "expectedTree": {
+        "status": "RECONSTRUCTED",
+        "method": "queue",
+        "base": "949731827585313f77f8fe40904b1ac1b2b5690c",
+        "head": "8c22f0b135258cd8ef3b3d5dcbc30687c0d1fcda",
+        "tree": "71ee56066dde98f5adf4ac0df04a35a2b103c29e",
+        "flags": [],
+        "strategy": "ort",
+        "config": [
+          "core.hooksPath=/dev/null",
+          "core.attributesFile=/dev/null",
+          "merge.renameLimit=7000",
+          "merge.directoryRenames=conflict",
+          "merge.renormalize=false",
+          "protocol.file.allow=never"
+        ],
+        "attributes": "EMPTY_TREE",
+        "submoduleObjects": "ABSENT",
+        "replaceRefs": "DISABLED",
+        "steps": [
+          {
+            "head": "24c82a4a622f942e74ad0fd8317bfd80c8cb97d7",
+            "candidate": "4b11ad205b1bc2835cd33db7bd0c85a2ec17c0bc",
+            "tree": "0cab56b05145d5aac8e9bd9118f5c02437f4b404",
+            "providerTree": "0cab56b05145d5aac8e9bd9118f5c02437f4b404",
+            "comparison": "MATCH"
+          },
+          {
+            "head": "8c22f0b135258cd8ef3b3d5dcbc30687c0d1fcda",
+            "candidate": "452e87034372202cc0f450a505d9ea976efcb0d1",
+            "tree": "71ee56066dde98f5adf4ac0df04a35a2b103c29e",
+            "providerTree": "71ee56066dde98f5adf4ac0df04a35a2b103c29e",
+            "comparison": "MATCH"
+          }
+        ],
+        "gitVersion": "git version 2.50.1 (Apple Git-155)",
+        "gitBinaryDigest": "a961f78075d8e7621ef4f5d764c64ef8a41bf66c0a98ab5cb6ca39b85ce31c93",
+        "mergeBases": [
+          "949731827585313f77f8fe40904b1ac1b2b5690c"
+        ],
+        "comparison": "MATCH"
+      }
+    },
+    {
+      "name": "O04-later-queue-landed-parent-and-tree",
+      "pass": true,
+      "state": "LANDED_VERIFIED",
+      "reason": "LANDED_TREE_EQUALS_PROVEN_TREE"
+    },
+    {
+      "name": "O05-portable-ordered-landed-chain",
+      "pass": true
+    }
+  ],
+  "receiptId": "122d87c1-66f5-4cdf-aa9d-bf4a2fa31c1d",
+  "policyCodeDigest": "bb5a1ce10ed2592ac4ab6db9b0c846a6691d6023bf6261f88b5707a681fbfc25",
+  "verdictInfoSourceCommit": "a6800e68f4c1e03d0cd0de28fe7febe5864bcdc4",
+  "landing": {
+    "state": "LANDED_VERIFIED",
+    "landed": {
+      "sha": "452e87034372202cc0f450a505d9ea976efcb0d1",
+      "tree": "71ee56066dde98f5adf4ac0df04a35a2b103c29e",
+      "parents": [
+        "4b11ad205b1bc2835cd33db7bd0c85a2ec17c0bc",
+        "8c22f0b135258cd8ef3b3d5dcbc30687c0d1fcda"
+      ]
+    },
+    "proven": {
+      "tree": "71ee56066dde98f5adf4ac0df04a35a2b103c29e",
+      "kind": "MERGE_GROUP",
+      "sha": "452e87034372202cc0f450a505d9ea976efcb0d1",
+      "headSha": "8c22f0b135258cd8ef3b3d5dcbc30687c0d1fcda",
+      "baseSha": "949731827585313f77f8fe40904b1ac1b2b5690c",
+      "ref": "refs/heads/gh-readonly-queue/main/pr-8-4b11ad205b1bc2835cd33db7bd0c85a2ec17c0bc",
+      "selection": {
+        "state": "AVAILABLE",
+        "value": {
+          "order": {
+            "providerOrderConfirmed": true,
+            "repositoryId": 1377343185,
+            "base": "949731827585313f77f8fe40904b1ac1b2b5690c",
+            "entries": [
+              {
+                "pr": 7,
+                "head": "24c82a4a622f942e74ad0fd8317bfd80c8cb97d7",
+                "candidate": "4b11ad205b1bc2835cd33db7bd0c85a2ec17c0bc",
+                "base": "949731827585313f77f8fe40904b1ac1b2b5690c"
+              },
+              {
+                "pr": 8,
+                "head": "8c22f0b135258cd8ef3b3d5dcbc30687c0d1fcda",
+                "candidate": "452e87034372202cc0f450a505d9ea976efcb0d1",
+                "base": "4b11ad205b1bc2835cd33db7bd0c85a2ec17c0bc"
+              }
+            ]
+          },
+          "orderReason": null,
+          "id": "MQE_lQDOUhiW0c8AAAABESITFs4ABDv2zgLl4Xk",
+          "state": "MERGEABLE",
+          "headSha": "452e87034372202cc0f450a505d9ea976efcb0d1",
+          "baseSha": "4b11ad205b1bc2835cd33db7bd0c85a2ec17c0bc",
+          "candidateSha": "8c22f0b135258cd8ef3b3d5dcbc30687c0d1fcda"
+        }
+      }
+    },
+    "receiptId": "122d87c1-66f5-4cdf-aa9d-bf4a2fa31c1d",
+    "receiptDigest": "4e52faf0edf2f6e29574f4e3638e3cc36fd49c368175d078d1a741885b9162e2",
+    "currentnessAtMerge": "UNAVAILABLE",
+    "independentReconstruction": "RECONSTRUCTED",
+    "method": "merge",
+    "parentsConsistent": true,
+    "reason": "LANDED_TREE_EQUALS_PROVEN_TREE",
+    "trust": "GITHUB_API_CONTENT_IDENTIFIERS",
+    "commitResolution": {
+      "state": "AVAILABLE",
+      "value": "452e87034372202cc0f450a505d9ea976efcb0d1"
+    },
+    "ruleSuite": {
+      "state": "AVAILABLE",
+      "value": {
+        "id": 4146080964,
+        "result": "pass",
+        "before": "4b11ad205b1bc2835cd33db7bd0c85a2ec17c0bc",
+        "after": "452e87034372202cc0f450a505d9ea976efcb0d1",
+        "actorId": 299822117,
+        "pushedAt": "2026-09-19T23:49:50-05:00",
+        "trust": "GITHUB_API",
+        "evaluations": [
+          {
+            "source": {
+              "type": "ruleset",
+              "id": 23701853,
+              "name": "L3 synthetic acceptance"
+            },
+            "enforcement": "active",
+            "result": "pass",
+            "type": "required_status_checks"
+          }
+        ]
+      }
+    },
+    "bypass": "UNKNOWN_EXEMPT_OR_UNREADABLE",
+    "authorityLimitation": "Rule suites record observed evaluations. Exempt actors and decision-time authorization may remain unobservable.",
+    "recordedAt": "2026-09-20T04:52:03.812Z",
+    "attestation": {
+      "_type": "https://in-toto.io/Statement/v1",
+      "subject": [
+        {
+          "name": "ohcaygo/merge-proof-l3-lab-queue-headgreen",
+          "digest": {
+            "gitCommit": "452e87034372202cc0f450a505d9ea976efcb0d1"
+          }
+        }
+      ],
+      "predicateType": "https://merge-proof.ohcaygo.com/attestation/landed-binding/v1",
+      "predicate": {
+        "receiptDigest": "4e52faf0edf2f6e29574f4e3638e3cc36fd49c368175d078d1a741885b9162e2",
+        "repositoryId": 1377343185,
+        "binding": {
+          "state": "LANDED_VERIFIED",
+          "landed": {
+            "sha": "452e87034372202cc0f450a505d9ea976efcb0d1",
+            "tree": "71ee56066dde98f5adf4ac0df04a35a2b103c29e",
+            "parents": [
+              "4b11ad205b1bc2835cd33db7bd0c85a2ec17c0bc",
+              "8c22f0b135258cd8ef3b3d5dcbc30687c0d1fcda"
+            ]
+          },
+          "proven": {
+            "tree": "71ee56066dde98f5adf4ac0df04a35a2b103c29e",
+            "kind": "MERGE_GROUP",
+            "sha": "452e87034372202cc0f450a505d9ea976efcb0d1",
+            "headSha": "8c22f0b135258cd8ef3b3d5dcbc30687c0d1fcda",
+            "baseSha": "949731827585313f77f8fe40904b1ac1b2b5690c",
+            "ref": "refs/heads/gh-readonly-queue/main/pr-8-4b11ad205b1bc2835cd33db7bd0c85a2ec17c0bc",
+            "selection": {
+              "state": "AVAILABLE",
+              "value": {
+                "order": {
+                  "providerOrderConfirmed": true,
+                  "repositoryId": 1377343185,
+                  "base": "949731827585313f77f8fe40904b1ac1b2b5690c",
+                  "entries": [
+                    {
+                      "pr": 7,
+                      "head": "24c82a4a622f942e74ad0fd8317bfd80c8cb97d7",
+                      "candidate": "4b11ad205b1bc2835cd33db7bd0c85a2ec17c0bc",
+                      "base": "949731827585313f77f8fe40904b1ac1b2b5690c"
+                    },
+                    {
+                      "pr": 8,
+                      "head": "8c22f0b135258cd8ef3b3d5dcbc30687c0d1fcda",
+                      "candidate": "452e87034372202cc0f450a505d9ea976efcb0d1",
+                      "base": "4b11ad205b1bc2835cd33db7bd0c85a2ec17c0bc"
+                    }
+                  ]
+                },
+                "orderReason": null,
+                "id": "MQE_lQDOUhiW0c8AAAABESITFs4ABDv2zgLl4Xk",
+                "state": "MERGEABLE",
+                "headSha": "452e87034372202cc0f450a505d9ea976efcb0d1",
+                "baseSha": "4b11ad205b1bc2835cd33db7bd0c85a2ec17c0bc",
+                "candidateSha": "8c22f0b135258cd8ef3b3d5dcbc30687c0d1fcda"
+              }
+            }
+          },
+          "receiptId": "122d87c1-66f5-4cdf-aa9d-bf4a2fa31c1d",
+          "receiptDigest": "4e52faf0edf2f6e29574f4e3638e3cc36fd49c368175d078d1a741885b9162e2",
+          "currentnessAtMerge": "UNAVAILABLE",
+          "independentReconstruction": "RECONSTRUCTED",
+          "method": "merge",
+          "parentsConsistent": true,
+          "reason": "LANDED_TREE_EQUALS_PROVEN_TREE",
+          "trust": "GITHUB_API_CONTENT_IDENTIFIERS",
+          "commitResolution": {
+            "state": "AVAILABLE",
+            "value": "452e87034372202cc0f450a505d9ea976efcb0d1"
+          },
+          "ruleSuite": {
+            "state": "AVAILABLE",
+            "value": {
+              "id": 4146080964,
+              "result": "pass",
+              "before": "4b11ad205b1bc2835cd33db7bd0c85a2ec17c0bc",
+              "after": "452e87034372202cc0f450a505d9ea976efcb0d1",
+              "actorId": 299822117,
+              "pushedAt": "2026-09-19T23:49:50-05:00",
+              "trust": "GITHUB_API",
+              "evaluations": [
+                {
+                  "source": {
+                    "type": "ruleset",
+                    "id": 23701853,
+                    "name": "L3 synthetic acceptance"
+                  },
+                  "enforcement": "active",
+                  "result": "pass",
+                  "type": "required_status_checks"
+                }
+              ]
+            }
+          },
+          "bypass": "UNKNOWN_EXEMPT_OR_UNREADABLE",
+          "authorityLimitation": "Rule suites record observed evaluations. Exempt actors and decision-time authorization may remain unobservable.",
+          "recordedAt": "2026-09-20T04:52:03.812Z"
+        }
+      }
+    },
+    "envelope": {
+      "payloadType": "application/vnd.in-toto+json",
+      "payload": "eyJfdHlwZSI6Imh0dHBzOi8vaW4tdG90by5pby9TdGF0ZW1lbnQvdjEiLCJwcmVkaWNhdGUiOnsiYmluZGluZyI6eyJhdXRob3JpdHlMaW1pdGF0aW9uIjoiUnVsZSBzdWl0ZXMgcmVjb3JkIG9ic2VydmVkIGV2YWx1YXRpb25zLiBFeGVtcHQgYWN0b3JzIGFuZCBkZWNpc2lvbi10aW1lIGF1dGhvcml6YXRpb24gbWF5IHJlbWFpbiB1bm9ic2VydmFibGUuIiwiYnlwYXNzIjoiVU5LTk9XTl9FWEVNUFRfT1JfVU5SRUFEQUJMRSIsImNvbW1pdFJlc29sdXRpb24iOnsic3RhdGUiOiJBVkFJTEFCTEUiLCJ2YWx1ZSI6IjQ1MmU4NzAzNDM3MjIwMmNjMGY0NTBhNTA1ZDllYTk3NmVmY2IwZDEifSwiY3VycmVudG5lc3NBdE1lcmdlIjoiVU5BVkFJTEFCTEUiLCJpbmRlcGVuZGVudFJlY29uc3RydWN0aW9uIjoiUkVDT05TVFJVQ1RFRCIsImxhbmRlZCI6eyJwYXJlbnRzIjpbIjRiMTFhZDIwNWIxYmMyODM1Y2QzM2RiN2JkMGM4NWEyZWMxN2MwYmMiLCI4YzIyZjBiMTM1MjU4Y2Q4ZWYzYjNkNWRjYmMzMDY4N2MwZDFmY2RhIl0sInNoYSI6IjQ1MmU4NzAzNDM3MjIwMmNjMGY0NTBhNTA1ZDllYTk3NmVmY2IwZDEiLCJ0cmVlIjoiNzFlZTU2MDY2ZGRlOThmNWFkZjRhYzBkZjA0YTM1YTJiMTAzYzI5ZSJ9LCJtZXRob2QiOiJtZXJnZSIsInBhcmVudHNDb25zaXN0ZW50Ijp0cnVlLCJwcm92ZW4iOnsiYmFzZVNoYSI6Ijk0OTczMTgyNzU4NTMxM2Y3N2Y4ZmU0MDkwNGIxYWMxYjJiNTY5MGMiLCJoZWFkU2hhIjoiOGMyMmYwYjEzNTI1OGNkOGVmM2IzZDVkY2JjMzA2ODdjMGQxZmNkYSIsImtpbmQiOiJNRVJHRV9HUk9VUCIsInJlZiI6InJlZnMvaGVhZHMvZ2gtcmVhZG9ubHktcXVldWUvbWFpbi9wci04LTRiMTFhZDIwNWIxYmMyODM1Y2QzM2RiN2JkMGM4NWEyZWMxN2MwYmMiLCJzZWxlY3Rpb24iOnsic3RhdGUiOiJBVkFJTEFCTEUiLCJ2YWx1ZSI6eyJiYXNlU2hhIjoiNGIxMWFkMjA1YjFiYzI4MzVjZDMzZGI3YmQwYzg1YTJlYzE3YzBiYyIsImNhbmRpZGF0ZVNoYSI6IjhjMjJmMGIxMzUyNThjZDhlZjNiM2Q1ZGNiYzMwNjg3YzBkMWZjZGEiLCJoZWFkU2hhIjoiNDUyZTg3MDM0MzcyMjAyY2MwZjQ1MGE1MDVkOWVhOTc2ZWZjYjBkMSIsImlkIjoiTVFFX2xRRE9VaGlXMGM4QUFBQUJFU0lURnM0QUJEdjJ6Z0xsNFhrIiwib3JkZXIiOnsiYmFzZSI6Ijk0OTczMTgyNzU4NTMxM2Y3N2Y4ZmU0MDkwNGIxYWMxYjJiNTY5MGMiLCJlbnRyaWVzIjpbeyJiYXNlIjoiOTQ5NzMxODI3NTg1MzEzZjc3ZjhmZTQwOTA0YjFhYzFiMmI1NjkwYyIsImNhbmRpZGF0ZSI6IjRiMTFhZDIwNWIxYmMyODM1Y2QzM2RiN2JkMGM4NWEyZWMxN2MwYmMiLCJoZWFkIjoiMjRjODJhNGE2MjJmOTQyZTc0YWQwZmQ4MzE3YmZkODBjOGNiOTdkNyIsInByIjo3fSx7ImJhc2UiOiI0YjExYWQyMDViMWJjMjgzNWNkMzNkYjdiZDBjODVhMmVjMTdjMGJjIiwiY2FuZGlkYXRlIjoiNDUyZTg3MDM0MzcyMjAyY2MwZjQ1MGE1MDVkOWVhOTc2ZWZjYjBkMSIsImhlYWQiOiI4YzIyZjBiMTM1MjU4Y2Q4ZWYzYjNkNWRjYmMzMDY4N2MwZDFmY2RhIiwicHIiOjh9XSwicHJvdmlkZXJPcmRlckNvbmZpcm1lZCI6dHJ1ZSwicmVwb3NpdG9yeUlkIjoxMzc3MzQzMTg1fSwib3JkZXJSZWFzb24iOm51bGwsInN0YXRlIjoiTUVSR0VBQkxFIn19LCJzaGEiOiI0NTJlODcwMzQzNzIyMDJjYzBmNDUwYTUwNWQ5ZWE5NzZlZmNiMGQxIiwidHJlZSI6IjcxZWU1NjA2NmRkZTk4ZjVhZGY0YWMwZGYwNGEzNWEyYjEwM2MyOWUifSwicmVhc29uIjoiTEFOREVEX1RSRUVfRVFVQUxTX1BST1ZFTl9UUkVFIiwicmVjZWlwdERpZ2VzdCI6IjRlNTJmYWYwZWRmMmY2ZTI5NTc0ZjRlMzYzOGUzY2MzNmZkNDljMzY4MTc1ZDA3OGQxYTc0MTg4NWI5MTYyZTIiLCJyZWNlaXB0SWQiOiIxMjJkODdjMS02NmY1LTRjZGYtYWE5ZC1iZjRhMmZhMzFjMWQiLCJyZWNvcmRlZEF0IjoiMjAyNi0wOS0yMFQwNDo1MjowMy44MTJaIiwicnVsZVN1aXRlIjp7InN0YXRlIjoiQVZBSUxBQkxFIiwidmFsdWUiOnsiYWN0b3JJZCI6Mjk5ODIyMTE3LCJhZnRlciI6IjQ1MmU4NzAzNDM3MjIwMmNjMGY0NTBhNTA1ZDllYTk3NmVmY2IwZDEiLCJiZWZvcmUiOiI0YjExYWQyMDViMWJjMjgzNWNkMzNkYjdiZDBjODVhMmVjMTdjMGJjIiwiZXZhbHVhdGlvbnMiOlt7ImVuZm9yY2VtZW50IjoiYWN0aXZlIiwicmVzdWx0IjoicGFzcyIsInNvdXJjZSI6eyJpZCI6MjM3MDE4NTMsIm5hbWUiOiJMMyBzeW50aGV0aWMgYWNjZXB0YW5jZSIsInR5cGUiOiJydWxlc2V0In0sInR5cGUiOiJyZXF1aXJlZF9zdGF0dXNfY2hlY2tzIn1dLCJpZCI6NDE0NjA4MDk2NCwicHVzaGVkQXQiOiIyMDI2LTA5LTE5VDIzOjQ5OjUwLTA1OjAwIiwicmVzdWx0IjoicGFzcyIsInRydXN0IjoiR0lUSFVCX0FQSSJ9fSwic3RhdGUiOiJMQU5ERURfVkVSSUZJRUQiLCJ0cnVzdCI6IkdJVEhVQl9BUElfQ09OVEVOVF9JREVOVElGSUVSUyJ9LCJyZWNlaXB0RGlnZXN0IjoiNGU1MmZhZjBlZGYyZjZlMjk1NzRmNGUzNjM4ZTNjYzM2ZmQ0OWMzNjgxNzVkMDc4ZDFhNzQxODg1YjkxNjJlMiIsInJlcG9zaXRvcnlJZCI6MTM3NzM0MzE4NX0sInByZWRpY2F0ZVR5cGUiOiJodHRwczovL21lcmdlLXByb29mLm9oY2F5Z28uY29tL2F0dGVzdGF0aW9uL2xhbmRlZC1iaW5kaW5nL3YxIiwic3ViamVjdCI6W3siZGlnZXN0Ijp7ImdpdENvbW1pdCI6IjQ1MmU4NzAzNDM3MjIwMmNjMGY0NTBhNTA1ZDllYTk3NmVmY2IwZDEifSwibmFtZSI6Im9oY2F5Z28vbWVyZ2UtcHJvb2YtbDMtbGFiLXF1ZXVlLWhlYWRncmVlbiJ9XX0=",
+      "signatures": [
+        {
+          "keyid": "ordered-queue-fixture",
+          "sig": "MEUCIACuOod+B65sY9h4/p5H1XHvravTRChMAqML6ebrICzVAiEAmoN6O8QmVn23hjZ5wAdyPq5nfjFhpH3Tu3OsWHS1FQo="
+        }
+      ]
+    },
+    "observationId": "40e71312d0ded20f574e28849e82961838870bd32c8f7dc1d447e6755a83e327"
+  },
+  "portable": {
+    "state": "CONSISTENT_OFFLINE",
+    "landings": [
+      {
+        "state": "LANDED_CHAIN_CONSISTENT",
+        "landedState": "LANDED_VERIFIED",
+        "signature": "VALID_TRUSTED_KEY",
+        "currentnessAtMerge": "UNAVAILABLE",
+        "exitCode": 0
+      }
+    ],
+    "log": {
+      "state": "NOT_INCLUDED"
+    },
+    "signature": "VALID_TRUSTED_KEY",
+    "coverage": {
+      "offline": [
+        "receipt digest",
+        "subject binding",
+        "verdict replay",
+        "policy and engine identity",
+        "supplied landed binding"
+      ],
+      "providerTrusted": [
+        "historical observations",
+        "provider truth",
+        "permissions at observation"
+      ],
+      "unavailable": [
+        "what CI actually checked out",
+        "unobserved exempt bypasses",
+        "atomic currentness at merge"
+      ]
+    },
+    "limitation": "Consistency does not establish provider truth or present currentness.",
+    "exitCode": 0
+  },
+  "independentCLI": {
+    "exitCode": 0,
+    "offline": {
+      "state": "CONSISTENT_OFFLINE",
+      "landings": [
+        {
+          "state": "LANDED_CHAIN_CONSISTENT",
+          "landedState": "LANDED_VERIFIED",
+          "signature": "VALID_TRUSTED_KEY",
+          "currentnessAtMerge": "UNAVAILABLE",
+          "exitCode": 0
+        }
+      ],
+      "log": {
+        "state": "NOT_INCLUDED"
+      },
+      "signature": "VALID_TRUSTED_KEY",
+      "coverage": {
+        "offline": [
+          "receipt digest",
+          "subject binding",
+          "verdict replay",
+          "policy and engine identity",
+          "supplied landed binding"
+        ],
+        "providerTrusted": [
+          "historical observations",
+          "provider truth",
+          "permissions at observation"
+        ],
+        "unavailable": [
+          "what CI actually checked out",
+          "unobserved exempt bypasses",
+          "atomic currentness at merge"
+        ]
+      },
+      "limitation": "Consistency does not establish provider truth or present currentness.",
+      "exitCode": 0
+    },
+    "independent": {
+      "state": "INDEPENDENTLY_RECOMPUTED",
+      "rows": [
+        {
+          "kind": "HEAD_TREE",
+          "state": "MATCH",
+          "expected": "07859f57d8ab20c43f226c8209994ffb4d8c4f7b",
+          "actual": "07859f57d8ab20c43f226c8209994ffb4d8c4f7b"
+        },
+        {
+          "kind": "BASE_TREE",
+          "state": "MATCH",
+          "expected": "158b3b3f8bfff180e799ed3bef61294017fcb1ef",
+          "actual": "158b3b3f8bfff180e799ed3bef61294017fcb1ef"
+        },
+        {
+          "kind": "CANDIDATE_TREE",
+          "state": "MATCH",
+          "expected": "71ee56066dde98f5adf4ac0df04a35a2b103c29e",
+          "actual": "71ee56066dde98f5adf4ac0df04a35a2b103c29e"
+        },
+        {
+          "kind": "MERGE_BASE_CONTAINMENT",
+          "state": "MATCH",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "kind": "GROUP_HEAD_ANCESTRY",
+          "state": "MATCH",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "kind": "GROUP_BASE_ANCESTRY",
+          "state": "MATCH",
+          "expected": true,
+          "actual": true
+        },
+        {
+          "kind": "EXPECTED_TREE",
+          "state": "MATCH",
+          "expected": "71ee56066dde98f5adf4ac0df04a35a2b103c29e",
+          "actual": "71ee56066dde98f5adf4ac0df04a35a2b103c29e"
+        },
+        {
+          "kind": "QUEUE_CANDIDATE_TREE",
+          "state": "MATCH",
+          "expected": "0cab56b05145d5aac8e9bd9118f5c02437f4b404",
+          "actual": "0cab56b05145d5aac8e9bd9118f5c02437f4b404"
+        },
+        {
+          "kind": "QUEUE_EXPECTED_STEP",
+          "state": "MATCH",
+          "candidate": "4b11ad205b1bc2835cd33db7bd0c85a2ec17c0bc"
+        },
+        {
+          "kind": "QUEUE_CANDIDATE_TREE",
+          "state": "MATCH",
+          "expected": "71ee56066dde98f5adf4ac0df04a35a2b103c29e",
+          "actual": "71ee56066dde98f5adf4ac0df04a35a2b103c29e"
+        },
+        {
+          "kind": "QUEUE_EXPECTED_STEP",
+          "state": "MATCH",
+          "candidate": "452e87034372202cc0f450a505d9ea976efcb0d1"
+        },
+        {
+          "kind": "LANDED_TREE",
+          "state": "MATCH",
+          "expected": "71ee56066dde98f5adf4ac0df04a35a2b103c29e",
+          "actual": "71ee56066dde98f5adf4ac0df04a35a2b103c29e"
+        },
+        {
+          "kind": "LANDED_PARENTS",
+          "state": "MATCH",
+          "expected": [
+            "4b11ad205b1bc2835cd33db7bd0c85a2ec17c0bc",
+            "8c22f0b135258cd8ef3b3d5dcbc30687c0d1fcda"
+          ],
+          "actual": [
+            "4b11ad205b1bc2835cd33db7bd0c85a2ec17c0bc",
+            "8c22f0b135258cd8ef3b3d5dcbc30687c0d1fcda"
+          ]
+        }
+      ],
+      "recomputed": {
+        "status": "RECONSTRUCTED",
+        "method": "queue",
+        "base": "949731827585313f77f8fe40904b1ac1b2b5690c",
+        "head": "8c22f0b135258cd8ef3b3d5dcbc30687c0d1fcda",
+        "tree": "71ee56066dde98f5adf4ac0df04a35a2b103c29e",
+        "flags": [],
+        "strategy": "ort",
+        "config": [
+          "core.hooksPath=/dev/null",
+          "core.attributesFile=/dev/null",
+          "merge.renameLimit=7000",
+          "merge.directoryRenames=conflict",
+          "merge.renormalize=false",
+          "protocol.file.allow=never"
+        ],
+        "attributes": "EMPTY_TREE",
+        "submoduleObjects": "ABSENT",
+        "replaceRefs": "DISABLED",
+        "steps": [
+          {
+            "head": "24c82a4a622f942e74ad0fd8317bfd80c8cb97d7",
+            "candidate": "4b11ad205b1bc2835cd33db7bd0c85a2ec17c0bc",
+            "tree": "0cab56b05145d5aac8e9bd9118f5c02437f4b404",
+            "providerTree": "0cab56b05145d5aac8e9bd9118f5c02437f4b404",
+            "comparison": "MATCH"
+          },
+          {
+            "head": "8c22f0b135258cd8ef3b3d5dcbc30687c0d1fcda",
+            "candidate": "452e87034372202cc0f450a505d9ea976efcb0d1",
+            "tree": "71ee56066dde98f5adf4ac0df04a35a2b103c29e",
+            "providerTree": "71ee56066dde98f5adf4ac0df04a35a2b103c29e",
+            "comparison": "MATCH"
+          }
+        ],
+        "gitVersion": "git version 2.50.1 (Apple Git-155)",
+        "gitBinaryDigest": "a961f78075d8e7621ef4f5d764c64ef8a41bf66c0a98ab5cb6ca39b85ce31c93",
+        "mergeBases": [
+          "949731827585313f77f8fe40904b1ac1b2b5690c"
+        ],
+        "comparison": "MATCH"
+      },
+      "flags": [],
+      "exitCode": 0,
+      "limitation": "Recomputes the recorded inputs with the pinned Git. Provider queue membership/order, checks, reviews and permissions remain provider-trusted; caveats are preserved."
+    }
+  },
+  "privateEvidence": "merge-proof-l3-live-lab-2026-09-19/frontier-resume/ordered-queue-complete/"
+}

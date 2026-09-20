@@ -1,0 +1,130 @@
+TAP version 13
+# Subtest: portable receipt replays offline; tampering and untrusted self-signed keys do not pass
+ok 1 - portable receipt replays offline; tampering and untrusted self-signed keys do not pass
+  ---
+  duration_ms: 115.357693
+  type: 'test'
+  ...
+# Subtest: machine contract holds wrong subject, stale receipt and queue admission
+ok 2 - machine contract holds wrong subject, stale receipt and queue admission
+  ---
+  duration_ms: 6.431159
+  type: 'test'
+  ...
+# Subtest: landing checks content, proof, head and method parentage; squash SHA may differ
+ok 3 - landing checks content, proof, head and method parentage; squash SHA may differ
+  ---
+  duration_ms: 4.707915
+  type: 'test'
+  ...
+# Subtest: local differential lab: clean merge expected tree matches Git
+ok 4 - local differential lab: clean merge expected tree matches Git
+  ---
+  duration_ms: 136.526016
+  type: 'test'
+  ...
+# Subtest: local differential lab: clean squash expected tree matches Git
+ok 5 - local differential lab: clean squash expected tree matches Git
+  ---
+  duration_ms: 134.298588
+  type: 'test'
+  ...
+# Subtest: local differential lab: clean rebase expected tree matches Git
+ok 6 - local differential lab: clean rebase expected tree matches Git
+  ---
+  duration_ms: 165.121927
+  type: 'test'
+  ...
+# Subtest: conflicted reconstruction emits no expected tree
+ok 7 - conflicted reconstruction emits no expected tree
+  ---
+  duration_ms: 87.877238
+  type: 'test'
+  ...
+# Subtest: rebase with a merge commit is explicitly refused
+ok 8 - rebase with a merge commit is explicitly refused
+  ---
+  duration_ms: 115.372993
+  type: 'test'
+  ...
+# Subtest: queue reconstruction follows confirmed order and refuses missing membership
+ok 9 - queue reconstruction follows confirmed order and refuses missing membership
+  ---
+  duration_ms: 204.80502
+  type: 'test'
+  ...
+# Subtest: clean binary, executable mode and symlink changes preserve Git tree identity
+ok 10 - clean binary, executable mode and symlink changes preserve Git tree identity
+  ---
+  duration_ms: 82.509502
+  type: 'test'
+  ...
+# Subtest: attribute-dependent conflict and both-sided gitlinks refuse a definitive tree
+ok 11 - attribute-dependent conflict and both-sided gitlinks refuse a definitive tree
+  ---
+  duration_ms: 88.048156
+  type: 'test'
+  ...
+# Subtest: both-sided gitlinks retain the researched refusal boundary
+ok 12 - both-sided gitlinks retain the researched refusal boundary
+  ---
+  duration_ms: 108.168427
+  type: 'test'
+  ...
+# Subtest: frozen pure engine matches current policy across passing and failing captures
+ok 13 - frozen pure engine matches current policy across passing and failing captures
+  ---
+  duration_ms: 49.859102
+  type: 'test'
+  ...
+# Subtest: online verifier distinguishes provider divergence from record retention uncertainty
+ok 14 - online verifier distinguishes provider divergence from record retention uncertainty
+  ---
+  duration_ms: 6.214225
+  type: 'test'
+  ...
+# Subtest: MCP advertises only a read-only decision tool and bounds incoming messages
+ok 15 - MCP advertises only a read-only decision tool and bounds incoming messages
+  ---
+  duration_ms: 5.072182
+  type: 'test'
+  ...
+# Subtest: decision with a changed provider head cannot pass the provider SHA guard
+ok 16 - decision with a changed provider head cannot pass the provider SHA guard
+  ---
+  duration_ms: 3.622346
+  type: 'test'
+  ...
+# Subtest: ambient attributes cannot turn a conflicted merge into an uncaveated expected tree
+ok 17 - ambient attributes cannot turn a conflicted merge into an uncaveated expected tree
+  ---
+  duration_ms: 159.757716
+  type: 'test'
+  ...
+# Subtest: CLI/MCP reject contradictory, malformed or wrong-subject decision contracts
+ok 18 - CLI/MCP reject contradictory, malformed or wrong-subject decision contracts
+  ---
+  duration_ms: 4.627936
+  type: 'test'
+  ...
+# Subtest: offline verifier recomputes supplied Git objects and detects a consistently recorded false tree
+ok 19 - offline verifier recomputes supplied Git objects and detects a consistently recorded false tree
+  ---
+  duration_ms: 386.181914
+  type: 'test'
+  ...
+# Subtest: every ordered provider candidate tree is compared even when final queue content matches
+ok 20 - every ordered provider candidate tree is compared even when final queue content matches
+  ---
+  duration_ms: 280.199057
+  type: 'test'
+  ...
+1..20
+# tests 20
+# suites 0
+# pass 20
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2247.210796
