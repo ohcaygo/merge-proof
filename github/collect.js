@@ -154,7 +154,7 @@ async function collectOnce(
   client,
   repo,
   pr,
-  { mergeGroup = null, historical = false, previous = null, areas = null } = {},
+  { mergeGroup = null, historical = false, previous = null, areas = null, executionPolicyReader = null } = {},
 ) {
   assert(repoName(repo) && Number.isSafeInteger(pr) && pr > 0, "INVALID_SCOPE");
   const keep = (key) => previous && areas && !areas.includes(key);
@@ -177,7 +177,9 @@ async function collectOnce(
     i.baseSha = landed.parents[0];
   }
   const rules = keep("rules") ? previous.rules : await collectRules(client, repo, i.baseRef, i.branchProtected);
-  if (!keep("rules")) rules.executionProtections = await require("./rules").executionProtections(client, repo);
+  if (!keep("rules")) rules.executionProtections = executionPolicyReader
+    ? await executionPolicyReader({ repository: repo, repositoryId: i.repositoryId })
+    : await require("./rules").executionProtections(client, repo);
   const req = requirements(rules);
   const git = keep("git") ? previous.git : await client.observe(async () => {
     const d = await client.get(
