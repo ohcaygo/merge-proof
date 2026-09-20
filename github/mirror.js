@@ -28,7 +28,7 @@ function work({ config, repository, repositoryId, token, input }) {
     git(["config", "remote.origin.url", remote]);
     git(["config", "remote.origin.promisor", "true"]);
     git(["config", "remote.origin.partialclonefilter", "blob:none"]);
-    git(["fetch", "--no-tags", "--filter=blob:none", "origin", ...new Set([input.base, input.head, ...(input.entries || []).map(x => x.head)])]);
+    git(["fetch", "--no-tags", "--filter=blob:none", "origin", ...new Set([input.base, input.head, ...(input.entries || []).flatMap(x => [x.head,x.candidate].filter(Boolean))])]);
     return require("./reconstruct").reconstruct(dir, input, { ...config, authEnvironment: authEnvironment(token) });
   } finally { /* Lock lifetime is owned by the parent, including termination. */ }
 }

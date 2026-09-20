@@ -168,3 +168,11 @@ test("offline verifier recomputes supplied Git objects and detects a consistentl
   const wrongPin=structuredClone(b);wrongPin.receipt.expectedTree.gitBinaryDigest='0'.repeat(64);
   a.equal(independent(wrongPin,l.bare).reason,'PINNED_GIT_BINARY_MISMATCH');
 });
+test('every ordered provider candidate tree is compared even when final queue content matches',t=>{
+ const l=lab(t);l.write('base','b');const base=l.commit();l.git('checkout','-b','first');l.write('a','a');const first=l.commit();l.git('checkout','main');l.git('checkout','-b','second');l.write('b','b');const second=l.commit();
+ l.git('checkout','main');l.git('merge','--no-ff','first');const firstCandidate=l.git('rev-parse','HEAD');l.git('merge','--no-ff','second');const finalCandidate=l.git('rev-parse','HEAD'),providerTree=l.git('rev-parse','HEAD^{tree}');l.mirror();
+ const input={method:'queue',base,head:second,providerOrderConfirmed:true,providerTree,entries:[{head:first,candidate:firstCandidate},{head:second,candidate:finalCandidate}]},reconstruct=require('../reconstruct').reconstruct;
+ const good=reconstruct(l.bare,input,l.config);a.equal(good.comparison,'MATCH');a.deepEqual(good.steps.map(s=>s.comparison),['MATCH','MATCH']);a.ok(good.steps.every(s=>s.candidate&&s.providerTree));
+ const wrong=reconstruct(l.bare,{...input,entries:[{head:first,candidate:base},{head:second,candidate:finalCandidate}]},l.config);a.equal(wrong.tree,providerTree);a.equal(wrong.comparison,'CANDIDATE_MISMATCH');a.equal(wrong.steps[0].comparison,'CANDIDATE_MISMATCH');
+ const c=JSON.parse(JSON.stringify(capture()).replaceAll(B,base).replaceAll(H,second));c.expectedTree=wrong;const receipt=prove(c);a.equal(receipt.verdict,'FAIL');a.ok(receipt.gaps.includes('CANDIDATE_MISMATCH'));
+});

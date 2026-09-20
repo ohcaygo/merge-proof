@@ -72,9 +72,13 @@ function independent(bundle, directory, binary = "/usr/bin/git") {
     if(c.target.value?.kind==='MERGE_GROUP') for(const [kind,ancestor] of [['GROUP_HEAD_ANCESTRY',c.identity.headSha],['GROUP_BASE_ANCESTRY',c.identity.baseSha]])
       inspect(kind,true,()=>{const result=g.run(['merge-base','--is-ancestor',ancestor,c.target.value.sha]);require('./common').assert(result.code===0 || result.code===1,'ANCESTRY_OBJECT_UNAVAILABLE');return result.code===0;});
     const recomputed = reconstruct(directory,{base:c.identity.baseSha,head:c.identity.headSha,method:expected.method,
-      providerTree:c.target.value?.tree, ...(expected.method==='queue'?{entries:expected.steps.map(x=>({head:x.head,tree:x.providerTree})),providerOrderConfirmed:true}:{})},config);
+      providerTree:c.target.value?.tree, ...(expected.method==='queue'?{entries:expected.steps.map(x=>({head:x.head,candidate:x.candidate,tree:x.providerTree})),providerOrderConfirmed:true}:{})},config);
     if(recomputed.status==='RECONSTRUCTED') rows.push({kind:'EXPECTED_TREE',state:recomputed.tree===expected.tree?'MATCH':'DIVERGED',expected:expected.tree,actual:recomputed.tree});
     else rows.push({kind:'EXPECTED_TREE',state:'OBJECT_OR_RECONSTRUCTION_UNAVAILABLE',reason:recomputed.reason});
+    for(const [n,step] of (expected.steps||[]).entries())if(step.candidate){
+      inspect('QUEUE_CANDIDATE_TREE',step.providerTree,()=>g.tree(step.candidate));
+      const actual=recomputed.steps?.[n];rows.push({kind:'QUEUE_EXPECTED_STEP',state:actual&&actual.tree===step.tree&&actual.comparison===step.comparison?'MATCH':'DIVERGED',candidate:step.candidate});
+    }
     for(const value of bundle.landings||[]) {
       const landed=value.observation.landed;
       if(!landed?.sha){rows.push({kind:'LANDED_TREE',state:'OBJECT_UNAVAILABLE'});continue;}

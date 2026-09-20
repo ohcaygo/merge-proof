@@ -82,7 +82,10 @@ function reconstruct(directory, input, config) {
         assert(sha(entry.head), "QUEUE_ENTRY_UNAVAILABLE");
         const step = reconstruct(directory, { method: "merge", base: cur, head: entry.head }, config);
         assert(step.status === "RECONSTRUCTED", step.reason || "QUEUE_STEP_UNAVAILABLE");
-        result.flags.push(...step.flags); result.steps.push({ head: entry.head, tree: step.tree, providerTree: entry.tree || null });
+        const providerTree=sha(entry.candidate)?g.tree(entry.candidate):entry.tree||null;
+        assert(!entry.tree||!entry.candidate||entry.tree===providerTree,"QUEUE_PROVIDER_TREE_BINDING_MISMATCH");
+        const comparison=!sha(providerTree)?"PROVIDER_TREE_UNAVAILABLE":step.tree===providerTree?"MATCH":step.flags.length?"DIVERGED_WITH_CAVEATS":"CANDIDATE_MISMATCH";
+        result.flags.push(...step.flags); result.steps.push({ head: entry.head, candidate:entry.candidate||null, tree: step.tree, providerTree, comparison });
         cur = g.get(["commit-tree", step.tree, "-p", cur, "-p", entry.head, "-m", "queue reconstruction"]);
       }
       result.tree = g.tree(cur);
@@ -107,6 +110,8 @@ function reconstruct(directory, input, config) {
     }
     result.flags = [...new Set(result.flags)].sort(); result.status = "RECONSTRUCTED";
     result.comparison = !sha(input.providerTree) ? "PROVIDER_TREE_UNAVAILABLE" : result.tree === input.providerTree ? "MATCH" : result.flags.length ? "DIVERGED_WITH_CAVEATS" : "CANDIDATE_MISMATCH";
+    if(result.steps.some(s=>["CANDIDATE_MISMATCH","DIVERGED_WITH_CAVEATS"].includes(s.comparison)))
+      result.comparison=result.flags.length?"DIVERGED_WITH_CAVEATS":"CANDIDATE_MISMATCH";
   } catch (e) { result.tree = null; result.reason = e.code || "RECONSTRUCTION_UNAVAILABLE"; }
   return result;
 }
