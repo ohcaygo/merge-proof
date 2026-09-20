@@ -1,0 +1,14 @@
+{
+  "at": "2026-09-20T18:09:43.352185+00:00",
+  "candidate": "7953ecdbd849c8afe0379bfec1b4a61133292c62",
+  "state": "PASS",
+  "unchangedTrackedNonDocumentationFiles": 250,
+  "jsonDraftsParsed": 4,
+  "newDocumentRelativeLinks": "PASS",
+  "policyCodeDigest": "b770fe7f5dac86730095e768e4c3c4b4e1856eae909b3757acfc756069e47b76",
+  "limits": [
+    "No new runtime code or full regression run; prior exact-candidate suites reused.",
+    "Documents are preparation, not deployed configuration or external acceptance."
+  ],
+  "kmsAcceptanceSnippetSyntax": "PASS"
+}

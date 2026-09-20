@@ -1,5 +1,7 @@
 # Level 3 operator steps
 
+The current [production acceptance packet](LEVEL3-RELEASE-PACKET.md) contains concrete owner inputs, configuration drafts and acceptance criteria. Administration Read is the default; [optional Enhanced Policy Proof](../validation/final-frontier-l3-2026-09-19/least-privilege.md) is designed but not yet integrated in validated candidate `7953ecd`.
+
 These steps implement the researched boundary without granting new authority. Normal service operation never merges, enqueues, dismisses reviews, edits GitHub policies, or publishes anchors.
 
 ## Durable receipts

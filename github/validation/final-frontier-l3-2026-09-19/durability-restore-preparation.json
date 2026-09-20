@@ -1,0 +1,53 @@
+{
+  "at": "2026-09-20T18:05:13.544Z",
+  "candidate": "7953ecdbd849c8afe0379bfec1b4a61133292c62",
+  "state": "PASS",
+  "receiptId": "df91f650-7660-48b6-9eac-86ee304b595b",
+  "files": 11,
+  "bytes": 454968,
+  "manifestSha256": "6ad87023ce62e814536fc993d88669c5dcb0e887baba84162127232455a2edaa",
+  "sourceUnchanged": true,
+  "backupBytesMatch": true,
+  "restoreBytesMatch": true,
+  "restoredStoreOpened": true,
+  "currentness": "UNAVAILABLE",
+  "landingLookup": 1,
+  "verification": {
+    "state": "CONSISTENT_OFFLINE",
+    "landings": [
+      {
+        "state": "LANDED_CHAIN_CONSISTENT",
+        "landedState": "LANDED_VERIFIED",
+        "signature": "VALID_TRUSTED_KEY",
+        "currentnessAtMerge": "UNAVAILABLE",
+        "exitCode": 0
+      }
+    ],
+    "log": {
+      "state": "NOT_INCLUDED"
+    },
+    "signature": "VALID_TRUSTED_KEY",
+    "coverage": {
+      "offline": [
+        "receipt digest",
+        "subject binding",
+        "verdict replay",
+        "policy and engine identity",
+        "supplied landed binding"
+      ],
+      "providerTrusted": [
+        "historical observations",
+        "provider truth",
+        "permissions at observation"
+      ],
+      "unavailable": [
+        "what CI actually checked out",
+        "unobserved exempt bypasses",
+        "atomic currentness at merge"
+      ]
+    },
+    "limitation": "Consistency does not establish provider truth or present currentness.",
+    "exitCode": 0
+  },
+  "limitation": "Offline copy and reopen on the lab filesystem; no production host, replicated backup, RPO/RTO, KMS, public trust or network authorization acceptance."
+}

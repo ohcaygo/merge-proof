@@ -38,7 +38,7 @@ Organization-wide ruleset enforcement remains a separate Team/Enterprise validat
 ## 3. Owner gates
 
 - **Repository selection and isolated signed queue gate closed.** Exactly the approved product and queue fixture remain saved. The final candidate passed all 13 real signed queue-to-landed assertions, independent Git replay and archive restart under the temporarily approved lab credential. [Current acceptance and exact boundary](signed-queue-final.md).
-- **Production policy-evidence permission decision remains open.** Real Read tokens receive policy-list 403; temporary Write received 200. Both App and installation were restored exactly to Read after acceptance. Stock `7953ecd` explicitly requests Read tokens; the lab supplied a real one-repository Write token through its existing App-client hook. No equivalent complete narrower API was established, and no production permission model or code change is approved. [Claims, alternatives and owner decision](signed-queue-final.md#production-permission-finding).
+- **Production default is Administration Read.** Ryan selected an optional Enhanced Policy Proof design after the [focused investigation](least-privilege.md) found no equivalent documented narrower source. Real Read returns policy-list 403; temporary lab Write returned 200 and was restored. Stock `7953ecd` still issues Read tokens. The dedicated optional credential integration/customer opt-in is designed but unimplemented; companion App registration and customer grants remain explicit external gates. No production permission changed.
 - Choose an existing Team/Enterprise test organization or explicitly approve a paid plan change for organization-wide ruleset enforcement and eligible Code Quality validation. Do not infer enforcement from a Free-plan ruleset API accepting parameters.
 - Existing production gates remain: KMS/JWKS identity and live signer acceptance; independent public-key/root publication and anchoring authority; production credentials, persistent runtime/storage and deployment; private weekly differential-lab scheduler and credential identity. Their implementation is retained from the Level 3 baseline and their activation remains unperformed.
 
@@ -46,7 +46,7 @@ Organization-wide ruleset enforcement remains a separate Team/Enterprise validat
 
 The positive GitHub coverage aggregate collection adapter remains unimplemented because the documented provider API does not expose the required qualifying facts. The evaluator and refusal boundary do not close this item. Reassess actual API evidence in the approved eligible environment and implement an adapter only when sufficient facts can be bound; do not replace it with comments, fabricated metrics or a weaker producer/event contract.
 
-This is an explicit remaining addendum implementation item. Level 3 is not called complete. The pre-addendum charter, full exact-candidate chain and all production owner gates remain in force.
+The subsequently requested optional Enhanced Policy Proof credential integration and customer opt-in/UI are designed but also unimplemented; see [the design](least-privilege.md). These remain explicit implementation items. Level 3 is not called complete. The pre-addendum charter, full exact-candidate chain and all production owner gates remain in force.
 
 ## Primary provider sources
 
