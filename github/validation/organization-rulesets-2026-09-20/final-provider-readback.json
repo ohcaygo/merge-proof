@@ -1,0 +1,289 @@
+{
+  "at": "2026-09-21T03:04:53.509Z",
+  "source": "9a35a7a2a8491dbec6d05a567ef69ac69a94753f",
+  "repository": {
+    "id": 1378968803,
+    "node_id": "R_kgDOUjFk4w",
+    "name": "merge-proof-l3-lab-org-rules",
+    "full_name": "ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules",
+    "private": false,
+    "owner": {
+      "login": "ohcaygo-merge-proof-validation-lab",
+      "id": 331842075,
+      "node_id": "O_kgDOE8eCGw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/331842075?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ohcaygo-merge-proof-validation-lab",
+      "html_url": "https://github.com/ohcaygo-merge-proof-validation-lab",
+      "followers_url": "https://api.github.com/users/ohcaygo-merge-proof-validation-lab/followers",
+      "following_url": "https://api.github.com/users/ohcaygo-merge-proof-validation-lab/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ohcaygo-merge-proof-validation-lab/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ohcaygo-merge-proof-validation-lab/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ohcaygo-merge-proof-validation-lab/subscriptions",
+      "organizations_url": "https://api.github.com/users/ohcaygo-merge-proof-validation-lab/orgs",
+      "repos_url": "https://api.github.com/users/ohcaygo-merge-proof-validation-lab/repos",
+      "events_url": "https://api.github.com/users/ohcaygo-merge-proof-validation-lab/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ohcaygo-merge-proof-validation-lab/received_events",
+      "type": "Organization",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "html_url": "https://github.com/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules",
+    "description": "Owned synthetic Merge-Proof Level 3 organization-ruleset acceptance. No production or customer data.",
+    "fork": false,
+    "url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules",
+    "forks_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/forks",
+    "keys_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/keys{/key_id}",
+    "collaborators_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/collaborators{/collaborator}",
+    "teams_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/teams",
+    "hooks_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/hooks",
+    "issue_events_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/issues/events{/number}",
+    "events_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/events",
+    "assignees_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/assignees{/user}",
+    "branches_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/branches{/branch}",
+    "tags_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/tags",
+    "blobs_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/git/blobs{/sha}",
+    "git_tags_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/git/tags{/sha}",
+    "git_refs_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/git/refs{/sha}",
+    "trees_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/git/trees{/sha}",
+    "statuses_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/statuses/{sha}",
+    "languages_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/languages",
+    "stargazers_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/stargazers",
+    "contributors_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/contributors",
+    "subscribers_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/subscribers",
+    "subscription_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/subscription",
+    "commits_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/commits{/sha}",
+    "git_commits_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/git/commits{/sha}",
+    "comments_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/comments{/number}",
+    "issue_comment_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/issues/comments{/number}",
+    "contents_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/contents/{+path}",
+    "compare_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/compare/{base}...{head}",
+    "merges_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/merges",
+    "archive_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/{archive_format}{/ref}",
+    "downloads_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/downloads",
+    "issues_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/issues{/number}",
+    "pulls_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/pulls{/number}",
+    "milestones_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/milestones{/number}",
+    "notifications_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/notifications{?since,all,participating}",
+    "labels_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/labels{/name}",
+    "releases_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/releases{/id}",
+    "deployments_url": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/deployments",
+    "created_at": "2026-09-21T02:08:06Z",
+    "updated_at": "2026-09-21T02:55:28Z",
+    "pushed_at": "2026-09-21T02:55:42Z",
+    "git_url": "git://github.com/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules.git",
+    "ssh_url": "git@github.com:ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules.git",
+    "clone_url": "https://github.com/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules.git",
+    "svn_url": "https://github.com/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules",
+    "homepage": null,
+    "size": 0,
+    "stargazers_count": 0,
+    "watchers_count": 0,
+    "language": null,
+    "has_issues": false,
+    "has_projects": false,
+    "has_wiki": false,
+    "has_pages": false,
+    "has_discussions": false,
+    "forks_count": 0,
+    "mirror_url": null,
+    "archived": false,
+    "disabled": false,
+    "open_issues_count": 2,
+    "license": null,
+    "allow_forking": true,
+    "is_template": false,
+    "web_commit_signoff_required": false,
+    "has_pull_requests": true,
+    "pull_request_creation_policy": "all",
+    "topics": [],
+    "visibility": "public",
+    "forks": 0,
+    "open_issues": 2,
+    "watchers": 0,
+    "default_branch": "main",
+    "permissions": {
+      "admin": true,
+      "maintain": true,
+      "push": true,
+      "triage": true,
+      "pull": true
+    },
+    "temp_clone_token": "",
+    "allow_squash_merge": true,
+    "allow_merge_commit": true,
+    "allow_rebase_merge": true,
+    "allow_auto_merge": false,
+    "delete_branch_on_merge": false,
+    "allow_update_branch": false,
+    "squash_merge_commit_message": "COMMIT_MESSAGES",
+    "squash_merge_commit_title": "COMMIT_OR_PR_TITLE",
+    "merge_commit_message": "PR_TITLE",
+    "merge_commit_title": "MERGE_MESSAGE",
+    "custom_properties": {},
+    "organization": {
+      "login": "ohcaygo-merge-proof-validation-lab",
+      "id": 331842075,
+      "node_id": "O_kgDOE8eCGw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/331842075?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/ohcaygo-merge-proof-validation-lab",
+      "html_url": "https://github.com/ohcaygo-merge-proof-validation-lab",
+      "followers_url": "https://api.github.com/users/ohcaygo-merge-proof-validation-lab/followers",
+      "following_url": "https://api.github.com/users/ohcaygo-merge-proof-validation-lab/following{/other_user}",
+      "gists_url": "https://api.github.com/users/ohcaygo-merge-proof-validation-lab/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/ohcaygo-merge-proof-validation-lab/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/ohcaygo-merge-proof-validation-lab/subscriptions",
+      "organizations_url": "https://api.github.com/users/ohcaygo-merge-proof-validation-lab/orgs",
+      "repos_url": "https://api.github.com/users/ohcaygo-merge-proof-validation-lab/repos",
+      "events_url": "https://api.github.com/users/ohcaygo-merge-proof-validation-lab/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/ohcaygo-merge-proof-validation-lab/received_events",
+      "type": "Organization",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "security_and_analysis": {
+      "secret_scanning": {
+        "status": "disabled"
+      },
+      "secret_scanning_push_protection": {
+        "status": "disabled"
+      },
+      "dependabot_security_updates": {
+        "status": "disabled"
+      },
+      "secret_scanning_non_provider_patterns": {
+        "status": "disabled"
+      },
+      "secret_scanning_validity_checks": {
+        "status": "disabled"
+      }
+    },
+    "network_count": 0,
+    "subscribers_count": 0
+  },
+  "ruleset": {
+    "id": 23745947,
+    "name": "L3 owned organization acceptance 9a35a7a",
+    "target": "branch",
+    "source_type": "Organization",
+    "source": "ohcaygo-merge-proof-validation-lab",
+    "enforcement": "active",
+    "conditions": {
+      "ref_name": {
+        "exclude": [],
+        "include": [
+          "refs/heads/main"
+        ]
+      }
+    },
+    "rules": [
+      {
+        "type": "deletion"
+      },
+      {
+        "type": "non_fast_forward"
+      },
+      {
+        "type": "pull_request",
+        "parameters": {
+          "required_approving_review_count": 1,
+          "dismiss_stale_reviews_on_push": false,
+          "required_reviewers": [],
+          "require_code_owner_review": false,
+          "require_last_push_approval": false,
+          "required_review_thread_resolution": false,
+          "require_extra_approval_for_unattributed_changes": true,
+          "allowed_merge_methods": [
+            "merge",
+            "squash",
+            "rebase"
+          ]
+        }
+      },
+      {
+        "type": "required_status_checks",
+        "parameters": {
+          "strict_required_status_checks_policy": true,
+          "do_not_enforce_on_create": false,
+          "required_status_checks": [
+            {
+              "context": "l3 org validation",
+              "integration_id": 15368
+            }
+          ]
+        }
+      }
+    ],
+    "node_id": "RRS_lACkVXNlcs4Tx4IbzgFqVZs",
+    "created_at": "2026-09-20T21:19:40.956-05:00",
+    "updated_at": "2026-09-20T22:04:49.624-05:00",
+    "bypass_actors": [],
+    "current_user_can_bypass": "never",
+    "_links": {
+      "self": {
+        "href": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/rulesets/23745947"
+      },
+      "html": {
+        "href": "https://github.com/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/rules/23745947"
+      }
+    }
+  },
+  "active": [
+    {
+      "type": "deletion",
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "ohcaygo-merge-proof-validation-lab",
+      "ruleset_id": 23745947
+    },
+    {
+      "type": "non_fast_forward",
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "ohcaygo-merge-proof-validation-lab",
+      "ruleset_id": 23745947
+    },
+    {
+      "type": "pull_request",
+      "parameters": {
+        "required_approving_review_count": 1,
+        "dismiss_stale_reviews_on_push": false,
+        "required_reviewers": [],
+        "require_code_owner_review": false,
+        "require_last_push_approval": false,
+        "required_review_thread_resolution": false,
+        "require_extra_approval_for_unattributed_changes": true,
+        "allowed_merge_methods": [
+          "merge",
+          "squash",
+          "rebase"
+        ]
+      },
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "ohcaygo-merge-proof-validation-lab",
+      "ruleset_id": 23745947
+    },
+    {
+      "type": "required_status_checks",
+      "parameters": {
+        "strict_required_status_checks_policy": true,
+        "do_not_enforce_on_create": false,
+        "required_status_checks": [
+          {
+            "context": "l3 org validation",
+            "integration_id": 15368
+          }
+        ]
+      },
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "ohcaygo-merge-proof-validation-lab",
+      "ruleset_id": 23745947
+    }
+  ],
+  "secondAccount": {
+    "id": 249527096,
+    "login": "thatguyrw-boop",
+    "state": "pending",
+    "role": "member"
+  },
+  "main": "2981ae25b39711abad60e48cae26d670d15d3046"
+}

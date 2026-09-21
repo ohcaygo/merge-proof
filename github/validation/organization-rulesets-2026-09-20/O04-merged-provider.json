@@ -1,0 +1,48 @@
+{
+  "source": "9a35a7a2a8491dbec6d05a567ef69ac69a94753f",
+  "freshness": {
+    "state": "CURRENT",
+    "historicalVerdict": "VERIFIED",
+    "claims": {
+      "TARGET": {
+        "binding": "6338a9cca355b663882aa71cc89edda2e342e52a806d41a063c07edf87b2c6b7",
+        "state": "CURRENT"
+      },
+      "CI_EXECUTED": {
+        "binding": "3b9b51b78cecfc0884a467b5f2b555ccc3a9f9913cbbea10f86d9efb735ded3b",
+        "state": "CURRENT"
+      },
+      "APPROVAL_CURRENT": {
+        "binding": "0ef6fb74fa45315601d71a5c94cd670e476678b40244bf798fb44fffc9d21f9d",
+        "state": "CURRENT"
+      },
+      "RULES_SNAPSHOT": {
+        "binding": "1d84b2d2e57a696d7cf38fd624768591eadde83a24cca55bd320b4fecc2d2ba5",
+        "state": "CURRENT"
+      },
+      "CODE_COVERAGE": {
+        "binding": "1061b645f6e505401934ff4aa283d34abe8f4cc4f9bda053eddedd4372f7d0f9",
+        "state": "CURRENT"
+      },
+      "REMOTE_DURABLE": {
+        "binding": "d31c663329b98f86f289c96c792b5ace294ada6374164d74e17b1da6cfd3bb03",
+        "state": "CURRENT"
+      },
+      "CI_EXECUTED:l3 org validation": {
+        "binding": "3b9b51b78cecfc0884a467b5f2b555ccc3a9f9913cbbea10f86d9efb735ded3b",
+        "state": "CURRENT"
+      }
+    },
+    "changedClaims": [],
+    "changed": [],
+    "unavailable": [],
+    "asOf": "2026-09-21T02:55:22.480Z",
+    "next": "Current at this observation only."
+  },
+  "merged": {
+    "sha": "2981ae25b39711abad60e48cae26d670d15d3046",
+    "merged": true,
+    "message": "Pull Request successfully merged"
+  },
+  "head": "d1a2ad6783c212b3425abbbdcb56d683c9cf5c5e"
+}

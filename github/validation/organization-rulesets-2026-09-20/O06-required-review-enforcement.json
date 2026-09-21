@@ -1,0 +1,13 @@
+{
+  "source": "9a35a7a2a8491dbec6d05a567ef69ac69a94753f",
+  "before": "2981ae25b39711abad60e48cae26d670d15d3046",
+  "after": "2981ae25b39711abad60e48cae26d670d15d3046",
+  "denial": {
+    "status": 405,
+    "response": {
+      "message": "Repository rule violations found\n\nAt least 1 approving review is required by reviewers with write access.\n\n",
+      "documentation_url": "https://docs.github.com/rest/pulls/pulls#merge-a-pull-request",
+      "status": "405"
+    }
+  }
+}

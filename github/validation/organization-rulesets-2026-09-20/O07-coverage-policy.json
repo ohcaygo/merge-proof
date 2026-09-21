@@ -1,0 +1,63 @@
+{
+  "source": "9a35a7a2a8491dbec6d05a567ef69ac69a94753f",
+  "rules": [
+    {
+      "type": "deletion",
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "ohcaygo-merge-proof-validation-lab",
+      "ruleset_id": 23745947
+    },
+    {
+      "type": "non_fast_forward",
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "ohcaygo-merge-proof-validation-lab",
+      "ruleset_id": 23745947
+    },
+    {
+      "type": "pull_request",
+      "parameters": {
+        "required_approving_review_count": 1,
+        "dismiss_stale_reviews_on_push": false,
+        "required_reviewers": [],
+        "require_code_owner_review": false,
+        "require_last_push_approval": false,
+        "required_review_thread_resolution": false,
+        "require_extra_approval_for_unattributed_changes": true,
+        "allowed_merge_methods": [
+          "merge",
+          "squash",
+          "rebase"
+        ]
+      },
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "ohcaygo-merge-proof-validation-lab",
+      "ruleset_id": 23745947
+    },
+    {
+      "type": "required_status_checks",
+      "parameters": {
+        "strict_required_status_checks_policy": true,
+        "do_not_enforce_on_create": false,
+        "required_status_checks": [
+          {
+            "context": "l3 org validation",
+            "integration_id": 15368
+          }
+        ]
+      },
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "ohcaygo-merge-proof-validation-lab",
+      "ruleset_id": 23745947
+    },
+    {
+      "type": "code_coverage",
+      "parameters": {
+        "minimum_coverage": 80,
+        "max_coverage_drop": 2
+      },
+      "ruleset_source_type": "Organization",
+      "ruleset_source": "ohcaygo-merge-proof-validation-lab",
+      "ruleset_id": 23745947
+    }
+  ]
+}

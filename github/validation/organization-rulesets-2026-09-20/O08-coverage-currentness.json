@@ -1,0 +1,54 @@
+{
+  "source": "9a35a7a2a8491dbec6d05a567ef69ac69a94753f",
+  "freshness": {
+    "state": "STALE",
+    "historicalVerdict": "NOT_PROVEN",
+    "claims": {
+      "TARGET": {
+        "binding": "7b6fddcf69cdc213659306589eb450501124000a7355e2836d1068241dfb9707",
+        "state": "CURRENT"
+      },
+      "CI_EXECUTED": {
+        "binding": "154981e9efd6f97dc71af80ee30a371b3a9efdb7471b4f9931e8fa053dd67644",
+        "state": "CURRENT"
+      },
+      "APPROVAL_CURRENT": {
+        "binding": "b31301892a320bf741925af566bdc18432e8af5d3f82375051f152a2e4d92417",
+        "state": "CURRENT"
+      },
+      "RULES_SNAPSHOT": {
+        "binding": "570afa5e09f47dabe257820af049b40f66b837ade8a094c2c71a8a0686725a71",
+        "state": "STALE"
+      },
+      "CODE_COVERAGE": {
+        "binding": "26d66597c3c704e59aec563836d21926a5ec50fcf35d39476c37070f71434987",
+        "state": "STALE"
+      },
+      "REMOTE_DURABLE": {
+        "binding": "d99b58b17da4a13e24307608bd7cf4f09547e7565b05a36e8e371cb3edb5f3c5",
+        "state": "CURRENT"
+      },
+      "CI_EXECUTED:l3 org validation": {
+        "binding": "154981e9efd6f97dc71af80ee30a371b3a9efdb7471b4f9931e8fa053dd67644",
+        "state": "CURRENT"
+      },
+      "CODE_COVERAGE:23745947": {
+        "binding": "26d66597c3c704e59aec563836d21926a5ec50fcf35d39476c37070f71434987",
+        "state": "STALE"
+      }
+    },
+    "changedClaims": [
+      "CODE_COVERAGE:23745947",
+      "RULES_SNAPSHOT"
+    ],
+    "changed": [
+      "RULES_SNAPSHOT",
+      "CODE_COVERAGE"
+    ],
+    "unavailable": [
+      "CODE_COVERAGE"
+    ],
+    "asOf": "2026-09-21T03:01:48.439Z",
+    "next": "RE-PROOF REQUIRED"
+  }
+}

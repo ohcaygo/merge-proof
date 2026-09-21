@@ -32,7 +32,7 @@
     "linux-chrome-version.txt": "fb6bdaf3a279ab7814b5325970658139601e8c65d5e30f52acacf95273189a0f",
     "linux-engine-digest.txt": "4ec5550ddb5831542b18f15a10e3a47ddf4740e2474ce9d0d3bb0bd690a8d2c9",
     "linux-factory-tests.txt": "2a542fc831121b96ce054a54b842d7ad4593ef045c92773a3b86a508cf8a8a70",
-    "README.md": "59349a2ddabad1d50d6c332ef544a63a24d63ca8d998787f0c21b52212dd5c74",
+    "README.md": "72f211246fea6e2e27d42d6df332214671674f3841240f898e2c0254d06c5012",
     "linux-fixture.json": "29c61f401a575791a1a52d9c9a2616c1430c043dd3b9dac96d41d474785c381c",
     "local-cli-report-tests.txt": "2905fd03eff578eec49b83e5e4d00c18c3c62d928e9d5e9ab5778b12f222b665",
     "local-factory-tests.txt": "06d9d8f39d7c343008ab7ac3eb05d1b9165eb7b6fd12ac460ddcc2ea5cfa522e",
@@ -52,5 +52,6 @@
     "validation-org-github-tests-sandbox-denied.txt": "d67967867f2131dec81c0063713a78c90c09cc3c4a0820e18f9a1acd43194812"
   },
   "currentProductCandidate": "9a35a7a2a8491dbec6d05a567ef69ac69a94753f",
-  "currentCandidateAcceptance": "validation-organization-checkout.json"
+  "currentCandidateAcceptance": "../organization-rulesets-2026-09-20/README.md",
+  "currentOrganizationAcceptance": "../organization-rulesets-2026-09-20/summary.json"
 }

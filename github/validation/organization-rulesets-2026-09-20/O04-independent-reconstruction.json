@@ -1,0 +1,39 @@
+{
+  "source": "9a35a7a2a8491dbec6d05a567ef69ac69a94753f",
+  "config": {
+    "binary": "/usr/bin/git",
+    "version": "git version 2.50.1 (Apple Git-155)",
+    "sha256": "a961f78075d8e7621ef4f5d764c64ef8a41bf66c0a98ab5cb6ca39b85ce31c93",
+    "offline": true
+  },
+  "expected": {
+    "status": "RECONSTRUCTED",
+    "method": "merge",
+    "base": "dbe54d86bedf99b2e199cf5ff3de8371d5fc815a",
+    "head": "d1a2ad6783c212b3425abbbdcb56d683c9cf5c5e",
+    "tree": "996417855217e6918b01cebd284e172603a5bac6",
+    "flags": [],
+    "strategy": "ort",
+    "config": [
+      "core.hooksPath=/dev/null",
+      "core.attributesFile=/dev/null",
+      "merge.renameLimit=7000",
+      "merge.directoryRenames=conflict",
+      "merge.renormalize=false",
+      "protocol.file.allow=never"
+    ],
+    "attributes": "EMPTY_TREE",
+    "submoduleObjects": "ABSENT",
+    "replaceRefs": "DISABLED",
+    "steps": [],
+    "gitVersion": "git version 2.50.1 (Apple Git-155)",
+    "gitBinaryDigest": "a961f78075d8e7621ef4f5d764c64ef8a41bf66c0a98ab5cb6ca39b85ce31c93",
+    "mergeBases": [
+      "dbe54d86bedf99b2e199cf5ff3de8371d5fc815a"
+    ],
+    "comparison": "PROVIDER_TREE_UNAVAILABLE"
+  },
+  "providerTree": "996417855217e6918b01cebd284e172603a5bac6",
+  "matches": true,
+  "scope": "SEPARATE_OFFLINE_RECONSTRUCTION_ORIGINAL_RECEIPT_UNCHANGED"
+}

@@ -1,0 +1,193 @@
+{
+  "source": "9a35a7a2a8491dbec6d05a567ef69ac69a94753f",
+  "landed": {
+    "state": "LANDED_VERIFIED",
+    "landed": {
+      "sha": "2981ae25b39711abad60e48cae26d670d15d3046",
+      "tree": "996417855217e6918b01cebd284e172603a5bac6",
+      "parents": [
+        "dbe54d86bedf99b2e199cf5ff3de8371d5fc815a",
+        "d1a2ad6783c212b3425abbbdcb56d683c9cf5c5e"
+      ]
+    },
+    "proven": {
+      "tree": "996417855217e6918b01cebd284e172603a5bac6",
+      "kind": "HEAD_CONTAINS_CURRENT_BASE",
+      "sha": "d1a2ad6783c212b3425abbbdcb56d683c9cf5c5e",
+      "headSha": "d1a2ad6783c212b3425abbbdcb56d683c9cf5c5e",
+      "baseSha": "dbe54d86bedf99b2e199cf5ff3de8371d5fc815a"
+    },
+    "receiptId": "c7018b85-546b-4530-9f05-6ee218579aa8",
+    "receiptDigest": "930f2676aa6040bd2b8e01a99d21894e1e9b2dfeebdd9390d59f0be851a16ef8",
+    "currentnessAtMerge": "UNAVAILABLE",
+    "independentReconstruction": "NOT_RECONSTRUCTABLE",
+    "method": "merge",
+    "parentsConsistent": true,
+    "reason": "LANDED_TREE_EQUALS_PROVEN_TREE",
+    "trust": "GITHUB_API_CONTENT_IDENTIFIERS",
+    "commitResolution": {
+      "state": "AVAILABLE",
+      "value": "2981ae25b39711abad60e48cae26d670d15d3046"
+    },
+    "ruleSuite": {
+      "state": "AVAILABLE",
+      "value": {
+        "id": 4152146495,
+        "result": "pass",
+        "before": "dbe54d86bedf99b2e199cf5ff3de8371d5fc815a",
+        "after": "2981ae25b39711abad60e48cae26d670d15d3046",
+        "actorId": 299822117,
+        "pushedAt": "2026-09-20T21:55:24-05:00",
+        "trust": "GITHUB_API",
+        "evaluations": [
+          {
+            "source": {
+              "type": "ruleset",
+              "id": 23745947,
+              "name": "L3 owned organization acceptance 9a35a7a"
+            },
+            "enforcement": "active",
+            "result": "pass",
+            "type": "required_status_checks"
+          },
+          {
+            "source": {
+              "type": "ruleset",
+              "id": 23745947,
+              "name": "L3 owned organization acceptance 9a35a7a"
+            },
+            "enforcement": "active",
+            "result": "pass",
+            "type": "pull_request"
+          },
+          {
+            "source": {
+              "type": "ruleset",
+              "id": 23745947,
+              "name": "L3 owned organization acceptance 9a35a7a"
+            },
+            "enforcement": "active",
+            "result": "pass",
+            "type": "non_fast_forward"
+          },
+          {
+            "source": {
+              "type": "ruleset",
+              "id": 23745947,
+              "name": "L3 owned organization acceptance 9a35a7a"
+            },
+            "enforcement": "active",
+            "result": "pass",
+            "type": "deletion"
+          }
+        ]
+      }
+    },
+    "bypass": "UNKNOWN_EXEMPT_OR_UNREADABLE",
+    "authorityLimitation": "Rule suites record observed evaluations. Exempt actors and decision-time authorization may remain unobservable.",
+    "recordedAt": "2026-09-21T02:55:25.882Z",
+    "attestation": {
+      "_type": "https://in-toto.io/Statement/v1",
+      "subject": [
+        {
+          "name": "ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules",
+          "digest": {
+            "gitCommit": "2981ae25b39711abad60e48cae26d670d15d3046"
+          }
+        }
+      ],
+      "predicateType": "https://merge-proof.ohcaygo.com/attestation/landed-binding/v1",
+      "predicate": {
+        "receiptDigest": "930f2676aa6040bd2b8e01a99d21894e1e9b2dfeebdd9390d59f0be851a16ef8",
+        "repositoryId": 1378968803,
+        "binding": {
+          "state": "LANDED_VERIFIED",
+          "landed": {
+            "sha": "2981ae25b39711abad60e48cae26d670d15d3046",
+            "tree": "996417855217e6918b01cebd284e172603a5bac6",
+            "parents": [
+              "dbe54d86bedf99b2e199cf5ff3de8371d5fc815a",
+              "d1a2ad6783c212b3425abbbdcb56d683c9cf5c5e"
+            ]
+          },
+          "proven": {
+            "tree": "996417855217e6918b01cebd284e172603a5bac6",
+            "kind": "HEAD_CONTAINS_CURRENT_BASE",
+            "sha": "d1a2ad6783c212b3425abbbdcb56d683c9cf5c5e",
+            "headSha": "d1a2ad6783c212b3425abbbdcb56d683c9cf5c5e",
+            "baseSha": "dbe54d86bedf99b2e199cf5ff3de8371d5fc815a"
+          },
+          "receiptId": "c7018b85-546b-4530-9f05-6ee218579aa8",
+          "receiptDigest": "930f2676aa6040bd2b8e01a99d21894e1e9b2dfeebdd9390d59f0be851a16ef8",
+          "currentnessAtMerge": "UNAVAILABLE",
+          "independentReconstruction": "NOT_RECONSTRUCTABLE",
+          "method": "merge",
+          "parentsConsistent": true,
+          "reason": "LANDED_TREE_EQUALS_PROVEN_TREE",
+          "trust": "GITHUB_API_CONTENT_IDENTIFIERS",
+          "commitResolution": {
+            "state": "AVAILABLE",
+            "value": "2981ae25b39711abad60e48cae26d670d15d3046"
+          },
+          "ruleSuite": {
+            "state": "AVAILABLE",
+            "value": {
+              "id": 4152146495,
+              "result": "pass",
+              "before": "dbe54d86bedf99b2e199cf5ff3de8371d5fc815a",
+              "after": "2981ae25b39711abad60e48cae26d670d15d3046",
+              "actorId": 299822117,
+              "pushedAt": "2026-09-20T21:55:24-05:00",
+              "trust": "GITHUB_API",
+              "evaluations": [
+                {
+                  "source": {
+                    "type": "ruleset",
+                    "id": 23745947,
+                    "name": "L3 owned organization acceptance 9a35a7a"
+                  },
+                  "enforcement": "active",
+                  "result": "pass",
+                  "type": "required_status_checks"
+                },
+                {
+                  "source": {
+                    "type": "ruleset",
+                    "id": 23745947,
+                    "name": "L3 owned organization acceptance 9a35a7a"
+                  },
+                  "enforcement": "active",
+                  "result": "pass",
+                  "type": "pull_request"
+                },
+                {
+                  "source": {
+                    "type": "ruleset",
+                    "id": 23745947,
+                    "name": "L3 owned organization acceptance 9a35a7a"
+                  },
+                  "enforcement": "active",
+                  "result": "pass",
+                  "type": "non_fast_forward"
+                },
+                {
+                  "source": {
+                    "type": "ruleset",
+                    "id": 23745947,
+                    "name": "L3 owned organization acceptance 9a35a7a"
+                  },
+                  "enforcement": "active",
+                  "result": "pass",
+                  "type": "deletion"
+                }
+              ]
+            }
+          },
+          "bypass": "UNKNOWN_EXEMPT_OR_UNREADABLE",
+          "authorityLimitation": "Rule suites record observed evaluations. Exempt actors and decision-time authorization may remain unobservable.",
+          "recordedAt": "2026-09-21T02:55:25.882Z"
+        }
+      }
+    }
+  }
+}

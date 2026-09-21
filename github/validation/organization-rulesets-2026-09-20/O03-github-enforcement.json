@@ -1,0 +1,23 @@
+{
+  "source": "9a35a7a2a8491dbec6d05a567ef69ac69a94753f",
+  "before": "dbe54d86bedf99b2e199cf5ff3de8371d5fc815a",
+  "after": "dbe54d86bedf99b2e199cf5ff3de8371d5fc815a",
+  "head": "a300d786c3d103f19f7808bb2fb248dcdb192312",
+  "merge": {
+    "status": 405,
+    "response": {
+      "message": "Repository rule violations found\n\nRequired status check \"l3 org validation\" is failing.\n\n",
+      "documentation_url": "https://docs.github.com/rest/pulls/pulls#merge-a-pull-request",
+      "status": "405"
+    }
+  },
+  "direct": {
+    "status": 409,
+    "response": {
+      "message": "Repository rule violations found\n\nChanges must be made through a pull request.\n\nRequired status check \"l3 org validation\" is expected.\n\n",
+      "metadata": {},
+      "documentation_url": "https://docs.github.com/rest/repos/contents#create-or-update-file-contents",
+      "status": "409"
+    }
+  }
+}

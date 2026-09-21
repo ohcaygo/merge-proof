@@ -1,0 +1,21 @@
+{
+  "observedAt": "2026-09-21T02:54:21.563Z",
+  "organization": "ohcaygo-merge-proof-validation-lab",
+  "source": "AUTHENTICATED_GITHUB_LICENSING_UI",
+  "url": "https://github.com/organizations/ohcaygo-merge-proof-validation-lab/settings/licensing",
+  "plan": "Team",
+  "current": {
+    "purchasedSeats": 3,
+    "occupiedSeats": 2,
+    "monthlyUsd": 12
+  },
+  "confirmedScheduledChange": {
+    "seats": 2,
+    "monthlyUsd": 8,
+    "effective": "2026-10-20",
+    "uiText": "Your downgrade to Team plan with 2 seats will be effective on Oct 20, 2026. The new price will be $8 / month."
+  },
+  "taxIncluded": false,
+  "memberCount": 1,
+  "pendingInvitations": 1
+}

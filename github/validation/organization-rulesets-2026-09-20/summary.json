@@ -1,0 +1,76 @@
+{
+  "observedAt": "2026-09-21T03:08:09.871Z",
+  "productCandidate": "9a35a7a2a8491dbec6d05a567ef69ac69a94753f",
+  "lastLiveSignedQueueCandidate": "7953ecdbd849c8afe0379bfec1b4a61133292c62",
+  "proofCodeDigest": "b770fe7f5dac86730095e768e4c3c4b4e1856eae909b3757acfc756069e47b76",
+  "basicTeamOrganizationAcceptance": "PASS_FOR_RECORDED_CASES",
+  "organizationAppDelivery": "NOT_PROVEN_SCOPE_DECISION_PENDING",
+  "positiveSecondAccountApproval": "NOT_PROVEN_MEMBERSHIP_PENDING",
+  "newCandidateSignedQueue": "NOT_PROVEN",
+  "positiveCoverageCollection": "UNIMPLEMENTED_PROVIDER_BLOCKED",
+  "replays": [
+    {
+      "file": "O01-org-positive.json",
+      "verdict": "VERIFIED",
+      "replay": "CONSISTENT_OFFLINE",
+      "signature": "UNSIGNED"
+    },
+    {
+      "file": "O02-org-failed.json",
+      "verdict": "FAIL",
+      "replay": "CONSISTENT_OFFLINE",
+      "signature": "UNSIGNED"
+    },
+    {
+      "file": "O04-preland.json",
+      "verdict": "VERIFIED",
+      "replay": "CONSISTENT_OFFLINE",
+      "signature": "UNSIGNED"
+    },
+    {
+      "file": "O05-before-policy.json",
+      "verdict": "VERIFIED",
+      "replay": "CONSISTENT_OFFLINE",
+      "signature": "UNSIGNED"
+    },
+    {
+      "file": "O05-after-policy.json",
+      "verdict": "NOT_PROVEN",
+      "replay": "CONSISTENT_OFFLINE",
+      "signature": "UNSIGNED"
+    },
+    {
+      "file": "O07-coverage-unavailable.json",
+      "verdict": "NOT_PROVEN",
+      "replay": "CONSISTENT_OFFLINE",
+      "signature": "UNSIGNED"
+    },
+    {
+      "file": "O08-coverage-changed.json",
+      "verdict": "NOT_PROVEN",
+      "replay": "CONSISTENT_OFFLINE",
+      "signature": "UNSIGNED"
+    },
+    {
+      "file": "O09-required-workflow.json",
+      "verdict": "NOT_PROVEN",
+      "replay": "CONSISTENT_OFFLINE",
+      "signature": "UNSIGNED"
+    }
+  ],
+  "unsignedLandedReplay": "PASS",
+  "independentLandedReconstruction": "PASS",
+  "tests": {
+    "github": 367,
+    "cli": 26,
+    "report": 10,
+    "factory": 37,
+    "modelSequences": 1000,
+    "modelActions": 28578,
+    "modelInvariants": 17
+  },
+  "finalSyntheticMain": "2981ae25b39711abad60e48cae26d670d15d3046",
+  "productCodeChanges": false,
+  "existingAppScopeChanges": false,
+  "productionChanges": false
+}

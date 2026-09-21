@@ -1,0 +1,40 @@
+{
+  "status": "OWNER_SCOPE_DECISION_REQUIRED_NOT_CREATED",
+  "proposedName": "OHCAYGO Validation Proof Dev",
+  "owner": "ohcaygo-merge-proof-validation-lab",
+  "ownerId": 331842075,
+  "installability": "PRIVATE_OWNER_ONLY",
+  "repositorySelection": "selected",
+  "repositories": [
+    {"fullName": "ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules", "id": 1378968803}
+  ],
+  "repositoryPermissions": {
+    "actions": "read",
+    "administration": "read",
+    "checks": "write",
+    "contents": "read",
+    "merge_queues": "read",
+    "metadata": "read",
+    "pull_requests": "read",
+    "statuses": "read"
+  },
+  "organizationPermissions": {},
+  "accountPermissions": {},
+  "events": [
+    "branch_protection_configuration", "branch_protection_rule", "check_run", "check_suite",
+    "merge_group", "pull_request", "pull_request_review", "push", "repository",
+    "repository_ruleset", "status", "workflow_run"
+  ],
+  "permissionAndEventReference": "Fresh GET /app readback for development standard App 4899448; retained in standard-app-readback.json",
+  "purpose": "Genuine signed App-delivered organization-ruleset receipts and private differential-lab observations on the exact synthetic repository",
+  "administrationMutationCapability": false,
+  "unavailableExecutionPolicyBehavior": "NOT_PROVEN",
+  "existingAppChanges": false,
+  "productionAccess": false,
+  "additionalPaidPlan": false,
+  "registrationPrerequisites": [
+    "Owner authorization for this distinct App and exact installation scope",
+    "Separate nonproduction receiver URL and private webhook secret staged before registration",
+    "Private credential storage and real signed delivery acceptance; registration alone is not acceptance"
+  ]
+}

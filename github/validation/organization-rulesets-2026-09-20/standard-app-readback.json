@@ -1,0 +1,30 @@
+{
+  "at": "2026-09-21T03:05:28.567Z",
+  "id": 4899448,
+  "name": "OHCAYGO Merge Proof Dev",
+  "owner": "dupageinspect-beep",
+  "permissions": {
+    "actions": "read",
+    "administration": "read",
+    "checks": "write",
+    "contents": "read",
+    "merge_queues": "read",
+    "metadata": "read",
+    "pull_requests": "read",
+    "statuses": "read"
+  },
+  "events": [
+    "branch_protection_configuration",
+    "branch_protection_rule",
+    "check_run",
+    "check_suite",
+    "merge_group",
+    "pull_request",
+    "pull_request_review",
+    "push",
+    "repository",
+    "repository_ruleset",
+    "status",
+    "workflow_run"
+  ]
+}

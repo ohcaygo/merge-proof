@@ -1,0 +1,51 @@
+{
+  "source": "9a35a7a2a8491dbec6d05a567ef69ac69a94753f",
+  "beforeReceiptDigest": "38a1be11a958c48e93f2529a9da1b4aaf759069e127cb4466eb22ac0fc14a421",
+  "historicalVerdict": "VERIFIED",
+  "currentVerdict": "NOT_PROVEN",
+  "freshness": {
+    "state": "STALE",
+    "historicalVerdict": "VERIFIED",
+    "claims": {
+      "TARGET": {
+        "binding": "7b6fddcf69cdc213659306589eb450501124000a7355e2836d1068241dfb9707",
+        "state": "CURRENT"
+      },
+      "CI_EXECUTED": {
+        "binding": "154981e9efd6f97dc71af80ee30a371b3a9efdb7471b4f9931e8fa053dd67644",
+        "state": "CURRENT"
+      },
+      "APPROVAL_CURRENT": {
+        "binding": "b31301892a320bf741925af566bdc18432e8af5d3f82375051f152a2e4d92417",
+        "state": "STALE"
+      },
+      "RULES_SNAPSHOT": {
+        "binding": "1ee457191758d6b624361a8b8854812526dc5e91b90d78ba1544a2b2b2aeb57b",
+        "state": "STALE"
+      },
+      "CODE_COVERAGE": {
+        "binding": "1061b645f6e505401934ff4aa283d34abe8f4cc4f9bda053eddedd4372f7d0f9",
+        "state": "CURRENT"
+      },
+      "REMOTE_DURABLE": {
+        "binding": "d99b58b17da4a13e24307608bd7cf4f09547e7565b05a36e8e371cb3edb5f3c5",
+        "state": "CURRENT"
+      },
+      "CI_EXECUTED:l3 org validation": {
+        "binding": "154981e9efd6f97dc71af80ee30a371b3a9efdb7471b4f9931e8fa053dd67644",
+        "state": "CURRENT"
+      }
+    },
+    "changedClaims": [
+      "APPROVAL_CURRENT",
+      "RULES_SNAPSHOT"
+    ],
+    "changed": [
+      "APPROVAL_CURRENT",
+      "RULES_SNAPSHOT"
+    ],
+    "unavailable": [],
+    "asOf": "2026-09-21T02:56:59.331Z",
+    "next": "RE-PROOF REQUIRED"
+  }
+}
