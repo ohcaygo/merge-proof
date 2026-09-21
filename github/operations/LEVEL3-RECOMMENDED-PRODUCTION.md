@@ -108,7 +108,7 @@ No organization-administration Write or enterprise permission is proposed. Inher
 
 ## 7. Private scheduler
 
-**Selected:** Private GitHub Actions control repository `ohcaygo-merge-proof-validation/merge-proof-lab-control` in the isolated Team organization below. Weekly Sunday **14:17 UTC** plus manual relevant-schema-change runs. One job at a time, 20-minute cap, bounded provider requests, pinned action/runtime SHAs and private 30-day artifacts. Run the existing read-only differential observer plus separate model/reconstruction checks. Fresh signed queue generation remains a separate explicitly authorized synthetic fixture driver.
+**Selected:** Private GitHub Actions control repository `ohcaygo-merge-proof-validation-lab/merge-proof-lab-control` in the isolated Team organization below. Weekly Sunday **14:17 UTC** plus manual relevant-schema-change runs. One job at a time, 20-minute cap, bounded provider requests, pinned action/runtime SHAs and private 30-day artifacts. Run the existing read-only differential observer plus separate model/reconstruction checks. Fresh signed queue generation remains a separate explicitly authorized synthetic fixture driver.
 
 **Fit and trust:** Operates away from production and needs no production AWS or signing credentials. Use separate lab App credentials and one-repository short-lived tokens, with the same companion restriction if opted in. Workflow file/write access is credential authority; protect it. Never upload raw customer evidence or put secrets in command arguments. No job may silently edit policies, broaden Apps, revise expectations or deploy.
 
@@ -150,7 +150,7 @@ No organization-administration Write or enterprise permission is proposed. Inher
 
 ## 10. Minimum GitHub plan/test organization
 
-**Selected:** A new isolated **GitHub Team** organization, proposed name `ohcaygo-merge-proof-validation`, with **two seats: Ryan’s existing primary and `thatguyrw-boop` accounts for functional validation**. Do not upgrade the production `ohcaygo` organization. Strict minimum for active org branch/tag rules is Team with one licensed owner; the approved second account enables functional authority/approval testing, without claiming independent-human participation.
+**Selected:** A new isolated **GitHub Team** organization, proposed name `ohcaygo-merge-proof-validation-lab`, with **two seats: Ryan’s existing primary and `thatguyrw-boop` accounts for functional validation**. Do not upgrade the production `ohcaygo` organization. Strict minimum for active org branch/tag rules is Team with one licensed owner; the approved second account enables functional authority/approval testing, without claiming independent-human participation.
 
 **Fit and trust:** Organization-wide active ruleset enforcement is available on Team; repository-level rulesets and the existing public queue acceptance are different already-tested surfaces. Use selected public synthetic queue/branch fixtures and a private synthetic push-rules fixture, active inherited org policies and no bypass actors. Test actual enforcement, policy movement, refusal and exact signed proof. No customer repositories belong in this organization. [GitHub org rulesets](https://docs.github.com/en/organizations/managing-organization-settings/creating-rulesets-for-repositories-in-your-organization).
 

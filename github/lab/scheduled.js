@@ -7,7 +7,7 @@ function clientFactory(app,fetchImpl){return async fixture=>{
  return require("../app").installationClient(app,fixture.installationId,fixture.repositoryId,fetchImpl);
 };}
 async function main({env=process.env,configFile=process.argv[2],fetchImpl}={}){
- assert(env.GITHUB_REPOSITORY==="ohcaygo-merge-proof-validation/merge-proof-lab-control"&&["workflow_dispatch","schedule"].includes(env.GITHUB_EVENT_NAME),"PRIVATE_LAB_CONTEXT_REQUIRED");
+ assert(env.GITHUB_REPOSITORY==="ohcaygo-merge-proof-validation-lab/merge-proof-lab-control"&&["workflow_dispatch","schedule"].includes(env.GITHUB_EVENT_NAME),"PRIVATE_LAB_CONTEXT_REQUIRED");
  const config=JSON.parse(fs.readFileSync(configFile));
  assert(Array.isArray(config.authorizedRepositories)&&config.authorizedRepositories.length&&config.fixtures.every(f=>Number.isSafeInteger(f.installationId)&&f.installationId>0),"EXACT_LAB_INSTALLATIONS_REQUIRED");
  assert(/^[a-f0-9]{40}$/.test(env.MP_SOURCE_COMMIT||"")&&require("node:child_process").execFileSync("git",["rev-parse","HEAD"],{cwd:path.resolve(__dirname,"../.."),encoding:"utf8"}).trim()===env.MP_SOURCE_COMMIT,"EXACT_LAB_CANDIDATE_REQUIRED");

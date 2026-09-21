@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   observe:
-    if: github.repository == 'ohcaygo-merge-proof-validation/merge-proof-lab-control' && github.event.repository.private == true
+    if: github.repository == 'ohcaygo-merge-proof-validation-lab/merge-proof-lab-control' && github.event.repository.private == true
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
