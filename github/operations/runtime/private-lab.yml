@@ -55,3 +55,10 @@ jobs:
           path: private-results/
           retention-days: 30
           if-no-files-found: error
+      - name: Signal private lab heartbeat
+        if: always()
+        env:
+          MP_LAB_HEALTHCHECK_URL: ${{ secrets.MP_LAB_HEALTHCHECK_URL }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          node product/github/operations/healthcheck.js

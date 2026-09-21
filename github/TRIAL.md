@@ -1,6 +1,6 @@
 # Hosted trial, version 1
 
-Offer: seven calendar days from the first CURRENT, collection-complete VERIFIED
+The public/default offer is seven calendar days from the first CURRENT, collection-complete VERIFIED
 or NOT_PROVEN hosted receipt. FAIL, unavailable collection, stale completion,
 OAuth, repository authorization and historical scans do not start time. The
 single writer saves the trial start, completion identity and receipt in the same
@@ -8,6 +8,21 @@ fsynced snapshot. All installations of the same immutable GitHub owner share one
 trial. Reinstall, restart and same-head refresh cannot reset it. Existing accounts
 without a trial start get their clock on their next successful proof, not on
 migration. Existing paid accounts retain paid entitlement.
+
+A trusted server-side account allowlist may assign an invited account a persisted
+ten-day report-only offer; it is never client-controlled or exposed. Public
+metadata remains the seven-day offer.
+
+Before an invited tester's first qualifying receipt, put the immutable GitHub
+installation-owner account ID in the private App configuration's
+`invitedTesterAccountIds` array. An organization installation uses the
+organization's ID, not the installing person's ID. Verify that identity through
+the installation record; never accept an ID from an unauthenticated request.
+All installations for that account share one trial. Restart the service through
+the normal release process to load a changed allowlist. Existing trial deadlines
+are preserved, including seven-day trials that have already started; removing
+and re-adding an account cannot restart or extend them. No invitation email or
+paid subscription is created by this setting.
 
 Trial and paid Pro allow hosted proofs without customer proof credits. Internal
 receipt, subscription, delivery, concurrent-worker and GitHub API budgets remain.
@@ -27,8 +42,9 @@ existing PRs. Empty repositories wait for ordinary PR events. Existing bounds ar
 visible in activation state, never reported as complete. Multi-repository installs
 are watched even without choosing each repository on the hosted page.
 
-Days 1–4 have a quiet expiry date. Days 5, 6 and 7 show progressive notices on the
-hosted account, receipt page and GitHub Checks. The existing five-second worker
+Days 1–4 have a quiet expiry date. Default accounts see progressive notices on days
+5, 6 and 7; an invited ten-day account sees them on days 8, 9 and 10. The existing
+five-second worker
 updates saved checks without new PR activity; failed delivery retries. No email
 transport exists in this product, so no email platform or unsolicited email is
 introduced. At expiry, proof collection pauses, including repeats of already
@@ -84,7 +100,7 @@ unknown is explicit where no connection established attribution.
 | checkout_started | Provider returned valid checkout URL; once per purchase |
 | pro_activated | Fetched verified paid period; once per account/period, renewals included |
 | trial_expired | Clock elapsed and hosted access paused; once per account, recorded on next worker/read observation |
-| trial_notice | Day 5/6/7/expiry notice processed per tracked PR; once per day/PR |
+| trial_notice | Final three trial days/expiry notice processed per tracked PR; once per day/PR |
 
 Stages are not all unique people: report event and distinct account counts, never
 claim clicks, sessions, trial starts and paid renewals are interchangeable. Join

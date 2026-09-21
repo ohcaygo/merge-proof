@@ -15,4 +15,5 @@ PrivateTmp=true
 PrivateDevices=true
 RestrictNamespaces=true
 CapabilityBoundingSet=CAP_DAC_READ_SEARCH
-InaccessiblePaths=/run/merge-proof-credentials
+InaccessiblePaths=/run/merge-proof-credentials/proof /run/merge-proof-credentials/policy /run/merge-proof-credentials/backup
+ReadOnlyPaths=/run/merge-proof-credentials/monitor

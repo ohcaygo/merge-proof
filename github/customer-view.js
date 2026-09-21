@@ -5,11 +5,11 @@ const {escape} = require("./receipt");
 const {specialize} = require("./wording");
 function trial(usage) {
   if (!usage) return {label:"Account status unavailable", detail:"Return to your account to check hosted access."};
-  const end = usage.trial?.endsAt;
+  const end = usage.trial?.endsAt, days=Number.isSafeInteger(usage.trialDays)&&usage.trialDays>0?usage.trialDays:7;
   if (usage.plan === "PRO") return {label:"Paid Pro active", detail:"Hosted access is active for the verified subscription period. $29/month per active developer."};
-  if (usage.plan === "TRIAL" && end) return {label:"Trial active", detail:`Your seven-day report-only trial expires at ${end}. No automatic charge at expiry.`};
-  if (usage.plan === "PAUSED") return {label:end ? "Trial expired — hosted access paused" : "Hosted access paused", detail:`${end ? "Trial expiration: " + end + ". " : ""}New proofs, re-proofs and scans pause. Existing receipts remain accessible with current repository authorization, within retention and capacity limits. Continue Pro for $29/month per active developer. No automatic charge at trial expiry. Existing required checks may still affect merging; Merge Proof never changes GitHub rules.`};
-  if (usage.plan === "AWAITING_FIRST_PROOF") return {label:"Trial not started", detail:"Starts with your first CURRENT, collection-complete VERIFIED or NOT_PROVEN hosted proof. Incomplete or unavailable collection, FAIL, stale results, installation and historical scans do not start the clock. No card required."};
+  if (usage.plan === "TRIAL" && end) return {label:"Trial active", detail:`Your ${days}-day report-only trial expires at ${end}. No automatic charge at expiry.`};
+  if (usage.plan === "PAUSED") return {label:end ? "Trial expired — hosted access paused" : "Hosted access paused", detail:`${end ? "Your " + days + "-day trial expired at " + end + ". " : ""}New proofs, re-proofs and scans pause. Existing receipts remain accessible with current repository authorization, within retention and capacity limits. Continue Pro for $29/month per active developer. No automatic charge at trial expiry. Existing required checks may still affect merging; Merge Proof never changes GitHub rules.`};
+  if (usage.plan === "AWAITING_FIRST_PROOF") return {label:"Trial not started", detail:`Your ${days}-day report-only trial starts with your first CURRENT, collection-complete VERIFIED or NOT_PROVEN hosted proof. Incomplete or unavailable collection, FAIL, stale results, installation and historical scans do not start the clock. No card required.`};
   return {label:"Account status unavailable", detail:"Refresh account information to check your access. No active trial or payment is inferred."};
 }
 function context(data, config, row, usage, open, policy = null) {
@@ -32,7 +32,7 @@ function explanation(r) {
   const failed=(s.ci?.required||[]).find(x=>x.state==="FAILED"&&["failure","timed_out","cancelled","action_required","startup_failure"].includes(x.conclusion));
   if(failed) return {explanation:`Required check “${failed.name}” did not succeed on the observed validation state. Other evidence gaps may also remain.`,action:"Open the failed check in GitHub, resolve its reported cause, then rerun the required validation on the applicable version."};
   if(s.approval?.reason==="CHANGES_REQUESTED_OBSERVED")return {explanation:"A changes-requested review was observed. Other evidence gaps may also remain.",action:"Open this PR in GitHub and address the changes-requested review."};
-  if(r.verdict==="VERIFIED"&&!(r.gaps||[]).length&&r.freshness?.state==="CURRENT")return {explanation:"The supported evidence claims were established for the recorded version at observation. This is not a bug-free guarantee or a current permission to merge.",action:"No action needed for the recorded evidence claims. Check the separate freshness and merge-impact statements before relying on them now."};
+  if(r.verdict==="VERIFIED"&&!(r.gaps||[]).length&&r.freshness?.state==="CURRENT")return {explanation:"The supported evidence claims were sufficiently established for the recorded version at observation. This is not a bug-free guarantee or a current permission to merge.",action:"No action needed for the recorded evidence claims. Check the separate freshness and merge-impact statements before relying on them now."};
   if(r.verdict==="NOT_PROVEN"&&gaps.has("NO_REQUIRED_VALIDATION_CONFIGURED")&&gaps.size===1) {
     const wording=specialize("NO_REQUIRED_VALIDATION_CONFIGURED",r);
     return {explanation:wording.plain,action:wording.doNext};

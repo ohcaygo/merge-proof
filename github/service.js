@@ -68,7 +68,11 @@ class ProofService {
     this.data.policies ||= {};
     this.data.activation ||= {};
     ledger.area(store);
-    this.meter = config.hosted ? new (require("./meter").Meter)(store) : null;
+    this.meter = config.hosted
+      ? new (require("./meter").Meter)(store, {
+          invitedTesterAccountIds: config.invitedTesterAccountIds,
+        })
+      : null;
     this.customers = this.meter
       ? new (require("./customer").Customers)(this)
       : null;
@@ -862,8 +866,11 @@ class ProofService {
       const usage = this.meter.usage(sub.installationId);
       const trial = this.meter.account(sub.installationId).trial;
       if (!trial || usage.plan === "PRO") continue;
-      const day = usage.plan === "PAUSED" ? 8 : Math.min(8,Math.floor((Date.now()-trial.startedAt)/86400000)+1);
-      if(day<5 || sub.noticeDay===day) continue;
+      const trialDays = usage.trialDays;
+      const day = usage.plan === "PAUSED"
+        ? trialDays + 1
+        : Math.min(trialDays, Math.floor((Date.now()-trial.startedAt)/86400000)+1);
+      if(day < Math.max(1, trialDays - 2) || sub.noticeDay===day) continue;
       // Update existing native checks even when no new GitHub event arrives.
       if(this.config.publishChecks) {
         const client=await this.appClient(sub.installationId,sub.repositoryId);

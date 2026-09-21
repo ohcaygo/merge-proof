@@ -3,10 +3,10 @@ const {test}=require("node:test"), a=require("node:assert/strict");
 const fs=require("node:fs"),os=require("node:os"),path=require("node:path");
 const {createHmac,randomUUID}=require("node:crypto");
 const {Store}=require("../../factory/store"),{ProofService}=require("../service"),{Client}=require("../client"),{fixtureFetch}=require("./fixtures"),{aggregate}=require("../events");
-function harness(t){
+function harness(t, config={}){
  const root=fs.mkdtempSync(path.join(os.tmpdir(),"mp-trial-")),store=new Store(root),writes=[];
  let check=500,head="1".repeat(40);
- const service=new ProofService({store,config:{hosted:true,appId:42,publishChecks:true,origin:"https://example.test",webhookSecret:"s".repeat(40)},appClient:async()=>{
+ const service=new ProofService({store,config:{hosted:true,appId:42,publishChecks:true,origin:"https://example.test",webhookSecret:"s".repeat(40),...config},appClient:async()=>{
   const c=new Client(fixtureFetch({head})); const list=c.list.bind(c),request=c.request.bind(c);
   c.list=async(p,k)=>p.endsWith("/pulls?state=open") ? [{number:1,state:"open",user:{id:9,type:"User",login:"owner"},created_at:new Date().toISOString()}] : list(p,k);
   c.request=async(p,o)=>{if(o?.method && p !== "/graphql"){writes.push({p,...o});return {id:check++};} return request(p,o);};
@@ -53,12 +53,43 @@ test("scheduled day 5/6/7 notices, expiry, same-head pause, immutable receipt an
  a.ok(reminder.output.summary.endsWith(require("../check").summary(first.receipt,first.current,s.gateFor(first.receipt,first.current),s.remediationFor(first.receipt,first.current))),"reminder retains proof/remediation summary");
  a.equal(JSON.stringify(first.receipt),body);const n=h.writes.length;await s.drain();a.equal(h.writes.length,n);}
  now=trial.endsAt;await s.drain();a.equal(s.meter.usage(2).plan,"PAUSED");
+ a.equal(s.data.subscriptions["1:1"].noticeDay,8);
+ a.ok(h.writes.some(w=>w.body?.output?.title==="Hosted access ended — action required"));
  a.match(h.writes.at(-1).body.output.summary,/subscribe or remove/);
  await a.rejects(s.run("fixture/public",1,{installationId:2}),/TRIAL_EXPIRED/);
  a.equal(JSON.stringify(first.receipt),body);
  a.equal((await s.read(first.receipt.receiptId,"fixture")).receipt.receiptId,first.receipt.receiptId);
  s.meter.paidPeriod("github:9",{verifiedPaid:true,quantity:1,periodStart:now,periodEnd:now+30*86400000});s.resumeEntitled();await s.drain();
  a.equal(s.meter.usage(2).plan,"PRO");a.equal(s.data.subscriptions["1:1"].refreshState,"CURRENT");a.deepEqual(s.meter.account(2).trial,trial);
+});
+test("allowlisted account sends only days 8/9/10 reminders and expires on its persisted tenth day",async t=>{
+ const h=harness(t,{invitedTesterAccountIds:[9]}),s=h.service;
+ s.meter.connect(2,9);s.watch(2,1,"fixture/public",[{number:1}]);await s.drain();
+ const trial=s.meter.account(2).trial,first=Object.values(s.data.receipts)[0];
+ a.equal(trial.trialDays,10);a.equal(s.meter.usage(2).trialDays,10);
+ a.throws(()=>s.setPolicy(1,"REPOSITORY_REQUIREMENTS",9),/PAID_PRO_REQUIRED_FOR_GATE/);
+ let now=trial.startedAt;t.mock.method(Date,"now",()=>now);
+ now=trial.startedAt+6*86400000;
+ await s.drain();
+ a.equal(h.writes.filter(w=>w.body?.output?.title?.startsWith("Trial ends")).length,0);
+ a.doesNotMatch(s.meter.usage(2).notice,/within 24 hours/);
+ // Preserve a pre-existing enforcing policy, as in the public-trial case.
+ s.data.policies[1]={preset:"REPOSITORY_REQUIREMENTS"};
+ for(const day of [8,9,10]){
+   now=trial.startedAt+(day-1)*86400000;await s.drain();
+   a.equal(s.data.subscriptions["1:1"].noticeDay,day);
+   const reminder=[...h.writes].reverse().find(w=>w.body?.output?.title?.startsWith("Trial ends") && w.p.endsWith("/"+first.checkId));
+   a.ok(reminder,"trial reminder posted");
+   a.match(reminder.body.output.summary,/within 24 hours|Trial ends/);
+ }
+ now=trial.endsAt;await s.drain();
+ a.equal(s.meter.usage(2).plan,"PAUSED");
+ a.equal(s.data.subscriptions["1:1"].noticeDay,11);
+ a.ok(h.writes.some(w=>w.body?.output?.title==="Hosted access ended — action required"));
+ a.equal(h.writes.at(-1).body.conclusion,"failure");
+ a.equal(s.data.subscriptions["1:1"].refreshState,"TRIAL_EXPIRED");
+ a.match(h.writes.at(-1).body.output.summary,/subscribe or remove/);
+ const afterExpiry=h.writes.length;await s.drain();a.equal(h.writes.length,afterExpiry);
 });
 test("trial gate enablement rejected, inherited enforcement never silently passes at expiry",async t=>{
  const h=harness(t),s=h.service;s.meter.connect(2,9);s.watch(2,1,"fixture/public",[{number:1}]);await s.drain();

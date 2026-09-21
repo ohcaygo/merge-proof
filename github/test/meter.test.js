@@ -69,9 +69,50 @@ test("trial is unlimited, starts once and persists across restart and installati
   a.equal(m.usage(3).trial.startedAt, new Date(m.account(3).trial.startedAt).toISOString());
   a.throws(() => m.usage(2), /INSTALLATION_INACTIVE/);
 });
+test("trusted invited tester allowlist selects one durable ten-day offer per account", (t) => {
+  const h = setup(t);
+  const invited = [9];
+  let m = new Meter(h.store, { invitedTesterAccountIds: invited });
+  invited.push(10);
+  m.connect(2, 9);
+  a.match(m.usage(2).notice, /10-day report-only trial/);
+  a.equal(m.complete(2, receipt(1), { state: "CURRENT" }, true).charged, true);
+  const trial = { ...m.account(2).trial };
+  a.equal(trial.trialDays, 10);
+  a.equal(trial.endsAt - trial.startedAt, 10 * 86400000);
+  a.equal(m.usage(2).trialDays, 10);
+  a.equal(m.usage(2).invitedTesterAccountIds, undefined);
+  m.disconnect(2);
+  m.connect(3, 9);
+  a.deepEqual(m.account(3).trial, trial);
+  m.connect(4, 10);
+  a.equal(m.usage(4).trialDays, 7);
+  a.equal(m.complete(4, receipt(2, 2), { state: "CURRENT" }, true).charged, true);
+  a.equal(m.account(4).trial.trialDays, 7);
+  h.store.save();
+  m = h.reopen();
+  a.equal(m.usage(3).trialDays, 10);
+  a.equal(m.account(3).trial.endsAt, trial.endsAt);
+});
+test("malformed invited tester configuration is rejected and cannot be changed through the meter", (t) => {
+  const h = setup(t);
+  for (const invitedTesterAccountIds of [
+    null,
+    {},
+    [0],
+    [-1],
+    [1.5],
+    ["9"],
+    [9, 9],
+  ])
+    a.throws(
+      () => new Meter(h.store, { invitedTesterAccountIds }),
+      { code: "INVALID_INVITED_TESTER_ACCOUNT_IDS" },
+    );
+});
 test("FAIL, failed collection and stale completion debit zero", (t) => {
   const h = setup(t),
-    m = new Meter(h.store);
+    m = new Meter(h.store, { invitedTesterAccountIds: [9] });
   m.connect(2, 9);
   for (const [verdict, state, complete] of [
     ["FAIL", "CURRENT", true],
@@ -84,6 +125,7 @@ test("FAIL, failed collection and stale completion debit zero", (t) => {
     );
   a.equal(m.usage(2).used, 0);
   a.equal(m.complete(2, receipt(1), { state: "CURRENT" }, true).charged, true);
+  a.equal(m.account(2).trial.trialDays, 10);
 });
 test("real proof service snapshot commits receipt and debit together; same head reruns once", async (t) => {
   const h = setup(t);

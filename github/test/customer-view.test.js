@@ -50,9 +50,9 @@ test('PR without a receipt is pending only if a matching job actually exists',()
  d.queue=[{installationId:2,repositoryId:1,pr:16}];const c=ui.inbox(d,config,2,1,pulls,usage)[0];a.equal(c.label,'Checking current evidence');a.equal(c.id,null);a.equal(c.freshness,'Not established');
 });
 test('trial presentation preserves exact expiry and does not infer payment, start a trial or mutate usage',()=>{
- const states=[usage,{plan:'TRIAL',trial:{endsAt:'2026-09-20T17:00:00.000Z'}},{plan:'PAUSED',trial:{endsAt:'2026-09-12T17:00:00.000Z'}},{plan:'PRO'},{}];const before=JSON.stringify(states);
- a.deepEqual(states.map(u=>ui.trial(u).label),['Trial not started','Trial active','Trial expired — hosted access paused','Paid Pro active','Account status unavailable']);
- a.match(ui.trial(states[1]).detail,/2026-09-20T17:00:00.000Z/);a.match(ui.trial(states[2]).detail,/Existing receipts remain accessible/);a.match(ui.trial(usage).detail,/collection-complete VERIFIED or NOT_PROVEN/);a.equal(JSON.stringify(states),before);
+ const states=[usage,{plan:'TRIAL',trial:{endsAt:'2026-09-20T17:00:00.000Z'}},{plan:'TRIAL',trialDays:10,trial:{endsAt:'2026-09-23T17:00:00.000Z'}},{plan:'PAUSED',trial:{endsAt:'2026-09-12T17:00:00.000Z'}},{plan:'PRO'},{}];const before=JSON.stringify(states);
+ a.deepEqual(states.map(u=>ui.trial(u).label),['Trial not started','Trial active','Trial active','Trial expired — hosted access paused','Paid Pro active','Account status unavailable']);
+ a.match(ui.trial(states[1]).detail,/seven-day|7-day/);a.match(ui.trial(states[1]).detail,/2026-09-20T17:00:00.000Z/);a.match(ui.trial(states[2]).detail,/10-day/);a.match(ui.trial(states[3]).detail,/Existing receipts remain accessible/);a.match(ui.trial(usage).detail,/collection-complete VERIFIED or NOT_PROVEN/);a.match(ui.trial({...usage,trialDays:10}).detail,/10-day/);a.equal(JSON.stringify(states),before);
 });
 test('receipt foreground is human-readable, raw evidence remains collapsed and HTML escapes untrusted values',()=>{
  const r=row(19);r.receipt.identity.repository='<img onerror=bad>';const raw=require('../receipt').html(r.receipt,r.current);const html=brand.receipt(raw,ui.presentation(r),ui.trial(usage));
@@ -64,7 +64,7 @@ test('executed client shows one card, collapsed complete history, explicit toggl
  const els=new Map();function element(tag){return {tag,value:'',checked:false,hidden:false,options:[],textContent:'',append(...xs){this.options.push(...xs);},replaceChildren(){this.options=[];},closest(){return {hidden:false};}};}
  const get=id=>{if(!els.has(id))els.set(id,element(id));return els.get(id);};get('latestOnly').checked=true;
  const ctx=vm.createContext({document:{getElementById:get,createElement:element},location:{search:''},URLSearchParams,setInterval(){},fetch:async()=>({ok:false,json:async()=>({error:'LOGIN_REQUIRED'})})});
- vm.runInContext(script,ctx);await new Promise(r=>setImmediate(r));ctx.cards=ui.inbox(dataset(),config,2,1,[{number:16}],usage);vm.runInContext('account={inbox:cards};renderInbox(cards)',ctx);
+ vm.runInContext(script,ctx);await new Promise(r=>setImmediate(r));a.equal(get('status').textContent,'Connect GitHub to view your authorized repositories. We will check your App installation and repository access after sign-in. Existing background proofs keep running.');ctx.cards=ui.inbox(dataset(),config,2,1,[{number:16}],usage);vm.runInContext('account={inbox:cards};renderInbox(cards)',ctx);
  const history=()=>get('receipts').options[0].options.find(e=>e.tag==='details');a.equal(get('receipts').options.length,1);a.equal(history().open,false);a.equal(history().options[1].options.length,18);
  history().open=true;history().ontoggle();vm.runInContext('renderInbox(cards)',ctx);a.equal(history().open,true);
  get('latestOnly').checked=true;get('latestOnly').onchange();a.equal(history().open,false);

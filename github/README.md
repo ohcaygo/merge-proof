@@ -165,6 +165,21 @@ the other exact-state evidence is sufficient. Existing protected categories and
 ignore behavior remain unchanged locally. Hosted metadata does not load customer
 ignore files. Additional repository-specific boundary configuration is not added.
 
+## Level 3 hosted evidence policy
+
+Merge Proof records GitHub-reported candidate identity, checks, approvals and applicable
+repository policy for one exact observed state. A receipt is **VERIFIED** only when
+available current evidence sufficiently satisfies the implemented requirements for that
+scope. **NOT_PROVEN** means a required claim is missing, ambiguous, unsupported or
+unavailable from GitHub; it is not a finding that the code is bad. **FAIL** means
+sufficiently bound evidence demonstrated that a required condition was unmet.
+
+A receipt records a point-in-time GitHub observation, not an atomic GitHub merge
+decision or a guarantee about a future merge. When GitHub supplies the required
+identities for a landing, the durable merge record can bind the pre-merge receipt to
+landed content and retain it as a portable record. When those identities or provider
+reads are unavailable, the corresponding claim remains unavailable or NOT_PROVEN.
+
 ## Merge assurance: the required gate, and the policy behind it
 
 Merge Proof reports on every proof. Whether that report **blocks** a merge is two
@@ -285,7 +300,7 @@ consumption.
 
 Pro is US$29/month per distinct human GitHub ID observed opening covered PRs or pushing covered commits. Bots, configured service identities and inactive organization members are excluded. One account shares its trial and billing across installations. Initial count uses the preceding 30 days of observed covered activity; subsequent counts use the subscription month. Billing owners review the count before checkout. Withheld billing data is not a zero count. Quantity increases require confirmation; changes take effect at renewal without proration.
 
-The current offer has no proof-credit package, five-proof trial, 50-proof allowance or top-ups. Historical accounting remains preserved; it is not a current sales allowance. Same-head refresh and reinstall do not restart the seven-calendar-day trial. Checkout redirects do not establish payment or entitlement.
+The current offer has no proof-credit package, five-proof trial, 50-proof allowance or top-ups. Historical accounting remains preserved; it is not a current sales allowance. Same-head refresh and reinstall do not restart the 7-day trial. Checkout redirects do not establish payment or entitlement.
 
 ## Receipt, freshness and history
 

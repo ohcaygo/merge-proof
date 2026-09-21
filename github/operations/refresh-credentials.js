@@ -2,7 +2,7 @@
 "use strict";
 // Root-only bootstrap boundary. Individual workloads receive only their own
 // Secrets Manager material and temporary role credentials in private tmpfs dirs.
-const fs=require("node:fs"),path=require("node:path"),{assert}=require("../common"),{client}=require("./aws");
+const fs=require("node:fs"),path=require("node:path"),{assert}=require("../common"),{client}=require("./aws"),healthcheck=require("./healthcheck");
 function secureDirectory(dir,gid,mode){
  try{fs.mkdirSync(dir,{mode});}catch(e){if(e.code!=="EEXIST")throw e;}
  const st=fs.lstatSync(dir);
@@ -19,6 +19,22 @@ function atomic(file,body,uid,gid){
   fs.renameSync(temp,file);const parent=fs.openSync(dir,"r");try{fs.fsyncSync(parent);}finally{fs.closeSync(parent);}
  }finally{if(fs.existsSync(temp))fs.unlinkSync(temp);}
 }
+function projectHealthchecks(primary,root="/run/merge-proof-credentials",gid=process.getgid()){
+ const dir=path.join(root,"monitor"),file=path.join(dir,"healthchecks.json");
+ secureDirectory(dir,gid,0o700);
+ const healthchecks=primary?.monitor?.healthchecks;
+ if(healthchecks===undefined){
+  try{
+   const st=fs.lstatSync(file);
+   assert(st.isFile()&&st.uid===process.getuid()&&(st.mode&0o777)===0o600,"CREDENTIAL_DIRECTORY_UNSAFE");
+   fs.unlinkSync(file);
+  }catch(error){if(error.code!=="ENOENT")throw error;}
+  return;
+ }
+ assert(healthchecks&&typeof healthchecks==="object"&&!Array.isArray(healthchecks)&&typeof healthchecks.service==="string"&&typeof healthchecks.backup==="string","HEALTHCHECK_CONFIG_INVALID");
+ healthcheck.assertUrlPair(healthchecks.service,healthchecks.backup);
+ atomic(file,JSON.stringify({service:healthchecks.service,backup:healthchecks.backup})+"\n",process.getuid(),gid);
+}
 async function refresh(config,aws=client(config.aws)){
  assert(process.getuid?.()===0,"ROOT_BOOTSTRAP_REQUIRED");
  require("./authority").environment(config);
@@ -31,6 +47,7 @@ async function refresh(config,aws=client(config.aws)){
  const secret=async arn=>{assert(new RegExp(`^arn:aws:secretsmanager:${config.aws.region}:${config.aws.accountId}:secret:merge-proof/preparation/`).test(arn),"EXACT_PREPARATION_SECRET_REQUIRED");const r=await aws.call("secretsmanager","get-secret-value",["--secret-id",arn]);assert(r.ARN===arn&&typeof r.SecretString==="string","SECRET_IDENTITY_MISMATCH");return r.SecretString;};
  const primary=JSON.parse(await secret(config.primarySecretArn)),policy=JSON.parse(await secret(config.companionSecretArn)),key=await secret(config.companionKeyArn);
  assert(primary.app&&primary.factory&&primary.app.appId!==policy.appId&&!primary.app.enhancedPolicy?.privateKey,"CREDENTIAL_BOUNDARY_INVALID");
+ projectHealthchecks(primary);
  const enhanced={appId:policy.appId,appSlug:config.companionSlug,socketPath:"/run/merge-proof-policy/reader.sock",grantsPath:"/var/lib/merge-proof-grants/consent.json"};
  atomic(root+"/proof/app.json",JSON.stringify({...primary.app,enhancedPolicy:enhanced}),config.proofUid,config.proofGid);
  atomic(root+"/proof/factory.json",JSON.stringify(primary.factory),config.proofUid,config.proofGid);
@@ -46,4 +63,4 @@ async function refresh(config,aws=client(config.aws)){
  return {state:"SEPARATE_TEMPORARY_CREDENTIALS_WRITTEN",at:new Date().toISOString()};
 }
 if(require.main===module){try{const file=process.argv[2],st=fs.lstatSync(file);assert(st.isFile()&&st.uid===0&&(st.mode&0o077)===0,"ROOT_BOOTSTRAP_CONFIG_REQUIRED");refresh(JSON.parse(fs.readFileSync(file))).then(r=>console.log(JSON.stringify(r))).catch(e=>{console.error(e.code||"CREDENTIAL_REFRESH_UNAVAILABLE");process.exitCode=2;});}catch(e){console.error(e.code||"CREDENTIAL_REFRESH_UNAVAILABLE");process.exitCode=2;}}
-module.exports={refresh,atomic,secureDirectory};
+module.exports={refresh,atomic,secureDirectory,projectHealthchecks};

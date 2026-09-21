@@ -5,10 +5,44 @@ const {record}=require("./events");
 // Stored in the existing single-writer snapshot, together with the receipt.
 // Callers must save completion and debit once, without an intervening await.
 class Meter {
-  constructor(store) {
+  constructor(store, options = {}) {
+    assert(options && typeof options === "object" && !Array.isArray(options), "INVALID_METER_OPTIONS");
+    const invitedTesterAccountIds = options.invitedTesterAccountIds;
+    assert(
+      invitedTesterAccountIds === undefined ||
+        (Array.isArray(invitedTesterAccountIds) &&
+          invitedTesterAccountIds.every(
+            (id) => Number.isSafeInteger(id) && id > 0,
+          ) &&
+          new Set(invitedTesterAccountIds).size === invitedTesterAccountIds.length),
+      "INVALID_INVITED_TESTER_ACCOUNT_IDS",
+    );
     this.store = store;
+    // Copy and freeze trusted server configuration so an external config array
+    // cannot change an account's offer after this writer starts.
+    Object.defineProperty(this, "invitedTesterAccountIds", {
+      value: Object.freeze([...(invitedTesterAccountIds || [])]),
+      enumerable: false,
+      writable: false,
+      configurable: false,
+    });
     store.data.meter ||= { accounts: {}, installations: {}, proofs: {} };
     this.data = store.data.meter;
+  }
+  configuredTrialDays(installationId) {
+    const account = this.data.installations[installationId];
+    const ownerId = Number(account?.account?.match(/^github:(\d+)$/)?.[1]);
+    return Number.isSafeInteger(ownerId) && this.invitedTesterAccountIds.includes(ownerId)
+      ? 10
+      : 7;
+  }
+  persistedTrialDays(installationId, trial, fallback) {
+    if (Number.isSafeInteger(trial?.trialDays) && trial.trialDays > 0)
+      return trial.trialDays;
+    const elapsed = Number(trial?.endsAt) - Number(trial?.startedAt);
+    return Number.isFinite(elapsed) && elapsed > 0
+      ? Math.max(1, Math.ceil(elapsed / 86400000))
+      : fallback ?? this.configuredTrialDays(installationId);
   }
   connect(installationId, ownerId) {
     assert(Number.isSafeInteger(installationId) && installationId > 0);
@@ -76,7 +110,8 @@ class Meter {
     // Same synchronous transaction as the receipt save; no install or failed attempt starts time.
     if (!account.trial && this.usage(installationId).plan !== "PRO") {
       const now = Date.now();
-      account.trial = { startedAt: now, endsAt: now + 7 * 86400000, receiptId: receipt.receiptId };
+      const trialDays = this.configuredTrialDays(installationId);
+      account.trial = { startedAt: now, endsAt: now + trialDays * 86400000, trialDays, receiptId: receipt.receiptId };
       record(this.store, "first_successful_proof", accountKey, { account: accountKey, installationId, receiptId: receipt.receiptId });
       record(this.store, "trial_started", accountKey, { account: accountKey, installationId, startedAt: now, endsAt: account.trial.endsAt });
     }
@@ -104,6 +139,7 @@ class Meter {
       s && s.periodStart <= now && now < s.periodEnd && s.verifiedPaid === true;
     const period = active ? a.periods[s.periodStart] : null;
     const trial = a.trial;
+    const trialDays = this.persistedTrialDays(installationId, trial);
     const expired = (!!trial && now >= trial.endsAt) || (!!s && !active);
     if (trial && expired && !active) record(this.store, "trial_expired", this.data.installations[installationId].account, { account: this.data.installations[installationId].account, endsAt: trial.endsAt });
     const plan = active ? "PRO" : expired ? "PAUSED" : trial ? "TRIAL" : "AWAITING_FIRST_PROOF";
@@ -111,8 +147,9 @@ class Meter {
       plan,
       automationAllowed: active || !expired,
       used: active ? period.used : a.freeUsed,
+      trialDays,
       trial: trial ? { startedAt: new Date(trial.startedAt).toISOString(), endsAt: new Date(trial.endsAt).toISOString() } : null,
-      notice: this.notice(plan, trial || (s ? {endsAt:s.periodEnd} : null), now),
+      notice: this.notice(plan, trial || (s ? {endsAt:s.periodEnd} : null), now, trialDays),
       paidDevelopers: active ? period.quantity : 0,
       nextQuantity: a.nextQuantity ?? (active ? period.quantity : null),
       quantityEffectiveAt: a.quantityEffectiveAt
@@ -141,13 +178,14 @@ class Meter {
         : null,
     };
   }
-  notice(plan, trial, now = Date.now()) {
+  notice(plan, trial, now = Date.now(), configuredTrialDays = 7) {
     if (plan === "PRO") return "Pro is active.";
-    if (plan === "AWAITING_FIRST_PROOF") return "Your 7-day report-only trial starts with the first CURRENT, collection-complete VERIFIED or NOT_PROVEN hosted receipt. No card required.";
+    if (plan === "AWAITING_FIRST_PROOF") return `Your ${configuredTrialDays}-day report-only trial starts with the first CURRENT, collection-complete VERIFIED or NOT_PROVEN hosted receipt. No card required.`;
     const end = new Date(trial.endsAt).toISOString();
     if (plan === "PAUSED") return "Hosted access ended — automation paused. New hosted proofs, re-proofs and scans are paused. Existing receipts remain available with current authorization, subject to retention and capacity limits. Continue Pro for $29/month per active developer. If you require Merge Proof in GitHub, subscribe or remove the required Merge Proof check in repository Settings → Rules / Branches; Merge Proof never changes your rules.";
     const day = Math.floor((now - trial.startedAt) / 86400000) + 1;
-    return day < 5 ? `Trial active until ${end}.` : `Trial ends ${end}${day >= 7 ? " — within 24 hours" : ""}. Continue Pro for $29/month per active developer. If Merge Proof is required in GitHub, subscribe or remove the required check before expiry in Settings → Rules / Branches. Existing receipts stay available with current authorization and retention limits; no automatic charge.`;
+    const trialDays = this.persistedTrialDays(null, trial, configuredTrialDays);
+    return day < Math.max(1, trialDays - 2) ? `Trial active until ${end}.` : `Trial ends ${end}${day >= trialDays ? " — within 24 hours" : ""}. Continue Pro for $29/month per active developer. If Merge Proof is required in GitHub, subscribe or remove the required check before expiry in Settings → Rules / Branches. Existing receipts stay available with current authorization and retention limits; no automatic charge.`;
   }
   activity(installationId, user, kind, evidence, at = Date.now()) {
     const a = this.account(installationId);

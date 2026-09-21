@@ -10,6 +10,14 @@ A persistent `Store` automatically creates a `receipt-archive/` sidecar with imm
 
 Retain the entire archive and operator-log history. This is local operator retention, not replicated storage or an independently witnessed timestamp. Configure filesystem backup/restore and capacity monitoring in the release environment. Those production operations require the owner's infrastructure authorization.
 
+The optional Healthchecks.io integration projects `primary.monitor.healthchecks`
+from the existing root refresh into the root-owned 0600 monitor file and reads
+it only through the configured `monitor.externalHealthFile`. It accepts an exact `OK` response from each fixed `hc-ping.com` UUID,
+and reports unavailable or stale service/backup state as a monitor failure. It
+is not active until the owner creates the checks and completes real alert
+delivery and missing-heartbeat acceptance; no configured or simulated result
+is an operational claim.
+
 ## Signing and published keys
 
 `signing` in the existing App configuration may select the implemented AWS KMS adapter:

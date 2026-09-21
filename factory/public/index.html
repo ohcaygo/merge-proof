@@ -16,24 +16,25 @@
 <main>
 <section class="hero" id="prove" aria-labelledby="hero-title">
 <div class="hero-copy">
-<h1 id="hero-title">Green checks go <span class="gold">STALE</span> when the tip moves.</h1>
-<div class="tip-scene" aria-label="Why old green checks go stale">
+<h1 id="hero-title">Prove the merge.<br><span class="gold">Verify what landed.</span></h1>
+<p class="hero-evidence"><strong>For an exact candidate, Merge Proof checks available GitHub-reported checks, approvals and policies against current authorization.</strong> When GitHub can bind that evidence to a landing, it keeps a portable receipt for the landed content.</p>
+<div class="tip-scene" aria-label="Example of a stale GitHub check">
 <p><span class="green">Checks were green</span> on one tip.</p>
 <p>Someone pushed again. <strong>The tip moved.</strong></p>
 <p>Old green no longer proves this tip → <strong class="gold">STALE.</strong></p>
 </div>
-<p class="hero-evidence"><strong>Independent exact-tip merge evidence.</strong><br>Verdict: VERIFIED / NOT_PROVEN. Freshness: CURRENT / STALE.</p>
-<p class="hero-evidence">Not the coding agent grading its own work — independent check that greens/approvals still belong to the exact tip you’re merging.</p>
-<p class="hero-boundary">Not an AI reviewer. Neither NOT_PROVEN nor STALE means bad code.</p>
+<p class="hero-evidence"><strong>GitHub-native evidence for an exact observed state.</strong><br>Verdict: VERIFIED / NOT_PROVEN / FAIL. Freshness: CURRENT / STALE.</p>
+<p class="hero-evidence">The receipt records what GitHub reported at that point in time. It is not an atomic GitHub decision or a guarantee about a future merge.</p>
+<p class="hero-boundary">Receipt Checks stay with the PR. Not an AI reviewer; neither NOT_PROVEN nor STALE means bad code.</p>
 </div>
 <aside class="story install-card" id="how-it-works" aria-labelledby="install-title">
 <h2 class="eyebrow" id="install-title">START IN 1–2–3</h2>
 <ol class="install-steps">
-<li><span class="step-number gold" aria-hidden="true">1</span><span>Install the GitHub App on a repo you admin.</span></li>
-<li><span class="step-number gold" aria-hidden="true">2</span><span>Pick an open PR.</span></li>
-<li><span class="step-number gold" aria-hidden="true">3</span><span>Get a receipt for that tip.</span></li>
+<li><span class="step-number gold" aria-hidden="true">1</span><span>Connect GitHub and install the App on selected repositories.</span></li>
+<li><span class="step-number gold" aria-hidden="true">2</span><span>We discover open PRs — or watch for the next one.</span></li>
+<li><span class="step-number gold" aria-hidden="true">3</span><span>Read the receipt for the exact observed candidate.</span></li>
 </ol>
-<p class="install-prereq">Needs a GitHub account, a repo you can authorize, and an open PR. No card for the trial.</p>
+<p class="install-prereq">Needs a GitHub account and a repository you can authorize. No card for the trial.</p>
 <a class="primary-cta" href="/proof/">CONNECT GITHUB <span aria-hidden="true">↗</span></a>
 <p class="cta-shadow">7-day hosted trial. Report-only.</p>
 <p class="local-link"><a href="https://github.com/ohcaygo/merge-proof#readme">Free local CLI + GitHub Action →</a></p>
@@ -48,9 +49,9 @@
 <div class="benefits">
 <article><span class="card-number">01 / CHECKS &amp; CODE</span><h3>Was this version checked?</h3><p>Connects check evidence to the observed version. Surfaces changes to the new work or the main code while it waits.</p></article>
 <article><span class="card-number">02 / APPROVALS &amp; RULES</span><h3>What actually needs to be true?</h3><p>Examines available project requirements and whether approvals apply to this version. Missing or unsupported evidence stays explicit.</p></article>
-<article><span class="card-number">03 / CURRENT STATE &amp; HISTORY</span><h3>Can I still rely on this receipt?</h3><p>Compares refreshed evidence with the saved record. Keeps what was known then, and shows when it no longer describes now.</p></article>
+<article><span class="card-number">03 / LANDING &amp; HISTORY</span><h3>Can I still rely on this receipt?</h3><p>Compares refreshed evidence with the saved record. When a landing can be bound, connects the receipt to landed content and keeps a portable record of what was observed.</p></article>
 </div>
-<details class="disclosure"><summary>Under the hood: exact versions, execution evidence and limits</summary><div class="detail-body"><p>Hosted evidence binds the PR head, target base, applicable merge state and remote GitHub ref at observation. Check conclusions are distinguished from successful workflow/job/step execution records; status-only success does not prove execution. Even a workflow record does not prove checkout contents or test coverage.</p><p>Available branch protection and rulesets are evaluated together. Old-head approvals are insufficient under the implemented policy. Unsupported requirements and unavailable reads remain evidence gaps. Base movement alone is not a bug or an automatic failed verdict.</p><p>AI can inspect its own work, including GitHub. Merge Proof adds an independent deterministic evidence receipt. It does not guarantee correctness or security.</p><a href="https://github.com/ohcaygo/merge-proof/blob/234b1317fd407d133b5da5714b04466625eb84ca/github/README.md">Inspect the hosted evidence policy on GitHub →</a></div></details>
+<details class="disclosure"><summary>Under the hood: exact versions, execution evidence and limits</summary><div class="detail-body"><p>Hosted evidence binds the PR head, target base, applicable merge state and remote GitHub ref at observation. Check conclusions are distinguished from successful workflow/job/step execution records; status-only success does not prove execution. Even a workflow record does not prove checkout contents or test coverage.</p><p>Available branch protection and rulesets are evaluated together. Old-head approvals are insufficient under the implemented policy. Unsupported requirements, ambiguous records and unavailable provider reads remain evidence gaps. Base movement alone is not a bug or an automatic failed verdict.</p><p>The Standard GitHub App uses Administration Read. Optional Enhanced Policy Proof is a separately authorized, repository-bound Administration Write policy reader for policy reads only; it cannot change repository administration. If the optional reader is unavailable or GitHub cannot provide a needed detail, the affected policy claim remains NOT_PROVEN.</p><p>AI can inspect its own work, including GitHub. Merge Proof adds a deterministic evidence receipt. It does not guarantee correctness or security.</p><a href="https://github.com/ohcaygo/merge-proof/blob/codex/final-frontier-l3/github/README.md#level-3-hosted-evidence-policy">Inspect the hosted evidence policy on GitHub →</a></div></details>
 </section>
 <section class="page-section receipt-section" id="receipt" aria-labelledby="receipt-title">
 <div><p class="eyebrow">EVIDENCE YOU CAN READ</p><h2 id="receipt-title">A receipt.<br>Not a rubber stamp.</h2><p>A record of what Merge Proof could actually establish about this merge at that moment.</p><p>Read the explanation. Inspect the HTML/JSON evidence. See the gap and the next action.</p><a class="text-link" href="#plain-english">What do the labels mean? ↓</a></div>
@@ -62,9 +63,9 @@
 <details><summary>PR, repository &amp; merge</summary><p><strong>Repository:</strong> a project's code and history. <strong>PR / pull request:</strong> proposed new work waiting for review and addition to the main code. <strong>Merge:</strong> integrating that work into the target version of the project.</p></details>
 <details><summary>Green checks &amp; CI</summary><p><strong>CI (Continuous Integration):</strong> automated workflows that build, test or check changes. <strong>Green checks:</strong> GitHub reporting that automated checks passed. Passing checks don't establish that code is bug-free.</p></details>
 <details><summary>Branch, main, base, head &amp; SHA</summary><p><strong>Branch:</strong> a separate line of development. <strong>Main:</strong> the primary version the team builds around; its branch may have another name. <strong>Base:</strong> the version receiving the changes. <strong>Head:</strong> the proposed version. <strong>SHA:</strong> the Git identifier used to tell exact versions apart.</p></details>
-<details><summary>VERIFIED &amp; NOT_PROVEN</summary><p><strong>VERIFIED:</strong> available evidence satisfies the implemented checks for the stated scope and exact observed state. It is not a correctness or security guarantee.</p><p><strong>NOT_PROVEN:</strong> Merge Proof could not establish everything required from the available evidence. This does not mean broken, buggy or unsafe. The receipt explains the gap.</p></details>
+<details><summary>VERIFIED &amp; NOT_PROVEN</summary><p><strong>VERIFIED:</strong> for a CURRENT receipt, available evidence sufficiently satisfies the implemented checks for the stated scope and exact observed state. It is not a correctness or security guarantee.</p><p><strong>NOT_PROVEN:</strong> Merge Proof could not establish everything required from the available evidence. Missing, ambiguous, unsupported or unavailable provider evidence stays NOT_PROVEN. This does not mean broken, buggy or unsafe. The receipt explains the gap.</p></details>
 <details><summary>STALE &amp; currentness unavailable</summary><p><strong>STALE:</strong> something relevant changed. The old proof should not be treated as proof of what is there now. It does not mean the code is broken.</p><p>Freshness is separate from the original verdict. Without a fresh observation, the receipt shows <strong>CURRENTNESS UNAVAILABLE / REFRESH REQUIRED</strong>. Time passing alone does not make evidence stale. Re-proof evaluates the current situation.</p></details>
-<details><summary>FAIL &amp; receipt</summary><p><strong>FAIL:</strong> the analysis could not reliably complete. This does not start the trial. This is not a judgment that your code is bad.</p><p><strong>Receipt:</strong> a saved record of the evidence, verdict, gaps and next action at that moment.</p></details>
+<details><summary>FAIL &amp; receipt</summary><p><strong>FAIL:</strong> sufficiently bound evidence demonstrated that a required condition was unmet. Collection uncertainty, missing evidence and provider unavailability are NOT_PROVEN instead. Neither verdict is a judgment that your code is bad.</p><p><strong>Receipt:</strong> a saved record of the evidence, verdict, gaps and next action at that moment. When landing can be bound, a portable receipt can carry that evidence with the landed content.</p></details>
 </div>
 </section>
 <section class="page-section" id="pricing" aria-labelledby="pricing-title">
