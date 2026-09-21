@@ -1,0 +1,79 @@
+{
+  "status": "GITHUB_OWNER_CONFIRM_ACCESS_REQUIRED_BEFORE_FORM",
+  "proposedName": "OHCAYGO Validation Proof Dev",
+  "ownerId": 331842075,
+  "installability": "PRIVATE_OWNER_ONLY",
+  "repositorySelection": "selected",
+  "repositories": [
+    {
+      "fullName": "ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules",
+      "id": 1378968803
+    }
+  ],
+  "repositoryPermissions": {
+    "actions": "read",
+    "administration": "read",
+    "checks": "write",
+    "contents": "read",
+    "metadata": "read",
+    "pull_requests": "read",
+    "statuses": "read"
+  },
+  "organizationPermissions": {},
+  "accountPermissions": {},
+  "events": [
+    "branch_protection_configuration",
+    "branch_protection_rule",
+    "check_run",
+    "check_suite",
+    "pull_request",
+    "pull_request_review",
+    "push",
+    "repository",
+    "repository_ruleset",
+    "status",
+    "workflow_run"
+  ],
+  "permissionAndEventReference": "Fresh GET /app readback for development standard App 4899448; retained in standard-app-readback.json",
+  "purpose": "Signed organization-ruleset receipt acceptance only; no queue or scheduler access requested",
+  "administrationMutationCapability": false,
+  "unavailableExecutionPolicyBehavior": "NOT_PROVEN",
+  "existingAppChanges": false,
+  "productionAccess": false,
+  "additionalPaidPlan": false,
+  "registrationPrerequisites": [
+    "GitHub owner re-authentication before form access",
+    "Generate and store this App credential privately after creation",
+    "Select only the approved synthetic repository at installation"
+  ],
+  "owner": "ohcaygo-merge-proof-validation-lab",
+  "narrowingReason": "The latest authorization is solely organization-receipt acceptance. Merge queues Read and merge_group subscription are unnecessary for this path and omitted; product proof semantics are unchanged.",
+  "registration": {
+    "name": "OHCAYGO Validation Proof Dev",
+    "description": "Non-production Merge-Proof App for explicitly authorized synthetic organization-ruleset receipt acceptance only.",
+    "homepageUrl": "https://github.com/ohcaygo/merge-proof",
+    "callbackUrl": null,
+    "setupUrl": null,
+    "requestOAuthDuringInstallation": false,
+    "deviceFlow": false,
+    "webhookActive": true,
+    "sslVerification": true,
+    "webhookSecret": "CONFIGURED_ONLY_IN_PRIVATE_LOCAL_FILE",
+    "installability": "Only on this account",
+    "webhookHost": "smee.io",
+    "webhookUrlRecordedPrivately": true
+  },
+  "ownerClarification": "Explicit owner reply: Use validation-organization ownership as reviewed",
+  "duplicateCheck": "Authenticated validation-organization App list displayed No GitHub Apps",
+  "registrationUrl": "https://github.com/organizations/ohcaygo-merge-proof-validation-lab/settings/apps/new",
+  "ownerButton": "Use GitHub Mobile",
+  "ownerAuthenticationAccount": "dupageinspect-beep",
+  "productCandidate": "9a35a7a2a8491dbec6d05a567ef69ac69a94753f",
+  "observedAt": "2026-09-21T15:21:16.830513+00:00",
+  "appCreated": false,
+  "installed": false,
+  "privateKeyGenerated": false,
+  "githubFormConfigured": false,
+  "privateConfigurationPermissions": "0600",
+  "ownerRestrictionSource": "https://docs.github.com/en/apps/using-github-apps/installing-your-own-github-app"
+}
