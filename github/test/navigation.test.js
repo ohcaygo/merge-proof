@@ -36,6 +36,7 @@ test('lost session and OAuth error stay on recoverable branded trial; explicit d
   const h=harness(search,async()=>({ok:false,json:async()=>({error:'LOGIN_REQUIRED'})}));await h.settle();
   a.equal(h.get('welcome').hidden,false);a.equal(h.get('connected').hidden,true);a.equal(h.location.href,'original');
   a.match(h.get('status').textContent,/Connect GitHub|GitHub connection was canceled/);
+  a.doesNotMatch(h.get('status').textContent,/session expired|Connect GitHub again|two-factor authentication/);
  }
  const h=harness();await h.settle();await h.get('logout').onclick();
  a.equal(h.calls.at(-1).url,'/proof/logout');a.equal(h.calls.at(-1).init.method,'POST');a.equal(h.location.href,'/proof/');
