@@ -1,5 +1,5 @@
 {
-  "status": "GITHUB_OWNER_CONFIRM_ACCESS_REQUIRED_BEFORE_FORM",
+  "status": "FORM_CONFIGURED_CREATE_BLOCKED_BY_AUTOMATIC_APPROVAL_REVIEW",
   "proposedName": "OHCAYGO Validation Proof Dev",
   "ownerId": 331842075,
   "installability": "PRIVATE_OWNER_ONLY",
@@ -42,9 +42,9 @@
   "productionAccess": false,
   "additionalPaidPlan": false,
   "registrationPrerequisites": [
-    "GitHub owner re-authentication before form access",
-    "Generate and store this App credential privately after creation",
-    "Select only the approved synthetic repository at installation"
+    "Exact development webhook destination approval requested after automatic-review rejection",
+    "Create App, privately generate credential and install on the one approved synthetic repository",
+    "Real signed delivery acceptance remains separate"
   ],
   "owner": "ohcaygo-merge-proof-validation-lab",
   "narrowingReason": "The latest authorization is solely organization-receipt acceptance. Merge queues Read and merge_group subscription are unnecessary for this path and omitted; product proof semantics are unchanged.",
@@ -66,14 +66,38 @@
   "ownerClarification": "Explicit owner reply: Use validation-organization ownership as reviewed",
   "duplicateCheck": "Authenticated validation-organization App list displayed No GitHub Apps",
   "registrationUrl": "https://github.com/organizations/ohcaygo-merge-proof-validation-lab/settings/apps/new",
-  "ownerButton": "Use GitHub Mobile",
+  "ownerButton": null,
   "ownerAuthenticationAccount": "dupageinspect-beep",
   "productCandidate": "9a35a7a2a8491dbec6d05a567ef69ac69a94753f",
-  "observedAt": "2026-09-21T15:21:16.830513+00:00",
+  "observedAt": "2026-09-21T15:26:59.341441+00:00",
+  "githubOwnerAuthenticationComplete": true,
+  "githubFormConfigured": true,
+  "formReadback": {
+    "repositoryPermissionGrants": 7,
+    "onlyWritePermission": "checks",
+    "administration": "read",
+    "selectedEventCount": 11,
+    "otherNoAccessControls": 112,
+    "privateVisibility": true,
+    "oauthDuringInstallation": false,
+    "deviceFlow": false,
+    "callbackUrl": null,
+    "setupUrl": null,
+    "sslVerification": true
+  },
+  "approvedRepositoryReadback": {
+    "id": 1378968803,
+    "fullName": "ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules",
+    "private": false,
+    "ownerId": 331842075
+  },
+  "automaticApprovalReview": {
+    "action": "Create GitHub App with active Smee webhook",
+    "result": "REJECTED",
+    "reason": "Creating the App would activate a webhook to the untrusted Smee destination, potentially exporting GitHub event payloads; the user authorized the App scope but not that sensitive payload egress destination.",
+    "requiredDecision": "Explicit authorization for this exact development-only webhook destination and synthetic event payload scope"
+  },
   "appCreated": false,
   "installed": false,
-  "privateKeyGenerated": false,
-  "githubFormConfigured": false,
-  "privateConfigurationPermissions": "0600",
-  "ownerRestrictionSource": "https://docs.github.com/en/apps/using-github-apps/installing-your-own-github-app"
+  "privateKeyGenerated": false
 }

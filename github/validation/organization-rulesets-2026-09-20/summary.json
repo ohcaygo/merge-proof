@@ -4,7 +4,7 @@
   "lastLiveSignedQueueCandidate": "7953ecdbd849c8afe0379bfec1b4a61133292c62",
   "proofCodeDigest": "b770fe7f5dac86730095e768e4c3c4b4e1856eae909b3757acfc756069e47b76",
   "basicTeamOrganizationAcceptance": "PASS_FOR_RECORDED_CASES",
-  "organizationAppDelivery": "NOT_PROVEN_OWNER_AUTHENTICATION_REQUIRED",
+  "organizationAppDelivery": "NOT_PROVEN_EXACT_WEBHOOK_DESTINATION_APPROVAL_PENDING",
   "positiveSecondAccountApproval": "NOT_PROVEN_MEMBERSHIP_PENDING",
   "newCandidateSignedQueue": "NOT_PROVEN",
   "positiveCoverageCollection": "UNIMPLEMENTED_PROVIDER_BLOCKED",
