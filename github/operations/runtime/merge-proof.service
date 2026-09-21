@@ -15,16 +15,21 @@ Environment=MP_GITHUB_APP_CONFIG=/run/merge-proof-credentials/proof/app.json
 Environment=AWS_SHARED_CREDENTIALS_FILE=/run/merge-proof-credentials/proof/aws
 Environment=AWS_EC2_METADATA_DISABLED=true
 Environment=FACTORY_HOST=127.0.0.1
+Environment=XDG_CONFIG_HOME=/run/merge-proof-browser/config
+Environment=XDG_CACHE_HOME=/run/merge-proof-browser/cache
 EnvironmentFile=/etc/merge-proof/release.env
 ExecStart=/usr/local/bin/node factory/server.js
 UMask=0077
+RuntimeDirectory=merge-proof-browser
+RuntimeDirectoryMode=0700
 Restart=on-failure
 RestartSec=5
 NoNewPrivileges=true
 ProtectSystem=strict
 ProtectHome=true
 ProtectProc=invisible
-ProcSubset=pid
+# Chromium needs non-process /proc/cpuinfo; ProtectProc retains cross-user process isolation.
+ProcSubset=all
 PrivateTmp=true
 PrivateDevices=true
 ProtectKernelTunables=true

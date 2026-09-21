@@ -2,7 +2,7 @@
 const {test}=require("node:test"),a=require("node:assert/strict"),fs=require("node:fs"),os=require("node:os"),path=require("node:path"),crypto=require("node:crypto");
 const {Store}=require("../../factory/store"),{ProofService}=require("../service"),{Client}=require("../client"),{fixtureFetch}=require("./fixtures"),backup=require("../operations/backup"),cloud=require("../operations/backup-cycle"),lab=require("../operations/object-lock-lab");
 function provider(){
- const data=new Map(),calls=[],state={copyFailure:false,expire:false,retentionShortfallMs:0};let sequence=0;
+ const data=new Map(),calls=[],state={copyFailure:false,expire:false,retentionShortfallMs:0,retentionReadbackShortfallMs:0,defaultComplianceRetention:false,allowRetentionRenewal:false};let sequence=0;
  const make=c=>({checkIdentity:async()=>({accountId:c.accountId,role:`arn:aws:sts::${c.accountId}:assumed-role/lab/test`}),call:async(_,op,args=[])=>{
   calls.push({account:c.accountId,op,args});const get=name=>args[args.indexOf(name)+1],bucket=get("--bucket"),key=args.includes("--key")?get("--key"):null,id=bucket+"/"+key,now=Date.now(),item=data.get(id);
   const error=code=>{throw Object.assign(Error(code),{providerCode:code});};
@@ -13,13 +13,13 @@ function provider(){
   if(op==="put-object"||op==="copy-object"){
    if(op==="copy-object"&&state.copyFailure)error("AccessDenied");
    const bytes=op==="put-object"?fs.readFileSync(get("--body")):data.get(get("--copy-source").split("?")[0]).bytes;
-   const lockUntil=args.includes("--object-lock-retain-until-date")?new Date(Math.floor(Date.parse(get("--object-lock-retain-until-date"))/1000)*1000-state.retentionShortfallMs).toISOString():undefined;
-   const value={bytes,VersionId:String(++sequence),ContentLength:bytes.length,ChecksumSHA256:crypto.createHash("sha256").update(bytes).digest("base64"),...(args.includes("--object-lock-mode")?{ObjectLockMode:get("--object-lock-mode"),ObjectLockRetainUntilDate:lockUntil}:{} )};data.set(id,value);return {VersionId:value.VersionId};
+   const lockUntil=args.includes("--object-lock-retain-until-date")?new Date(Math.floor(Date.parse(get("--object-lock-retain-until-date"))/1000)*1000-state.retentionShortfallMs).toISOString():state.defaultComplianceRetention?new Date(Math.floor((now+31*86400000)/1000)*1000).toISOString():undefined;
+   const value={bytes,VersionId:String(++sequence),ContentLength:bytes.length,ChecksumSHA256:crypto.createHash("sha256").update(bytes).digest("base64"),...(args.includes("--object-lock-mode")?{ObjectLockMode:get("--object-lock-mode"),ObjectLockRetainUntilDate:lockUntil}:state.defaultComplianceRetention?{ObjectLockMode:"COMPLIANCE",ObjectLockRetainUntilDate:lockUntil}:{} )};data.set(id,value);return {VersionId:value.VersionId};
   }
   if(op==="head-object"){if(!item)error("404");return item;}
   if(op==="get-object"){if(!item)error("NoSuchKey");a.equal(get("--version-id"),item.VersionId);fs.writeFileSync(args.at(-1),item.bytes);return {};}
   if(op==="get-object-retention")return {Retention:{Mode:item.ObjectLockMode,RetainUntilDate:item.ObjectLockRetainUntilDate}};
-  if(op==="put-object-retention")error("AccessDenied");
+  if(op==="put-object-retention"){if(!state.allowRetentionRenewal)error("AccessDenied");const retention=JSON.parse(get("--retention"));item.ObjectLockMode=retention.Mode;item.ObjectLockRetainUntilDate=new Date(Math.floor(Date.parse(retention.RetainUntilDate)/1000)*1000-state.retentionReadbackShortfallMs).toISOString();return {};}
   if(op==="delete-object"){if(item&&Date.parse(item.ObjectLockRetainUntilDate)>now&&!state.expire)error("AccessDenied");data.delete(id);return {};}
   if(op==="list-object-versions")return {IsTruncated:false,Versions:state.expire?[]:[...data].filter(([k])=>k.startsWith(bucket+"/"+get("--prefix"))).map(([k,v])=>({Key:k.slice(bucket.length+1),VersionId:v.VersionId}))};
   throw Error("UNEXPECTED_PROVIDER_OPERATION "+op);
@@ -38,6 +38,16 @@ test("cross-account backup only succeeds after recovery readback; recovery needs
  await a.rejects(cloud.upload({...c,environment:"production"},p.make),{code:"OWNER_PRODUCTION_ACTIVATION_REQUIRED"});
  const mutationCount=p.calls.filter(x=>/^(put|copy|delete)/.test(x.op)).length;await a.rejects(cloud.upload({...c,environment:"production",productionActivationAuthorized:true},p.make),{code:"OWNER_PRODUCTION_RETENTION_REQUIRED"});a.equal(p.calls.filter(x=>/^(put|copy|delete)/.test(x.op)).length,mutationCount);
  const tampered={...result,manifestSha256:"b".repeat(64)};await a.rejects(cloud.recover({...c,...tampered,writerFenced:true,destination:path.join(root,"bad")},p.make),{code:"RECOVERY_CONFIG_INVALID"});
+});
+test("production renewal rounds Object Lock retention upward and rejects a genuinely short readback",async t=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),"mp-cloud-retention-")),store=new Store(path.join(root,"state"));t.after(()=>{store.close();fs.rmSync(root,{recursive:true,force:true});});const service=new ProofService({store,clientFactory:()=>new Client(fixtureFetch())});await service.run("fixture/public",1,{token:"fixture"});
+ const mirror=path.join(root,"mirrors/1");fs.mkdirSync(mirror,{recursive:true});require("node:child_process").execFileSync("git",["init","--bare","-q",mirror]);const local=path.join(root,"local");backup.create({stateDir:store.root,mirrorRoot:path.join(root,"mirrors"),output:local,sourceCommit:"a".repeat(40)});
+ const manifestPath=path.join(local,"MANIFEST.json"),manifest=JSON.parse(fs.readFileSync(manifestPath));manifest.at="2026-09-21T00:00:00.999Z";fs.writeFileSync(manifestPath,JSON.stringify(manifest)+"\n");const retentionMinimum=Date.parse(manifest.at)+30*86400000,retentionFloor=Math.floor(retentionMinimum/1000)*1000,retentionCeiling=Math.ceil(retentionMinimum/1000)*1000;
+ const c={environment:"nonproduction",backup:local,record:path.join(root,"confirmed.json"),...accounts("merge-proof-backup-")},p=provider();await cloud.upload(c,p.make);
+ for(const [key,item] of p.data)if(key.includes("/objects/")){item.ObjectLockMode="COMPLIANCE";item.ObjectLockRetainUntilDate=new Date(retentionFloor).toISOString();}
+ p.state.defaultComplianceRetention=true;p.state.allowRetentionRenewal=true;const result=await cloud.upload({...c,environment:"production",productionActivationAuthorized:true,productionComplianceRetentionAuthorized:true},p.make);a.equal(result.state,"RECOVERY_MANIFEST_CONFIRMED");
+ const renewals=p.calls.filter(x=>x.op==="put-object-retention");a.ok(renewals.length>=2);a.deepEqual(new Set(renewals.map(x=>x.account)),new Set([c.primary.accountId,c.recovery.accountId]));for(const renewal of renewals){const requested=Date.parse(JSON.parse(renewal.args[renewal.args.indexOf("--retention")+1]).RetainUntilDate);a.equal(requested,retentionCeiling);a.ok(requested>=retentionMinimum);}
+ const target=[...p.data.entries()].find(([key])=>key.includes("/objects/"));target[1].ObjectLockRetainUntilDate=new Date(retentionFloor).toISOString();p.state.retentionReadbackShortfallMs=1000;const shortRecord=path.join(root,"short-readback.json");await a.rejects(cloud.upload({...c,environment:"production",record:shortRecord,productionActivationAuthorized:true,productionComplianceRetentionAuthorized:true},p.make),{code:"BACKUP_RETENTION_UNAVAILABLE"});a.equal(fs.existsSync(shortRecord),false);
 });
 test("health uses the snapshot time and refuses missing recovery evidence; incomplete snapshots cannot justify pruning",async t=>{
  const root=fs.mkdtempSync(path.join(os.tmpdir(),"mp-monitor-"));t.after(()=>fs.rmSync(root,{recursive:true,force:true}));const now=Date.now(),record=path.join(root,"backup.json");fs.writeFileSync(path.join(root,"state.json"),JSON.stringify({github:{}}));

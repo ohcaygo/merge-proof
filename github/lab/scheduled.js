@@ -4,7 +4,7 @@ const fs=require("node:fs"),path=require("node:path"),{assert}=require("../commo
 function clientFactory(app,fetchImpl){return async fixture=>{
  const install=await require("../app").appClient(app,fetchImpl).get(`/app/installations/${fixture.installationId}`);
  assert(install.app_id===app.appId&&install.repository_selection==="selected"&&install.permissions?.administration==="read"&&install.suspended_at===null,"STANDARD_LAB_APP_REQUIRED");
- return require("../app").installationClient(app,fixture.installationId,fixture.repositoryId,fetchImpl);
+ return require("../app").installationClient({...app,mergeQueues:app.mergeQueues===true&&install.permissions?.merge_queues==="read"},fixture.installationId,fixture.repositoryId,fetchImpl);
 };}
 async function main({env=process.env,configFile=process.argv[2],fetchImpl}={}){
  assert(env.GITHUB_REPOSITORY==="ohcaygo-merge-proof-validation-lab/merge-proof-lab-control"&&["workflow_dispatch","schedule"].includes(env.GITHUB_EVENT_NAME),"PRIVATE_LAB_CONTEXT_REQUIRED");

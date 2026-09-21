@@ -23,7 +23,11 @@ async function upload(config,make=client,{chunkBytes=64*1024*1024}={}){
   for(let n=0;n<2;n++){
    const side=sides[n];let head=null;
    try{head=await side.aws.call("s3api","head-object",[...side.base,"--key",key,"--checksum-mode","ENABLED"]);}catch(e){assert(["404","NoSuchKey","NotFound"].includes(e.providerCode),"BACKUP_READ_UNAVAILABLE");}
-   const retentionUntil=Date.parse(checked.manifest.at)+30*86400000;
+   const retentionMinimum=Date.parse(checked.manifest.at)+30*86400000;
+   // S3 Object Lock persists whole seconds. Round the requested deadline up so
+   // an otherwise valid provider readback cannot fall below the exact 30-day
+   // minimum captured by this backup manifest.
+   const retentionUntil=Math.ceil(retentionMinimum/1000)*1000;
    const renew=config.environment==="production"&&head&&head.ObjectLockMode!=="COMPLIANCE";
    if(!head||renew){
     if(n===0)await side.aws.call("s3api","put-object",[...side.base,"--key",key,"--body",part.file,"--checksum-algorithm","SHA256","--checksum-sha256",checksum,...(!head?["--if-none-match","*"]:[])]);
@@ -33,9 +37,9 @@ async function upload(config,make=client,{chunkBytes=64*1024*1024}={}){
    assert(head.VersionId&&head.ChecksumSHA256===checksum&&head.ContentLength===part.size,"BACKUP_REMOTE_DIGEST_MISMATCH");
    if(config.environment==="production"){
     assert(head.ObjectLockMode==="COMPLIANCE"&&Number.isFinite(Date.parse(head.ObjectLockRetainUntilDate)),"BACKUP_RETENTION_UNAVAILABLE");
-    if(Date.parse(head.ObjectLockRetainUntilDate)<retentionUntil){
+    if(Date.parse(head.ObjectLockRetainUntilDate)<retentionMinimum){
      await side.aws.call("s3api","put-object-retention",[...side.base,"--key",key,"--version-id",head.VersionId,"--retention",JSON.stringify({Mode:"COMPLIANCE",RetainUntilDate:new Date(retentionUntil).toISOString()})]);
-     const observed=await side.aws.call("s3api","get-object-retention",[...side.base,"--key",key,"--version-id",head.VersionId]);assert(observed.Retention?.Mode==="COMPLIANCE"&&Date.parse(observed.Retention.RetainUntilDate)>=retentionUntil,"BACKUP_RETENTION_UNAVAILABLE");
+     const observed=await side.aws.call("s3api","get-object-retention",[...side.base,"--key",key,"--version-id",head.VersionId]);assert(observed.Retention?.Mode==="COMPLIANCE"&&Date.parse(observed.Retention.RetainUntilDate)>=retentionMinimum,"BACKUP_RETENTION_UNAVAILABLE");
     }
    }versions.push(head.VersionId);
   }
