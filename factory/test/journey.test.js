@@ -328,16 +328,42 @@ test("report failure is honest, retryable, preserves cleanup, escalates refund t
       throw Error("sk_test_should_never_appear");
     },
   });
-  const o = (await h.json("/api/eligibility", eligibility)).data;
-  await h.json("/api/checkout", {});
-  await h.pay(o.id);
-  await h.json("/api/authorize", { url: eligibility.url, pr: 1 });
+  const expectHttp = (result, expected, label) => {
+    const error =
+      typeof result?.data?.error === "string" &&
+      /^[A-Z0-9_]+$/.test(result.data.error)
+        ? result.data.error
+        : null;
+    a.equal(
+      result.status,
+      expected,
+      `${label} HTTP status${error ? ` (${error})` : ""}`,
+    );
+    return result;
+  };
+  const o = expectHttp(
+    await h.json("/api/eligibility", eligibility),
+    200,
+    "eligibility",
+  ).data;
+  expectHttp(await h.json("/api/checkout", {}), 200, "checkout");
+  const payment = await h.pay(o.id);
+  a.equal(payment.status, 200, "payment webhook HTTP status");
+  expectHttp(
+    await h.json("/api/authorize", { url: eligibility.url, pr: 1 }),
+    200,
+    "authorize",
+  );
   for (let n = 0; n < 3; n++) {
-    const p = (await h.json("/api/scope", {})).data;
-    await h.json("/api/run", { scopeHash: p.scopeHash });
+    const p = expectHttp(await h.json("/api/scope", {}), 200, `scope ${n + 1}`).data;
+    expectHttp(
+      await h.json("/api/run", { scopeHash: p.scopeHash }),
+      202,
+      `run ${n + 1}`,
+    );
     await Promise.all([...h.service.jobs]);
   }
-  const state = (await h.json("/api/order")).data;
+  const state = expectHttp(await h.json("/api/order"), 200, "order").data;
   a.equal(state.state, "REFUND_REQUIRED");
   a.equal(state.failure, "REPORT_FAILED");
   a.equal(state.exception.owner, "Ryan");

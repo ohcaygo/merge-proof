@@ -1,6 +1,6 @@
 # Level 3 operator steps
 
-The [approved preparation](LEVEL3-PREPARATION.md) and [exact candidate validation](../validation/enhanced-policy-production-prep-2026-09-20/README.md) describe current implementation, authority and open gates. Administration Read is the default; optional Enhanced Policy Proof is integrated in local candidate `838ed8f422605bc814c0a7d9d0140dabbe78fedb`. `7953ecd` remains the last accepted live signed queue candidate.
+The [continuation tracker](../validation/aws-production-continuation-2026-09-21/README.md) is current authority for candidate identity, accepted foundations, and remaining gates. This operator material is preparation/source configuration only; it does not claim hosted operational acceptance. Administration Read remains the default; `7953ecd` is a historical signed-queue acceptance only.
 
 These steps implement the researched boundary without granting new authority. Normal service operation never merges, enqueues, dismisses reviews, edits GitHub policies, or publishes anchors.
 
@@ -17,6 +17,24 @@ and reports unavailable or stale service/backup state as a monitor failure. It
 is not active until the owner creates the checks and completes real alert
 delivery and missing-heartbeat acceptance; no configured or simulated result
 is an operational claim.
+
+## Monitor metrics and redacted logs
+
+The monitor publishes backup age, storage use, Linux `MemAvailable`/`MemTotal`-based memory use, warning health, and critical health. Its CloudFormation template binds a 30-day `/merge-proof/preparation/monitor` log group and `health` stream to the selected primary account. The exact stream ARN and `logs:CreateLogStream`/`logs:PutLogEvents` actions follow the [AWS CloudWatch Logs authorization reference](https://docs.aws.amazon.com/service-authorization/latest/reference/list_logs.html). The root-owned monitor configuration must bind the same account and region before any network request:
+
+```json
+{
+  "memoryInfoFile": "/proc/meminfo",
+  "logs": {
+    "accountId": "SAME_12_DIGIT_PRIMARY_ACCOUNT_AS_AWS",
+    "region": "SAME_PRIMARY_REGION_AS_AWS",
+    "group": "/merge-proof/preparation/monitor",
+    "stream": "health"
+  }
+}
+```
+
+Each event contains only timestamp, monitor state, hardcoded alarm codes/severities, backup age, storage/memory percentages, and external-health states. It contains no log path, healthcheck URL, repository, receipt, credential, or arbitrary provider text. Invalid destination binding, unavailable memory, CloudWatch partial rejection, or failed log delivery is a monitor failure; none is reported as healthy.
 
 ## Signing and published keys
 

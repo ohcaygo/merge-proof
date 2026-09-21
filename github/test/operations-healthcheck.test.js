@@ -30,9 +30,11 @@ function fixture(t, { activityAt = Date.now(), backupAt = Date.now() - 10000, si
     JSON.stringify({ state: "RECOVERY_MANIFEST_CONFIRMED", snapshotAt: new Date(backupAt).toISOString() }),
   );
   const externalHealthFile = path.join(root, "healthchecks.json");
+  const memoryInfoFile = path.join(root, "meminfo");
   fs.writeFileSync(externalHealthFile, JSON.stringify({ service: serviceUrl, backup: backupUrl }), { mode: 0o600 });
+  fs.writeFileSync(memoryInfoFile, "MemTotal:       1000 kB\nMemAvailable:    500 kB\n");
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
-  return { root, stateDir, backupRecord, externalHealthFile };
+  return { root, stateDir, backupRecord, externalHealthFile, memoryInfoFile };
 }
 
 test("Healthchecks URL and method validation rejects before I/O", async () => {
@@ -224,4 +226,58 @@ test("runtime and lab heartbeat controls preserve isolation and failure mapping"
   a.match(workflow, /JOB_STATUS: \$\{\{ job\.status \}\}/);
   a.match(workflow, /node product\/github\/operations\/healthcheck\.js/);
   a.doesNotMatch(workflow, /curl /);
+});
+
+
+test("memory uses MemAvailable and explicit capacity or collection states", async t => {
+  const now = Date.now(), f = fixture(t, { activityAt: now, backupAt: now - 10000 });
+  fs.writeFileSync(f.memoryInfoFile, "MemTotal:       1000 kB\nMemAvailable:    150 kB\nCached:          900 kB\n");
+  let out = monitor.inspect({ stateDir: f.stateDir, backupRecord: f.backupRecord, memoryInfoFile: f.memoryInfoFile }, now);
+  a.equal(out.memoryUsedPercent, 85);
+  a.deepEqual(out.alarms.find(x => x.code === "MEMORY_CAPACITY"), { code: "MEMORY_CAPACITY", severity: "WARNING" });
+  fs.writeFileSync(f.memoryInfoFile, "MemTotal:       1000 kB\nMemAvailable:     50 kB\nCached:          900 kB\n");
+  out = monitor.inspect({ stateDir: f.stateDir, backupRecord: f.backupRecord, memoryInfoFile: f.memoryInfoFile }, now);
+  a.deepEqual(out.alarms.find(x => x.code === "MEMORY_CAPACITY"), { code: "MEMORY_CAPACITY", severity: "CRITICAL" });
+  out = monitor.inspect({ stateDir: f.stateDir, backupRecord: f.backupRecord, memoryInfoFile: path.join(f.root, "missing-meminfo") }, now);
+  a.equal(out.memoryUsedPercent, null);
+  a.ok(out.alarms.some(x => x.code === "MEMORY_METRICS_UNAVAILABLE"));
+});
+
+test("monitor validates its fixed log destination before I/O and publishes only redacted operational fields", async t => {
+  const now = Date.now(), f = fixture(t, { activityAt: now, backupAt: now - 10000 }), aws = { accountId: "111111111111", region: "us-east-1" };
+  fs.writeFileSync(path.join(f.stateDir, "state.json"), JSON.stringify({ github: { lastActivityAt: now, signingHealth: { state: "AVAILABLE" }, subscriptions: { fixture: { refreshState: "UNAVAILABLE" } } } }));
+  t.mock.method(fs, "statfsSync", () => ({ blocks: 100, bavail: 50, files: 100, ffree: 50 }));
+  const config = { environment: "nonproduction", stateDir: f.stateDir, backupRecord: f.backupRecord, memoryInfoFile: f.memoryInfoFile, aws, logs: { accountId: aws.accountId, region: aws.region, group: monitor.LOG_GROUP, stream: monitor.LOG_STREAM } };
+  const calls = [], clientFactory = input => ({
+    checkIdentity: async () => { calls.push({ service: "sts", operation: "get-caller-identity", input }); return {}; },
+    call: async (service, operation, args) => { calls.push({ service, operation, args }); return {}; },
+  });
+  const out = await monitor.publish(config, clientFactory);
+  a.equal(out.state, "WARNING");
+  const metrics = JSON.parse(calls.find(x => x.operation === "put-metric-data").args[3]);
+  a.deepEqual(metrics.map(x => x.MetricName), ["RecoveryBackupAgeSeconds", "StorageUsedPercent", "MemoryUsedPercent", "WarningHealth", "CriticalHealth"]);
+  a.equal(metrics.find(x => x.MetricName === "WarningHealth").Value, 1);
+  const event = JSON.parse(calls.find(x => x.operation === "put-log-events").args[5])[0];
+  a.deepEqual(Object.keys(JSON.parse(event.message)).sort(), ["alarms", "at", "externalHealth", "memoryUsedPercent", "recoveryBackupAgeSeconds", "schema", "state", "storageUsedPercent"]);
+  a.doesNotMatch(event.message, /mp-healthcheck|stateDir|backupRecord|hc-ping|secret|repository/i);
+  a.deepEqual(calls.filter(x => x.service === "logs").map(x => x.operation), ["create-log-stream", "put-log-events"]);
+
+  let network = 0, inspected = 0;
+  const noIo = () => { network++; throw Error("must not connect"); };
+  const inspectNever = async () => { inspected++; throw Error("must not inspect"); };
+  await a.rejects(monitor.publish({ ...config, logs: { ...config.logs, group: "/other" } }, noIo, inspectNever), { code: "MONITOR_LOG_DESTINATION_INVALID" });
+  await a.rejects(monitor.publish({ ...config, aws: { accountId: undefined, region: config.aws.region }, logs: { ...config.logs, accountId: undefined } }, noIo, inspectNever), { code: "MONITOR_LOG_DESTINATION_INVALID" });
+  await a.rejects(monitor.publish({ ...config, aws: { accountId: config.aws.accountId, region: "eu-west-1" }, logs: { ...config.logs, region: "eu-west-1" } }, noIo, inspectNever), { code: "MONITOR_LOG_DESTINATION_INVALID" });
+  a.equal(network, 0);a.equal(inspected, 0);
+
+  await a.rejects(monitor.publish(config, () => ({ checkIdentity: async () => {}, call: async (_service, operation) => { if (operation === "put-log-events") throw Object.assign(Error("denied"), { providerCode: "AccessDeniedException" }); return {}; } })), { providerCode: "AccessDeniedException" });
+  await a.rejects(monitor.publish(config, () => ({ checkIdentity: async () => {}, call: async (_service, operation) => operation === "put-log-events" ? { rejectedLogEventsInfo: { tooNewLogEventStartIndex: 0 } } : {} })), { code: "MONITOR_LOG_DELIVERY_REJECTED" });
+
+  const safeResult = JSON.parse(JSON.stringify(out)), maliciousCalls = [];
+  const privateClient = () => ({ checkIdentity: async () => { maliciousCalls.push("identity"); }, call: async (_service, operation) => { maliciousCalls.push(operation); return {}; } });
+  for(const altered of [{ ...safeResult, alarms: [{ code: "EXFILTRATE_SECRET", severity: "WARNING" }] }, { ...safeResult, externalHealth: { state: "PRIVATE_URL", service: { state: "RECEIVED" }, backup: { state: "RECEIVED" } } }]){
+    maliciousCalls.length=0;
+    await a.rejects(monitor.publish(config, privateClient, async () => altered), { code: "MONITOR_LOG_EVENT_INVALID" });
+    a.ok(!maliciousCalls.includes("put-log-events"));
+  }
 });
