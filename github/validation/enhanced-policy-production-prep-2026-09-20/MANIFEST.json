@@ -32,7 +32,7 @@
     "linux-chrome-version.txt": "fb6bdaf3a279ab7814b5325970658139601e8c65d5e30f52acacf95273189a0f",
     "linux-engine-digest.txt": "4ec5550ddb5831542b18f15a10e3a47ddf4740e2474ce9d0d3bb0bd690a8d2c9",
     "linux-factory-tests.txt": "2a542fc831121b96ce054a54b842d7ad4593ef045c92773a3b86a508cf8a8a70",
-    "README.md": "f06079c1a476976ef49639c98c7899139979535c163712c80fd9a3754e614d9c",
+    "README.md": "59349a2ddabad1d50d6c332ef544a63a24d63ca8d998787f0c21b52212dd5c74",
     "linux-fixture.json": "29c61f401a575791a1a52d9c9a2616c1430c043dd3b9dac96d41d474785c381c",
     "local-cli-report-tests.txt": "2905fd03eff578eec49b83e5e4d00c18c3c62d928e9d5e9ab5778b12f222b665",
     "local-factory-tests.txt": "06d9d8f39d7c343008ab7ac3eb05d1b9165eb7b6fd12ac460ddcc2ea5cfa522e",
@@ -46,6 +46,11 @@
     "independent-review-62c2f97.md": "376363bcd626c044b2e1545a62add52e29a94f53cdf4d2db9d08f52b584a8d1b",
     "owner-prerequisites.json": "cbde2b1e5a1ffd5eea68bcb68acc22495a5a35c29f38810c1037a3100b1ec4cb",
     "standard-read-preflight-2320.json": "4feef536f3401c85e5c5e64acde26ca4151016d85c24800438af2f34c7009217",
-    "companion-installation-observation.json": "ffce74f96bb88a11a9784523163ffa4b1267cf963e18288f33da7ca860a078df"
-  }
+    "companion-installation-observation.json": "ffce74f96bb88a11a9784523163ffa4b1267cf963e18288f33da7ca860a078df",
+    "validation-organization-checkout.json": "f2a23407cc3332456dae7200c360ab20447be7d082cb769e29f84804a62542a5",
+    "validation-org-github-tests.txt": "5df2d6f10d7d7f7c1015e69719149f120bb995991d0bdb8731e68bfcb8a29a64",
+    "validation-org-github-tests-sandbox-denied.txt": "d67967867f2131dec81c0063713a78c90c09cc3c4a0820e18f9a1acd43194812"
+  },
+  "currentProductCandidate": "9a35a7a2a8491dbec6d05a567ef69ac69a94753f",
+  "currentCandidateAcceptance": "validation-organization-checkout.json"
 }

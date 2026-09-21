@@ -1,0 +1,659 @@
+
+> merge-proof@0.2.0 test:github
+> node --test github/test/*.test.js
+
+✔ live observer preserves old verdict and requires new head and stale history (3.050292ms)
+✔ checkout rejects absent and revoked installations before provider requests (4.479792ms)
+✔ verified top-up grants exactly five across duplicate events and delivery types (2.229541ms)
+✔ unpaid, wrong quantity, invalid signature grant nothing (0.316167ms)
+✔ two paid developers get Pro, duplicate invoices preserve usage, topups survive renewal (1.66175ms)
+✔ human identity dedups across installations, bots and guessed attribution excluded (0.285416ms)
+✔ quantity increase needs confirmation, changes next invoice without expanding current allowance (1.397125ms)
+✔ checkout creation uses exact monthly quantity and redirect cannot activate subscription (1.095291ms)
+✔ renewal entitlement follows paid invoice quantity, not mutable next-invoice quantity (0.236ms)
+✔ quantity reconciliation never reverses a newly requested provider cancellation (0.259083ms)
+✔ sandbox ledger cannot be reopened with live billing (0.236125ms)
+✔ optional provider test clock attaches only to sandbox customer creation (1.476209ms)
+✔ eligible actor, event and exact workflow satisfy execution policy with GitHub trust (12.615542ms)
+✔ wrong explicit actor and event are demonstrated unmet requirements only for a bound producer (27.176166ms)
+✔ unavailable execution policy and unobservable actor membership never imply eligibility (22.252625ms)
+✔ policy changed after execution refuses historical satisfaction and stales only dependent claims (13.382667ms)
+✔ irrelevant, disabled and evaluate policies are absent from receipt and currentness dependencies (6.945ms)
+✔ policy currentness is specific to the affected workflow evidence claim (6.631875ms)
+✔ same-name duplicate cannot substitute an unprotected producer or wrong event for required evidence (15.221709ms)
+✔ coverage minimum and percentage-point drop are satisfied at exact boundaries (7.170917ms)
+✔ demonstrated minimum or drop violation is FAIL, not a generic unavailable result (9.800334ms)
+✔ missing, incomplete, ambiguous or unbound coverage evidence is NOT_PROVEN (47.151917ms)
+✔ coverage policy changes only stale coverage and policy claims; unrelated CI and approval stay current (18.644917ms)
+✔ disabled zero thresholds need no coverage measurements and do not bind unused baseline metrics (8.735917ms)
+✔ coverage cannot evade producer ambiguity, wrong event, denied execution or policy currentness (53.542ms)
+✔ 1000 bounded coverage/threshold fixtures agree with integer inequality and never round up (2754.998208ms)
+✔ collector discovers policy details read-only and refuses unknown coverage without a fabricated metrics endpoint (81.5755ms)
+✔ portable receipt replays policy, producer and coverage claims without promoting provider trust (26.024875ms)
+✔ policy snapshot does not assert completeness when required policy discovery is missing or malformed (14.152084ms)
+✔ portable receipt replays offline; tampering and untrusted self-signed keys do not pass (83.028625ms)
+✔ machine contract holds wrong subject, stale receipt and queue admission (7.39225ms)
+✔ landing checks content, proof, head and method parentage; squash SHA may differ (3.805792ms)
+✔ local differential lab: clean merge expected tree matches Git (3085.40025ms)
+✔ local differential lab: clean squash expected tree matches Git (4199.02175ms)
+✔ local differential lab: clean rebase expected tree matches Git (3975.697ms)
+✔ conflicted reconstruction emits no expected tree (1212.836708ms)
+✔ rebase with a merge commit is explicitly refused (1021.485542ms)
+✔ queue reconstruction follows confirmed order and refuses missing membership (1706.517791ms)
+✔ clean binary, executable mode and symlink changes preserve Git tree identity (633.011125ms)
+✔ attribute-dependent conflict and both-sided gitlinks refuse a definitive tree (618.36025ms)
+✔ both-sided gitlinks retain the researched refusal boundary (715.940917ms)
+✔ frozen pure engine matches current policy across passing and failing captures (28.3785ms)
+✔ online verifier distinguishes provider divergence from record retention uncertainty (5.841292ms)
+✔ MCP advertises only a read-only decision tool and bounds incoming messages (6.180125ms)
+✔ decision with a changed provider head cannot pass the provider SHA guard (48.118584ms)
+✔ ambient attributes cannot turn a conflicted merge into an uncaveated expected tree (1233.090625ms)
+✔ CLI/MCP reject contradictory, malformed or wrong-subject decision contracts (28.226125ms)
+✔ offline verifier recomputes supplied Git objects and detects a consistently recorded false tree (2402.701875ms)
+✔ every ordered provider candidate tree is compared even when final queue content matches (2738.72775ms)
+✔ classic required_signatures is preserved, blocks unsupported proof and stales history (71.549333ms)
+✔ classic required_linear_history is preserved, blocks unsupported proof and stales history (11.624333ms)
+✔ real collector projects REST metadata into a complete proof with no source or review bodies (5.073042ms)
+✔ classic protection 404 on protected branch is unavailable, never absent (6.256417ms)
+✔ unprotected branch with 404 and empty active rules is confirmed no classic rule (3.831417ms)
+✔ 300-file compare boundary fails closed (7.995ms)
+✔ changed check between collections is detected (6.585458ms)
+✔ pagination limit and request budget never imply empty evidence (0.630416ms)
+✔ test merge requires exact parents and current ref (8.387042ms)
+✔ merge group requires live ref and ancestor evidence, never branch-name guess (26.345792ms)
+✔ remote ref mismatch is recorded without losing historical identity (5.025083ms)
+✔ current queue selection must match live GraphQL entry; old group remains unproven (4.46275ms)
+✔ queue admission proves PR evidence without pretending the future group is proven (16.568833ms)
+✔ remote metadata reader produces same local findings as real full Git history (5064.888875ms)
+✔ existing composite Action shell runs real CLI unchanged, outputs JSON/markdown and enforces exit 2 (3830.111083ms)
+✔ recorded L3 corpus: clean (26.690542ms)
+✔ recorded L3 corpus: producer-collision (10.87525ms)
+✔ recorded L3 corpus: authority-edited (6.0585ms)
+✔ recorded L3 corpus: event-workflow_dispatch (7.353167ms)
+✔ recorded L3 corpus: event-schedule (12.302167ms)
+✔ recorded L3 corpus: event-push (5.728459ms)
+✔ recorded L3 corpus: event-pull_request_target (8.049791ms)
+✔ recorded L3 corpus: missing-run (7.399334ms)
+✔ recorded L3 corpus: wrong-pr (6.444708ms)
+✔ recorded L3 corpus: review-old (6.061459ms)
+✔ recorded L3 corpus: review-permission (8.316458ms)
+✔ recorded L3 corpus: review-nonwriter-change (18.061ms)
+✔ recorded L3 corpus: writer-change (14.007083ms)
+✔ recorded L3 corpus: failed-required (4.505ms)
+✔ recorded L3 corpus: rules-unavailable (2.552209ms)
+✔ recorded L3 corpus: push-time (3.186458ms)
+✔ recorded L3 corpus: non-actions (6.933875ms)
+✔ recorded L3 corpus: codeowners (9.071542ms)
+✔ recorded L3 corpus: merged-pr (7.59075ms)
+✔ recorded L3 corpus: remote-moved (8.777833ms)
+✔ nineteen immutable observations become one latest card and eighteen history links; no fingerprint merging or writes (8.289791ms)
+✔ grouping includes history beyond the old last-30 cap, sorts by observation, and excludes other scopes (3.782125ms)
+✔ result follows concrete evidence, not a global FAIL rename (0.190417ms)
+✔ freshness never inherits worker CURRENT, stale does not invent a queued recovery, and policy is independent (0.211792ms)
+✔ automatic states distinguish actual queued retries, exhaustion, delivery and paused access (1.212625ms)
+✔ PR without a receipt is pending only if a matching job actually exists (0.114083ms)
+✔ trial presentation preserves exact expiry and does not infer payment, start a trial or mutate usage (0.19275ms)
+✔ receipt foreground is human-readable, raw evidence remains collapsed and HTML escapes untrusted values (6.323917ms)
+✔ executed client shows one card, collapsed complete history, explicit toggle and retains user-expanded history across refresh (11.3585ms)
+✔ no required validation preserves machine NOT_PROVEN across Check, account and receipt independently of freshness (5.091084ms)
+✖ customer OAuth login, authorized repository, receipt, free meter, private access and logout HTTP journey (52.792083ms)
+✔ OAuth state is cookie-bound, expires, and cannot be replayed (18.472042ms)
+✔ acquisition is coarse, bounded, deduplicated per session and excludes arbitrary input (3.646208ms)
+✔ revoked GitHub user token requires login while provider denial stays distinct (0.462208ms)
+✔ optional GitHub check reports same verdict and cannot be its own CI evidence (43.19725ms)
+✔ Pages forwards proof receipts and raw App webhook signature using existing proxy boundary (21.508542ms)
+✔ a skipped workflow step is visible but not full execution proof (3.611375ms)
+✔ Pages upload manifest sends proof routes to the existing worker (2.165958ms)
+✖ HTTP opt-in binds existing authenticated admin and isolated companion; default Read stays NOT_PROVEN (37.467ms)
+✖ disable preserves immutable receipt, invalidates dependent claims, and requeues policy observation (34.891125ms)
+✖ revocation during broker collection cannot return a current positive result (69.525916ms)
+✖ forged installation redirect, session substitution and removed repository authority cannot enroll (94.989125ms)
+✖ signed companion uninstall stops enhanced reads durably; unsigned event has no effect (63.18225ms)
+✖ broker denies method/path/body expansion before provider network access (85.171959ms)
+✖ companion outage and suspension remain NOT_PROVEN; primary removal revokes the matching grant only (105.8385ms)
+✖ observed companion access loss invalidates other dependent receipts while preserving independent claim freshness (87.286542ms)
+✖ grant survives service recreation but user session and enrollment nonce do not (109.887292ms)
+✔ broker executable refuses a shared proof UID instead of silently losing process isolation (22.870084ms)
+✖ companion delivery retry flushes an earlier failed durable save before duplicate acknowledgement (78.929125ms)
+✔ 30 tracked PRs and 200 unrelated events leave proofs current with no reads (10970.595542ms)
+✔ organization rules, permission events, TTL duplicates and reconciliation are scoped (323.098792ms)
+✔ conditional 304 reads use authenticated cache and do not consume counted budget (1.413667ms)
+✖ HTTP machine decision, subject guard and authorized durable bundle journey (27.704875ms)
+✖ proof-to-merge journey preserves ledger and resolves REST 2026 commit (legacy=true) (237.313292ms)
+✖ proof-to-merge journey preserves ledger and resolves REST 2026 commit (legacy=false) (363.231042ms)
+✔ delivery reconciliation follows cursor pages, redelivers missed GUID and respects four-hour cadence (44.8525ms)
+✔ unchanged full reconciliations retain one receipt and refresh observation time (207.272708ms)
+✔ live-sized delivery IDs survive parsing, pagination, and redelivery exactly (29.017583ms)
+✔ malformed delivery identity cannot report reconciled (null) (33.835792ms)
+✔ malformed delivery identity cannot report reconciled (0) (32.825666ms)
+✔ malformed delivery identity cannot report reconciled (-1) (34.781167ms)
+✔ malformed delivery identity cannot report reconciled (1.5) (25.772666ms)
+✔ malformed delivery identity cannot report reconciled (3843641202479988700) (26.618125ms)
+✔ malformed delivery identity cannot report reconciled (../attempts) (38.431041ms)
+✔ malformed delivery identity cannot report reconciled (1e20) (40.217417ms)
+✔ malformed delivery identity cannot report reconciled (999999999999999999999) (43.539833ms)
+✔ lossless delivery parsing preserves quoted text and safe numeric fields (0.289042ms)
+✔ a raced initial collection automatically retries and issues a stable successor without changing history (171.933334ms)
+✔ F1: same-App workflow collision and candidate-authored evidence cannot verify (15.393375ms)
+✔ F2: workflow_dispatch never replaces qualifying execution (14.411209ms)
+✔ F2: schedule never replaces qualifying execution (6.535541ms)
+✔ F2: push never replaces qualifying execution (10.380125ms)
+✔ F2: pull_request_target never replaces qualifying execution (5.798666ms)
+✔ F2: null never replaces qualifying execution (10.050083ms)
+✔ same producer rerun passes; unrelated workflow does not create ambiguity (2.898541ms)
+✔ unknown producer and missing workflow blob fail closed (8.569792ms)
+✔ G1-G3: unrelated checks, comments and mergeability never stale claims (3.189166ms)
+✔ a CI change invalidates only CI; historical receipt never mutates (2.714ms)
+✔ permission unknown excludes its reviewer without contaminating other claims (14.292375ms)
+✔ only observed writers can block with CHANGES_REQUESTED (3.753708ms)
+✔ uncertainty is NOT_PROVEN; a bound failed required check is FAIL (3.531084ms)
+✔ push-time rules do not block or invalidate evidence claims (4.517834ms)
+✔ bound execution on combined candidate resolves the behind-base drift gap (4.024ms)
+✔ collector retains producer, workflow blob, event and exact tree (22.54975ms)
+✔ 1000 seeded state sequences protect subject, event, authority and locality invariants (8626.475167ms)
+✔ event routing touches only the relevant PR, subject and claim (0.525625ms)
+✔ execution protection snapshots bind only relevant workflows; evaluate mode does not enforce (17.83175ms)
+✔ coverage rules retain thresholds without pretending a generic CI success proves coverage (6.328916ms)
+✔ wrong PR context cannot create FAIL; bot initiation and target topology remain explicit (7.754208ms)
+✔ an enforcing policy never reports a conclusion GitHub treats as a pass (13.25275ms)
+✔ a proof that could not complete blocks an enforcing gate and never passes (1.818667ms)
+✔ an unrecognised gap blocks by default rather than becoming advisory (3.329958ms)
+✔ a stale or unrefreshed receipt can never satisfy an enforcing gate (3.696ms)
+✔ a superseded published check is retracted with a blocking conclusion (670.793291ms)
+✔ a new head produces a new check bound to the new commit (721.918625ms)
+✔ a merge group is reported on the group commit as well as the pull request head (9.23125ms)
+✔ a required check named the same as ours but owned by another app is named as a collision (11.653542ms)
+✔ requiring Merge Proof's own check is detected and does not deadlock the gate (1.737084ms)
+✔ policy defaults derive from the requirements the repository already sets (0.146167ms)
+✔ a branch with nothing to prove is refused as a gate instead of passing (0.90175ms)
+✔ a requirement Merge Proof cannot establish is declared before it is enabled (0.16775ms)
+✔ unreadable repository rules are an explicit gap and never a silent pass (1.167833ms)
+✔ setup instructions never claim automation Merge Proof is not permitted (0.168417ms)
+✔ protected boundaries are reported by default and enforced only when chosen (1.800125ms)
+✔ the stricter boundary preset is satisfied by a second current approval (2.3745ms)
+✔ NOT_PROVEN says what is missing, why, what to do and whether it blocks (2.494584ms)
+✔ an old check result is explained as an old version, not as a failure (1.139208ms)
+✔ the published check body carries the plain explanation and the consequence (1.65325ms)
+✔ observed human, app and bot identities are recorded from GitHub evidence (2.648833ms)
+✔ unknown actors stay unknown and are never guessed (4.638625ms)
+✔ no free-text commit, review or check content is collected as actor evidence (1.461ms)
+✔ a completed merge is preserved immutably with what was known at the time (688.2055ms)
+✔ a merge of a commit no receipt covers is recorded as exactly that (434.757708ms)
+✔ a merge with no proof at all is recorded without inventing one (83.76175ms)
+✔ the ledger filters, states its own completeness and refuses another repository (275.584292ms)
+✔ the gate adds no billable proof: a re-proof of the same head is zero debit (881.5245ms)
+✔ policy selection is bounded, defaults to report-only and is recorded (114.0295ms)
+✔ a receipt stored by the previous version still renders, evaluates and ledgers (3.557833ms)
+✔ a store snapshot missing the new keys boots without losing anything (98.093958ms)
+✔ policy activation invalidates and queues existing checks without another event (811.880792ms)
+✔ unknown App identity cannot waive an explicitly publisher-bound requirement (2.773834ms)
+✔ partial publication persists the first identity before the second request fails (3.071791ms)
+✔ a signed event during publication immediately retracts the returned check (405.723917ms)
+✔ delayed merge delivery never borrows a receipt issued after the merge (447.39975ms)
+✔ ledger snapshot remains detached from receipt mutation and capacity is explicit (257.512917ms)
+✔ failed enforcing retraction remains pending and recovers without another webhook (1490.45725ms)
+✔ validation organization requires exact explicit repository and owner IDs before any collection (11.020375ms)
+✔ scheduled runner reads the selected Read installation before minting an exact repository token (94.997625ms)
+✖ fixture agent uses real MCP tools/call and guarded merge only for an exact validated PROCEED (7.298834ms)
+✔ trial is unlimited, starts once and persists across restart and installations (132.936584ms)
+✔ FAIL, failed collection and stale completion debit zero (46.933417ms)
+✔ real proof service snapshot commits receipt and debit together; same head reruns once (340.836375ms)
+✔ overlapping workers cannot double-debit; second writer cannot open durable store (201.48125ms)
+✔ signed hosted lifecycle: automatic proof, immutable stale history, time expiry pauses even same head (1295.799167ms)
+✔ historical scan retries the same reservation after infrastructure failure and never consumes live taste (196.752375ms)
+✔ active developers require pushed commits; repeated later pushes retain their own event evidence (157.979583ms)
+✔ malformed signed lifecycle scopes reject without state mutation (60.16925ms)
+✔ actual Git garbage collection retains old exact candidates after later fetches replace FETCH_HEAD (3273.226125ms)
+✔ seeded service/world model: 5-60 actions, delivery faults and seventeen invariant obligations (29388.325542ms)
+✔ affected-event budget: 30 tracked PRs and 200 events use at least 70 percent fewer counted reads than full rescans (11092.552791ms)
+✔ authenticated trial, Back restoration and reload never automatically advance or load repository state (9.209833ms)
+✔ slow restoration leaves trial readable until explicit continuation (4.768875ms)
+✔ explicit account URL restores selection and automatic single-repository discovery without a navigation (1.632291ms)
+✔ lost session and OAuth error stay on recoverable branded trial; explicit disconnect alone posts logout (4.666709ms)
+✔ connection failures expose retry, which restores session without moving the trial (3.338917ms)
+✔ server renders requested step with shared brand before script or data loads; no history manipulation (1.383958ms)
+✔ repository controls remain hidden until authorization succeeds and disappear at known session expiry (6.338625ms)
+✔ late installation or repository response cannot resurrect an expired session (8.604208ms)
+✔ expired or denied repository lookup gives an actionable state without a populated disabled picker (1.735083ms)
+✔ companion return selects only currently authorized installation and repository; never auto-consents (3.447875ms)
+✔ consistent export retains archive/log closure and restores historical receipts without secrets or writer lock (641.832292ms)
+✔ export refuses missing immutable records and busy mirrors; altered or expanded backups refuse restore (834.713958ms)
+✔ AWS operations require the selected account and a temporary role identity (1.920208ms)
+✔ isolated recovery checks independently supplied signature trust and retains factory report closure (770.759334ms)
+✔ historical bare mirrors with empty refs remain real Git repositories after restore (3036.471834ms)
+✔ cross-account backup only succeeds after recovery readback; recovery needs no primary identity (4916.780333ms)
+✔ health uses the snapshot time and refuses missing recovery evidence; incomplete snapshots cannot justify pruning (30.663791ms)
+✔ disposable Object Lock acceptance cannot turn elapsed retention into observed lifecycle expiration (421.870333ms)
+✔ preparatory infrastructure has no product deployment/publication or production retention; roles stay separated (3.599167ms)
+✔ a completed daily checkpoint cannot hide a later receipt signing outage; real success clears its alarm (415.716416ms)
+✔ credential refresh replaces entries without following destination or predictable staging symlinks (93.994167ms)
+✔ companion exposes only a repository policy capability, mints one-repo token and revokes it (29.301917ms)
+✔ every non-GET method and non-policy administrative path is refused before network I/O (4.378333ms)
+✔ foreign repository, parent scope, URL alias, encoded traversal and query overrides cannot carry the credential (3.914916ms)
+✔ no opt-in or cross-account/repository/installation consent mints no token (0.33ms)
+✔ wrong App/account, suspension, all-repository selection or broadened companion grant refuses before token issuance (8.505334ms)
+✔ broadened or expired token is revoked without use, including wrong immutable repository identity (7.581166ms)
+✔ revoked consent stops subsequent policy reads and cleanup still revokes the token (2.034292ms)
+✔ unreadable inherited policy and revocation failure remain unavailable (5.458166ms)
+✔ dedicated collection seam preserves Read default and cannot turn missing policy or coverage evidence green (66.557417ms)
+✔ standard App token remains Administration Read (2.166167ms)
+✔ durable archive survives runtime eviction and restart, retains observations, and refuses rewriting (179.028708ms)
+✔ portable multi-file manifest detects component edits, omissions, traversal and private bundled keys (255.968208ms)
+✔ signed landed-content chain verifies with trusted key; substituted repo, receipt, tree, parents and signature refuse (430.845ms)
+✔ operator log validates whole chain and odd-leaf inclusion; external anchoring stays unproven (3.490458ms)
+✔ configured KMS adapter checks exact key ARN, algorithm, P-256 public key and returned signature (30.50275ms)
+✔ persisted service retrieves evicted receipt under live repository authorization and never restores stale CURRENT (298.487ms)
+✔ provider queue order must be complete, contiguous and bound to exact repository, head, base and candidate (1.477125ms)
+✔ archive retains evicted pending merge and durable observation replay without granting cross-repo access (58.713834ms)
+✔ signed delivery acknowledgement follows one coalesced durable save and reports save failure (0.346ms)
+✔ operator checkpoint signature cannot be replaced while keeping successful portable verification (0.456583ms)
+✔ archived ledger identity and record access survive pruning with unchanged repository and installation checks (103.349792ms)
+✔ explicit anchor publisher checks ownership and immutable existing bytes before any external write (20.099667ms)
+✔ private differential runner flags unexpected positive verdicts and reads supplied drift counters (39.650833ms)
+✔ review regression: later HEADGREEN prefix binds proof and landed predecessor without transferring subject (18.534916ms)
+✔ review regression: signed unresolved landing history and later resolved chain both verify without upgrading history (10.986041ms)
+✔ review regression: duplicate signed delivery retries failed durability before acknowledgement and survives restart (1.168458ms)
+✔ review regression: public hosted JWKS and bearer bundle retain live installation/repository authorization after eviction (5.874875ms)
+✔ drain retries transient durability failures without permanently locking the worker (0.832292ms)
+✔ current head includes base, required executed CI, eligible approval and remote ref verify (11.436125ms)
+✔ obsolete green SHA never verifies through omission (3.286166ms)
+✔ missing check never verifies through omission (2.11975ms)
+✔ check read denied never verifies through omission (3.196417ms)
+✔ status read denied never verifies through omission (19.167958ms)
+✔ rules denied never verifies through omission (1.106ms)
+✔ rulesets denied never verifies through omission (2.296834ms)
+✔ no required checks never verifies through omission (1.806416ms)
+✔ required workflow unsupported never verifies through omission (3.437417ms)
+✔ stale approval after push never verifies through omission (2.932333ms)
+✔ dismissed review never verifies through omission (2.908584ms)
+✔ review permission unknown never verifies through omission (1.75975ms)
+✔ PR author approval never verifies through omission (2.534042ms)
+✔ bot approval never verifies through omission (1.957166ms)
+✔ last push approval rule never verifies through omission (4.862166ms)
+✔ code owner rule never verifies through omission (2.405584ms)
+✔ remote missing never verifies through omission (1.47075ms)
+✔ remote unavailable never verifies through omission (1.14975ms)
+✔ remote wrong SHA never verifies through omission (1.291916ms)
+✔ target other base never verifies through omission (1.338167ms)
+✔ capture race never verifies through omission (0.7835ms)
+✔ merge queue without group never verifies through omission (1.901167ms)
+✔ skipped distinct from execution proof (1.469917ms)
+✔ neutral distinct from execution proof (1.670625ms)
+✔ failure distinct from execution proof (2.276875ms)
+✔ cancelled distinct from execution proof (2.259416ms)
+✔ timed_out distinct from execution proof (3.2505ms)
+✔ pending rerun supersedes old successful check (1.517542ms)
+✔ check success alone, status success alone, wrong job SHA and empty steps cannot establish execution (6.733917ms)
+✔ same context across multiple Apps is ambiguous (1.791917ms)
+✔ base movement with overlap preserves BASE_DRIFT_UNVERIFIED even with remote execution (1.559166ms)
+✔ base movement without overlap keeps STALE_BASE advisory and can prove combined state (1.3155ms)
+✔ protected boundary keeps local meaning; unavailable history fails closed (3.959541ms)
+✔ merge group execution binds group SHA; head success cannot substitute (4.130375ms)
+✔ review comments do not erase approval, latest decision and count apply (5.92675ms)
+✔ no approval requirement is explicitly not applicable (1.899208ms)
+✔ head change stales historical receipt without mutation (2.696792ms)
+✔ base change stales historical receipt without mutation (3.231875ms)
+✔ check change stales historical receipt without mutation (3.418083ms)
+✔ rules change stales historical receipt without mutation (2.128709ms)
+✔ approval change stales historical receipt without mutation (2.998958ms)
+✔ remote change stales historical receipt without mutation (1.75375ms)
+✔ group change stales historical receipt without mutation (1.927375ms)
+✔ timestamp alone does not expire proof; failed refresh preserves prior verdict (2.877625ms)
+✔ rules are intersected and unsupported evidence is explicit (8.102875ms)
+✔ human and JSON render same underlying receipt and escape untrusted strings (4.08275ms)
+✔ ALLGREEN requirements for other merge-group entries cannot be silently waived (4.069875ms)
+✔ issuance currentness and fresh human envelope agree when required sources are unavailable (0.955042ms)
+✔ reviewer permission uncertainty is scoped; queue selection uncertainty remains unavailable (5.325125ms)
+✔ REST 2026 merged commit resolves from exact GraphQL subject (28.226834ms)
+✔ merged commit rejects repositoryId ambiguity or mismatch (0.786541ms)
+✔ merged commit rejects repositoryName ambiguity or mismatch (0.287459ms)
+✔ merged commit rejects pr ambiguity or mismatch (0.290958ms)
+✔ merged commit rejects head ambiguity or mismatch (0.451792ms)
+✔ merged commit rejects base ambiguity or mismatch (0.299208ms)
+✔ merged commit rejects merged ambiguity or mismatch (0.214584ms)
+✔ merged commit rejects state ambiguity or mismatch (0.224959ms)
+✔ merged commit rejects commit ambiguity or mismatch (0.287583ms)
+✔ merged commit rejects partial ambiguity or mismatch (0.30775ms)
+✔ REST 2026 PR merge ref requires exact ordered parents (wrong=false) (14.295292ms)
+✔ REST 2026 PR merge ref requires exact ordered parents (wrong=true) (3.783167ms)
+✔ REST 2026 historical collection uses bound landed commit (3.783375ms)
+✔ unresolved merged commit cannot produce a landed verification (1.005417ms)
+✔ required validation missing, old checks, and status-only evidence remain distinct (22.680083ms)
+✔ missing, stale, and ineligible current approval are distinguished (9.188ms)
+✔ unavailable rules and unknown codes never invent a fix (4.949125ms)
+✔ boundary remediation never weakens the policy (3.585791ms)
+✔ queue validation and membership gaps have different actions (4.7015ms)
+✔ gate consequence requires policy, required check, and current observation (1.776959ms)
+✔ automatic event path needs tracked open PR; manual and unknown gaps stay manual (4.844ms)
+✔ VERIFIED FAIL and STALE never show NOT PROVEN remediation (10.144209ms)
+✔ JSON addition and rendering preserve original receipt and policy; details are underneath (2.486083ms)
+✔ untrusted reason never becomes HTML (3.429834ms)
+✔ ruleset-only checks/reviews prove satisfied and fail closed on real requirement failures (73.724125ms)
+✔ classic absence requires complete exact-ref evidence: partial errors (5.780708ms)
+✔ classic absence requires complete exact-ref evidence: missing repository (7.303458ms)
+✔ classic absence requires complete exact-ref evidence: missing ref (4.150667ms)
+✔ classic absence requires complete exact-ref evidence: missing field (5.746291ms)
+✔ classic absence requires complete exact-ref evidence: existing classic rule (7.761208ms)
+✔ classic absence requires complete exact-ref evidence: wrong ref (4.40475ms)
+✔ classic absence requires complete exact-ref evidence: wrong repository (4.55875ms)
+✔ classic HTTP 401 cannot be waived by rulesets (3.50425ms)
+✔ classic HTTP 403 cannot be waived by rulesets (3.841084ms)
+✔ classic HTTP 500 cannot be waived by rulesets (5.621875ms)
+✔ ruleset and classic requirements intersect by context/app and maximum approvals (9.851583ms)
+✔ unsupported/malformed rules never silently verify (30.515833ms)
+✔ applicable branch API receives the exact encoded ref, and pagination errors stay unavailable (0.238291ms)
+✔ ruleset-only required receipt gate enforces failure and succeeds only with proven inputs (10.615292ms)
+✔ historical scan uses actual proof and local semantics but never substitutes current policy for historical policy (60.657166ms)
+✔ unsupported historical shape and invalid bound remain unavailable (2.904166ms)
+✔ persisted proof, public share access, default unrefreshed view and fresh read (564.755542ms)
+✔ private receipt requires current repository access; publication refused (242.078833ms)
+✔ public-to-private visibility transition closes shared permalink (181.656334ms)
+✔ refresh failure does not erase historical VERIFIED; head change stales it (241.637125ms)
+✔ signed webhook automatically queues and completes receipt; duplicate is idempotent and unsigned denied (304.414541ms)
+✔ failed App refresh preserves history, bounded retries and no completed event (360.075959ms)
+✖ HTTP journey produces mobile HTML and same JSON; unauthorized private evidence denied (118.795667ms)
+✔ App JWT is signed, short lived and installation token limited to exact repository and read permissions (84.388625ms)
+✔ source-unavailable receipt is retained without completed-proof event (187.217125ms)
+✔ optional App check delivery stales the previous check and ignores its own events (545.660292ms)
+✔ receipt and pending refresh survive an actual store close/reopen (329.91175ms)
+✔ event during an active proof stales it and retains a subsequent refresh job (384.217542ms)
+✔ refresh revalidates a saved merge-group hint instead of discarding its binding (222.76075ms)
+✔ failed stale-check update does not prevent complete re-observation (564.279958ms)
+✔ remediation is additive on run and historical read, with actual tracking context (90.115833ms)
+✔ install discovers existing PR, starts one durable trial only after proof and automatic events reconstruct value (949.068959ms)
+✔ empty authorized repository watches next PR without starting trial (485.023542ms)
+✔ scheduled day 5/6/7 notices, expiry, same-head pause, immutable receipt and paid resume (1368.398083ms)
+✔ trial gate enablement rejected, inherited enforcement never silently passes at expiry (484.680375ms)
+✔ paid Pro has no proof cap and canceled paid entitlement cannot restart free access (46.157875ms)
+✔ aggregate export preserves source/time boundaries without exposing identifiers (0.209208ms)
+✔ automation derives six truthful scoped states without changing storage or leaking errors (0.818625ms)
+✔ non-billing-owner UI never fabricates zero and hides billing quantity controls (3.619083ms)
+✔ authorized billing owner retains actual zero and legitimate billing controls (1.862583ms)
+ℹ tests 367
+ℹ suites 0
+ℹ pass 351
+ℹ fail 16
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 41757.070458
+
+✖ failing tests:
+
+test at github/test/customer.test.js:14:1
+✖ customer OAuth login, authorized repository, receipt, free meter, private access and logout HTTP journey (52.792083ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1918:21)
+      at listenInCluster (node:net:1997:12)
+      at node:net:2206:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:89:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at github/test/enhanced-policy.test.js:42:1
+✖ HTTP opt-in binds existing authenticated admin and isolated companion; default Read stays NOT_PROVEN (37.467ms)
+  Error: listen EPERM: operation not permitted /var/folders/zt/cb0tw7l969q_yzl9jt4htlfr0000gn/T/mp-enhanced-J8zU0R/p.sock
+      at Server.setupListenHandle [as _listen2] (node:net:1918:21)
+      at listenInCluster (node:net:1997:12)
+      at Server.listen (node:net:2119:5)
+      at session.token (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:26:33)
+      at new Promise (<anonymous>)
+      at harness (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:26:9)
+      at TestContext.<anonymous> (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:43:19)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.start (node:internal/test_runner/test:1003:17) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '/var/folders/zt/cb0tw7l969q_yzl9jt4htlfr0000gn/T/mp-enhanced-J8zU0R/p.sock',
+    port: -1
+  }
+
+test at github/test/enhanced-policy.test.js:59:1
+✖ disable preserves immutable receipt, invalidates dependent claims, and requeues policy observation (34.891125ms)
+  Error: listen EPERM: operation not permitted /var/folders/zt/cb0tw7l969q_yzl9jt4htlfr0000gn/T/mp-enhanced-3jOmIZ/p.sock
+      at Server.setupListenHandle [as _listen2] (node:net:1918:21)
+      at listenInCluster (node:net:1997:12)
+      at Server.listen (node:net:2119:5)
+      at session.token (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:26:33)
+      at new Promise (<anonymous>)
+      at harness (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:26:9)
+      at TestContext.<anonymous> (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:60:19)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '/var/folders/zt/cb0tw7l969q_yzl9jt4htlfr0000gn/T/mp-enhanced-3jOmIZ/p.sock',
+    port: -1
+  }
+
+test at github/test/enhanced-policy.test.js:71:1
+✖ revocation during broker collection cannot return a current positive result (69.525916ms)
+  Error: listen EPERM: operation not permitted /var/folders/zt/cb0tw7l969q_yzl9jt4htlfr0000gn/T/mp-enhanced-DYXgKI/p.sock
+      at Server.setupListenHandle [as _listen2] (node:net:1918:21)
+      at listenInCluster (node:net:1997:12)
+      at Server.listen (node:net:2119:5)
+      at session.token (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:26:33)
+      at new Promise (<anonymous>)
+      at harness (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:26:9)
+      at TestContext.<anonymous> (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:72:19)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '/var/folders/zt/cb0tw7l969q_yzl9jt4htlfr0000gn/T/mp-enhanced-DYXgKI/p.sock',
+    port: -1
+  }
+
+test at github/test/enhanced-policy.test.js:77:1
+✖ forged installation redirect, session substitution and removed repository authority cannot enroll (94.989125ms)
+  Error: listen EPERM: operation not permitted /var/folders/zt/cb0tw7l969q_yzl9jt4htlfr0000gn/T/mp-enhanced-Fbq1hW/p.sock
+      at Server.setupListenHandle [as _listen2] (node:net:1918:21)
+      at listenInCluster (node:net:1997:12)
+      at Server.listen (node:net:2119:5)
+      at session.token (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:26:33)
+      at new Promise (<anonymous>)
+      at harness (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:26:9)
+      at TestContext.<anonymous> (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:78:19)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '/var/folders/zt/cb0tw7l969q_yzl9jt4htlfr0000gn/T/mp-enhanced-Fbq1hW/p.sock',
+    port: -1
+  }
+
+test at github/test/enhanced-policy.test.js:89:1
+✖ signed companion uninstall stops enhanced reads durably; unsigned event has no effect (63.18225ms)
+  Error: listen EPERM: operation not permitted /var/folders/zt/cb0tw7l969q_yzl9jt4htlfr0000gn/T/mp-enhanced-dkcCXE/p.sock
+      at Server.setupListenHandle [as _listen2] (node:net:1918:21)
+      at listenInCluster (node:net:1997:12)
+      at Server.listen (node:net:2119:5)
+      at session.token (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:26:33)
+      at new Promise (<anonymous>)
+      at harness (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:26:9)
+      at TestContext.<anonymous> (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:90:19)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '/var/folders/zt/cb0tw7l969q_yzl9jt4htlfr0000gn/T/mp-enhanced-dkcCXE/p.sock',
+    port: -1
+  }
+
+test at github/test/enhanced-policy.test.js:100:1
+✖ broker denies method/path/body expansion before provider network access (85.171959ms)
+  Error: listen EPERM: operation not permitted /var/folders/zt/cb0tw7l969q_yzl9jt4htlfr0000gn/T/mp-enhanced-Mz8eXB/p.sock
+      at Server.setupListenHandle [as _listen2] (node:net:1918:21)
+      at listenInCluster (node:net:1997:12)
+      at Server.listen (node:net:2119:5)
+      at session.token (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:26:33)
+      at new Promise (<anonymous>)
+      at harness (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:26:9)
+      at TestContext.<anonymous> (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:101:19)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '/var/folders/zt/cb0tw7l969q_yzl9jt4htlfr0000gn/T/mp-enhanced-Mz8eXB/p.sock',
+    port: -1
+  }
+
+test at github/test/enhanced-policy.test.js:107:1
+✖ companion outage and suspension remain NOT_PROVEN; primary removal revokes the matching grant only (105.8385ms)
+  Error: listen EPERM: operation not permitted /var/folders/zt/cb0tw7l969q_yzl9jt4htlfr0000gn/T/mp-enhanced-M7N2QY/p.sock
+      at Server.setupListenHandle [as _listen2] (node:net:1918:21)
+      at listenInCluster (node:net:1997:12)
+      at Server.listen (node:net:2119:5)
+      at session.token (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:26:33)
+      at new Promise (<anonymous>)
+      at harness (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:26:9)
+      at TestContext.<anonymous> (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:108:19)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '/var/folders/zt/cb0tw7l969q_yzl9jt4htlfr0000gn/T/mp-enhanced-M7N2QY/p.sock',
+    port: -1
+  }
+
+test at github/test/enhanced-policy.test.js:115:1
+✖ observed companion access loss invalidates other dependent receipts while preserving independent claim freshness (87.286542ms)
+  Error: listen EPERM: operation not permitted /var/folders/zt/cb0tw7l969q_yzl9jt4htlfr0000gn/T/mp-enhanced-62p7Oo/p.sock
+      at Server.setupListenHandle [as _listen2] (node:net:1918:21)
+      at listenInCluster (node:net:1997:12)
+      at Server.listen (node:net:2119:5)
+      at session.token (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:26:33)
+      at new Promise (<anonymous>)
+      at harness (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:26:9)
+      at TestContext.<anonymous> (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:116:17)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '/var/folders/zt/cb0tw7l969q_yzl9jt4htlfr0000gn/T/mp-enhanced-62p7Oo/p.sock',
+    port: -1
+  }
+
+test at github/test/enhanced-policy.test.js:123:1
+✖ grant survives service recreation but user session and enrollment nonce do not (109.887292ms)
+  Error: listen EPERM: operation not permitted /var/folders/zt/cb0tw7l969q_yzl9jt4htlfr0000gn/T/mp-enhanced-mskMMw/p.sock
+      at Server.setupListenHandle [as _listen2] (node:net:1918:21)
+      at listenInCluster (node:net:1997:12)
+      at Server.listen (node:net:2119:5)
+      at session.token (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:26:33)
+      at new Promise (<anonymous>)
+      at harness (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:26:9)
+      at TestContext.<anonymous> (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:124:19)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '/var/folders/zt/cb0tw7l969q_yzl9jt4htlfr0000gn/T/mp-enhanced-mskMMw/p.sock',
+    port: -1
+  }
+
+test at github/test/enhanced-policy.test.js:136:1
+✖ companion delivery retry flushes an earlier failed durable save before duplicate acknowledgement (78.929125ms)
+  Error: listen EPERM: operation not permitted /var/folders/zt/cb0tw7l969q_yzl9jt4htlfr0000gn/T/mp-enhanced-2NEjJK/p.sock
+      at Server.setupListenHandle [as _listen2] (node:net:1918:21)
+      at listenInCluster (node:net:1997:12)
+      at Server.listen (node:net:2119:5)
+      at session.token (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:26:33)
+      at new Promise (<anonymous>)
+      at harness (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:26:9)
+      at TestContext.<anonymous> (/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-final-frontier-l3/github/test/enhanced-policy.test.js:137:16)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '/var/folders/zt/cb0tw7l969q_yzl9jt4htlfr0000gn/T/mp-enhanced-2NEjJK/p.sock',
+    port: -1
+  }
+
+test at github/test/frontier-service.test.js:42:1
+✖ HTTP machine decision, subject guard and authorized durable bundle journey (27.704875ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1918:21)
+      at listenInCluster (node:net:1997:12)
+      at node:net:2206:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:89:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at github/test/frontier-service.test.js:55:37
+✖ proof-to-merge journey preserves ledger and resolves REST 2026 commit (legacy=true) (237.313292ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1918:21)
+      at listenInCluster (node:net:1997:12)
+      at node:net:2206:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:89:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at github/test/frontier-service.test.js:55:37
+✖ proof-to-merge journey preserves ledger and resolves REST 2026 commit (legacy=false) (363.231042ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1918:21)
+      at listenInCluster (node:net:1997:12)
+      at node:net:2206:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:89:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at github/test/mcp-agent.test.js:4:1
+✖ fixture agent uses real MCP tools/call and guarded merge only for an exact validated PROCEED (7.298834ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1918:21)
+      at listenInCluster (node:net:1997:12)
+      at node:net:2206:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:89:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }
+
+test at github/test/service.test.js:145:1
+✖ HTTP journey produces mobile HTML and same JSON; unauthorized private evidence denied (118.795667ms)
+  Error: listen EPERM: operation not permitted 127.0.0.1
+      at Server.setupListenHandle [as _listen2] (node:net:1918:21)
+      at listenInCluster (node:net:1997:12)
+      at node:net:2206:7
+      at process.processTicksAndRejections (node:internal/process/task_queues:89:21) {
+    code: 'EPERM',
+    errno: -1,
+    syscall: 'listen',
+    address: '127.0.0.1'
+  }

@@ -1,0 +1,40 @@
+{
+  "observedAt": "2026-09-21T02:01:22.350126+00:00",
+  "productCandidate": "9a35a7a2a8491dbec6d05a567ef69ac69a94753f",
+  "previousProductCandidate": "838ed8f422605bc814c0a7d9d0140dabbe78fedb",
+  "lastLiveSignedQueueCandidate": "7953ecdbd849c8afe0379bfec1b4a61133292c62",
+  "oldOrganizationName": "ohcaygo-merge-proof-validation",
+  "oldNameResult": "GITHUB_ORGANIZATION_NAME_UNAVAILABLE",
+  "organizationName": "ohcaygo-merge-proof-validation-lab",
+  "nameObservation": "GitHub organization setup accepted the entered name and advanced to payment details; organization not yet created or name reserved",
+  "ownerAccount": "dupageinspect-beep",
+  "purpose": "OHCAYGO validation-only synthetic Level 3 organization-ruleset and private differential lab",
+  "plan": "GitHub Team",
+  "billingInterval": "month",
+  "seats": 2,
+  "monthlySubtotalUsd": 8,
+  "tax": "PENDING_CHECKOUT_CALCULATION",
+  "checkoutState": "OWNER_BILLING_PAYMENT_REQUIRED",
+  "purchaseSubmittedByAgent": false,
+  "organizationCreated": false,
+  "organizationId": null,
+  "scheduledControlRepository": "ohcaygo-merge-proof-validation-lab/merge-proof-lab-control",
+  "productionOrganizationChanged": false,
+  "scopeChecks": {
+    "newRepositoryAuthorizedEvents": "PASS",
+    "oldProductionAndOtherRepositoriesDeniedBeforeNetworkIo": "PASS",
+    "unauthorizedEventDeniedBeforeNetworkIo": "PASS",
+    "privateWorkflowExactRepositoryMatches": "PASS",
+    "labAllowlistTests": "2/2 PASS"
+  },
+  "githubRegression": {
+    "result": "PASS",
+    "tests": 367,
+    "failed": 0,
+    "skipped": 0,
+    "log": "validation-org-github-tests.txt",
+    "initialAttempt": "Sandbox denied local HTTP/Unix socket listeners (EPERM); complete authorized rerun passed without source changes",
+    "initialAttemptLog": "validation-org-github-tests-sandbox-denied.txt"
+  },
+  "newCandidateSignedQueue": "NOT_PROVEN"
+}
