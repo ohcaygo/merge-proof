@@ -2,7 +2,7 @@
 const {test}=require("node:test"),a=require("node:assert/strict"),fs=require("node:fs"),os=require("node:os"),path=require("node:path"),crypto=require("node:crypto");
 const {Store}=require("../../factory/store"),{ProofService}=require("../service"),{Client}=require("../client"),{fixtureFetch}=require("./fixtures"),backup=require("../operations/backup"),cloud=require("../operations/backup-cycle"),lab=require("../operations/object-lock-lab");
 function provider(){
- const data=new Map(),calls=[],state={copyFailure:false,expire:false};let sequence=0;
+ const data=new Map(),calls=[],state={copyFailure:false,expire:false,retentionShortfallMs:0};let sequence=0;
  const make=c=>({checkIdentity:async()=>({accountId:c.accountId,role:`arn:aws:sts::${c.accountId}:assumed-role/lab/test`}),call:async(_,op,args=[])=>{
   calls.push({account:c.accountId,op,args});const get=name=>args[args.indexOf(name)+1],bucket=get("--bucket"),key=args.includes("--key")?get("--key"):null,id=bucket+"/"+key,now=Date.now(),item=data.get(id);
   const error=code=>{throw Object.assign(Error(code),{providerCode:code});};
@@ -13,7 +13,8 @@ function provider(){
   if(op==="put-object"||op==="copy-object"){
    if(op==="copy-object"&&state.copyFailure)error("AccessDenied");
    const bytes=op==="put-object"?fs.readFileSync(get("--body")):data.get(get("--copy-source").split("?")[0]).bytes;
-   const value={bytes,VersionId:String(++sequence),ContentLength:bytes.length,ChecksumSHA256:crypto.createHash("sha256").update(bytes).digest("base64"),...(args.includes("--object-lock-mode")?{ObjectLockMode:get("--object-lock-mode"),ObjectLockRetainUntilDate:get("--object-lock-retain-until-date")}:{} )};data.set(id,value);return {VersionId:value.VersionId};
+   const lockUntil=args.includes("--object-lock-retain-until-date")?new Date(Math.floor(Date.parse(get("--object-lock-retain-until-date"))/1000)*1000-state.retentionShortfallMs).toISOString():undefined;
+   const value={bytes,VersionId:String(++sequence),ContentLength:bytes.length,ChecksumSHA256:crypto.createHash("sha256").update(bytes).digest("base64"),...(args.includes("--object-lock-mode")?{ObjectLockMode:get("--object-lock-mode"),ObjectLockRetainUntilDate:lockUntil}:{} )};data.set(id,value);return {VersionId:value.VersionId};
   }
   if(op==="head-object"){if(!item)error("404");return item;}
   if(op==="get-object"){if(!item)error("NoSuchKey");a.equal(get("--version-id"),item.VersionId);fs.writeFileSync(args.at(-1),item.bytes);return {};}
@@ -46,12 +47,16 @@ test("health uses the snapshot time and refuses missing recovery evidence; incom
  const out=await require("../operations/snapshots").run({environment:"nonproduction",volumeId:"vol-abcd",aws:{accountId:"111111111111"}},()=>aws);a.equal(out.state,"SNAPSHOT_PENDING");a.ok(calls.every(x=>x.startsWith("describe")));
 });
 test("disposable Object Lock acceptance cannot turn elapsed retention into observed lifecycle expiration",async t=>{
- const root=fs.mkdtempSync(path.join(os.tmpdir(),"mp-retention-"));t.after(()=>fs.rmSync(root,{recursive:true,force:true}));const c={environment:"disposable-nonproduction",record:path.join(root,"record.json"),...accounts("merge-proof-lock-lab-")},p=provider();
- const prepared=await lab.prepare(c,p.make);a.equal(prepared.state,"WAITING_FOR_RETENTION_AND_LIFECYCLE_EXPIRATION");a.equal((await lab.finish(c,p.make)).reason,"RETENTION_HAS_NOT_EXPIRED");
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),"mp-retention-"));t.after(()=>fs.rmSync(root,{recursive:true,force:true}));const now=1700000000999;t.mock.method(Date,"now",()=>now);const c={environment:"disposable-nonproduction",record:path.join(root,"record.json"),...accounts("merge-proof-lock-lab-")},p=provider();
+ const prepared=await lab.prepare(c,p.make),requested=Date.parse(prepared.retainedUntil);a.equal(prepared.state,"WAITING_FOR_RETENTION_AND_LIFECYCLE_EXPIRATION");a.ok(requested>=now+180000);a.ok(requested<now+181000);a.equal(requested,now+180001);a.equal(requested%1000,0);for(const object of p.data.values())a.equal(Date.parse(object.ObjectLockRetainUntilDate),requested);a.equal((await lab.finish(c,p.make)).reason,"RETENTION_HAS_NOT_EXPIRED");
  // Model passage of time for this unit fixture; not retained as live evidence.
  prepared.retainedUntil=new Date(Date.now()-1000).toISOString();for(const object of p.data.values())object.ObjectLockRetainUntilDate=prepared.retainedUntil;fs.writeFileSync(c.record,JSON.stringify(prepared));
  a.equal((await lab.finish(c,p.make)).reason,"S3_LIFECYCLE_EXPIRATION_PENDING");p.state.expire=true;a.equal((await lab.finish(c,p.make)).state,"DISPOSABLE_LIFECYCLE_ACCEPTED");
  await a.rejects(lab.environment({...c,environment:"production"},p.make),{code:"DISPOSABLE_CROSS_ACCOUNT_LAB_REQUIRED"});
+});
+test("Object Lock acceptance rejects a genuinely short provider retention",async t=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),"mp-retention-short-"));t.after(()=>fs.rmSync(root,{recursive:true,force:true}));const c={environment:"disposable-nonproduction",record:path.join(root,"record.json"),...accounts("merge-proof-lock-lab-")},p=provider();p.state.retentionShortfallMs=1000;
+ await a.rejects(lab.prepare(c,p.make),{code:"RETENTION_NOT_CONFIRMED"});
 });
 test("preparatory infrastructure has no product deployment/publication or production retention; roles stay separated",()=>{
  const {template}=require("../operations/prepare-infrastructure"),primary=template("primary"),recovery=template("recovery");

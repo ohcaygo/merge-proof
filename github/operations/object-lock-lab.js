@@ -4,6 +4,8 @@
 const fs=require("node:fs"),path=require("node:path"),crypto=require("node:crypto");
 const {assert,hash}=require("../common"),{client}=require("./aws");
 const save=(file,data)=>{const temp=file+".tmp",fd=fs.openSync(temp,"w",0o600);try{fs.writeFileSync(fd,JSON.stringify(data,null,2)+"\n");fs.fsyncSync(fd);}finally{fs.closeSync(fd);}fs.renameSync(temp,file);};
+// S3 retains Object Lock deadlines at whole-second precision; round up to preserve the minimum.
+const minimumRetainUntil=millis=>new Date(Math.ceil(millis/1000)*1000).toISOString();
 async function environment(config,make=client){
  assert(config.environment==="disposable-nonproduction"&&config.primary.accountId!==config.recovery.accountId&&config.primary.region!==config.recovery.region&&path.isAbsolute(config.record),"DISPOSABLE_CROSS_ACCOUNT_LAB_REQUIRED");
  const sides=[];
@@ -18,7 +20,7 @@ async function environment(config,make=client){
  return sides;
 }
 async function prepare(config,make=client){
- assert(!fs.existsSync(config.record),"LAB_RECORD_EXISTS");const sides=await environment(config,make),run=crypto.randomUUID(),until=new Date(Date.now()+180000).toISOString();
+ assert(!fs.existsSync(config.record),"LAB_RECORD_EXISTS");const sides=await environment(config,make),run=crypto.randomUUID(),until=minimumRetainUntil(Date.now()+180000);
  const body=path.join(path.dirname(config.record),run+".bin"),bytes=crypto.randomBytes(256);fs.writeFileSync(body,bytes,{mode:0o600,flag:"wx"});
  const record={schema:"urn:merge-proof:object-lock-lab:1",environment:config.environment,configDigest:hash(config),run,retainedUntil:until,startedAt:new Date().toISOString(),contentSha256:crypto.createHash("sha256").update(bytes).digest("hex"),sides:[],state:"RUNNING",checks:[]};save(config.record,record);
  try{
