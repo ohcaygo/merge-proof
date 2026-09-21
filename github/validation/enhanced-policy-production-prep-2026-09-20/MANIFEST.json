@@ -32,7 +32,7 @@
     "linux-chrome-version.txt": "fb6bdaf3a279ab7814b5325970658139601e8c65d5e30f52acacf95273189a0f",
     "linux-engine-digest.txt": "4ec5550ddb5831542b18f15a10e3a47ddf4740e2474ce9d0d3bb0bd690a8d2c9",
     "linux-factory-tests.txt": "2a542fc831121b96ce054a54b842d7ad4593ef045c92773a3b86a508cf8a8a70",
-    "README.md": "72f211246fea6e2e27d42d6df332214671674f3841240f898e2c0254d06c5012",
+    "README.md": "63ed8fbaf90cd5c7dea7b89428534bb3ec4af66653756f45b269d9ff3fcf90c3",
     "linux-fixture.json": "29c61f401a575791a1a52d9c9a2616c1430c043dd3b9dac96d41d474785c381c",
     "local-cli-report-tests.txt": "2905fd03eff578eec49b83e5e4d00c18c3c62d928e9d5e9ab5778b12f222b665",
     "local-factory-tests.txt": "06d9d8f39d7c343008ab7ac3eb05d1b9165eb7b6fd12ac460ddcc2ea5cfa522e",
@@ -49,7 +49,8 @@
     "companion-installation-observation.json": "ffce74f96bb88a11a9784523163ffa4b1267cf963e18288f33da7ca860a078df",
     "validation-organization-checkout.json": "f2a23407cc3332456dae7200c360ab20447be7d082cb769e29f84804a62542a5",
     "validation-org-github-tests.txt": "5df2d6f10d7d7f7c1015e69719149f120bb995991d0bdb8731e68bfcb8a29a64",
-    "validation-org-github-tests-sandbox-denied.txt": "d67967867f2131dec81c0063713a78c90c09cc3c4a0820e18f9a1acd43194812"
+    "validation-org-github-tests-sandbox-denied.txt": "d67967867f2131dec81c0063713a78c90c09cc3c4a0820e18f9a1acd43194812",
+    "remaining-authentication-prerequisites.json": "118ff95c27df50c632e518a93580548c5770a248f72708f6c5f8e20526847208"
   },
   "currentProductCandidate": "9a35a7a2a8491dbec6d05a567ef69ac69a94753f",
   "currentCandidateAcceptance": "../organization-rulesets-2026-09-20/README.md",

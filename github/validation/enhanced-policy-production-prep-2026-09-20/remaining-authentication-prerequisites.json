@@ -1,0 +1,35 @@
+{
+  "observedAt": "2026-09-21T16:09:32.485597+00:00",
+  "productCandidate": "9a35a7a2a8491dbec6d05a567ef69ac69a94753f",
+  "secondIdentity": {
+    "login": "thatguyrw-boop",
+    "organization": "ohcaygo-merge-proof-validation-lab",
+    "providerMembership": "pending",
+    "localAuthenticatedIdentity": "dupageinspect-beep",
+    "requiredAction": "Owner completes second-account sign-in and accepts organization invitation; then verify membership and repository writer authority before actual review"
+  },
+  "companion": {
+    "appId": 5015754,
+    "installationId": 163368931,
+    "repository": "ohcaygo/merge-proof-l3-lab-queue-headgreen",
+    "privateKeyState": "NO_KEY_SHOWN_ON_AUTHENTICATED_GENERAL_PAGE",
+    "localSeparateUidRuntime": "UNAVAILABLE_WITHOUT_LOCAL_ADMIN_AUTHENTICATION",
+    "localNoninteractiveSudo": "PASSWORD_REQUIRED",
+    "newCandidateSignedQueue": "NOT_PROVEN",
+    "nextRuntime": "Approved AWS nonproduction host provides separate proof/policy service identities; no shared-UID credential substitution"
+  },
+  "aws": {
+    "cliVersion": "2.36.49",
+    "primaryProfile": "merge-proof-prep-primary",
+    "primaryRegion": "us-east-1",
+    "recoveryProfile": "merge-proof-prep-recovery",
+    "recoveryRegion": "us-west-2",
+    "authentication": "Primary browser-based temporary session login started; owner non-root sign-in required. Recovery login follows after primary identity verification.",
+    "accountIds": null,
+    "staticCredentialsRequested": false,
+    "resourcesCreated": false
+  },
+  "productionChanged": false,
+  "appPermissionsChanged": false,
+  "candidateChanged": false
+}
