@@ -1,0 +1,51 @@
+{
+  "observedAt": "2026-09-21T01:49:24.919871+00:00",
+  "productCandidate": "838ed8f422605bc814c0a7d9d0140dabbe78fedb",
+  "observationSource": "Authenticated GitHub browser UI; saved installation readback after Install",
+  "app": {
+    "name": "OHCAYGO Enhanced Policy Dev",
+    "slug": "ohcaygo-enhanced-policy-dev",
+    "appId": 5015754,
+    "owner": "ohcaygo",
+    "installability": "PRIVATE_OWNER_ONLY",
+    "privateEvidence": "Advanced page offers Make public / Allow this GitHub App to be installed on other accounts; no action taken"
+  },
+  "installation": {
+    "id": 163368931,
+    "state": "INSTALLED",
+    "repositorySelection": "selected",
+    "selectedRepositoryCount": 1,
+    "repositories": [
+      {
+        "fullName": "ohcaygo/merge-proof-l3-lab-queue-headgreen",
+        "id": 1377343185
+      }
+    ],
+    "permissions": {
+      "administration": "write",
+      "metadata": "read"
+    },
+    "settingsUrl": "https://github.com/organizations/ohcaygo/settings/installations/163368931"
+  },
+  "setupCallback": {
+    "url": "http://127.0.0.1:4318/proof/enhanced/callback?installation_id=163368931&setup_action=install",
+    "result": "CONNECTION_REFUSED_LOCAL_SERVICE_NOT_RUNNING",
+    "githubInstallationSaved": true,
+    "productEnrollmentCompleted": false
+  },
+  "boundaries": {
+    "permissionChanges": false,
+    "additionalRepositories": false,
+    "installabilityChanged": false,
+    "productionAccessAdded": false,
+    "privateKeyGeneratedByThisAction": false,
+    "repositoryAdministrationMutations": false
+  },
+  "acceptance": {
+    "companionRuntimeEnrollment": "NOT_PROVEN",
+    "companionPolicyApiPreflight": "NOT_PROVEN",
+    "newCandidateSignedQueue": "NOT_PROVEN",
+    "lastLiveSignedQueueCandidate": "7953ecdbd849c8afe0379bfec1b4a61133292c62"
+  },
+  "remainingPreparation": "Separate-UID broker credential/runtime setup and real product OAuth/consent are still required before fresh companion-backed signed queue acceptance."
+}
