@@ -1,0 +1,87 @@
+{
+  "state": "PASSED_SIGNED_APP_TRANSPORT_AND_READ_MODE_ACCEPTANCE",
+  "qualifiedRequiredCIFailure": "NOT_PROVEN_EXECUTION_POLICY_QUALIFICATION_UNAVAILABLE; original unmet expectation retained separately",
+  "source": "9a35a7a2a8491dbec6d05a567ef69ac69a94753f",
+  "appId": 5022592,
+  "installationId": 163531028,
+  "repositoryId": 1378968803,
+  "pr": 5,
+  "cases": [
+    {
+      "id": "A01-exact-candidate-runtime",
+      "pass": true,
+      "source": "9a35a7a2a8491dbec6d05a567ef69ac69a94753f",
+      "runtimeFilesVerified": 251,
+      "codeDigest": "b770fe7f5dac86730095e768e4c3c4b4e1856eae909b3757acfc756069e47b76"
+    },
+    {
+      "id": "A02-unsigned-webhook-refused",
+      "pass": true
+    },
+    {
+      "id": "A03-real-signed-PR-delivery",
+      "pass": true,
+      "head": "ad77673d5a668dc4404c459d8f30efe1af8266e5",
+      "receiptId": "4ebead51-f2eb-49e5-a5e3-d80984a49f54"
+    },
+    {
+      "id": "A04-unavailable-policy-no-false-verified",
+      "pass": true,
+      "verdict": "NOT_PROVEN",
+      "gaps": [
+        "CURRENT_STATE_EXECUTION_NOT_PROVEN",
+        "EXECUTION_PROTECTIONS_UNAVAILABLE",
+        "INSUFFICIENT_CURRENT_HUMAN_APPROVAL"
+      ]
+    },
+    {
+      "id": "A05-inherited-organization-policy-bound",
+      "pass": true
+    },
+    {
+      "id": "A06-portable-and-authorized-delivery",
+      "pass": true,
+      "signature": "VALID_TRUSTED_KEY",
+      "current": "CURRENT"
+    },
+    {
+      "id": "A07-unqualified-failed-CI-remains-NOT_PROVEN",
+      "pass": true,
+      "verdict": "NOT_PROVEN",
+      "violations": [],
+      "head": "f4731f9dda527eef573ced26f4afe9a6b9a55074",
+      "qualifiedRequiredCIFailure": "NOT_PROVEN_IN_READ_MODE; original FAIL expectation retained as unmet in parent run"
+    },
+    {
+      "id": "A08-old-receipt-immutable-stale",
+      "pass": true
+    },
+    {
+      "id": "A09-new-head-reproof-remains-NOT_PROVEN",
+      "pass": true,
+      "head": "56a71ab5b23aef10a5716e100644504003d84729",
+      "receiptId": "e56d1f3f-f9b7-4eae-9c19-d93e75bc45d7"
+    },
+    {
+      "id": "A10-real-provider-redelivery-idempotent",
+      "pass": true,
+      "guid": "ae614320-b5d4-11f1-9b57-9b2cb7bd0f3b"
+    },
+    {
+      "id": "A11-synthetic-main-unchanged",
+      "pass": true
+    },
+    {
+      "id": "A12-durable-restart-portable-replay",
+      "pass": true
+    }
+  ],
+  "signatureTrust": "Ephemeral non-production P-256 lab signer, distinct from GitHub App authentication key",
+  "positiveRequiredReview": "NOT_PROVEN_SECOND_ACCOUNT_MEMBERSHIP_PENDING",
+  "positiveExecutionPolicy": "NOT_PROVEN_ADMINISTRATION_READ_API_403",
+  "positiveOrgRulesetDetail": "NOT_PROVEN_ORGANIZATION_ENDPOINT_API_403",
+  "landedAcceptance": "NOT_RUN_REQUIRED_REVIEW_UNAVAILABLE_NO_RULE_RELAXATION",
+  "productionChanged": false,
+  "existingAppsChanged": false,
+  "keysRevoked": false
+}

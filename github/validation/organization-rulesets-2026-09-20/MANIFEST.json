@@ -78,8 +78,12 @@
       "bytes": 104804
     },
     "README.md": {
-      "sha256": "1b78ad4f479cef0e3e4738117690b33870767273be8427a8bfdd375883e91033",
-      "bytes": 9320
+      "sha256": "0f28e118931466a7c133a3b32ce8107c0b1b94e3bc049d35dbb08cafcb3470ea",
+      "bytes": 12450
+    },
+    "app-preflight.json": {
+      "sha256": "0485ded1f24ea27c5e6f96265d9918af825f1d559bb47f169fa7cd857368533b",
+      "bytes": 4748
     },
     "billing-readback.json": {
       "sha256": "450098e75e2bb5e09af4c92930e003d17b1570c9a09fd00bf28f454c9823cfd3",
@@ -117,29 +121,81 @@
       "sha256": "37fbd51248b54c2f16a64b79184f6679e36174dceb0183207721492b58076708",
       "bytes": 305
     },
+    "replacement-key-verification.json": {
+      "sha256": "a03626bb049025fe1d96ae7b1794d6f9506beea08e885d2caa666226502d40f7",
+      "bytes": 934
+    },
     "ruleset-import.json": {
       "sha256": "19fd252eb78ad0c839b82c1fe7c40bb486ea84f7593eb461972f3f55af437db6",
       "bytes": 1071
+    },
+    "signed-app-first-failed-ci.json": {
+      "sha256": "94d33cf5e055f45b414eab99045f51860168837d9c1d80fa393c210c2ac7589a",
+      "bytes": 91787
+    },
+    "signed-app-first-lab-public-keys.json": {
+      "sha256": "8bdf384f5b72801490625758372d31e8648d821d8ac09b13034f32a6a0a715f1",
+      "bytes": 356
+    },
+    "signed-app-first-receipt.json": {
+      "sha256": "0b8c187dfc3a7777a2c27897daff804e2fa575321eb5a2ebd911055c7d86de1c",
+      "bytes": 90821
+    },
+    "signed-app-initial-failure.json": {
+      "sha256": "1d45dc4b5357a33094205c2520319c0bb32f4300a2330cf6b6d4cdc76d42d056",
+      "bytes": 2000
+    },
+    "signed-app-lab-public-keys.json": {
+      "sha256": "43ea39d6aacc1fc7be8b067e0466fdc95d0fe7130d28ea2da06b4a3fed43a12e",
+      "bytes": 356
+    },
+    "signed-app-provider-delivery.json": {
+      "sha256": "1eebc1696b893eb6dedb3532116145c9674b91e5dff2a76c39dffce09e71d7fd",
+      "bytes": 264
+    },
+    "signed-app-read-mode-before.json": {
+      "sha256": "7670337c3f97740c67c25ba12846c29af082b1a2c4670e60a79c62732f516c13",
+      "bytes": 90929
+    },
+    "signed-app-read-mode-failed-ci.json": {
+      "sha256": "7c9b6461a2d47dbd9fce79ea63eaa3aab811b70c142f04d57dc9bb58e1d3b2f3",
+      "bytes": 91895
+    },
+    "signed-app-read-mode-restored.json": {
+      "sha256": "74d578868cec7a0305fe4bf30ea49e1eb55dcb43b109e102ca32e0067d9e6f6d",
+      "bytes": 92929
+    },
+    "signed-app-read-mode-result.json": {
+      "sha256": "b69f65cfbf61adb14122e087c8cf7f54d7a447a072039b9a74e85965b0f56389",
+      "bytes": 2825
+    },
+    "signed-app-shutdown.json": {
+      "sha256": "5ad09af78fdf5b12205cc170633166a8e8f0274b16fb38200daceb71538f0d93",
+      "bytes": 188
+    },
+    "signed-app-transport-index.json": {
+      "sha256": "d8621fe59445a972db36609bef2b8086caf9ac9ad18e5b4a1138746720012db2",
+      "bytes": 19856
     },
     "standard-app-readback.json": {
       "sha256": "e9a557f64f7ce3e594a8221d89069d848d95580b2bb71b3ac4e1a66868f2623f",
       "bytes": 633
     },
     "summary.json": {
-      "sha256": "5a3ce68064733a031ef504a6041cc93741f1ca626ca1d83dcb165fd7336b7d29",
-      "bytes": 2489
+      "sha256": "c225ad32228babb6d3c7e01d09a8fa40331fcd8bf6d3d628899124cb48ccbdf6",
+      "bytes": 2950
     },
     "validation-app-installation.json": {
-      "sha256": "a6f5f1c489b7b059faf3fad3e44133a21017f9397d5f7ba9a436218aa5dc4dc3",
-      "bytes": 2566
+      "sha256": "918cbf5f5982a8737d3effb9de4f7552e274b0892a0567ca4123d849a3452a8d",
+      "bytes": 3419
     },
     "validation-app-proposal.json": {
       "sha256": "fdcf7fae0fbb62ee714b3c1fe227bc6413cece2deb085cf05ba48c131b55a869",
       "bytes": 1729
     },
     "validation-app-registration-preparation.json": {
-      "sha256": "9a2ee29a666e365a3159838a70a0a4e1ef95dead07790407f3f4f894bd4168a9",
-      "bytes": 4300
+      "sha256": "aa8e85972f7a9bf5f991b834b3f126a8baa1f1b1226b3a39af837410f96c254b",
+      "bytes": 4432
     }
   }
 }

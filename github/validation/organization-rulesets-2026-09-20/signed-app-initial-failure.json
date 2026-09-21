@@ -1,0 +1,64 @@
+{
+  "failure": {
+    "phase": "failed-ci",
+    "error": "A07-failed-required-CI-is-FAIL",
+    "at": "2026-09-21T15:52:39.787Z"
+  },
+  "cases": [
+    {
+      "id": "A01-exact-candidate-runtime",
+      "pass": true,
+      "source": "9a35a7a2a8491dbec6d05a567ef69ac69a94753f",
+      "runtimeFilesVerified": 251,
+      "codeDigest": "b770fe7f5dac86730095e768e4c3c4b4e1856eae909b3757acfc756069e47b76"
+    },
+    {
+      "id": "A02-unsigned-webhook-refused",
+      "pass": true
+    },
+    {
+      "id": "A03-real-signed-PR-delivery",
+      "pass": true,
+      "head": "50e6395b8a05611e5b11a2ccb560ebab3454eeef",
+      "receiptId": "ca534594-90e6-4ea6-8f0e-846f4abaa38d"
+    },
+    {
+      "id": "A04-unavailable-policy-no-false-verified",
+      "pass": true,
+      "verdict": "NOT_PROVEN",
+      "gaps": [
+        "CURRENT_STATE_EXECUTION_NOT_PROVEN",
+        "EXECUTION_PROTECTIONS_UNAVAILABLE",
+        "INSUFFICIENT_CURRENT_HUMAN_APPROVAL"
+      ]
+    },
+    {
+      "id": "A05-inherited-organization-policy-bound",
+      "pass": true
+    },
+    {
+      "id": "A06-portable-and-authorized-delivery",
+      "pass": true,
+      "signature": "VALID_TRUSTED_KEY",
+      "current": "CURRENT"
+    },
+    {
+      "id": "A07-failed-required-CI-is-FAIL",
+      "pass": false,
+      "verdict": "NOT_PROVEN",
+      "violations": [],
+      "head": "1aec74186a5121788f685aaa211ef17421a56a0a"
+    }
+  ],
+  "interpretation": "Transport and signed portable replay passed. Initial expectation REQUIRED_CHECK_FAILED/FAIL was not met under Administration Read: producer binding was established, but execution-policy qualification remained UNKNOWN because GitHub returned 403. This limitation is retained, not counted as a passed FAIL acceptance. Product candidate and proof semantics are unchanged.",
+  "cleanup": {
+    "at": "2026-09-21T15:52:41.091Z",
+    "relayStopped": true,
+    "receiverStopped": true,
+    "pr": 4,
+    "closed": true,
+    "merged": false,
+    "branchRetained": true,
+    "keysRevoked": false
+  }
+}

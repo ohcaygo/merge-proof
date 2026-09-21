@@ -1,0 +1,10 @@
+{
+  "id": "3844008722263179264",
+  "guid": "ae614320-b5d4-11f1-9b57-9b2cb7bd0f3b",
+  "event": "pull_request",
+  "action": "opened",
+  "delivered_at": "2026-09-21T15:54:09.788Z",
+  "status_code": 200,
+  "installation_id": 163531028,
+  "repository_id": 1378968803
+}

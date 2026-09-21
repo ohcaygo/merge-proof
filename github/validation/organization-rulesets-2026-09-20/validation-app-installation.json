@@ -1,5 +1,5 @@
 {
-  "observedAt": "2026-09-21T15:37:35.378818+00:00",
+  "observedAt": "2026-09-21T15:58:08.715444+00:00",
   "productCandidate": "9a35a7a2a8491dbec6d05a567ef69ac69a94753f",
   "name": "OHCAYGO Validation Proof Dev",
   "appId": 5022592,
@@ -57,12 +57,22 @@
   },
   "privateKey": {
     "generated": true,
-    "keyId": 4550569,
-    "publicFingerprint": "SHA256:6VlBdbpg769JQs2OVqpF529ixqBTeBcPkeJZcCjEWBY=",
-    "localCredentialAvailable": false,
-    "status": "GENERATED_DOWNLOAD_HANDOFF_PENDING"
+    "keyId": 4550739,
+    "publicFingerprint": "SHA256:AQv8OLlsQgjVVu/ArGxaNrWFbte+rU7i6m7UyBguyOQ=",
+    "localCredentialAvailable": true,
+    "status": "VERIFIED_BY_GITHUB_APP_JWT",
+    "localPathRecordedPrivately": true,
+    "privateKeyMaterialWrittenToConfig": false,
+    "oldKey": {
+      "id": 4550569,
+      "publicFingerprint": "SHA256:6VlBdbpg769JQs2OVqpF529ixqBTeBcPkeJZcCjEWBY=",
+      "revoked": true,
+      "ownerRevocationApproval": "GRANTED: Revoke only old key 4550569",
+      "revocationVerifiedAt": "2026-09-21T15:58:08.715444+00:00",
+      "verification": "GitHub General now contains only integration-key-4550739 with expected replacement fingerprint; fresh replacement-signed JWT and exact-repository installation preflight succeeded"
+    }
   },
-  "signedAcceptance": "NOT_PROVEN_PENDING_LOCAL_APP_CREDENTIAL",
+  "signedAcceptance": "PASSED_REAL_SIGNED_TRANSPORT_AND_READ_MODE_RECEIPT_ACCEPTANCE",
   "secondAccountMembership": {
     "login": "thatguyrw-boop",
     "id": 249527096,
@@ -72,5 +82,9 @@
   },
   "existingAppsChanged": false,
   "productionChanged": false,
-  "productCodeChanged": false
+  "productCodeChanged": false,
+  "keyVerifiedAt": "2026-09-21T15:47:33.372Z",
+  "signedAcceptanceRecord": "signed-app-read-mode-result.json",
+  "qualifiedRequiredCIFailure": "NOT_PROVEN_IN_READ_MODE_ORIGINAL_UNMET_EXPECTATION_RETAINED",
+  "oldKeyRevokedOnlyAfterExplicitOwnerApproval": true
 }

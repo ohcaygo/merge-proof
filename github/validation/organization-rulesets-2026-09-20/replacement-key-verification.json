@@ -1,0 +1,22 @@
+{
+  "at": "2026-09-21T15:47:33.372Z",
+  "appId": 5022592,
+  "ownerId": 331842075,
+  "keyId": 4550739,
+  "publicFingerprint": "SHA256:AQv8OLlsQgjVVu/ArGxaNrWFbte+rU7i6m7UyBguyOQ=",
+  "verification": [
+    "Public-key SHA256 matches replacement displayed by GitHub",
+    "GitHub accepted JWT signed by this key and returned App 5022592"
+  ],
+  "privateKeyMaterialWrittenToConfig": false,
+  "oldKey": {
+    "id": 4550569,
+    "publicFingerprint": "SHA256:6VlBdbpg769JQs2OVqpF529ixqBTeBcPkeJZcCjEWBY=",
+    "revoked": true,
+    "ownerRevocationApproval": "GRANTED: Revoke only old key 4550569",
+    "revocationVerifiedAt": "2026-09-21T15:58:08.715444+00:00",
+    "verification": "GitHub General now contains only integration-key-4550739 with expected replacement fingerprint; fresh replacement-signed JWT and exact-repository installation preflight succeeded"
+  },
+  "localPathRecordedPrivately": true,
+  "replacementKeyRetained": true
+}

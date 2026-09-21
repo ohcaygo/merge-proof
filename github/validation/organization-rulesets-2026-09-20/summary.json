@@ -4,7 +4,7 @@
   "lastLiveSignedQueueCandidate": "7953ecdbd849c8afe0379bfec1b4a61133292c62",
   "proofCodeDigest": "b770fe7f5dac86730095e768e4c3c4b4e1856eae909b3757acfc756069e47b76",
   "basicTeamOrganizationAcceptance": "PASS_FOR_RECORDED_CASES",
-  "organizationAppDelivery": "NOT_PROVEN_PENDING_LOCAL_APP_CREDENTIAL",
+  "organizationAppDelivery": "PASSED_REAL_SIGNED_TRANSPORT_AND_READ_MODE_RECEIPT_ACCEPTANCE",
   "positiveSecondAccountApproval": "NOT_PROVEN_MEMBERSHIP_PENDING",
   "newCandidateSignedQueue": "NOT_PROVEN",
   "positiveCoverageCollection": "UNIMPLEMENTED_PROVIDER_BLOCKED",
@@ -67,7 +67,8 @@
     "factory": 37,
     "modelSequences": 1000,
     "modelActions": 28578,
-    "modelInvariants": 17
+    "modelInvariants": 17,
+    "signedAppReadModeChecks": 12
   },
   "finalSyntheticMain": "2981ae25b39711abad60e48cae26d670d15d3046",
   "productCodeChanges": false,
@@ -75,5 +76,10 @@
   "productionChanges": false,
   "organizationAppRegistrationAuthorization": "GRANTED_AND_EXECUTED_PRIVATE_VALIDATION_ORGANIZATION_ONLY",
   "organizationAppPreparation": "validation-app-registration-preparation.json",
-  "organizationAppInstallation": "validation-app-installation.json"
+  "organizationAppInstallation": "validation-app-installation.json",
+  "organizationAppSignedAcceptance": "signed-app-read-mode-result.json",
+  "organizationAppQualifiedFailure": "NOT_PROVEN_EXECUTION_POLICY_QUALIFICATION_UNAVAILABLE",
+  "organizationAppPositivePolicyProof": "NOT_PROVEN_EXECUTION_POLICY_403_AND_REQUIRED_REVIEW_MISSING",
+  "replacementKeyVerification": "replacement-key-verification.json",
+  "oldInaccessibleKey": "REVOKED_AFTER_EXPLICIT_OWNER_APPROVAL"
 }

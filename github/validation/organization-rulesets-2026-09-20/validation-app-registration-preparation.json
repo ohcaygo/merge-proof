@@ -1,5 +1,5 @@
 {
-  "status": "CREATED_AND_INSTALLED_LOCAL_KEY_HANDOFF_PENDING",
+  "status": "CREATED_INSTALLED_REPLACEMENT_KEY_VERIFIED_SIGNED_READ_MODE_ACCEPTANCE_PASSED",
   "proposedName": "OHCAYGO Validation Proof Dev",
   "ownerId": 331842075,
   "installability": "PRIVATE_OWNER_ONLY",
@@ -41,10 +41,7 @@
   "existingAppChanges": false,
   "productionAccess": false,
   "additionalPaidPlan": false,
-  "registrationPrerequisites": [
-    "Local generated-key download handoff",
-    "App-token policy preflight and actual signed delivery acceptance remain separate"
-  ],
+  "registrationPrerequisites": [],
   "owner": "ohcaygo-merge-proof-validation-lab",
   "narrowingReason": "The latest authorization is solely organization-receipt acceptance. Merge queues Read and merge_group subscription are unnecessary for this path and omitted; product proof semantics are unchanged.",
   "registration": {
@@ -68,7 +65,7 @@
   "ownerButton": null,
   "ownerAuthenticationAccount": "dupageinspect-beep",
   "productCandidate": "9a35a7a2a8491dbec6d05a567ef69ac69a94753f",
-  "observedAt": "2026-09-21T15:37:35.378818+00:00",
+  "observedAt": "2026-09-21T15:58:08.715444+00:00",
   "githubOwnerAuthenticationComplete": true,
   "githubFormConfigured": true,
   "formReadback": {
@@ -103,5 +100,7 @@
   "privateKeyGenerated": true,
   "appId": 5022592,
   "installationId": 163531028,
-  "completionRecord": "validation-app-installation.json"
+  "completionRecord": "validation-app-installation.json",
+  "signedAcceptanceRecord": "signed-app-read-mode-result.json",
+  "policyValidationLimit": "GitHub returns 403 for execution-policy reads with approved Administration Read; stronger policy and qualified-failure claims remain unproven"
 }

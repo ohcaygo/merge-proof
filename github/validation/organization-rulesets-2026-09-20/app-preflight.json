@@ -1,0 +1,145 @@
+{
+  "observedAt": "2026-09-21T15:57:13.374Z",
+  "scope": {
+    "appId": 5022592,
+    "installationId": 163531028,
+    "ownerId": 331842075,
+    "repositoryId": 1378968803,
+    "repo": "ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules"
+  },
+  "permissions": {
+    "actions": "read",
+    "administration": "read",
+    "checks": "write",
+    "contents": "read",
+    "metadata": "read",
+    "pull_requests": "read",
+    "statuses": "read"
+  },
+  "events": [
+    "branch_protection_configuration",
+    "branch_protection_rule",
+    "check_run",
+    "check_suite",
+    "pull_request",
+    "pull_request_review",
+    "push",
+    "repository",
+    "repository_ruleset",
+    "status",
+    "workflow_run"
+  ],
+  "installationRepositorySelection": "selected",
+  "tokenRepositories": [
+    {
+      "id": 1378968803,
+      "fullName": "ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules"
+    }
+  ],
+  "webhook": {
+    "authorizedDestinationMatches": true,
+    "sslVerification": true
+  },
+  "policyProbes": [
+    {
+      "endpoint": "/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/rules/branches/main",
+      "status": 200,
+      "value": [
+        {
+          "type": "deletion",
+          "ruleset_source_type": "Organization",
+          "ruleset_source": "ohcaygo-merge-proof-validation-lab",
+          "ruleset_id": 23745947
+        },
+        {
+          "type": "non_fast_forward",
+          "ruleset_source_type": "Organization",
+          "ruleset_source": "ohcaygo-merge-proof-validation-lab",
+          "ruleset_id": 23745947
+        },
+        {
+          "type": "pull_request",
+          "parameters": {
+            "required_approving_review_count": 1,
+            "dismiss_stale_reviews_on_push": false,
+            "required_reviewers": [],
+            "require_code_owner_review": false,
+            "require_last_push_approval": false,
+            "required_review_thread_resolution": false,
+            "require_extra_approval_for_unattributed_changes": true,
+            "allowed_merge_methods": [
+              "merge",
+              "squash",
+              "rebase"
+            ]
+          },
+          "ruleset_source_type": "Organization",
+          "ruleset_source": "ohcaygo-merge-proof-validation-lab",
+          "ruleset_id": 23745947
+        },
+        {
+          "type": "required_status_checks",
+          "parameters": {
+            "strict_required_status_checks_policy": true,
+            "do_not_enforce_on_create": false,
+            "required_status_checks": [
+              {
+                "context": "l3 org validation",
+                "integration_id": 15368
+              }
+            ]
+          },
+          "ruleset_source_type": "Organization",
+          "ruleset_source": "ohcaygo-merge-proof-validation-lab",
+          "ruleset_id": 23745947
+        }
+      ]
+    },
+    {
+      "endpoint": "/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/rulesets?includes_parents=true",
+      "status": 200,
+      "value": [
+        {
+          "id": 23745947,
+          "name": "L3 owned organization acceptance 9a35a7a",
+          "target": "branch",
+          "source_type": "Organization",
+          "source": "ohcaygo-merge-proof-validation-lab",
+          "enforcement": "active",
+          "node_id": "RRS_lACkVXNlcs4Tx4IbzgFqVZs",
+          "_links": {
+            "self": {
+              "href": "https://api.github.com/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/rulesets/23745947"
+            },
+            "html": {
+              "href": "https://github.com/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/rules/23745947"
+            }
+          },
+          "created_at": "2026-09-21T02:19:40.956Z",
+          "updated_at": "2026-09-21T03:04:49.624Z"
+        }
+      ]
+    },
+    {
+      "endpoint": "/orgs/ohcaygo-merge-proof-validation-lab/rulesets/23745947",
+      "status": 403,
+      "value": {
+        "message": "Resource not accessible by integration",
+        "documentation_url": "https://docs.github.com/rest/orgs/rules#get-an-organization-repository-ruleset",
+        "status": "403"
+      }
+    },
+    {
+      "endpoint": "/repos/ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules/actions/policies?has_parents=true",
+      "status": 403,
+      "value": {
+        "message": "Resource not accessible by integration",
+        "documentation_url": "https://docs.github.com/rest/actions/policies#list-repository-actions-policies",
+        "status": "403"
+      }
+    }
+  ],
+  "source": "Actual App JWT and exact-repository installation token; no owner-token substitution",
+  "productCandidate": "9a35a7a2a8491dbec6d05a567ef69ac69a94753f",
+  "productionChanged": false
+}

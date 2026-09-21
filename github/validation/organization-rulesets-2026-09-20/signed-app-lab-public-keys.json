@@ -1,0 +1,15 @@
+{
+  "keys": [
+    {
+      "kty": "EC",
+      "x": "rXv4mwKvku9LeDUv0P4TmCS24oF1SYAZqsJFxrfjjbg",
+      "y": "NSJd1uee24dbhocfNJw2XK9-HuqniyfqPUqKPdDtqbM",
+      "crv": "P-256",
+      "kid": "org-synthetic-1790006044777",
+      "alg": "ES256",
+      "use": "sig",
+      "nbf": "2026-09-21T15:53:04.777Z",
+      "exp": "2026-09-22T15:54:04.777Z"
+    }
+  ]
+}
