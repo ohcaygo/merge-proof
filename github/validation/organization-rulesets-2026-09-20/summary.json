@@ -4,7 +4,7 @@
   "lastLiveSignedQueueCandidate": "7953ecdbd849c8afe0379bfec1b4a61133292c62",
   "proofCodeDigest": "b770fe7f5dac86730095e768e4c3c4b4e1856eae909b3757acfc756069e47b76",
   "basicTeamOrganizationAcceptance": "PASS_FOR_RECORDED_CASES",
-  "organizationAppDelivery": "NOT_PROVEN_EXACT_WEBHOOK_DESTINATION_APPROVAL_PENDING",
+  "organizationAppDelivery": "NOT_PROVEN_PENDING_LOCAL_APP_CREDENTIAL",
   "positiveSecondAccountApproval": "NOT_PROVEN_MEMBERSHIP_PENDING",
   "newCandidateSignedQueue": "NOT_PROVEN",
   "positiveCoverageCollection": "UNIMPLEMENTED_PROVIDER_BLOCKED",
@@ -73,6 +73,7 @@
   "productCodeChanges": false,
   "existingAppScopeChanges": false,
   "productionChanges": false,
-  "organizationAppRegistrationAuthorization": "GRANTED_VALIDATION_ORGANIZATION_PRIVATE_ONLY",
-  "organizationAppPreparation": "validation-app-registration-preparation.json"
+  "organizationAppRegistrationAuthorization": "GRANTED_AND_EXECUTED_PRIVATE_VALIDATION_ORGANIZATION_ONLY",
+  "organizationAppPreparation": "validation-app-registration-preparation.json",
+  "organizationAppInstallation": "validation-app-installation.json"
 }

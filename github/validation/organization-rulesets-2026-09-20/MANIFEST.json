@@ -78,8 +78,8 @@
       "bytes": 104804
     },
     "README.md": {
-      "sha256": "21228c9626026ddc75395be8589bb837800bca89a3eb8456d3b8cb824335c436",
-      "bytes": 9367
+      "sha256": "1b78ad4f479cef0e3e4738117690b33870767273be8427a8bfdd375883e91033",
+      "bytes": 9320
     },
     "billing-readback.json": {
       "sha256": "450098e75e2bb5e09af4c92930e003d17b1570c9a09fd00bf28f454c9823cfd3",
@@ -126,16 +126,20 @@
       "bytes": 633
     },
     "summary.json": {
-      "sha256": "0c3b3119291aa1ea75d7f0e45d2dc72d87776089ab5ddaaacc73ffbf63d649f5",
-      "bytes": 2421
+      "sha256": "5a3ce68064733a031ef504a6041cc93741f1ca626ca1d83dcb165fd7336b7d29",
+      "bytes": 2489
+    },
+    "validation-app-installation.json": {
+      "sha256": "a6f5f1c489b7b059faf3fad3e44133a21017f9397d5f7ba9a436218aa5dc4dc3",
+      "bytes": 2566
     },
     "validation-app-proposal.json": {
       "sha256": "fdcf7fae0fbb62ee714b3c1fe227bc6413cece2deb085cf05ba48c131b55a869",
       "bytes": 1729
     },
     "validation-app-registration-preparation.json": {
-      "sha256": "8aa2e9c4cab2951482a9b0a2e5e1b6f17053d9e621fcded150937e8f0ce395f9",
-      "bytes": 4207
+      "sha256": "9a2ee29a666e365a3159838a70a0a4e1ef95dead07790407f3f4f894bd4168a9",
+      "bytes": 4300
     }
   }
 }

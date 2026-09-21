@@ -1,0 +1,76 @@
+{
+  "observedAt": "2026-09-21T15:37:35.378818+00:00",
+  "productCandidate": "9a35a7a2a8491dbec6d05a567ef69ac69a94753f",
+  "name": "OHCAYGO Validation Proof Dev",
+  "appId": 5022592,
+  "slug": "ohcaygo-validation-proof-dev",
+  "installationId": 163531028,
+  "owner": {
+    "login": "ohcaygo-merge-proof-validation-lab",
+    "id": 331842075
+  },
+  "installability": "PRIVATE_OWNER_ONLY",
+  "privateVisibilityEvidence": "GitHub Advanced displays Make public; installation chooser lists only the owning validation organization",
+  "repositorySelection": "selected",
+  "selectedRepositories": [
+    {
+      "fullName": "ohcaygo-merge-proof-validation-lab/merge-proof-l3-lab-org-rules",
+      "id": 1378968803
+    }
+  ],
+  "repositorySelectionEvidence": "Post-install GitHub settings shows Only select repositories and Selected 1 repository with exact synthetic repository",
+  "permissions": {
+    "actions": "read",
+    "administration": "read",
+    "checks": "write",
+    "contents": "read",
+    "metadata": "read",
+    "pull_requests": "read",
+    "statuses": "read"
+  },
+  "events": [
+    "branch_protection_configuration",
+    "branch_protection_rule",
+    "check_run",
+    "check_suite",
+    "pull_request",
+    "pull_request_review",
+    "push",
+    "repository",
+    "repository_ruleset",
+    "status",
+    "workflow_run"
+  ],
+  "configurationVerification": [
+    "Saved permissions/events browser readback",
+    "GET /orgs/ohcaygo-merge-proof-validation-lab/installations using existing owner credential"
+  ],
+  "suspendedAt": null,
+  "webhook": {
+    "active": true,
+    "host": "smee.io",
+    "exactDestinationRecordedPrivately": true,
+    "sslVerification": true,
+    "secretConfigured": true,
+    "ownerAuthorization": "Explicit owner response: Authorize this synthetic-lab relay only",
+    "allowedPayloadScope": "Only approved public synthetic repository plus related App/installation metadata"
+  },
+  "privateKey": {
+    "generated": true,
+    "keyId": 4550569,
+    "publicFingerprint": "SHA256:6VlBdbpg769JQs2OVqpF529ixqBTeBcPkeJZcCjEWBY=",
+    "localCredentialAvailable": false,
+    "status": "GENERATED_DOWNLOAD_HANDOFF_PENDING"
+  },
+  "signedAcceptance": "NOT_PROVEN_PENDING_LOCAL_APP_CREDENTIAL",
+  "secondAccountMembership": {
+    "login": "thatguyrw-boop",
+    "id": 249527096,
+    "state": "pending",
+    "source": "Fresh GitHub membership API readback",
+    "classification": "Second-account functional validation only; no independent-human claim"
+  },
+  "existingAppsChanged": false,
+  "productionChanged": false,
+  "productCodeChanged": false
+}
