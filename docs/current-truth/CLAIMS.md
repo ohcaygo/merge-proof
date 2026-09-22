@@ -7,8 +7,8 @@
 - Narrow merge-integrity job (evidence ↔ exact candidate ↔ current under authority/policy ↔ landed content).
 - Deterministic verdicts: `VERIFIED` / `NOT_PROVEN` / `FAIL` / `STALE`.
 - AI does not decide `VERIFIED`.
-- Public offer: 7-day no-card trial from first successful proof; then $29/mo per observed active developer — **when Ryan confirms install is live**.
-- Soft-close while EA build/cutover is unfinished (see [OFFER.md](./OFFER.md)).
+- Public offer: 7-day no-card trial from first successful proof; then $29/mo per observed active developer. **Confirmed live 2026-09-22** (see [STATUS.md](./STATUS.md)) — the soft-close is no longer required.
+- Early Access is live: `https://merge-proof.ohcaygo.com/early-access`, 10-day invited term, gated per-person by allowlist (see [CAMPAIGN.md](./CAMPAIGN.md)).
 
 ## Do NOT claim
 
@@ -18,7 +18,6 @@
 - “Zero possibility of false VERIFIED”
 - “Full coverage-policy proof”
 - “Production AWS migration complete”
-- Trial/install is live **until Ryan confirms**
 - Fake urgency, invented customers, invented ROI
 - That `NOT_PROVEN` means bad code
 - That Merge-Proof is an AI reviewer / scanner / CI replacement / dashboard

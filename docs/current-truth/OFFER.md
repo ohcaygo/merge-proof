@@ -12,21 +12,18 @@
 
 Invited EA testers are intended to receive **10 days** (allowlisted GitHub installation-owner account IDs on the host). Public metadata / public offer remains **7 days**.
 
-## Live-install gate (hard)
+## Live-install gate — CLEARED, EA is live
 
-**Do not** send anyone to a trial/install flow, or claim the trial install is live, until Ryan confirms the current Early Access deployment/install path is actually live and working.
+**Superseded 2026-09-22.** Early Access is confirmed live: production backend `b36a1bd`, Cloudflare Pages `72248ed4`, install path `https://merge-proof.ohcaygo.com/early-access` → `/proof/` → GitHub OAuth → App install. A real first tester journey (`thatguyrw-boop`) passed end-to-end — real OAuth, real install, real PR, real GitHub Check, real receipt, invited 10-day term displayed correctly. See [STATUS.md](./STATUS.md) for the full verification record.
 
-Repo ops note (`github/operations/EARLY-ACCESS.md`, 2026-09-22): product lineage for EA is on `main`; production cutover credentials/access were **not** available in that recording session. Treat EA front-door live status as **UNKNOWN/UNVERIFIED** until Ryan confirms.
+The soft-close below no longer applies. Warm, qualified prospects **may** receive the real `https://merge-proof.ohcaygo.com/early-access` link now.
 
-## Soft-close (until EA live)
+## Invitation is still gated per-person
 
-Use:
-
-> We’re finishing the new tester build now. Happy to send it over when it’s live.
-
-Do not create fake urgency or pretend availability. Do not attach a trial CTA/link as though it is ready.
+Live front door does not mean open enrollment. Each tester must be explicitly allowlisted with their **real, verified** GitHub installation-owner account ID before their 10-day term will apply (see [CAMPAIGN.md](./CAMPAIGN.md) for the operational process). Never guess an ID. Never broaden the allowlist to "everyone" to save a step. Until allowlisted, an invited tester who installs still gets the ordinary public 7-day offer — not broken, just not yet the intended 10-day term.
 
 ## Related
 
 - [TESTERS.md](./TESTERS.md) — cohort goals
+- [CAMPAIGN.md](./CAMPAIGN.md) — live invitation batch, allowlisting process, 10-day feedback tracking
 - [CLAIMS.md](./CLAIMS.md) — do-not-claim list

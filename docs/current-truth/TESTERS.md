@@ -18,18 +18,16 @@ Purpose is **not** vanity signups. Learn: install? first proof? meaningful catch
 
 ## Offer for invited testers
 
-Intended **10-day** report-only trial for allowlisted accounts. Public offer remains 7-day / $29 (see [OFFER.md](./OFFER.md)).
+**10-day** report-only trial for allowlisted accounts. Public offer remains 7-day / $29 (see [OFFER.md](./OFFER.md)). **Live as of 2026-09-22** — see [STATUS.md](./STATUS.md) for the verified first real tester journey.
 
-## Soft-close until Ryan confirms EA live
+## Campaign tracking, invitation batch, allowlisting process, feedback system
 
-> We’re finishing the new tester build now. Happy to send it over when it’s live.
+Moved to [CAMPAIGN.md](./CAMPAIGN.md) — that file is the live operational tracker (who's invited, allowlist status, feedback stage). This file stays the static cohort-strategy reference.
 
-No trial CTA/link as if ready. No fake urgency.
+## Feedback channels
 
-## Feedback (when live)
-
-Repo ops: `support@ohcaygo.com` with “Early Access” in subject; GitHub issues; `ryan@ohcaygo.com` fallback; `SECURITY.md` for security-shaped reports.
+`support@ohcaygo.com` with “Early Access” in subject; GitHub issues; `ryan@ohcaygo.com` fallback; `SECURITY.md` for security-shaped reports.
 
 ## Prospect INPUT
 
-Warm leads and soft packs live under `research/grok-inbox/` as **INPUT**, not established truth. Do not paste private customer data here.
+Warm leads and soft packs live under `research/grok-inbox/` as **INPUT**, not established truth. Grok owns X/Twitter radar and conversation opportunities. Do not paste private customer data here.
