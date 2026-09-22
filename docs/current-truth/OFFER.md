@@ -1,6 +1,6 @@
 # Merge-Proof — Offer truth
 
-**Authority:** Public commercial offer + soft-close rules. Ryan handoff 2026-09-22.
+**Authority:** Public commercial offer + outreach rules. Updated 2026-09-22 EA UNLOCK (Chief/Ryan).
 
 ## Public commercial offer
 
@@ -10,23 +10,24 @@
 
 ## Invited Early Access / design partners
 
-Invited EA testers are intended to receive **10 days** (allowlisted GitHub installation-owner account IDs on the host). Public metadata / public offer remains **7 days**.
+Invited EA testers receive **10 days** (allowlisted GitHub installation-owner account IDs on the host). Public metadata / public offer remains **7 days**.
 
-## Live-install gate (hard)
+## Live-install status (2026-09-22)
 
-**Do not** send anyone to a trial/install flow, or claim the trial install is live, until Ryan confirms the current Early Access deployment/install path is actually live and working.
+Controlled Early Access is **LIVE** — real-user journey verified (Chief/Ryan unlock).
 
-Repo ops note (`github/operations/EARLY-ACCESS.md`, 2026-09-22): product lineage for EA is on `main`; production cutover credentials/access were **not** available in that recording session. Treat EA front-door live status as **UNKNOWN/UNVERIFIED** until Ryan confirms.
+Early Access URL: `https://merge-proof.ohcaygo.com/early-access`
 
-## Soft-close (until EA live)
+Organic / outreach may include that URL **only when Ryan greens a specific paste**. Do not cold-spray. Pack 63 / Ads remain HOLD until Ryan says otherwise.
 
-Use:
+## Soft-close
 
-> We’re finishing the new tester build now. Happy to send it over when it’s live.
+Soft-close is **no longer the default** for the unlocked EA path after Ryan greens a post.
 
-Do not create fake urgency or pretend availability. Do not attach a trial CTA/link as though it is ready.
+Still forbidden: fake urgency, invented customers, Level-3 “certified” claims, or posting invites Ryan has not greenlit.
 
 ## Related
 
 - [TESTERS.md](./TESTERS.md) — cohort goals
 - [CLAIMS.md](./CLAIMS.md) — do-not-claim list
+- [STATUS.md](./STATUS.md) — production + EA ops truth
