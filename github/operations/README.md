@@ -1,6 +1,14 @@
 # Level 3 operator steps
 
-The [continuation tracker](../validation/aws-production-continuation-2026-09-21/README.md) is current authority for candidate identity, accepted foundations, and remaining gates. This operator material is preparation/source configuration only; it does not claim hosted operational acceptance. Administration Read remains the default; `7953ecd` is a historical signed-queue acceptance only.
+Current authority for candidate identity, accepted foundations and remaining gates is
+[approved Level 3 preparation](LEVEL3-PREPARATION.md) together with the
+[release packet](LEVEL3-RELEASE-PACKET.md) and the dated records under
+[`../validation/`](../validation/). An earlier revision of this file pointed at a
+`../validation/aws-production-continuation-2026-09-21/` continuation tracker; **that directory
+was never created and no such tracker exists**, so it confers no authority and must not be
+cited as one. For the separate controlled Early Access pilot, see
+[Early Access](EARLY-ACCESS.md). This operator material is preparation/source configuration
+only; it does not claim hosted operational acceptance. Administration Read remains the default; `7953ecd` is a historical signed-queue acceptance only.
 
 These steps implement the researched boundary without granting new authority. Normal service operation never merges, enqueues, dismisses reviews, edits GitHub policies, or publishes anchors.
 

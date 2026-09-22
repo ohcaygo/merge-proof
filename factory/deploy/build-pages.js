@@ -21,6 +21,7 @@ for (const name of [
   "index.html",
   "privacy.html",
   "terms.html",
+  "early-access.html",
   "app.js",
   "landing.js",
   "legacy.html",

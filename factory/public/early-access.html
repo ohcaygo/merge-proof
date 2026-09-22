@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Early Access — OHCAYGO Merge Proof</title>
+<meta name="description" content="What invited Merge Proof Early Access testers receive, how to install, what is not yet proven, and where to send feedback.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://merge-proof.ohcaygo.com/early-access">
+<link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/brand.css">
+<link rel="icon" href="/ohcaygo-mark.png">
+</head>
+<body class="brand-page">
+<a class="skip-link" href="#early-access">Skip to content</a>
+<header class="site-header">
+<a class="brand" href="/"><img src="/ohcaygo-mark.png" width="48" height="48" alt=""><span>OHCAYGO<small>MERGE PROOF</small></span></a>
+<nav aria-label="Main navigation"><a href="/">Home</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></nav>
+</header>
+<main>
+<article class="legal-copy" id="early-access" aria-labelledby="early-access-title">
+<p class="eyebrow">INVITED TESTERS ONLY</p>
+<h1 id="early-access-title">Merge Proof Early Access</h1>
+<p class="small">This page is for people who received a direct invitation. It is not a public offer.</p>
+
+<p>Merge Proof checks whether the available GitHub evidence actually supports the exact candidate being merged, and keeps a receipt of what it could establish. Early Access is a small, deliberately limited pilot: <strong>20 invited accounts</strong>. We want to know where the product is confusing, where the evidence is thinner than you expected, and where it gets in your way.</p>
+
+<h2>What you receive</h2>
+<ul>
+<li><strong>10 calendar days of hosted, report-only access.</strong> No card, and no automatic charge when it ends.</li>
+<li>Your 10 days are assigned to the GitHub account that owns the installation, from a server-side invitation list. If your account is not on that list you get the ordinary public offer of 7 days instead — nothing on this page changes that.</li>
+<li>The clock starts with your <strong>first successful hosted proof</strong>: a CURRENT, collection-complete VERIFIED or NOT_PROVEN receipt. Connecting GitHub, installing the App, authorizing repositories, historical scans, FAIL results and unavailable or stale collection do not start it.</li>
+<li>One trial per GitHub account, shared across that account's installations. Reinstalling does not restart it.</li>
+<li>After Early Access, Pro is US$29/month per active developer. Choosing not to continue simply pauses new hosted proofs, re-proofs and scans.</li>
+</ul>
+
+<h2>Install it</h2>
+<ol>
+<li><strong>Connect GitHub</strong> at <a href="/proof/">merge-proof.ohcaygo.com/proof/</a>. You will need a GitHub account and a repository you can authorize.</li>
+<li><strong>Install the App</strong> on the repositories you choose. It requests read permissions for the evidence it reads, plus Checks write solely to publish the receipt Check. It never requests Contents write, secrets, or organization administration.</li>
+<li><strong>Open or point it at a PR.</strong> Merge Proof discovers open pull requests automatically and watches for the next one if none is open. You can close the page; it keeps working.</li>
+<li><strong>Read the receipt.</strong> The receipt Check appears on the PR in GitHub. The account view at <a href="/proof/">/proof/</a> shows the same observations with the explanation, the evidence gap and the next action.</li>
+</ol>
+<p>Nothing in this flow changes your repository. Merge Proof never edits branch protection or rulesets, and Early Access does not enable any enforcing gate — new enforcement requires paid Pro <em>and</em> a repository administrator acting inside GitHub.</p>
+
+<h2>What to expect from the results</h2>
+<p><strong>NOT_PROVEN is normal and is not a criticism of your code.</strong> It means Merge Proof could not establish everything it needs from the evidence GitHub actually exposed — missing, ambiguous, unsupported or unavailable. Please report these rather than assuming they are bugs; which gaps you hit most is exactly what we need to learn.</p>
+<ul>
+<li><strong>VERIFIED</strong> — for a CURRENT receipt, the available evidence satisfied the implemented checks for that exact observed state. It is not a correctness or security guarantee.</li>
+<li><strong>FAIL</strong> — sufficiently bound evidence showed a required condition was unmet.</li>
+<li><strong>STALE</strong> — something relevant changed after the receipt was issued. The original verdict is preserved; freshness is reported separately.</li>
+</ul>
+
+<h2>Known limitations during Early Access</h2>
+<p>We would rather you read these here than discover them mid-pilot.</p>
+<ul>
+<li><strong>This is not a certified release.</strong> Merge Proof's internal Level 3 assurance programme is explicitly <em>not</em> complete, and Early Access does not claim it is. Independent portable verification, signed evidence replay and recovery drills have been exercised in a lab; they have not been certified on the production host.</li>
+<li><strong>Hosted receipts are not cryptographically signed.</strong> The signer is implemented and lab-proven, but no production signing key is in service, and no public key set has been published. Treat an Early Access receipt as an inspectable record, not as an independently attestable one.</li>
+<li><strong>No availability, recovery or retention commitment.</strong> The service runs on a single host with a single writer. Backups exist, but the internal 15-minute recovery-point and 4-hour recovery-time objectives are unmet and unmeasured on production infrastructure. Do not make Early Access receipts your only copy of anything, and expect occasional planned pauses.</li>
+<li><strong>Evidence coverage is bounded.</strong> Code-coverage aggregates are not collected at all: GitHub does not yet expose an aggregate with the provenance required, so coverage claims stay NOT_PROVEN. CODEOWNERS requirements, last-push approval rules, exempt bypass actors, merge-queue sibling entries and some rebase and squash histories are explicitly unsupported.</li>
+<li><strong>A receipt is a point-in-time observation, not an atomic merge decision.</strong> GitHub can accept a merge in the window between an observation and its publication. Keep GitHub's own head-SHA guard and required checks.</li>
+<li><strong>Your repository metadata is stored.</strong> Paths, identifiers, SHAs, normalized checks and rules are retained to produce and refresh receipts. Merge Proof does not clone your repository tree, execute your code, or send your code to a model. See the <a href="/privacy">Privacy Policy</a>.</li>
+<li><strong>No AI model decides a verdict.</strong> The verdict is deterministic.</li>
+</ul>
+
+<h2>Sending feedback</h2>
+<p>Email <a href="mailto:support@ohcaygo.com?subject=Merge%20Proof%20Early%20Access%20feedback">support@ohcaygo.com</a> with <strong>“Early Access”</strong> in the subject, or open an issue at <a href="https://github.com/ohcaygo/merge-proof/issues">github.com/ohcaygo/merge-proof/issues</a>. Reach <a href="mailto:ryan@ohcaygo.com">ryan@ohcaygo.com</a> directly if support is unreachable.</p>
+<p>Useful things to include: the repository and PR you were looking at, the receipt ID, what you expected the result to be, and what you would have done next. <strong>Never send access tokens, private keys or credentials.</strong> If something looks like a security issue, please follow <a href="https://github.com/ohcaygo/merge-proof/blob/main/SECURITY.md">SECURITY.md</a> instead of opening a public issue.</p>
+<p>You can stop at any time: uninstall the App in GitHub. That halts new proofs and revokes hosted receipt access, and changes nothing else in your repository.</p>
+</article>
+<footer><a class="brand" href="/"><img src="/ohcaygo-mark.png" width="40" height="40" alt=""><span>OHCAYGO<small>PROVE THE MERGE.</small></span></a><div><a href="mailto:support@ohcaygo.com">support@ohcaygo.com</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></div></footer>
+</main>
+</body></html>
