@@ -1,8 +1,8 @@
 # Merge-Proof — Verified status only
 
-**Rule:** Only facts confirmable from git/repo/files, live host inspection, or explicit Ryan verification. If unknown, say UNKNOWN/UNVERIFIED. Do not invent production SHA, Level-3 completion, or live EA deploy.
+**Rule:** Only facts confirmable from git/repo/files, live host inspection, or explicit Ryan/Chief verification. If unknown, say UNKNOWN/UNVERIFIED. Do not invent production SHA or Level-3 certification.
 
-**As of:** 2026-09-22 (clean Early Access cutover session + Ryan verification).
+**As of:** 2026-09-22 (EA UNLOCK from Chief/Ryan — real-user journey verified).
 
 ## Canonical product repository
 
@@ -26,25 +26,28 @@
 
 These are **not** the currently deployed backend:
 
-- `origin/main` tip `288e0df` — **not deployed**; diverges from the production lineage
+- `origin/main` tip `288e0df` — **not** the production backend lineage tip used for deploy (docs may land on `main`; deploy follows the production lineage)
 - `c5df66c` — Level-3 / acceptance candidate material; **not** production
 - `9a35a7a` — **not** current production backend
 - Any other Level-3 candidate SHA
 
-## Early Access release (in progress — not live)
+## Early Access release — LIVE (2026-09-22 unlock)
 
 | Claim | State |
 | --- | --- |
-| Controlled EA release base | Being constructed from production `d1ba274` **plus only** the minimum invited-tester functionality |
-| EA release live on host | **Not live yet** |
-| Public trial / EA install path “live” for outreach CTAs | **UNCONFIRMED** until the live smoke journey passes — **Do not claim** |
-| Soft-close until smoke passes | Use: “We’re finishing the new tester build now. Happy to send it over when it’s live.” |
+| Controlled EA live | **LIVE** — real-user journey verified (Chief/Ryan EA UNLOCK 2026-09-22) |
+| EA base | Production `d1ba274` + minimum invited-tester functionality |
+| Invited tester term | **10 days** verified |
+| Public commercial term | **7-day** no-card trial from first successful proof → **$29/mo** per observed active developer — verified |
+| Early Access URL | `https://merge-proof.ohcaygo.com/early-access` |
+| Outreach posting | Organic may include the EA URL **only when Ryan greens a specific post**. Pack 63 / cold spray / Ads remain **HOLD**. |
+| Soft-close | Soft-close is **no longer required** for the unlocked EA path once Ryan greens a paste. Still no fake urgency and no Level-3 certification claims. |
 
 ## Level 3 / AWS
 
 | Claim | State |
 | --- | --- |
-| Level 3 certified / complete | **NOT certified complete** — remains separate from the Early Access release; do not claim |
+| Level 3 certified / complete | **NOT certified complete** — remains separate from Early Access; **never claim certified** |
 | Production AWS migration complete | **Do not claim** |
 | L3 / AWS evidence location | Protected outside this scoreboard at `/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-l3-live-lab-2026-09-19/` (and sibling L3 dirs). Do not relocate/rewrite until deliberate archive/reconcile. |
 
@@ -67,4 +70,4 @@ These are **not** the currently deployed backend:
 
 ## Immediate product job (ops reminder)
 
-Finish the **minimal Early Access release on top of `d1ba274`**, smoke-test it, and get the first tester through. Do not redefine production as `main` / L3 candidates while that work is in flight.
+Get invited testers through the **live** Early Access path. Organic waits for Ryan’s green before posting Anra/Sam (or other) trial invites. Pack 63 / cold spray / Ads stay HOLD. Level 3 stays uncertified and separate.

@@ -33,3 +33,7 @@ Repo ops: `support@ohcaygo.com` with “Early Access” in subject; GitHub issue
 ## Prospect INPUT
 
 Warm leads and soft packs live under `research/grok-inbox/` as **INPUT**, not established truth. Do not paste private customer data here.
+
+## Live status (2026-09-22)
+
+Controlled Early Access is **LIVE** (real-user journey verified). Invited term **10 days**. Outreach posts that include `https://merge-proof.ohcaygo.com/early-access` require Ryan’s green. Pack 63 / cold spray / Ads remain HOLD. Level 3 stays uncertified.
