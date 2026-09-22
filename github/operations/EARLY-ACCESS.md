@@ -226,3 +226,87 @@ ref for `999.3` matches this file alone, where the claim is quoted.
 re-verified live**: outbound access to `merge-proof.ohcaygo.com` is denied by this session's
 network policy (proxy answered 403 to CONNECT), so the deployed release could not be confirmed
 against the running host. That limit cuts both ways and is stated rather than papered over.
+
+## 8. Cutover — access verified, and the exact sequence
+
+**Step 1 (integrate) is done.** `main` is at `c8eccb2`, fast-forwarded from the Early Access
+lineage. The homepage's hosted-evidence-policy link now resolves. Cloudflare Pages here is
+**direct-upload, not Git-connected**, and `.github/workflows/self-check.yml` only runs tests
+with `contents: read` — so integrating `main` deployed nothing and triggered nothing.
+`npm test` (what CI runs) passes.
+
+### Deployment access — checked, not assumed
+
+| Checked | Result |
+| --- | --- |
+| `~/.ssh`, `~/.netrc`, `~/.config/doctl`, `~/.wrangler`, `~/.config/.wrangler` | All present but **empty**. No key, no token, no profile. |
+| Environment variables | Full enumeration: **no Cloudflare and no DigitalOcean credential of any kind.** Only GitHub tokens and sandbox proxy shims. |
+| Filesystem | No `.pem`, `id_rsa*`, `id_ed25519*`, `.netrc`, `doctl*.yaml`, `wrangler.toml` or any Cloudflare/DigitalOcean config outside the system CA bundle. |
+| Tooling | `doctl`, `wrangler`, `ssh`, `scp`, `rsync` — **none installed**. |
+| Network | `api.cloudflare.com`, `api.digitalocean.com`, `merge-proof.ohcaygo.com`, `merge-proof-origin.ohcaygo.com` all **403 at CONNECT** (policy denial). Port 22 on `161.35.59.206` unreachable. |
+
+Cutover from this session is therefore not possible — verified four independent ways, not
+inferred. Steps 5, 8, 9, 10 and 12 of the launch require the owner or an environment with
+network access to those hosts.
+
+### Hard dependency: the deployed sample PDF
+
+`build-pages.js` verifies the existing public sample against SHA-256
+`6250cbc8cc33bf7030339197c95ced5c36440c223a9b02c61c98fa2c5a323a80` and refuses a changed file.
+The repository's `samples/kiota.pdf` hashes to `95da24d5…` and **will not satisfy it**. The
+matching file is the one already published at `/sample`, so the bundle can only be built by
+someone who can fetch it from the live site. Download it first:
+
+```sh
+curl -fsSL https://merge-proof.ohcaygo.com/sample -o /tmp/kiota-sample-assessment.pdf
+sha256sum /tmp/kiota-sample-assessment.pdf   # must be 6250cbc8...a323a80
+```
+
+### The sequence
+
+```sh
+# 0. Exact release, clean checkout.
+git fetch origin && git checkout c8eccb2fcd0b8e2cbe2ca5a3e2b3a8fa6f66c1a7 2>/dev/null || git checkout main
+git rev-parse HEAD        # record this; it is the promoted SHA
+
+# 1. Back up BEFORE anything. Service stopped, full state.
+sudo systemctl stop merge-proof
+sudo tar -czf /root/pre-ea-$(date -u +%Y%m%dT%H%M%SZ).tgz \
+  /var/lib/merge-proof/state /var/lib/merge-proof/pro-live
+readlink -f /opt/merge-proof/current    # record the rollback target
+
+# 2. Verify rollback BEFORE cutover: restart on the current release and confirm it serves.
+sudo systemctl start merge-proof && systemctl is-active merge-proof
+curl -fsS -o /dev/null -w '%{http_code}\n' https://merge-proof.ohcaygo.com/proof/
+
+# 3. Allowlist. Add ONLY the invited testers' immutable GitHub installation-owner
+#    account IDs to invitedTesterAccountIds in the private App config
+#    ($MP_GITHUB_APP_CONFIG). Organization installs use the ORGANIZATION's id.
+#    Verify each id from the installation record. Never accept one from a request.
+#    The file is root-owned 0640 and is never served to a client.
+
+# 4. Promote the backend release, then restart through the normal process.
+#    (immutable release dir + /opt/merge-proof/current symlink, per factory/deploy/README.md)
+
+# 5. Pages bundle.
+node factory/deploy/build-pages.js /tmp/ea-pages /tmp/kiota-sample-assessment.pdf
+#    Upload /tmp/ea-pages to the EXISTING Cloudflare Pages project `merge-proof`.
+#    Record the previous production deployment id first — that is the Pages rollback.
+```
+
+**Rollback.** Restore the previous Pages production deployment in the existing project; point
+`/opt/merge-proof/current` back at its recorded target and restart. Preserve state in both
+directions. **Never roll back below `trial-0a635a7`** — pre-trial code reintroduces proof
+limits and ignores expiry for accounts whose clock already started.
+
+### Post-cutover verification (owner runs; all five must pass)
+
+1. `https://merge-proof.ohcaygo.com/early-access` returns 200 and renders.
+2. An **allowlisted** account reads **10 days**; a **non-allowlisted** account reads **7 days**
+   and `$29/month`. Check both before inviting anyone.
+3. One full journey on a real repository: connect → install → open PR → receipt Check appears
+   on the PR → receipt renders in the account view.
+4. Report-only holds: no enforcing policy is enabled, and no GitHub rule was edited.
+5. `systemctl is-active merge-proof`, plus queue depth, `billingHealth`, scan retry state and
+   disk capacity. There is **no automated alert delivery on this host** — a daily manual check
+   is the pilot's real monitoring position, and should be described that way.
