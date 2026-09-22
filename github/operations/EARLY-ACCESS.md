@@ -171,3 +171,58 @@ pilot's real durability position rather than restating the target.
   trust publication is in service. None of it exists.
 - Nothing that presents a 10-day term as the public commercial offer. The public offer is
   7 days, no card, then US$29/month per active developer.
+
+## 7. External-state reconciliation — 2026-09-22
+
+Challenged on the basis that AWS state was maintained outside the candidate repository. Every
+named external location was checked directly. **The reconciliation did not change any finding
+in section 1.** It did sharpen one point of reasoning, recorded below.
+
+| Checked | Result |
+| --- | --- |
+| `~/.mp-aws/` | **Does not exist.** Checked `/root/.mp-aws/` and `/home/user/.mp-aws/`; a filesystem-wide search for `*mp-aws*`, `*mp-primary*`, `*mp-recovery*` returned nothing. |
+| `~/.aws/config` | Exists, but contains only `[default]` with an `s3.payload_signing_enabled` setting. **No `mp-primary`, no `mp-recovery`, no SSO profile.** Created at container start (2026-09-22 01:58), i.e. harness-provisioned, not carried in. |
+| SSO / CLI credential cache | `~/.aws/sso/cache/` and `~/.aws/cli/cache/` do not exist. |
+| AWS CLI | **Not installed** (`aws` is not on `PATH`; no `/usr/local/aws-cli`). |
+| Environment AWS credentials | `AWS_ACCESS_KEY_ID` is 14 characters beginning `prox`, alongside `AWS_CA_BUNDLE` pointing at the agent-proxy CA. This is the sandbox's proxy shim, **not an AWS access key** (real keys are 20 characters, `AKIA`/`ASIA`). |
+| Direct AWS resource verification | **Not possible from this session.** AWS API endpoints are reachable through the proxy (`sts`, `cloudformation`, `kms` all answer), so the network path exists — but there is no CLI, no SSO session and no real credential to authenticate with. One attempt to test the environment credentials was denied by the sandbox as credential exploration and was not retried. CloudFormation stacks, EC2, KMS, S3, Secrets Manager, CloudWatch/SNS and Recovery resources are therefore **UNVERIFIED-FROM-HERE**, not verified-absent. |
+| `5dda6bf` | **Not a valid object** in any of the three clones, after fetching all branches *and* `refs/pull/*/head`. `git fsck` reports no dangling objects; reflogs contain only this session's fetches. The GitHub API answers `No commit found for SHA: 5dda6bf` for `ohcaygo/merge-proof`. `origin/codex/final-frontier-l3` is still `c5df66c`; no later documentation commit has been pushed. |
+| Corroborating artifacts inside the repository | No AWS account ID, stack identifier, `StackStatus`, `CREATE_COMPLETE` or `RECOVERY_MANIFEST_CONFIRMED` record exists anywhere under `github/validation/`. `arn:aws` appears **only** in source and test fixtures — never in an evidence record. |
+
+**Sharpened reasoning.** Section 1's conclusion is not drawn from "public traffic points at
+Cloudflare/DigitalOcean." Those are separate questions and are not conflated. It rests on two
+independent things: the project's own most recent prerequisite record
+([`remaining-authentication-prerequisites.json`](../validation/enhanced-policy-production-prep-2026-09-20/remaining-authentication-prerequisites.json),
+`accountIds: null`, `resourcesCreated: false`), and the complete absence of any stack, account
+or recovery-manifest artifact that a real provisioning run would have produced. If AWS
+infrastructure does exist, it is unrecorded by the project and unreachable from this session —
+and an Early Access pilot still cannot rely on infrastructure whose identity nobody can name.
+
+**KMS signature provenance — verified from the evidence, not from source configuration.**
+The `c5df66c` lineage's signed evidence identifies its own signer explicitly:
+`addendum-signed-portable.json` records **`"productionSigning": false`**, and
+`organization-rulesets-2026-09-20/signed-app-first-receipt.json` records
+**`"signingTrust": "Ephemeral non-production P-256 lab key; not KMS, public trust publication,
+or anchoring"`** with `kid: org-synthetic-1790005843510`. The lab JWKS
+(`signed-app-lab-public-keys.json`) holds one synthetic P-256 key, `kid
+org-synthetic-1790006044777`, valid for a 24-hour window. **No KMS key ARN appears in any
+signed receipt.** These signatures did not come from a deployed AWS key.
+
+**Recovery run reconciled.** The described run — five receipts, one landing chain, four
+independently reconstructed Git claims — is
+[`real-historical-restore.json`](../validation/enhanced-policy-production-prep-2026-09-20/real-historical-restore.json),
+and matches exactly: five receipt rows, one with `landings: 1`, four `INDEPENDENTLY_RECOMPUTED`.
+Its recorded `elapsedMs` is **3477** (3.5 seconds), not 999.325 seconds, and its own limitation
+line reads: *"No new provider queue run, AWS recovery, production key, production RPO or
+cold-host RTO is claimed."* The companion
+[`durability-restore-preparation.json`](../validation/final-frontier-l3-2026-09-19/durability-restore-preparation.json)
+says the same: *"no production host, replicated backup, RPO/RTO, KMS, public trust or network
+authorization acceptance."* `restore-drill.js` does compute `snapshotAgeSeconds` and hardcodes
+`hostRecoveryRto: "NOT_PROVEN"`, so the tool that would produce such a figure exists — but **no
+output record of a run producing 999.325 exists on any ref.** Searching every local and remote
+ref for `999.3` matches this file alone, where the claim is quoted.
+
+**Live production topology** is as recorded in section 1 and is **repository-recorded, not
+re-verified live**: outbound access to `merge-proof.ohcaygo.com` is denied by this session's
+network policy (proxy answered 403 to CONNECT), so the deployed release could not be confirmed
+against the running host. That limit cuts both ways and is stated rather than papered over.
