@@ -122,3 +122,35 @@ test('a raced initial collection automatically retries and issues a stable succe
  await h.service.drain();const latest=Object.values(h.service.data.receipts).at(-1);
  a.equal(latest.receipt.verdict,'VERIFIED');a.equal(latest.receipt.evidence.consistency,'STABLE_OBSERVATION');a.equal(latest.receipt.supersedes.receiptId,first.receipt.receiptId);a.equal(JSON.stringify(first.receipt),immutable);a.equal(h.service.data.queue.length,0);
 });
+
+
+test("bounded delivery reconciliation resumes its saved cursor after restart",async t=>{
+  const h=harness(t),s=h.service,calls=[],reads=[];s.config.appId=42;s.config.privateKey='fixture';
+  const deliveryClient=()=>new Client({fetchImpl:async(url,init)=>{
+    const u=new URL(url);
+    if(init.method==='POST'){calls.push(u.pathname);return new Response(null,{status:202});}
+    const page=Number(u.searchParams.get('cursor')||0);reads.push(page);
+    return Response.json([{id:page+1,guid:'one-missing-event',event:'pull_request',status_code:200}],{headers:page<100?{link:`<https://api.github.com/app/hook/deliveries?cursor=${page+1}>; rel="next"`}:{}});
+  }});
+  s.deliveryClient=deliveryClient;await s.reconcileDeliveries();
+  a.equal(s.data.deliveryHealth,'UNAVAILABLE');a.equal(reads.length,100);a.equal(calls.length,1);
+  const restored=new ProofService({store:h.store,config:s.config,deliveryClient});
+  await restored.reconcileDeliveries(Date.now()+300001);
+  a.equal(restored.data.deliveryHealth,'RECONCILED');a.equal(reads.at(-1),100);a.equal(calls.length,1);a.equal(restored.data.deliveryScan,undefined);
+});
+test("delivery reconciliation does not skip a failed request on its saved page",async t=>{
+  const h=harness(t),s=h.service;let fail=true,posts=0;s.config.appId=42;s.config.privateKey='fixture';
+  s.data.deliveryScan={endpoint:'/app/hook/deliveries?cursor=remaining',seen:['already-requested']};
+  s.deliveryClient=()=>new Client({fetchImpl:async(url,init)=>{
+    if(init.method==='POST'){posts++;if(fail)return new Response('',{status:403});return new Response(null,{status:202});}
+    return Response.json([{id:1,guid:'already-requested',event:'push',status_code:200},{id:2,guid:'still-missing',event:'push',status_code:200}]);
+  }});
+  await s.reconcileDeliveries();a.equal(s.data.deliveryHealth,'UNAVAILABLE');a.equal(posts,1);
+  fail=false;await s.reconcileDeliveries(Date.now()+300001);a.equal(s.data.deliveryHealth,'RECONCILED');a.equal(posts,2);
+});
+test("saved delivery cursors cannot redirect reconciliation away from the App endpoint",async t=>{
+  const h=harness(t),s=h.service;s.config.appId=42;s.config.privateKey='fixture';
+  s.data.deliveryScan={endpoint:'https://example.com/app/hook/deliveries',seen:[]};
+  s.deliveryClient=()=>({get:async()=>{a.fail('unexpected network call')},links:new Map()});
+  await s.reconcileDeliveries();a.equal(s.data.deliveryHealth,'UNAVAILABLE');
+});
