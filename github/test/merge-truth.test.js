@@ -20,7 +20,7 @@ async function fixture() {
     mergedHeadSha: receipt.identity.headSha,
     mergeCommitSha: M,
     proof: {
-      receiptSnapshot: receipt,
+      receiptSnapshot: structuredClone(receipt),
       currentnessAtDelivery: {
         state: "CURRENT",
         asOf: receipt.issuedAt,
@@ -115,6 +115,34 @@ test("demonstrably different landed content fails while unavailable content stay
   const unresolved = truth.build({ receiptRow: second.receiptRow, record: second.record, landing: null });
   a.equal(unresolved.relationship.verdict, "NOT_PROVEN");
   a.equal(unresolved.relationship.reason, "LANDING_OBSERVATION_PENDING");
+});
+
+test("stored landing labels, trees, records and receipt snapshots cannot contradict replay into VERIFIED", async () => {
+  const make = async () => {
+    const value = await fixture();
+    const landed = { sha: M, tree: value.receipt.summary.target.value.tree, parents: [B] };
+    return { ...value, observation: observed(value.record, landed) };
+  };
+  const cases = [
+    async value => { value.observation.landed.tree = B; },
+    async value => { value.observation.state = "LANDED_MISMATCH"; },
+    async value => { value.observation.commitResolution = { state: "AVAILABLE", value: B }; },
+    async value => { value.observation.landed.parents = ["d".repeat(40)]; },
+    async value => { delete value.observation.landed; },
+    async value => { value.record.repositoryId = 2; },
+    async value => { value.record.proof.receiptSnapshot.identity.headSha = B; },
+  ];
+  for (const mutate of cases) {
+    const value = await make();
+    await mutate(value);
+    const projected = truth.build({ receiptRow: value.receiptRow, record: value.record, landing: value.observation });
+    a.equal(projected.relationship.verdict, "NOT_PROVEN");
+    a.equal(projected.relationship.state, "LANDING_OBSERVATION_INCONSISTENT");
+    a.equal(projected.landing.state, "LANDED_UNRESOLVED");
+    a.equal(projected.replay.landing.state, "INCONSISTENT");
+    a.ok(projected.replay.landing.discrepancies.length);
+    a.equal(truth.verify(projected).state, "CONSISTENT_PROJECTION");
+  }
 });
 
 test("buyer projection answers the merge-truth questions without exposing a second canonical receipt verdict", async () => {

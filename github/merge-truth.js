@@ -61,16 +61,46 @@ function relationship(record, landing) {
   };
 }
 
+function validateLanding(receipt, storedReceipt, record, landing) {
+  if (!record || !landing) return { consistent: true, computed: null, discrepancies: [] };
+  const discrepancies = [];
+  if (!record.proof?.receiptSnapshot || hash(record.proof.receiptSnapshot) !== hash(storedReceipt))
+    discrepancies.push("MERGE_RECORD_RECEIPT_MISMATCH");
+  if (record.repository !== receipt.identity.repository ||
+      record.repositoryId !== receipt.identity.repositoryId ||
+      record.pr !== receipt.identity.pr)
+    discrepancies.push("MERGE_RECORD_SUBJECT_MISMATCH");
+  const resolved = landing.commitResolution?.value || landing.landed?.sha || record.mergeCommitSha || null;
+  const comparisonRecord = {
+    ...record,
+    mergeCommitSha: resolved,
+    proof: { ...record.proof, receiptSnapshot: receipt },
+  };
+  const computed = require("./landing").compare(comparisonRecord, landing.landed);
+  for (const key of ["state", "reason", "method", "parentsConsistent", "receiptDigest"])
+    if ((computed[key] ?? null) !== (landing[key] ?? null))
+      discrepancies.push(`LANDING_${key.toUpperCase()}_MISMATCH`);
+  return { consistent: discrepancies.length === 0, computed, discrepancies };
+}
+
 function build({ receiptRow, record = null, landing = null, reconciliation = {} }) {
   const storedReceipt = receiptRow?.receipt;
-  const receipt = record?.proof?.receiptSnapshot || storedReceipt;
+  const receipt = storedReceipt;
   if (!receipt) throw Object.assign(new Error("RECEIPT_REQUIRED"), { code: "RECEIPT_REQUIRED" });
   const evaluatedTree = receipt.evidence?.git?.value?.headTree || null;
   const target = receipt.summary?.target?.value || null;
   const observed = record?.proof?.currentnessAtDelivery || receiptRow.current || null;
   const actualCommit = landing?.landed?.sha || landing?.commitResolution?.value || record?.mergeCommitSha || null;
   const actualTree = landing?.landed?.tree || null;
-  const relation = relationship(record, landing);
+  const landingValidation = validateLanding(receipt, storedReceipt, record, landing);
+  const relation = landingValidation.consistent
+    ? relationship(record, landingValidation.computed)
+    : {
+        verdict: "NOT_PROVEN",
+        state: "LANDING_OBSERVATION_INCONSISTENT",
+        reason: "LANDING_OBSERVATION_INCONSISTENT",
+        plain: "The retained landing observation disagrees with deterministic replay or the receipt/merge-record binding, so the landed relationship is not proven.",
+      };
   const receiptDigest = hash(receipt);
   const body = {
     schema: "urn:merge-proof:merge-truth:1",
@@ -112,14 +142,21 @@ function build({ receiptRow, record = null, landing = null, reconciliation = {} 
     currentness: currentness(receipt, observed),
     landing: record
       ? {
-          state: landing?.state || "LANDED_UNRESOLVED",
-          reason: landing?.reason || "LANDING_OBSERVATION_PENDING",
+          state: landingValidation.consistent
+            ? landingValidation.computed?.state || "LANDED_UNRESOLVED"
+            : "LANDED_UNRESOLVED",
+          reason: landingValidation.consistent
+            ? landingValidation.computed?.reason || "LANDING_OBSERVATION_PENDING"
+            : "LANDING_OBSERVATION_INCONSISTENT",
+          observedState: landing?.state || null,
           mergedAt: record.mergedAt || null,
           mergedHead: record.mergedHeadSha || null,
           mergeCommit: actualCommit,
           tree: actualTree,
           parents: structuredClone(landing?.landed?.parents || []),
-          path: landing?.method || "UNAVAILABLE",
+          path: landingValidation.consistent
+            ? landingValidation.computed?.method || "UNAVAILABLE"
+            : "UNAVAILABLE",
           observationId: landing?.observationId || null,
         }
       : {
@@ -160,13 +197,16 @@ function build({ receiptRow, record = null, landing = null, reconciliation = {} 
         ? require("./bundle").replay(receipt, receiptRow.artifacts.policy)
         : unavailable("HISTORICAL_BUNDLE_UNAVAILABLE"),
       landing: landing
-        ? {
+        ? landingValidation.consistent
+          ? {
             state: "REPLAYED",
-            result: require("./landing").compare(
-              { ...record, proof: { receiptSnapshot: receipt } },
-              landing.landed,
-            ),
+            result: landingValidation.computed,
           }
+          : {
+              state: "INCONSISTENT",
+              discrepancies: landingValidation.discrepancies,
+              result: landingValidation.computed,
+            }
         : unavailable("LANDING_OBSERVATION_UNAVAILABLE"),
       limitation: "Replay checks deterministic consistency of recorded evidence; it does not independently authenticate GitHub or establish present currentness.",
     },
@@ -223,4 +263,4 @@ function html(value, escape) {
   <p><small>${escape(value.replay.limitation)}</small></p></section>`;
 }
 
-module.exports = { build, verify, summary, html, relationship };
+module.exports = { build, verify, summary, html, relationship, validateLanding };

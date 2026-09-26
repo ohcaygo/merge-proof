@@ -43,4 +43,6 @@ Claim-level state is shown where it was recorded. Missing claim-level currentnes
 
 The record references the existing receipt bundle, receipt/observation identifiers, policy digest, merge-ledger row, and landed observation. Receipt replay and landing comparison are deterministic over those inputs. The record digest detects projection edits.
 
+The buyer relationship is derived from a fresh landing comparison. A retained landing state is never trusted by label alone: the receipt snapshot, repository/PR/head binding, landed tree/parentage, reason, method, and receipt digest must agree with replay. Any disagreement is `NOT_PROVEN / LANDING_OBSERVATION_INCONSISTENT`.
+
 This does not independently authenticate GitHub, create an L3 or Proof-of-Control claim, or establish present currentness. Production trust publication remains outside P0.
