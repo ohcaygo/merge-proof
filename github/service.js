@@ -729,9 +729,13 @@ class ProofService {
     if (!this.config.appId || !this.config.privateKey || (this.data.deliveryScanAt && now - this.data.deliveryScanAt < 4 * 3600000)) return;
     try {
       const client = this.deliveryClient();
-      let endpoint = "/app/hook/deliveries?per_page=100";
-      const seen = new Set();
+      const scan = this.data.deliveryScan || { endpoint: "/app/hook/deliveries?per_page=100", seen: [] };
+      assert(Array.isArray(scan.seen) && scan.seen.every(g => typeof g === "string" && /^[\w-]{1,100}$/.test(g)), "DELIVERY_SCAN_INVALID");
+      let endpoint = scan.endpoint;
+      const seen = new Set(scan.seen);
       for (let page = 0; endpoint && page < 100; page++) {
+        const cursor = new URL(endpoint, "https://api.github.com");
+        assert(cursor.origin === "https://api.github.com" && cursor.pathname === "/app/hook/deliveries", "INVALID_DELIVERY_CURSOR");
         const rows = await client.get(endpoint);
         assert(Array.isArray(rows), "DELIVERY_SCAN_UNAVAILABLE");
         for (const row of rows) {
@@ -739,15 +743,20 @@ class ProofService {
             typeof row?.id === "string" && /^[1-9][0-9]{0,19}$/.test(row.id);
           assert(validId && typeof row.guid === "string" && /^[\w-]{1,100}$/.test(row.guid), "DELIVERY_IDENTITY_UNAVAILABLE");
           if (row.event === "ping" || seen.has(row.guid)) continue;
-          seen.add(row.guid);
           if (!this.data.events[row.guid] || row.status_code >= 400)
             await client.request(`/app/hook/deliveries/${row.id}/attempts`, { method: "POST" });
+          seen.add(row.guid);
         }
         const next = client.links.get(endpoint)?.match(/<([^>]+)>; rel="next"/)?.[1];
         if (!next) endpoint = null;
         else { const url = new URL(next); assert(url.origin === "https://api.github.com" && url.pathname === "/app/hook/deliveries", "INVALID_DELIVERY_CURSOR"); endpoint = url.pathname + url.search; }
+        // Keep bounded passes resumable across retries and process restarts.
+        // Successful requests are deduplicated for the entire scan, not each pass.
+        this.data.deliveryScan = { endpoint, seen: [...seen] };
+        this.save();
       }
       assert(!endpoint, "DELIVERY_SCAN_INCOMPLETE");
+      delete this.data.deliveryScan;
       this.data.deliveryScanAt = now; this.data.deliveryHealth = "RECONCILED";
     } catch { this.data.deliveryHealth = "UNAVAILABLE"; this.data.deliveryScanAt = now - 4 * 3600000 + 300000; }
     this.save();
