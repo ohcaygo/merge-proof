@@ -38,7 +38,21 @@ jobs:
         run: npm run test:github
       - name: Disposable separate-UID broker acceptance
         working-directory: product
-        run: sudo "$(command -v node)" github/operations/isolation-acceptance.js
+        run: |
+          node_bin="$(command -v node)"
+          # Diagnose checkout access as the disposable policy UID. Hosted runners
+          # can keep their home directory private even when source files are 644.
+          namei -l "$PWD/github/policy-broker.js"
+          sudo -u '#65533' -g '#65533' "$node_bin" -e 'try { require(process.argv[1]); console.log("CHECKOUT_POLICY_MODULE_READABLE"); } catch (e) { console.log("CHECKOUT_POLICY_MODULE_UNAVAILABLE: " + e.code); }' "$PWD/github/policy-broker.js"
+          # Stage only committed source, owned by root, under a traversable path.
+          # Keep workload UIDs and every credential/socket assertion unchanged.
+          staged="$(mktemp -d /tmp/mp-lab-source.XXXXXX)"
+          trap 'sudo rm -rf "$staged"' EXIT
+          sudo chown root:root "$staged"
+          sudo chmod 755 "$staged"
+          git archive HEAD | sudo tar --no-same-owner -x -C "$staged"
+          cd "$staged"
+          sudo "$node_bin" github/operations/isolation-acceptance.js
       - name: Observe owned provider fixtures
         working-directory: product
         env:
