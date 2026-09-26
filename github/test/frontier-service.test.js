@@ -75,6 +75,8 @@ for (const legacy of [true, false]) test(`proof-to-merge journey preserves ledge
   a.equal(response.status,200);a.equal((await response.json()).records[0].landed.state,'LANDED_VERIFIED');
   const truthResponse=await fetch(`http://127.0.0.1:${server.address().port}/proof/receipts/${original.receipt.receiptId}/merge-truth`,{headers:{authorization:'Bearer fixture'}});
   a.equal(truthResponse.status,200);const mergeTruth=await truthResponse.json();a.equal(mergeTruth.relationship.verdict,'VERIFIED');a.equal(mergeTruth.landing.tree,tree);a.equal(require('../merge-truth').verify(mergeTruth).state,'CONSISTENT_PROJECTION');
+  const packetResponse=await fetch(`http://127.0.0.1:${server.address().port}/proof/receipts/${original.receipt.receiptId}/replay-packet`,{headers:{authorization:'Bearer fixture'}});
+  a.equal(packetResponse.status,200);a.match(packetResponse.headers.get('content-disposition'),/attachment/);const replay=require('../replay-packet').replay(await packetResponse.json());a.equal(replay.state,'REPLAY_CONSISTENT',JSON.stringify(replay));a.equal(replay.verdict,'VERIFIED');a.equal(replay.trust,'UNSIGNED');
   const human=await fetch(`http://127.0.0.1:${server.address().port}/proof/receipts/${original.receipt.receiptId}`,{headers:{authorization:'Bearer fixture'}});
   a.equal(human.status,200);a.match(await human.text(),/Merge truth[\s\S]*Evaluated[\s\S]*Evidence[\s\S]*Currentness[\s\S]*Landed[\s\S]*Conclusion[\s\S]*VERIFIED/);
 });

@@ -49,12 +49,19 @@ function lines(d) { return [d.outcome + " · " + d.verdict + " · " + d.currentn
   ...["expected", "candidate", "tested", "authorized", "landed"].map(k => `${k.toUpperCase()}: ${d.bindings[k] ?? "NOT_YET_APPLICABLE"}`),
   ...(d.reasons.length ? [`Reason: ${d.reasons[0].code}`, `Next: ${d.nextAction.text}`] : []), `Receipt: ${d.receipt.url}`].join("\n"); }
 async function main(args) {
-  if (args.includes("--help")) { console.log("merge-proof verify --repo OWNER/REPO --repository-id ID --pr N --head SHA --base SHA --target SHA [--json] [--wait SECONDS]\nmerge-proof verify --bundle DIRECTORY [--trusted-keys JWKS.json] [--allow-unsigned] [--online] [--git-dir BARE_REPO] [--git-binary PATH]\nmerge-proof mcp\nUses MP_GITHUB_TOKEN and optional MP_ORIGIN; never merges."); return 0; }
+  if (args.includes("--help")) { console.log("merge-proof verify --repo OWNER/REPO --repository-id ID --pr N --head SHA --base SHA --target SHA [--json] [--wait SECONDS]\nmerge-proof verify --replay-packet DOWNLOADED_PACKET.json\nmerge-proof verify --bundle DIRECTORY [--trusted-keys JWKS.json] [--allow-unsigned] [--online] [--git-dir BARE_REPO] [--git-binary PATH]\nmerge-proof mcp\nReplay packets are explicitly unsigned and establish deterministic consistency of supplied inputs, not independently trusted provenance.\nUses MP_GITHUB_TOKEN and optional MP_ORIGIN for online verification; never merges."); return 0; }
   const opts = {};
   for (let n = 0; n < args.length; n++) {
     const flag = args[n];
-    assert(["--bundle", "--git-dir", "--git-binary", "--trusted-keys", "--allow-unsigned", "--repo", "--repository-id", "--pr", "--head", "--base", "--target", "--json", "--online", "--wait"].includes(flag), "INVALID_ARGUMENT");
+    assert(["--replay-packet", "--bundle", "--git-dir", "--git-binary", "--trusted-keys", "--allow-unsigned", "--repo", "--repository-id", "--pr", "--head", "--base", "--target", "--json", "--online", "--wait"].includes(flag), "INVALID_ARGUMENT");
     opts[flag] = ["--json", "--allow-unsigned", "--online"].includes(flag) ? true : args[++n];
+  }
+  if (opts["--replay-packet"]) {
+    assert(!opts["--bundle"] && !opts["--online"] && !opts["--git-dir"] && !opts["--trusted-keys"], "INVALID_ARGUMENT");
+    const packet = require("./replay-packet").read(opts["--replay-packet"]);
+    const result = require("./replay-packet").replay(packet);
+    console.log(JSON.stringify(result, null, 2));
+    return result.exitCode;
   }
   if (opts["--bundle"]) {
     const bundle = require("./bundle").read(opts["--bundle"]);

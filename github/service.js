@@ -372,7 +372,7 @@ class ProofService {
     if(checkpoint && row.artifacts?.operatorLog?.index < checkpoint.size) result.tlog=require("./operator-log").inclusion(this.data,row.artifacts.operatorLog.index,checkpoint);
     return result;
   }
-  mergeTruth(row) {
+  mergeTruthInputs(row) {
     const id = row.receipt.receiptId;
     const live = ledger.area(this.store).records
       .filter(r => r.proof?.receiptSnapshot?.receiptId === id)
@@ -383,15 +383,22 @@ class ProofService {
     const landing = record
       ? this.data.landings[record.recordId] || (archived?.record.recordId === record.recordId ? archived.observation : null)
       : null;
-    return require("./merge-truth").build({
-      receiptRow: row,
-      record,
-      landing,
+    return {
+      receiptRow: row, record, landing,
       reconciliation: {
         state: this.data.deliveryHealth || "UNAVAILABLE",
         asOf: this.data.deliveryScanAt ? new Date(this.data.deliveryScanAt).toISOString() : null,
         inProgress: Boolean(this.data.deliveryScan),
       },
+    };
+  }
+  mergeTruth(row) {
+    return require("./merge-truth").build(this.mergeTruthInputs(row));
+  }
+  replayPacket(row) {
+    return require("./replay-packet").create({
+      ...this.mergeTruthInputs(row),
+      evidenceBundle: this.portable(row),
     });
   }
   async checkpoint(day) {

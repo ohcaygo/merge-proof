@@ -148,9 +148,14 @@ test("customer OAuth login, authorized repository, receipt, free meter, private 
   const human=await (await request(out.url)).text();
   a.match(human,/Technical evidence and machine verdict:/);
   a.match(human,/Verdict: /);a.match(human,/Freshness: /);
-  a.match(human,/Download JSON/);a.match(human,/Trial active/);a.match(human,/Merge truth/);a.match(human,/Merge Truth evidence chain/);a.match(human,/Landing has not yet been observed/);a.ok(human.indexOf('Merge truth')<human.indexOf('Technical evidence and machine verdict'));
+  a.match(human,/Download JSON/);a.match(human,/Trial active/);a.match(human,/Merge truth/);a.match(human,/Merge Truth evidence chain/);a.match(human,/Landing has not yet been observed/);a.match(human,/Download replay packet/);a.match(human,/Unsigned packet:/);a.ok(human.indexOf('Merge truth')<human.indexOf('Technical evidence and machine verdict'));
   const mergeTruth=await (await request(out.url+'/merge-truth')).json();
   a.equal(mergeTruth.relationship.verdict,'NOT_PROVEN');a.equal(mergeTruth.landing.state,'NOT_OBSERVED');a.equal(require('../merge-truth').verify(mergeTruth).state,'CONSISTENT_PROJECTION');
+  const replayDownload=await request(out.url+'/replay-packet');
+  a.equal(replayDownload.status,200);a.match(replayDownload.headers.get('content-disposition'),/^attachment; filename="merge-proof-.+-replay\.json"$/);
+  const replayPacket=await replayDownload.json(), replayed=require('../replay-packet').replay(replayPacket);
+  a.equal(replayed.state,'REPLAY_CONSISTENT');a.equal(replayed.verdict,'NOT_PROVEN');a.equal(replayed.trust,'UNSIGNED');
+  a.equal((await request(out.url+'/replay-packet',false,false)).status,403);
   const grouped=await (await request('/proof/account?installation=2&repository=1')).json();
   a.equal(grouped.inbox.length,1);
   a.equal(grouped.inbox[0].history.length+1,grouped.receipts.length);

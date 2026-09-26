@@ -8,6 +8,10 @@ async function handle(service, req, res, url) {
     res.writeHead(status, { "Content-Type": type });
     res.end(type === "application/json" ? JSON.stringify(data) : data);
   };
+  const download = (name, data) => {
+    res.writeHead(200, { "Content-Type": "application/json", "Content-Disposition": `attachment; filename="${name}"` });
+    res.end(JSON.stringify(data, null, 2) + "\n");
+  };
   // Only same-origin scripts and the existing product mark are loaded; no source contents.
   res.setHeader(
     "Content-Security-Policy",
@@ -153,6 +157,18 @@ async function handle(service, req, res, url) {
         assert(repositories.some(r=>r.id===row.receipt.identity.repositoryId&&r.full_name?.toLowerCase()===row.receipt.identity.repository.toLowerCase()),'ACCESS_DENIED');
       }
       assert(row.artifacts,'HISTORICAL_BUNDLE_UNAVAILABLE');send(200,service.portable(row));return true;
+    }
+    const machineReplay=url.pathname.match(/^\/proof\/receipts\/([a-f0-9-]{36})\/replay-packet$/);
+    if(req.method==='GET'&&machineReplay&&token){
+      const row=await service.access(machineReplay[1],token);
+      if(customers){
+        const credential={token};
+        const installations=await customers.installations(credential);
+        assert(installations.some(i=>i.id===row.installationId),'ACCESS_DENIED');
+        const repositories=await customers.list(credential,`/user/installations/${row.installationId}/repositories`,'repositories');
+        assert(repositories.some(r=>r.id===row.receipt.identity.repositoryId&&r.full_name?.toLowerCase()===row.receipt.identity.repository.toLowerCase()),'ACCESS_DENIED');
+      }
+      assert(row.artifacts,'HISTORICAL_BUNDLE_UNAVAILABLE');download(`merge-proof-${machineReplay[1]}-replay.json`,service.replayPacket(row));return true;
     }
     let session;
     if (customers) {
@@ -478,6 +494,13 @@ async function handle(service, req, res, url) {
       const row = await service.access(bundleMatch[1], token);
       assert(row.artifacts, "HISTORICAL_BUNDLE_UNAVAILABLE");
       send(200, service.portable(row));
+      return true;
+    }
+    const replayPacketMatch = url.pathname.match(/^\/proof\/receipts\/([a-f0-9-]{36})\/replay-packet$/);
+    if (replayPacketMatch && req.method === "GET") {
+      const row = await service.access(replayPacketMatch[1], token);
+      assert(row.artifacts, "HISTORICAL_BUNDLE_UNAVAILABLE");
+      download(`merge-proof-${replayPacketMatch[1]}-replay.json`, service.replayPacket(row));
       return true;
     }
     const mergeTruthMatch = url.pathname.match(/^\/proof\/receipts\/([a-f0-9-]{36})\/merge-truth$/);

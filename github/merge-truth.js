@@ -200,6 +200,7 @@ function build({ receiptRow, record = null, landing = null, reconciliation = {} 
       mergeRecord: record?.recordId || null,
       landingObservation: landing?.observationId || null,
       bundle: receiptRow?.artifacts ? `/proof/receipts/${receipt.receiptId}/bundle` : null,
+      replayPacket: receiptRow?.artifacts ? `/proof/receipts/${receipt.receiptId}/replay-packet` : null,
     },
     replay: {
       receipt: receiptRow?.artifacts?.policy
@@ -386,6 +387,7 @@ function html(value, escape) {
   <p class="merge-truth-conclusion ${escape(chain.verdict.toLowerCase())}"><strong>${escape(chain.verdict)}</strong> ${escape(chain.reason)}</p>
   <ol class="evidence-chain" aria-label="Merge Truth evidence chain">${stages}</ol>
   <p class="reconciliation-note">${reconciliation}</p>
+  ${value.references.replayPacket ? `<div class="replay-packet-action"><a href="${escape(value.references.replayPacket)}" download>Download replay packet</a><p>Replay this conclusion locally from the supplied evidence. <strong>Unsigned packet:</strong> it checks deterministic consistency and detects unmatched alteration, but does not independently establish packet provenance or a public trust root.</p></div>` : ""}
   <details class="merge-truth-details"><summary>Evidence details and identifiers</summary>
     <dl>
       <dt>Evaluated candidate</dt><dd>${short(value.evaluated.candidate.commit)} · tree ${short(value.evaluated.candidate.tree)}</dd>

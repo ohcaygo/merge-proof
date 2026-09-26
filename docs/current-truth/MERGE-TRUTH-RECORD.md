@@ -52,3 +52,7 @@ This does not independently authenticate GitHub, create an L3 or Proof-of-Contro
 The buyer page projects this record in five ordered stages: `Evaluated`, `Evidence`, `Currentness`, `Landed`, and `Conclusion`. The projection favors short explanations and only the commit/tree identifiers needed to establish identity; claim-level states, complete identifiers, replay references, and the authoritative reason remain available in an expandable detail.
 
 The chain has no verdict logic. Its conclusion is the Merge Truth relationship verdict, and its reason is a buyer-readable rendering of that relationship reason. Missing, stale, unavailable, or replay-inconsistent evidence stays visible and cannot be promoted by presentation state.
+
+## Downloadable deterministic replay
+
+An authorized proof page exposes the unsigned replay packet defined in [REPLAY-PACKET.md](./REPLAY-PACKET.md). The packet embeds the authoritative P0 inputs and reuses the existing receipt, landing, and Merge Truth replay logic. It does not add a verdict source or a trust claim.

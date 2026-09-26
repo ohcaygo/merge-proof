@@ -170,6 +170,9 @@ test("compact evidence chain projects the authoritative relationship in buyer-re
   a.ok(html.indexOf("LANDED_TREE_EQUALS_PROVEN_TREE") > html.indexOf("Evidence details and identifiers"));
   a.match(html, /Download Merge Truth JSON/);
   a.match(html, /Download replay bundle/);
+  a.match(html, /Download replay packet/);
+  a.match(html, /Unsigned packet:/);
+  a.ok(html.indexOf("Download replay packet") < html.indexOf("Evidence details and identifiers"));
 });
 
 test("compact evidence chain keeps fail, stale, missing, pending, reconciled and contradictory cases fail-closed", async () => {
