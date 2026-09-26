@@ -253,23 +253,144 @@ function summary(value) {
   };
 }
 
+const friendlyReason = {
+  LANDED_TREE_EQUALS_PROVEN_TREE: "Landed tree matches the evaluated tree.",
+  LANDED_TREE_DIFFERS_FROM_PROVEN_TREE: "Landed content differs from the evaluated candidate.",
+  LANDED_TREE_DIFFERS_FROM_EXPECTED_TREE: "Landed content differs from the independently reconstructed tree.",
+  LANDING_NOT_OBSERVED: "Landing has not yet been observed.",
+  LANDING_OBSERVATION_PENDING: "A merge was recorded, but landed content has not yet been resolved.",
+  LANDING_OBSERVATION_INCONSISTENT: "The retained landing observation conflicts with deterministic replay.",
+  NO_VERIFIED_PROOF_FOR_MERGED_HEAD: "The bound evidence does not verify the candidate that was merged.",
+  LANDED_PARENTAGE_UNRESOLVED: "The landed parentage does not establish a supported merge path.",
+  LANDED_CONTENT_UNAVAILABLE: "The landed commit or tree could not be established.",
+};
+
+function words(value) {
+  return String(value || "Unavailable")
+    .replace(/^CI_EXECUTED:/, "Required check: ")
+    .replace(/_/g, " ")
+    .toLowerCase()
+    .replace(/^./, (x) => x.toUpperCase());
+}
+
+function claimLabel(name) {
+  if (name === "TARGET") return "Evaluated target";
+  if (name === "APPROVAL_CURRENT") return "Current approval";
+  if (name === "RULES_SNAPSHOT") return "Repository rules";
+  if (name === "REMOTE_DURABLE") return "Remote candidate";
+  if (String(name).startsWith("CI_EXECUTED:")) return `Required check ${String(name).split(":").slice(1).join(":")}`;
+  return words(name);
+}
+
+function evidenceChain(value) {
+  const short = (x) => x && /^[a-f0-9]{40}$/.test(x) ? x.slice(0, 12) : x || "Unavailable";
+  const gaps = value.evidence.gaps || [];
+  const claims = (value.evidence.claims || []).map((claim) => claimLabel(claim.name));
+  const approvalCount = value.evidence.authority?.counted?.length || 0;
+  const evidenceHighlights = [...new Set([
+    ...claims.filter((label) => label.startsWith("Required check")),
+    ...(approvalCount ? [`${approvalCount} current approval${approvalCount === 1 ? "" : "s"}`] : []),
+    ...claims.filter((label) => label === "Repository rules" || label === "Remote candidate"),
+  ])].slice(0, 3);
+  const current = value.currentness.atMergeEvent || unavailable("CURRENTNESS_NOT_RECORDED");
+  const currentCopy = current.state === "CURRENT"
+    ? "Current when the merge event was recorded."
+    : current.state === "STALE"
+      ? "Evidence changed or was superseded after this proof."
+      : "Currentness could not be established.";
+  const landedState = value.landing.state;
+  const landedTitle = landedState === "LANDED_VERIFIED"
+    ? "Landing observed"
+    : landedState === "LANDED_MISMATCH"
+      ? "Different tree observed"
+      : landedState === "NOT_OBSERVED"
+        ? "Not yet observed"
+        : "Unable to establish";
+  const path = value.landing.path === "merge"
+    ? "Merge commit"
+    : value.landing.path === "squash-or-single-rebase"
+      ? "Squash or single-parent rebase"
+      : "Merge path unavailable";
+  return {
+    verdict: value.relationship.verdict,
+    reason: friendlyReason[value.relationship.reason] || value.relationship.plain,
+    stages: [
+      {
+        label: "Evaluated",
+        state: value.evaluated.candidate.tree ? "Bound" : "Incomplete",
+        tone: value.evaluated.candidate.tree ? "good" : "unknown",
+        title: `Candidate ${short(value.evaluated.candidate.commit)}`,
+        detail: `${value.repository.name} · PR #${value.repository.pullRequest}`,
+        meta: `Tree ${short(value.evaluated.candidate.tree)}`,
+      },
+      {
+        label: "Evidence",
+        state: gaps.length ? "Missing" : value.evaluated.receiptVerdict === "VERIFIED" ? "Bound" : "Incomplete",
+        tone: gaps.length ? "unknown" : value.evaluated.receiptVerdict === "VERIFIED" ? "good" : "unknown",
+        title: gaps.length ? `${gaps.length} evidence gap${gaps.length === 1 ? "" : "s"}` : `${value.evidence.claims.length} evidence claims`,
+        detail: gaps.length ? `Missing: ${gaps.slice(0, 2).map(words).join("; ")}` : evidenceHighlights.join(" · ") || "Bound evidence is available below.",
+        meta: value.evidence.authority?.state === "PROVEN" ? "Approval authority established" : "Authority not fully established",
+      },
+      {
+        label: "Currentness",
+        state: current.state === "CURRENT" ? "Current" : current.state === "STALE" ? "Stale" : "Not established",
+        tone: current.state === "CURRENT" ? "good" : "unknown",
+        title: currentCopy,
+        detail: `At proof: ${words(value.currentness.atProof.state)}`,
+        meta: "Decision-time currentness is shown in details.",
+      },
+      {
+        label: "Landed",
+        state: landedState === "LANDED_VERIFIED" ? "Observed" : landedState === "LANDED_MISMATCH" ? "Different" : "Not proven",
+        tone: landedState === "LANDED_VERIFIED" ? "good" : landedState === "LANDED_MISMATCH" ? "bad" : "unknown",
+        title: landedTitle,
+        detail: value.landing.mergeCommit ? `Commit ${short(value.landing.mergeCommit)} · tree ${short(value.landing.tree)}` : "No landed commit and tree are bound yet.",
+        meta: path,
+      },
+      {
+        label: "Conclusion",
+        state: value.relationship.verdict,
+        tone: value.relationship.verdict === "VERIFIED" ? "good" : value.relationship.verdict === "FAIL" ? "bad" : "unknown",
+        title: friendlyReason[value.relationship.reason] || value.relationship.plain,
+        detail: "Derived from the Merge Truth record above, not presentation state.",
+        meta: null,
+      },
+    ],
+  };
+}
+
 function html(value, escape) {
   const short = (x) => x ? escape(String(x).replace(/^[a-f0-9]{40}$/, (s) => s.slice(0, 12))) : "Unavailable";
+  const chain = evidenceChain(value);
   const claims = value.currentness.claims.length
     ? `<ul>${value.currentness.claims.map((claim) => `<li><strong>${escape(claim.name)}</strong>: evidence ${escape(claim.evidenceState)} · currentness ${escape(claim.currentness.state)}${claim.evidenceReason ? ` · ${escape(claim.evidenceReason)}` : ""}</li>`).join("")}</ul>`
     : "<p>No bound evidence claims were recorded.</p>";
-  return `<section aria-labelledby="merge-truth-heading"><h2 id="merge-truth-heading">Merge truth</h2>
-  <p><strong>${escape(value.relationship.verdict)}</strong> — ${escape(value.relationship.plain)}</p>
-  <dl>
-    <dt>What Merge Proof evaluated</dt><dd>Candidate ${short(value.evaluated.candidate.commit)} · tree ${short(value.evaluated.candidate.tree)} · ${escape(value.evaluated.target.kind || value.evaluated.target.reason || "target unavailable")}</dd>
-    <dt>Evidence currentness</dt><dd>At proof: ${escape(value.currentness.atProof.state)} · when merge event arrived: ${escape(value.currentness.atMergeEvent.state)} · at merge decision: ${escape(value.currentness.atMergeDecision.state)}</dd>
-    <dt>What actually landed</dt><dd>${value.recordId ? `Commit ${short(value.landing.mergeCommit)} · tree ${short(value.landing.tree)} · path ${escape(value.landing.path)}` : "No merge event has been bound to this receipt."}</dd>
-    <dt>Evaluated vs landed</dt><dd>${escape(value.relationship.verdict)} · ${escape(value.relationship.reason)}</dd>
-    <dt>Delivery reconciliation</dt><dd>${escape(value.reconciliation.state)}${value.reconciliation.asOf ? ` as of ${escape(value.reconciliation.asOf)}` : ""}</dd>
-  </dl>
-  <details><summary>Bound evidence and claim currentness</summary>${claims}</details>
-  <p><a href="/proof/receipts/${escape(value.evaluated.receiptId)}/merge-truth">Download Merge Truth JSON</a>${value.references.bundle ? ` · <a href="${escape(value.references.bundle)}">Download replay bundle</a>` : ""}</p>
-  <p><small>${escape(value.replay.limitation)}</small></p></section>`;
+  const stages = chain.stages.map((stage, index) => `<li class="chain-stage ${escape(stage.tone)}">
+    <p class="chain-label"><span>${index + 1}</span>${escape(stage.label)}</p>
+    <p class="chain-state">${escape(stage.state)}</p>
+    <strong>${escape(stage.title)}</strong>
+    <p>${escape(stage.detail)}</p>
+    ${stage.meta ? `<small>${escape(stage.meta)}</small>` : ""}
+  </li>`).join("");
+  const reconciliation = value.reconciliation.state === "RECONCILED"
+    ? `Delivery history reconciled${value.reconciliation.asOf ? ` through ${escape(value.reconciliation.asOf)}` : ""}.`
+    : `Delivery reconciliation: ${escape(words(value.reconciliation.state))}${value.reconciliation.asOf ? ` as of ${escape(value.reconciliation.asOf)}` : ""}.`;
+  return `<section class="merge-truth" aria-labelledby="merge-truth-heading">
+  <p class="eyebrow">EVALUATED TO LANDED</p><h2 id="merge-truth-heading">Merge truth</h2>
+  <p class="merge-truth-conclusion ${escape(chain.verdict.toLowerCase())}"><strong>${escape(chain.verdict)}</strong> ${escape(chain.reason)}</p>
+  <ol class="evidence-chain" aria-label="Merge Truth evidence chain">${stages}</ol>
+  <p class="reconciliation-note">${reconciliation}</p>
+  <details class="merge-truth-details"><summary>Evidence details and identifiers</summary>
+    <dl>
+      <dt>Evaluated candidate</dt><dd>${short(value.evaluated.candidate.commit)} · tree ${short(value.evaluated.candidate.tree)}</dd>
+      <dt>Evidence currentness</dt><dd>At proof: ${escape(value.currentness.atProof.state)} · when merge event arrived: ${escape(value.currentness.atMergeEvent.state)} · at merge decision: ${escape(value.currentness.atMergeDecision.state)}</dd>
+      <dt>Landed content</dt><dd>${value.recordId ? `Commit ${short(value.landing.mergeCommit)} · tree ${short(value.landing.tree)} · ${escape(value.landing.path)}` : "No merge event is bound to this receipt."}</dd>
+      <dt>Authoritative relationship</dt><dd>${escape(value.relationship.verdict)} · ${escape(value.relationship.reason)}</dd>
+    </dl>
+    <h3>Bound claims</h3>${claims}
+    <p><a href="/proof/receipts/${escape(value.evaluated.receiptId)}/merge-truth">Download Merge Truth JSON</a>${value.references.bundle ? ` · <a href="${escape(value.references.bundle)}">Download replay bundle</a>` : ""}</p>
+    <p><small>${escape(value.replay.limitation)}</small></p>
+  </details></section>`;
 }
 
-module.exports = { build, verify, summary, html, relationship, validateLanding };
+module.exports = { build, verify, summary, evidenceChain, html, relationship, validateLanding };

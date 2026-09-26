@@ -76,7 +76,7 @@ for (const legacy of [true, false]) test(`proof-to-merge journey preserves ledge
   const truthResponse=await fetch(`http://127.0.0.1:${server.address().port}/proof/receipts/${original.receipt.receiptId}/merge-truth`,{headers:{authorization:'Bearer fixture'}});
   a.equal(truthResponse.status,200);const mergeTruth=await truthResponse.json();a.equal(mergeTruth.relationship.verdict,'VERIFIED');a.equal(mergeTruth.landing.tree,tree);a.equal(require('../merge-truth').verify(mergeTruth).state,'CONSISTENT_PROJECTION');
   const human=await fetch(`http://127.0.0.1:${server.address().port}/proof/receipts/${original.receipt.receiptId}`,{headers:{authorization:'Bearer fixture'}});
-  a.equal(human.status,200);a.match(await human.text(),/Merge truth[\s\S]*What Merge Proof evaluated[\s\S]*What actually landed[\s\S]*VERIFIED/);
+  a.equal(human.status,200);a.match(await human.text(),/Merge truth[\s\S]*Evaluated[\s\S]*Evidence[\s\S]*Currentness[\s\S]*Landed[\s\S]*Conclusion[\s\S]*VERIFIED/);
 });
 test("delivery reconciliation follows cursor pages, redelivers missed GUID and respects four-hour cadence",async t=>{
   const h=harness(t),s=h.service,calls=[];s.config.appId=42;s.config.privateKey='fixture-never-used';
