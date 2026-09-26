@@ -89,9 +89,16 @@ function replay(packet) {
 }
 
 function read(file) {
-  const stat = fs.lstatSync(file);
-  assert(stat.isFile() && !stat.isSymbolicLink() && stat.size <= 10 * 1024 * 1024, "REPLAY_PACKET_FILE_INVALID");
-  return JSON.parse(fs.readFileSync(file, "utf8"));
+  try {
+    const stat = fs.lstatSync(file);
+    assert(stat.isFile() && !stat.isSymbolicLink() && stat.size <= 10 * 1024 * 1024, "REPLAY_PACKET_FILE_INVALID");
+    const value = JSON.parse(fs.readFileSync(file, "utf8"));
+    assert(value && typeof value === "object" && !Array.isArray(value), "REPLAY_PACKET_FILE_INVALID");
+    return value;
+  } catch (error) {
+    if (error.code === "REPLAY_PACKET_FILE_INVALID") throw error;
+    throw Object.assign(new Error("REPLAY_PACKET_FILE_INVALID"), { code: "REPLAY_PACKET_FILE_INVALID" });
+  }
 }
 
 module.exports = { SCHEMA, VERSION, LIMITATION, create, replay, read };

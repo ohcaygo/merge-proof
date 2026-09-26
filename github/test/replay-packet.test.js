@@ -106,3 +106,14 @@ test("download serialization round trip replays through the supported CLI", asyn
   a.equal(result.verdict, "VERIFIED");
   a.equal(result.trust, "UNSIGNED");
 });
+
+test("CLI classifies missing and malformed packet files as packet failures", t => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "mp-replay-packet-invalid-"));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const cli = path.join(__dirname, "../../bin/merge-proof.js"), missing = path.join(root, "missing.json");
+  const absent = spawnSync(process.execPath, [cli, "verify", "--replay-packet", missing], { encoding: "utf8" });
+  a.equal(absent.status, 3);a.equal(JSON.parse(absent.stderr).reason, "REPLAY_PACKET_FILE_INVALID");
+  const malformed = path.join(root, "malformed.json");fs.writeFileSync(malformed, "{not json\n");
+  const invalid = spawnSync(process.execPath, [cli, "verify", "--replay-packet", malformed], { encoding: "utf8" });
+  a.equal(invalid.status, 3);a.equal(JSON.parse(invalid.stderr).reason, "REPLAY_PACKET_FILE_INVALID");
+});
