@@ -207,6 +207,9 @@ test("compact evidence chain keeps fail, stale, missing, pending, reconciled and
   a.equal(truth.evidenceChain(pendingValue).reason, "Landing has not yet been observed.");
   a.equal(truth.evidenceChain(pendingValue).stages[2].title, "Current at the latest retained observation.");
   a.doesNotMatch(truth.evidenceChain(pendingValue).stages[2].title, /merge event/i);
+  const pendingHtml = truth.html(pendingValue, require("../receipt").escape);
+  a.doesNotMatch(pendingHtml, /merge event arrived/i);
+  a.match(pendingHtml, /latest retained observation: CURRENT.*no merge decision is bound/s);
 
   const pendingStale = await fixture();
   pendingStale.receiptRow.current = { state: "STALE", asOf: pendingStale.receipt.issuedAt };

@@ -389,7 +389,7 @@ function html(value, escape) {
   <details class="merge-truth-details"><summary>Evidence details and identifiers</summary>
     <dl>
       <dt>Evaluated candidate</dt><dd>${short(value.evaluated.candidate.commit)} · tree ${short(value.evaluated.candidate.tree)}</dd>
-      <dt>Evidence currentness</dt><dd>At proof: ${escape(value.currentness.atProof.state)} · when merge event arrived: ${escape(value.currentness.atMergeEvent.state)} · at merge decision: ${escape(value.currentness.atMergeDecision.state)}</dd>
+      <dt>Evidence currentness</dt><dd>At proof: ${escape(value.currentness.atProof.state)} · ${value.recordId ? "when merge event arrived" : "latest retained observation"}: ${escape(value.currentness.atMergeEvent.state)} · ${value.recordId ? `at merge decision: ${escape(value.currentness.atMergeDecision.state)}` : "no merge decision is bound"}</dd>
       <dt>Landed content</dt><dd>${value.recordId ? `Commit ${short(value.landing.mergeCommit)} · tree ${short(value.landing.tree)} · ${escape(value.landing.path)}` : "No merge event is bound to this receipt."}</dd>
       <dt>Authoritative relationship</dt><dd>${escape(value.relationship.verdict)} · ${escape(value.relationship.reason)}</dd>
     </dl>
