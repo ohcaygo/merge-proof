@@ -294,10 +294,16 @@ function evidenceChain(value) {
   ])].slice(0, 3);
   const current = value.currentness.atMergeEvent || unavailable("CURRENTNESS_NOT_RECORDED");
   const currentCopy = current.state === "CURRENT"
-    ? "Current when the merge event was recorded."
+    ? value.recordId
+      ? "Current when the merge event was recorded."
+      : "Current at the latest retained observation."
     : current.state === "STALE"
-      ? "Evidence changed or was superseded after this proof."
-      : "Currentness could not be established.";
+      ? value.recordId
+        ? "Evidence changed or was superseded after this proof."
+        : "The latest retained evidence is stale."
+      : value.recordId
+        ? "Currentness at the merge event could not be established."
+        : "Currentness could not be established for this retained proof.";
   const landedState = value.landing.state;
   const landedTitle = landedState === "LANDED_VERIFIED"
     ? "Landing observed"
@@ -337,7 +343,7 @@ function evidenceChain(value) {
         tone: current.state === "CURRENT" ? "good" : "unknown",
         title: currentCopy,
         detail: `At proof: ${words(value.currentness.atProof.state)}`,
-        meta: "Decision-time currentness is shown in details.",
+        meta: value.recordId ? "Decision-time currentness is shown in details." : "No merge decision is bound to this receipt.",
       },
       {
         label: "Landed",

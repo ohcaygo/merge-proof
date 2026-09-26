@@ -205,6 +205,16 @@ test("compact evidence chain keeps fail, stale, missing, pending, reconciled and
   a.equal(truth.evidenceChain(pendingValue).verdict, "NOT_PROVEN");
   a.equal(truth.evidenceChain(pendingValue).stages[3].state, "Not proven");
   a.equal(truth.evidenceChain(pendingValue).reason, "Landing has not yet been observed.");
+  a.equal(truth.evidenceChain(pendingValue).stages[2].title, "Current at the latest retained observation.");
+  a.doesNotMatch(truth.evidenceChain(pendingValue).stages[2].title, /merge event/i);
+
+  const pendingStale = await fixture();
+  pendingStale.receiptRow.current = { state: "STALE", asOf: pendingStale.receipt.issuedAt };
+  a.equal(truth.evidenceChain(truth.build({ receiptRow: pendingStale.receiptRow })).stages[2].title, "The latest retained evidence is stale.");
+
+  const pendingUnknown = await fixture();
+  pendingUnknown.receiptRow.current = { state: "UNAVAILABLE", reason: "CURRENTNESS_NOT_RECORDED" };
+  a.equal(truth.evidenceChain(truth.build({ receiptRow: pendingUnknown.receiptRow })).stages[2].title, "Currentness could not be established for this retained proof.");
 
   const reconciled = await fixture();
   const reconciledValue = truth.build({ receiptRow: reconciled.receiptRow, record: reconciled.record, landing: observed(reconciled.record, { sha: M, tree: reconciled.receipt.summary.target.value.tree, parents: [B] }), reconciliation: { state: "RECONCILED", asOf: "2026-09-26T13:00:00.000Z" } });
