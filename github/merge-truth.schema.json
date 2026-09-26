@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:merge-proof:merge-truth:1",
+  "title": "Merge Proof buyer-facing merge truth record",
+  "type": "object",
+  "required": [
+    "schema",
+    "recordId",
+    "repository",
+    "evaluated",
+    "evidence",
+    "currentness",
+    "landing",
+    "relationship",
+    "reconciliation",
+    "references",
+    "replay",
+    "limitations",
+    "recordDigest"
+  ],
+  "properties": {
+    "schema": { "const": "urn:merge-proof:merge-truth:1" },
+    "recordId": { "type": ["string", "null"] },
+    "relationship": {
+      "type": "object",
+      "required": ["verdict", "state", "reason", "plain"],
+      "properties": {
+        "verdict": { "enum": ["VERIFIED", "NOT_PROVEN", "FAIL"] }
+      }
+    },
+    "recordDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  }
+}

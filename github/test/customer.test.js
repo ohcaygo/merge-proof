@@ -148,7 +148,9 @@ test("customer OAuth login, authorized repository, receipt, free meter, private 
   const human=await (await request(out.url)).text();
   a.match(human,/Technical evidence and machine verdict:/);
   a.match(human,/Verdict: /);a.match(human,/Freshness: /);
-  a.match(human,/Download JSON/);a.match(human,/Trial active/);
+  a.match(human,/Download JSON/);a.match(human,/Trial active/);a.match(human,/Merge truth/);a.match(human,/What Merge Proof evaluated/);a.match(human,/No merge event has been bound to this receipt/);a.ok(human.indexOf('Merge truth')<human.indexOf('Technical evidence and machine verdict'));
+  const mergeTruth=await (await request(out.url+'/merge-truth')).json();
+  a.equal(mergeTruth.relationship.verdict,'NOT_PROVEN');a.equal(mergeTruth.landing.state,'NOT_OBSERVED');a.equal(require('../merge-truth').verify(mergeTruth).state,'CONSISTENT_PROJECTION');
   const grouped=await (await request('/proof/account?installation=2&repository=1')).json();
   a.equal(grouped.inbox.length,1);
   a.equal(grouped.inbox[0].history.length+1,grouped.receipts.length);

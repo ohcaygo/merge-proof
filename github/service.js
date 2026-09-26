@@ -372,6 +372,28 @@ class ProofService {
     if(checkpoint && row.artifacts?.operatorLog?.index < checkpoint.size) result.tlog=require("./operator-log").inclusion(this.data,row.artifacts.operatorLog.index,checkpoint);
     return result;
   }
+  mergeTruth(row) {
+    const id = row.receipt.receiptId;
+    const live = ledger.area(this.store).records
+      .filter(r => r.proof?.receiptSnapshot?.receiptId === id)
+      .sort((a,b) => Date.parse(b.mergedAt || b.recordedAt) - Date.parse(a.mergedAt || a.recordedAt))[0] || null;
+    const archived = this.archive?.byReceipt(id)?.sort((a,b) =>
+      String(b.observation.recordedAt || "").localeCompare(String(a.observation.recordedAt || "")))[0] || null;
+    const record = live || archived?.record || null;
+    const landing = record
+      ? this.data.landings[record.recordId] || (archived?.record.recordId === record.recordId ? archived.observation : null)
+      : null;
+    return require("./merge-truth").build({
+      receiptRow: row,
+      record,
+      landing,
+      reconciliation: {
+        state: this.data.deliveryHealth || "UNAVAILABLE",
+        asOf: this.data.deliveryScanAt ? new Date(this.data.deliveryScanAt).toISOString() : null,
+        inProgress: Boolean(this.data.deliveryScan),
+      },
+    });
+  }
   async checkpoint(day) {
     const existing=(this.data.logCheckpoints||[]).find(c=>c.day===day);
     if(existing)return existing;

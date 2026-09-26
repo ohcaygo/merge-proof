@@ -480,6 +480,12 @@ async function handle(service, req, res, url) {
       send(200, service.portable(row));
       return true;
     }
+    const mergeTruthMatch = url.pathname.match(/^\/proof\/receipts\/([a-f0-9-]{36})\/merge-truth$/);
+    if (mergeTruthMatch && req.method === "GET") {
+      const row = await service.access(mergeTruthMatch[1], token);
+      send(200, service.mergeTruth(row));
+      return true;
+    }
     const match = url.pathname.match(
       /^\/proof\/receipts\/([a-f0-9-]{36})(\/refresh)?$/,
     );
@@ -494,6 +500,7 @@ async function handle(service, req, res, url) {
       const receiptRow = service.data.receipts[match[1]] || service.archive?.get(match[1]);
       const receiptUsage = customers ? service.meter.usage(receiptRow.installationId) : null;
       const notice = receiptUsage?.notice || "";
+      const mergeTruth = service.mergeTruth(receiptRow);
       if (customers) { out.entitlementNotice = notice; service.save(); }
       if (
         url.searchParams.get("format") === "json" ||
@@ -503,7 +510,7 @@ async function handle(service, req, res, url) {
       else
         send(
           200,
-          interactive(require("./customer-brand").receipt(html(out.receipt, out.current, out.gate, out.remediation), require("./customer-view").presentation(receiptRow, require("./customer-view").context(service.data, service.config, receiptRow, receiptUsage, out.receipt.identity.prState === "open", require("./policy").normalize(service.policyFor(out.receipt.identity.repositoryId)))), receiptUsage ? require("./customer-view").trial(receiptUsage) : null))
+          interactive(require("./customer-brand").receipt(html(out.receipt, out.current, out.gate, out.remediation), require("./customer-view").presentation(receiptRow, require("./customer-view").context(service.data, service.config, receiptRow, receiptUsage, out.receipt.identity.prState === "open", require("./policy").normalize(service.policyFor(out.receipt.identity.repositoryId)))), receiptUsage ? require("./customer-view").trial(receiptUsage) : null, mergeTruth))
             .replace('src="/proof/app.js"', 'src="/proof/receipt.js"')
             .replace('>Refresh current evidence</button>', '>Optional: recheck this historical receipt</button>')
             .replace(

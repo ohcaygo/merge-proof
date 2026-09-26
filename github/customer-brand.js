@@ -46,10 +46,10 @@ body.proof-page{margin:0;font-size:16px;line-height:1.6;color-scheme:dark}
 @media print{body.proof-page{background:white;color:black}.proof-page .site-header,.proof-page button{display:none}.proof-page :is(p,small,dt,a){color:black}.proof-page .policy,.proof-page aside{background:white}}
 `;
 const header = `<a class="skip-link" href="#main">Skip to content</a><header class="site-header"><a class="brand" href="/" aria-label="OHCAYGO Merge Proof home"><img src="/proof/brand-mark.png" width="48" height="48" alt=""><span>OHCAYGO<small>MERGE PROOF</small></span></a><nav aria-label="Product navigation"><a href="/">Merge Proof home</a><a href="/proof/">Trial information</a><a href="/proof/?view=account">Connected repositories</a></nav></header>`;
-function receipt(document, view = null, trial = null) {
+function receipt(document, view = null, trial = null, mergeTruth = null) {
   if(view) {
     const ui=require("./customer-view");
-    document=document.replace(/<main>([\s\S]*?)<\/main>/, (_, original) => `<main><header><p class="eyebrow">${require("./receipt").escape(view.repository)} · PR #${view.pr}</p>${ui.summaryHtml(view,"h1")}</header>${trial?ui.trialHtml(trial):""}<details><summary>Technical evidence and machine verdict: ${require("./receipt").escape(view.verdict)}</summary>${original}</details></main>`);
+    document=document.replace(/<main>([\s\S]*?)<\/main>/, (_, original) => `<main><header><p class="eyebrow">${require("./receipt").escape(view.repository)} · PR #${view.pr}</p>${ui.summaryHtml(view,"h1")}</header>${trial?ui.trialHtml(trial):""}${mergeTruth?require("./merge-truth").html(mergeTruth,require("./receipt").escape):""}<details><summary>Technical evidence and machine verdict: ${require("./receipt").escape(view.verdict)}</summary>${original}</details></main>`);
   }
   return document.replace(/<style>[\s\S]*?<\/style>/, `<style>${css}</style><body class="brand-page proof-page">${header}`)
     .replace('<main>', '<main id="main">')
