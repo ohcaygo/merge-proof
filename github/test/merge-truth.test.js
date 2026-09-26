@@ -127,6 +127,10 @@ test("stored landing labels, trees, records and receipt snapshots cannot contrad
     async value => { value.observation.landed.tree = B; },
     async value => { value.observation.state = "LANDED_MISMATCH"; },
     async value => { value.observation.commitResolution = { state: "AVAILABLE", value: B }; },
+    async value => {
+      value.observation.commitResolution = { state: "AVAILABLE", value: B };
+      value.observation.landed.sha = B;
+    },
     async value => { value.observation.landed.parents = ["d".repeat(40)]; },
     async value => { delete value.observation.landed; },
     async value => { value.record.repositoryId = 2; },

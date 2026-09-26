@@ -70,7 +70,16 @@ function validateLanding(receipt, storedReceipt, record, landing) {
       record.repositoryId !== receipt.identity.repositoryId ||
       record.pr !== receipt.identity.pr)
     discrepancies.push("MERGE_RECORD_SUBJECT_MISMATCH");
-  const resolved = landing.commitResolution?.value || landing.landed?.sha || record.mergeCommitSha || null;
+  const recordCommit = record.mergeCommitSha || null;
+  const resolutionCommit = landing.commitResolution?.value || null;
+  const landedCommit = landing.landed?.sha || null;
+  if (recordCommit && resolutionCommit && recordCommit !== resolutionCommit)
+    discrepancies.push("LANDING_RESOLUTION_COMMIT_MISMATCH");
+  if (recordCommit && landedCommit && recordCommit !== landedCommit)
+    discrepancies.push("LANDED_COMMIT_RECORD_MISMATCH");
+  if (resolutionCommit && landedCommit && resolutionCommit !== landedCommit)
+    discrepancies.push("LANDED_COMMIT_RESOLUTION_MISMATCH");
+  const resolved = recordCommit || resolutionCommit || landedCommit || null;
   const comparisonRecord = {
     ...record,
     mergeCommitSha: resolved,
