@@ -82,3 +82,31 @@ test('companion return selects only currently authorized installation and reposi
   a.ok(h.calls.every(c=>!c.init.method));a.equal(h.location.href,'original');
  }
 });
+
+test('reading schedules no refresh; explicit refresh keeps workspace visible, scroll and selections while showing new state',async()=>{
+ const intervals=[],scrolls=[];let resolveRefresh,delay=false,observation='First observation';
+ const h=harness('?view=account',async url=>{
+  if(url.includes('account?')&&delay)await new Promise(r=>resolveRefresh=r);
+  const data=url.endsWith('installations')?{installations:[{id:2,account:'fixture'}]}:
+   url.includes('repositories?')?{repositories:[{id:3,name:'fixture/a'},{id:4,name:'fixture/b'}]}:
+   url.includes('account?')?{usage:{notice:'Trial active',activeDevelopers:[],automationAllowed:true},pulls:[{number:1,title:'One'},{number:2,title:'Two'}],automation:{message:observation},inbox:[],merges:{records:[],total:0,completeness:'Complete'}}:{};
+  return {ok:true,json:async()=>data};
+ },{setInterval(fn,ms){intervals.push({fn,ms});},window:{scrollX:0,scrollY:850,scrollTo(x,y){scrolls.push([x,y]);}}});
+ await h.settle();h.get('repository').value='3';await h.get('repository').onchange();await h.settle();
+ a.equal(h.get('workspace').hidden,false);a.equal(intervals.length,0);
+ h.get('pull').value='2';h.get('preset').value='unsaved-choice';
+ const focus=h.get('refresh');h.context.document.activeElement=focus;
+ let hidden=h.get('workspace').hidden;const visibility=[];
+ Object.defineProperty(h.get('workspace'),'hidden',{get:()=>hidden,set:v=>{visibility.push(v);hidden=v;}});
+ const initialCalls=h.calls.length;delay=true;observation='New background observation';
+ const refresh=h.get('refresh').onclick();await h.settle();
+ a.equal(hidden,false);a.equal(h.get('monitoring').textContent,'First observation');
+ a.equal(h.get('installation').value,2);a.equal(h.get('repository').value,'3');
+ resolveRefresh();await refresh;
+ a.equal(h.get('monitoring').textContent,'New background observation');
+ a.ok(visibility.every(v=>v===false));a.deepEqual(scrolls,[[0,850]]);
+ a.equal(h.get('pull').value,'2');a.equal(h.get('preset').value,'unsaved-choice');
+ a.equal(h.context.document.activeElement,focus);a.equal(h.get('connected').hidden,false);
+ a.equal(h.location.href,'original');a.equal(h.calls.length,initialCalls+1);
+ a.ok(h.calls.every(c=>!c.init.method));
+});
