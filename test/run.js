@@ -1,5 +1,8 @@
 'use strict';
 
+const { SHALLOW_MESSAGE, validateCurrentStatus } = require('./current-status');
+validateCurrentStatus();
+
 // Zero-dependency test runner. Each test is a name plus a function that throws
 // on failure; a thrown error is a failed test, anything else passes.
 
@@ -14,6 +17,13 @@ const { parseActionYaml } = require('./action-meta');
 
 const tests = [];
 const test = (name, fn) => tests.push({ name, fn });
+
+test('STATUS contract rejects shallow checkouts with an explicit full-history remedy', () => {
+  assert.throws(
+    () => validateCurrentStatus({ runGit: () => 'true' }),
+    (error) => error.message.includes(SHALLOW_MESSAGE),
+  );
+});
 
 const ROOT = path.join(__dirname, '..');
 const analyzeAt = (dir, extra = {}) => analyze({ repoPath: dir, base: 'main', head: 'feature', version: '0.1.0', ...extra });

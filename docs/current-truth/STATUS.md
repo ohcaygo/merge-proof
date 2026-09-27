@@ -1,73 +1,79 @@
-# Merge-Proof — Verified status only
+# Merge-Proof current status
 
-**Rule:** Only facts confirmable from git/repo/files, live host inspection, or explicit Ryan/Chief verification. If unknown, say UNKNOWN/UNVERIFIED. Do not invent production SHA or Level-3 certification.
+**Updated:** 2026-09-27T00:03:04-05:00
+**Source main commit:** `c51c47c8fe6ca478f8b51cb95d613a69c0310a8f`
+**Authority:** Canonical compact repository/lifecycle state and task router. Fresh Git, GitHub, runtime, and provider evidence overrides this snapshot when they differ.
 
-**As of:** 2026-09-22 (EA UNLOCK from Chief/Ryan — real-user journey verified).
+## Repository and lifecycle
 
-## Canonical product repository
+- Authoritative repository: `https://github.com/ohcaygo/merge-proof`; default branch `main`.
+- Refreshed remote `main`: `c51c47c8fe6ca478f8b51cb95d613a69c0310a8f` (`Merge pull request #22 from ohcaygo/codex/independent-review-procedure`). Working from another branch or clone does not change that authority.
+- Current `main` implements the Merge Truth record, buyer evidence chain, unsigned deterministic replay packet, and authoritative pinned-candidate review procedure. GitHub self-check run `36294771158` completed all nine jobs successfully for this exact SHA.
+- Last directly verified production backend is `/opt/merge-proof/releases/earlyaccess-b36a1bd`, marker `b36a1bd867f194e727e031bab9da630e899afcb4`. Public `/`, `/proof/`, and the sample PDF returned HTTP 200 on this update. The public service does not expose a source SHA, so current `main` is **not proven deployed**.
+- Controlled Early Access was accepted on 2026-09-22 for its bounded real-user journey. That acceptance does not prove continuous health, current-main deployment, or L3 completion.
 
-| Field | Value | Confidence |
+| State | Current `main` | Production / acceptance truth |
 | --- | --- | --- |
-| GitHub | `https://github.com/ohcaygo/merge-proof` | VERIFIED |
-| Remote URL | `https://github.com/ohcaygo/merge-proof.git` | VERIFIED |
-| Default branch | `main` | VERIFIED |
-| Local Mac clone | `/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof` | VERIFIED via Mac FS 2026-09-22 |
-| Homepage metadata | `https://merge-proof.ohcaygo.com` | VERIFIED as repo homepage metadata |
+| Implemented | Yes, in the landed tree | EA subset is live; L3 code is not proven live |
+| Tested | Nine current-SHA GitHub jobs passed | Prior bounded live/lab evidence remains scoped to its named candidate |
+| Independently reviewed | Procedure candidate was reviewed before merge; later candidates require their own review | Historical reviews do not approve later candidates |
+| Merged | Yes, through `c51c47c8` | Merge is not deployment authority |
+| Deployed | **NOT_PROVEN** | Last direct backend identity is `b36a1bd` |
+| Accepted | **NOT_PROVEN** for current main and L3 | Controlled EA journey only |
 
-## Current production backend (authoritative)
+## GitHub policy truth
 
-| Field | Value | Confidence |
-| --- | --- | --- |
-| Deployed backend commit | `d1ba274` (`d1ba274a613896d6afeebb6a7dd146d89c21528d`) | VERIFIED directly from DigitalOcean droplet `DEPLOYED_COMMIT` (clean EA cutover session 2026-09-22) |
-| Production lineage branch | `codex/account-reload-closure` | VERIFIED |
-| What that production tip contains | Live billing-evidence-collapse and account-reload-timing fixes | VERIFIED (present on `d1ba274`; absent from the divergent `main` lineage noted below) |
+Fresh read on 2026-09-27:
 
-### Do not treat as current production backend
+- `main` reports no classic branch protection.
+- Active repository ruleset `23000277`, `Merge assurance temporary acceptance`, applies only to `codex/merge-assurance-acceptance-base` and `codex/ruleset-only-acceptance-base`; it requires two named checks and a merge queue.
+- Ruleset `23717603`, `L3 isolated signed queue fixture`, is disabled and targets only its fixture branch.
+- `main` has nine successful check runs at the source SHA and no commit-status contexts. These facts do not establish a protected `main` policy.
+- PR `#11` remains open on the old production-lineage branch. Do not treat it as current deployment or integration authority.
 
-These are **not** the currently deployed backend:
+Re-read GitHub before any PR, policy, approval, currentness, or landed-tree claim; rules and checks can change without a repository commit.
 
-- `origin/main` tip `288e0df` — **not** the production backend lineage tip used for deploy (docs may land on `main`; deploy follows the production lineage)
-- `c5df66c` — Level-3 / acceptance candidate material; **not** production
-- `9a35a7a` — **not** current production backend
-- Any other Level-3 candidate SHA
+## Active objective and finish line
 
-## Early Access release — LIVE (2026-09-22 unlock)
+The active product objective is one truthful buyer path from evaluated candidate through bound evidence/authority/currentness to landed content and reproducible replay. P0/P1/P2 are present on `main`; release completion still requires an exact candidate, full regression and adversarial verification, an applicable independent review, deliberate integration/deployment authority, and controlled hosted acceptance. A documentation or context change must not move any product lifecycle state.
 
-| Claim | State |
-| --- | --- |
-| Controlled EA live | **LIVE** — real-user journey verified (Chief/Ryan EA UNLOCK 2026-09-22) |
-| EA base | Production `d1ba274` + minimum invited-tester functionality |
-| Invited tester term | **10 days** verified |
-| Public commercial term | **7-day** no-card trial from first successful proof → **$29/mo** per observed active developer — verified |
-| Early Access URL | `https://merge-proof.ohcaygo.com/early-access` |
-| Outreach posting | Organic may include the EA URL **only when Ryan greens a specific post**. Pack 63 / cold spray / Ads remain **HOLD**. |
-| Soft-close | Soft-close is **no longer required** for the unlocked EA path once Ryan greens a paste. Still no fake urgency and no Level-3 certification claims. |
+## Level 3 and external gates
 
-## Level 3 / AWS
+L3 is **not complete or certified**. The reviewed L3 closure tree landed through `2e6bf02`, but current `main` is newer. Retained evidence now supports cold-host recovery and delivery reconciliation within their recorded bounds. Remaining established gates include:
 
-| Claim | State |
-| --- | --- |
-| Level 3 certified / complete | **NOT certified complete** — remains separate from Early Access; **never claim certified** |
-| Production AWS migration complete | **Do not claim** |
-| L3 / AWS evidence location | Protected outside this scoreboard at `/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-l3-live-lab-2026-09-19/` (and sibling L3 dirs). Do not relocate/rewrite until deliberate archive/reconcile. |
+- one successful actual scheduled differential-lab event;
+- owner-gated production schedule and 30-day COMPLIANCE retention activation;
+- positive qualifying coverage, externally blocked under the frozen contract;
+- exact-final-candidate review and production-lineage reconciliation;
+- owner-authorized public JWKS/trust-root/checkpoint publication and independent verification;
+- owner-authorized production L3 cutover, rollback readiness, and controlled L3 journey.
 
-## Shared-truth layout
+Do not alter AWS, KMS, JWKS, anchoring, retention, GitHub policy/App permissions, authentication, or production without the separate authority named in the operational records.
 
-| Path | Role |
-| --- | --- |
-| `docs/current-truth/*` | Established shared product/market/ops truth — overrides stale conversation assumptions |
-| `research/grok-inbox/` | Grok INPUT only — does **not** automatically become truth |
+## Verification commands
 
-## Local Mac pointers
+Run from a full-history checkout with a supported Node version:
 
-| Path | Class / note |
-| --- | --- |
-| `/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof` | Class A canonical clone |
-| `/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-archive-desktop-2026-09-22/` | Archived former Desktop working material |
-| `/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/_private-do-not-commit/` | Class G secrets diverted here — never commit |
-| `/Users/ryanwilliams/Documents/ChatGPT/OHCAYGO Foundry/merge-proof-l3-live-lab-2026-09-19/` | Class B PROTECTED L3 evidence |
-| Sibling L3 dirs under OHCAYGO Foundry (`merge-proof-final-frontier-l3`, `merge-proof-l3-acceptance-c5df66c`) | Class B evidence — leave alone |
+```sh
+npm test
+npm run test:factory
+npm run test:github
+node test/pilot-report.js --pdf
+npm run report:sample
+```
 
-## Immediate product job (ops reminder)
+For release work, also run the exact live/provider/preflight checks required by the selected release packet. Unit fixtures, retained captures, browser rendering, signed replay, recovery, and live provider acceptance are not interchangeable.
 
-Get invited testers through the **live** Early Access path. Organic waits for Ryan’s green before posting Anra/Sam (or other) trial invites. Pack 63 / cold spray / Ads stay HOLD. Level 3 stays uncertified and separate.
+## Task routing
+
+- Product/verdict/claims: `PRODUCT.md`, `CLAIMS.md`, `MERGE-TRUTH-RECORD.md`.
+- Unsigned replay: `REPLAY-PACKET.md`, `github/replay-packet.js`, `github/test/replay-packet.test.js`.
+- GitHub proof/currentness/policy/landing: `github/README.md`, `github/PRODUCTION.md`, implementation, and `github/test/`.
+- L3 and release: `github/FINAL-FRONTIER.md`, `github/operations/LEVEL3-PREPARATION.md`, `LEVEL3-RELEASE-PACKET.md`, and the exact linked validation bundle.
+- Factory/hosted/billing: `factory/README.md`, `ACCEPTANCE.md`, `PUBLIC-LAUNCH.md`, and `factory/test/`.
+- Historical proof/research: route to the named record under `github/validation/`, `factory/review/`, `docs/research/`, or `research/`; never bulk-load or rewrite it as current state.
+- Independent review: `INDEPENDENT-REVIEW.md` is the authoritative pinned-candidate procedure. Existing reviewer files are candidate-specific records, not reusable procedure authority; the OHCAYGO reviewer is not a substitute.
+
+## Maintenance and live verification
+
+Keep this file under 1,000 words. Update its timestamp and source commit whenever lifecycle truth changes. Before operational claims, verify live repository/ref/commit, checks/workflows/statuses, rulesets/protection, deployed identity, public rendering, and the relevant provider or infrastructure state. If access is missing or evidence conflicts, report `UNKNOWN` or `NOT_PROVEN` and route to the deeper record; do not make this file a historical ledger.
