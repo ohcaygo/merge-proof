@@ -1,14 +1,14 @@
 # Merge-Proof current status
 
-**Updated:** 2026-09-27T11:30:24-05:00
-**Source main commit:** `c07fdf4aa61b3afe4deba3270798c21d9bc637db`
+**Updated:** 2026-09-27T12:51:01-05:00
+**Source main commit:** `01a38366be4e51bc69ba04644f3247c70d19b950`
 **Authority:** Canonical compact repository/lifecycle state and task router. Fresh Git, GitHub, runtime, and provider evidence overrides this snapshot when they differ.
 
 ## Repository and lifecycle
 
 - Authoritative repository: `https://github.com/ohcaygo/merge-proof`; default branch `main`.
-- Refreshed remote `main`: `c07fdf4aa61b3afe4deba3270798c21d9bc637db` (`Merge pull request #23 from ohcaygo/codex/context-routing-pilot-refresh`). Working from another branch or clone does not change that authority.
-- Current `main` implements the Merge Truth record, buyer evidence chain, unsigned deterministic replay packet, authoritative pinned-candidate review procedure, and compact context routing. The last recorded nine-job GitHub self-check applies to predecessor `c51c47c8fe6ca478f8b51cb95d613a69c0310a8f`; it is not promoted to the newer main SHA.
+- Refreshed remote `main`: `01a38366be4e51bc69ba04644f3247c70d19b950` (`Merge approved P3 provider history candidate`). Working from another branch or clone does not change that authority.
+- Current `main` implements P0-P3: the Merge Truth record, buyer evidence chain, unsigned deterministic replay packet, authoritative pinned-candidate review procedure, compact context routing, and provider-history reconciliation coverage beneath Merge Truth. The last recorded nine-job GitHub self-check applies to predecessor `c51c47c8fe6ca478f8b51cb95d613a69c0310a8f`; it is not promoted to the newer main SHA.
 - Last directly verified production backend is `/opt/merge-proof/releases/earlyaccess-b36a1bd`, marker `b36a1bd867f194e727e031bab9da630e899afcb4`. Public `/`, `/proof/`, and the sample PDF returned HTTP 200 on this update. The public service does not expose a source SHA, so current `main` is **not proven deployed**.
 - Controlled Early Access was accepted on 2026-09-22 for its bounded real-user journey. That acceptance does not prove continuous health, current-main deployment, or L3 completion.
 
@@ -17,7 +17,7 @@
 | Implemented | Yes, in the landed tree | EA subset is live; L3 code is not proven live |
 | Tested | Current-main provider checks are **NOT_PROVEN** in this snapshot; candidate suites must be run directly | Prior bounded live/lab evidence remains scoped to its named candidate |
 | Independently reviewed | Procedure candidate was reviewed before merge; later candidates require their own review | Historical reviews do not approve later candidates |
-| Merged | Yes, through `c07fdf4a` | Merge is not deployment authority |
+| Merged | Yes, through `01a38366` | Merge is not deployment authority |
 | Deployed | **NOT_PROVEN** | Last direct backend identity is `b36a1bd` |
 | Accepted | **NOT_PROVEN** for current main and L3 | Controlled EA journey only |
 
@@ -35,7 +35,7 @@ Re-read GitHub before any PR, policy, approval, currentness, or landed-tree clai
 
 ## Active objective and finish line
 
-The active product objective is one truthful buyer path from evaluated candidate through bound evidence/authority/currentness to landed content and reproducible replay. P0/P1/P2 are present on `main`; release completion still requires an exact candidate, full regression and adversarial verification, an applicable independent review, deliberate integration/deployment authority, and controlled hosted acceptance. A documentation or context change must not move any product lifecycle state.
+The active product objective is one truthful buyer path from evaluated candidate through bound evidence/authority/currentness to landed content and reproducible replay. P0-P3 are present on `main`; release completion still requires an exact candidate, full regression and adversarial verification, an applicable independent review, deliberate integration/deployment authority, and controlled hosted acceptance. A documentation or context change must not move any product lifecycle state.
 
 ## Level 3 and external gates
 

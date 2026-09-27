@@ -78,3 +78,5 @@ The chain has no verdict logic. Its conclusion is the Merge Truth relationship v
 ## Downloadable deterministic replay
 
 An authorized proof page exposes the unsigned replay packet defined in [REPLAY-PACKET.md](./REPLAY-PACKET.md). The packet embeds the authoritative P0 inputs and reuses the existing receipt, landing, and Merge Truth replay logic. It does not add a verdict source or a trust claim.
+
+When a third party supplies an independently acquired bare Git repository, the same command path can additionally invoke the existing offline Git-object verifier. That layer recomputes applicable commit, tree, merge-base, expected-tree, and parent relationships. It does not authenticate the packet's repository/PR association or promote checks, reviews, policies, currentness, webhook history, or other provider observations into independently verified facts.
