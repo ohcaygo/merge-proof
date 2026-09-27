@@ -17,6 +17,28 @@ The record is deterministically derived from:
 3. the retained landed-content observation, when GitHub content resolution completed;
 4. current delivery-reconciliation health, reported separately from merge truth.
 
+## Provider-history coverage (P3)
+
+The buyer projection reports App delivery-history coverage beneath the replay
+action. It is supporting evidence, never a second merge verdict:
+
+- `RECONCILED` means the existing bounded delivery traversal reached its
+  completion condition through the recorded time and is bound to the same
+  repository, pull request, and evaluated candidate.
+- `IN_PROGRESS` means a resumable traversal still has provider pages left.
+- `STALE` means the retained completion predates the proof point it would need
+  to cover.
+- `UNAVAILABLE` means completion or proof binding cannot be established from
+  retained provider state.
+- `RECOVERED` additionally requires a confirmed redelivery requested by the
+  existing reconciler and a subsequently accepted event bound to the exact
+  repository, pull request, and evaluated candidate.
+
+A stored label, active cursor, unconfirmed redelivery, malformed subject, or
+cross-proof subject cannot project `RECONCILED` or `RECOVERED`. None of these
+states changes `relationship.verdict`; in particular, reconciled history cannot
+turn missing evidence or an unresolved landing into `VERIFIED`.
+
 It collects no new evidence and grants no authority.
 
 ## Relationship verdict

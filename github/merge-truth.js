@@ -92,6 +92,61 @@ function validateLanding(receipt, storedReceipt, record, landing) {
   return { consistent: discrepancies.length === 0, computed, discrepancies };
 }
 
+function reconciliationFor(receipt, record, input = {}) {
+  const expected = {
+    repositoryId: receipt.identity.repositoryId,
+    pullRequest: receipt.identity.pr,
+    candidate: receipt.identity.headSha,
+  };
+  const subject = input.subject || null;
+  const subjectMatches = subject?.repositoryId === expected.repositoryId &&
+    subject?.pullRequest === expected.pullRequest && subject?.candidate === expected.candidate;
+  const relevantAt = record?.mergedAt || receipt.issuedAt;
+  const relevantTime = Date.parse(relevantAt || "");
+  const asOf = Number.isFinite(Date.parse(input.asOf || "")) ? input.asOf : null;
+  const base = {
+    state: "UNAVAILABLE",
+    asOf,
+    relevantAt,
+    reason: "PROVIDER_HISTORY_UNAVAILABLE",
+    coverage: "INCOMPLETE",
+    recovered: null,
+    scope: "GitHub App delivery history for this repository, pull request, and evaluated candidate; this does not establish atomic currentness at merge.",
+  };
+  if (!subjectMatches)
+    return { ...base, reason: subject ? "RECONCILIATION_SUBJECT_MISMATCH" : "RECONCILIATION_SUBJECT_UNBOUND" };
+  if (!Number.isFinite(relevantTime))
+    return { ...base, reason: "PROOF_POINT_TIME_UNAVAILABLE" };
+  if (input.inProgress)
+    return { ...base, state: "IN_PROGRESS", reason: "PROVIDER_HISTORY_TRAVERSAL_IN_PROGRESS" };
+  if (input.state !== "RECONCILED")
+    return { ...base, reason: input.reason || "PROVIDER_HISTORY_UNAVAILABLE" };
+  if (!asOf)
+    return { ...base, reason: "RECONCILIATION_TIME_UNAVAILABLE" };
+  const requestedTime = Date.parse(input.recovered?.requestedAt || "");
+  const observedTime = Date.parse(input.recovered?.observedAt || "");
+  const recovered = input.recovered?.confirmed === true &&
+    Number.isFinite(requestedTime) && Number.isFinite(observedTime) &&
+    observedTime >= requestedTime && requestedTime <= Date.parse(asOf)
+      ? {
+          state: "RECOVERED",
+          event: input.recovered.event || null,
+          requestedAt: input.recovered.requestedAt || null,
+          observedAt: input.recovered.observedAt,
+          deliveryId: input.recovered.deliveryId || null,
+        }
+      : null;
+  if ((record || !recovered) && Date.parse(asOf) < relevantTime)
+    return { ...base, state: "STALE", reason: "RECONCILIATION_PREDATES_PROOF" };
+  return {
+    ...base,
+    state: recovered ? "RECOVERED" : "RECONCILED",
+    reason: recovered ? "DELAYED_PROVIDER_EVENT_RECOVERED" : "PROVIDER_HISTORY_RECONCILED",
+    coverage: "COMPLETE",
+    recovered,
+  };
+}
+
 function build({ receiptRow, record = null, landing = null, reconciliation = {} }) {
   const storedReceipt = receiptRow?.receipt;
   const receipt = storedReceipt;
@@ -180,13 +235,7 @@ function build({ receiptRow, record = null, landing = null, reconciliation = {} 
           observationId: null,
         },
     relationship: relation,
-    reconciliation: {
-      state: reconciliation.inProgress
-        ? "IN_PROGRESS"
-        : reconciliation.state || "UNAVAILABLE",
-      asOf: reconciliation.asOf || null,
-      scope: "GitHub App delivery history; this does not establish atomic currentness at merge.",
-    },
+    reconciliation: reconciliationFor(receipt, record, reconciliation),
     references: {
       receipt: {
         id: receipt.receiptId,
@@ -389,6 +438,37 @@ function buyerOutcome(value) {
   return { verdict, headline, context };
 }
 
+function buyerReconciliation(value) {
+  const reconciliation = value.reconciliation;
+  const through = reconciliation.asOf ? ` through ${reconciliation.asOf}` : "";
+  const conclusion = `This provider-history status does not change Merge Truth: ${value.relationship.verdict}.`;
+  if (reconciliation.state === "RECOVERED") return {
+    state: "Recovered", tone: "good",
+    summary: `A delayed or missed provider event for this proof was recovered through reconciliation${reconciliation.recovered?.observedAt ? ` at ${reconciliation.recovered.observedAt}` : ""}.`,
+    detail: `Relevant delivery history was traversed${through}. ${conclusion}`,
+  };
+  if (reconciliation.state === "RECONCILED") return {
+    state: "Reconciled", tone: "good",
+    summary: `Relevant provider delivery history was traversed${through}.`,
+    detail: `The accepted traversal reached its completion condition for this proof. ${conclusion}`,
+  };
+  if (reconciliation.state === "IN_PROGRESS") return {
+    state: "Reconciliation in progress", tone: "unknown",
+    summary: "Merge Proof has not yet completed the accepted provider delivery-history traversal.",
+    detail: `Provider-history coverage is incomplete. ${conclusion}`,
+  };
+  if (reconciliation.state === "STALE") return {
+    state: "Out of date", tone: "unknown",
+    summary: `The last completed traversal${through} predates the recorded proof point.`,
+    detail: `Provider-history coverage is not current enough for this proof. ${conclusion}`,
+  };
+  return {
+    state: "Unavailable", tone: "unknown",
+    summary: "Merge Proof cannot establish reconciliation from the available provider history.",
+    detail: `Provider-history coverage remains unproven. ${conclusion}`,
+  };
+}
+
 function html(value, escape, supportingHtml = "") {
   const short = (x) => x ? escape(String(x).replace(/^[a-f0-9]{40}$/, (s) => s.slice(0, 12))) : "Unavailable";
   const chain = evidenceChain(value);
@@ -403,17 +483,19 @@ function html(value, escape, supportingHtml = "") {
     <p>${escape(stage.detail)}</p>
     ${stage.meta ? `<small>${escape(stage.meta)}</small>` : ""}
   </li>`).join("");
-  const reconciliation = value.reconciliation.state === "RECONCILED"
-    ? `Delivery history reconciled${value.reconciliation.asOf ? ` through ${escape(value.reconciliation.asOf)}` : ""}.`
-    : `Delivery reconciliation: ${escape(words(value.reconciliation.state))}${value.reconciliation.asOf ? ` as of ${escape(value.reconciliation.asOf)}` : ""}.`;
+  const reconciliation = buyerReconciliation(value);
+  const reconciliationHtml = `<aside class="reconciliation-status ${escape(reconciliation.tone)}" aria-label="Provider history coverage">
+    <p class="reconciliation-heading"><span>Provider history</span><strong>${escape(reconciliation.state)}</strong></p>
+    <p>${escape(reconciliation.summary)}</p><small>${escape(reconciliation.detail)}</small>
+  </aside>`;
   return `<section class="merge-truth" aria-labelledby="merge-truth-heading">
   <p class="eyebrow">MERGE TRUTH</p><h1 id="merge-truth-heading">Merge truth: ${escape(outcome.verdict)}</h1>
   <p class="merge-truth-lede"><strong>${escape(outcome.headline)}</strong></p>
   <p class="merge-truth-context">${escape(outcome.context)}</p>
   <div class="merge-truth-comparison" aria-label="Evaluated and landed content"><div class="truth-side"><small>Evaluated merge-target tree</small><strong>${short(value.evaluated.target?.tree)}</strong></div><div class="truth-side"><small>Actual landed tree</small><strong>${short(value.landing.tree)}</strong></div></div>
   <ol class="evidence-chain" aria-label="Merge Truth evidence chain">${stages}</ol>
-  <p class="reconciliation-note">${reconciliation}</p>
   ${value.references.replayPacket ? `<div class="replay-packet-action"><a href="${escape(value.references.replayPacket)}" download>Download replay packet</a><p>Replay this conclusion locally from the supplied evidence. <strong>Unsigned packet:</strong> it checks deterministic consistency and detects unmatched alteration, but does not independently establish packet provenance or a public trust root.</p></div>` : ""}
+  ${reconciliationHtml}
   ${supportingHtml}
   <details class="merge-truth-details"><summary>Evidence details and identifiers</summary>
     <dl>
@@ -421,6 +503,7 @@ function html(value, escape, supportingHtml = "") {
       <dt>Evidence currentness</dt><dd>At proof: ${escape(value.currentness.atProof.state)} · ${value.recordId ? "when merge event arrived" : "latest retained observation"}: ${escape(value.currentness.atMergeEvent.state)} · ${value.recordId ? `at merge decision: ${escape(value.currentness.atMergeDecision.state)}` : "no merge decision is bound"}</dd>
       <dt>Landed content</dt><dd>${value.recordId ? `Commit ${short(value.landing.mergeCommit)} · tree ${short(value.landing.tree)} · ${escape(value.landing.path)}` : "No merge event is bound to this receipt."}</dd>
       <dt>Authoritative relationship</dt><dd>${escape(value.relationship.verdict)} · ${escape(value.relationship.reason)}</dd>
+      <dt>Provider history</dt><dd>${escape(value.reconciliation.state)} · ${escape(value.reconciliation.reason)}${value.reconciliation.asOf ? ` · through ${escape(value.reconciliation.asOf)}` : ""}</dd>
     </dl>
     <h3>Bound claims</h3>${claims}
     <p><a href="/proof/receipts/${escape(value.evaluated.receiptId)}/merge-truth">Download Merge Truth JSON</a>${value.references.bundle ? ` · <a href="${escape(value.references.bundle)}">Download replay bundle</a>` : ""}</p>
@@ -428,4 +511,4 @@ function html(value, escape, supportingHtml = "") {
   </details></section>`;
 }
 
-module.exports = { build, verify, summary, evidenceChain, buyerOutcome, html, relationship, validateLanding };
+module.exports = { build, verify, summary, evidenceChain, buyerOutcome, buyerReconciliation, html, relationship, validateLanding, reconciliationFor };

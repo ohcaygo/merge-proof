@@ -84,10 +84,13 @@ test("delivery reconciliation follows cursor pages, redelivers missed GUID and r
   const h=harness(t),s=h.service,calls=[];s.config.appId=42;s.config.privateKey='fixture-never-used';
   s.deliveryClient=()=>new Client({fetchImpl:async(url,init)=>{
     const u=new URL(url);calls.push([u.pathname,init.method]);
-    if(init.method==='POST') {await h.hook('pull_request',{pull_request:{number:1,state:'open'}},'missed-guid');return new Response(null,{status:202});}
+    if(init.method==='POST') {await h.hook('pull_request',{pull_request:{number:1,state:'open',head:{sha:H}}},'missed-guid');return new Response(null,{status:202});}
     return u.searchParams.has('cursor') ? Response.json([{id:2,guid:'missed-guid',event:'pull_request',status_code:500}]) : new Response('[]',{headers:{link:'<https://api.github.com/app/hook/deliveries?cursor=next&per_page=100>; rel="next"'}});
   }});
   await s.reconcileDeliveries();a.equal(s.data.deliveryHealth,'RECONCILED');a.ok(s.data.events['missed-guid']);a.equal(s.data.queue.length,1);
+  a.equal(s.data.deliveryRecoveries['missed-guid'].confirmed,true);
+  await s.drain();const row=Object.values(s.data.receipts)[0],projected=s.mergeTruth(row);
+  a.equal(projected.reconciliation.state,'RECOVERED');a.equal(projected.relationship.verdict,'NOT_PROVEN');
   const n=calls.length;await s.reconcileDeliveries();a.equal(calls.length,n);
 });
 test("unchanged full reconciliations retain one receipt and refresh observation time",async t=>{

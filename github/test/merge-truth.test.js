@@ -37,10 +37,23 @@ function observed(record, landed) {
   return { ...result, recordedAt: "2026-09-26T12:00:01.000Z", observationId: "a".repeat(64) };
 }
 
+function coverage(receipt, overrides = {}) {
+  return {
+    state: "RECONCILED",
+    asOf: "2026-09-26T13:00:00.000Z",
+    subject: {
+      repositoryId: receipt.identity.repositoryId,
+      pullRequest: receipt.identity.pr,
+      candidate: receipt.identity.headSha,
+    },
+    ...overrides,
+  };
+}
+
 test("exact candidate and one-parent squash/rebase envelopes produce a verified merge truth relationship", async () => {
   const { receipt, receiptRow, record } = await fixture();
   const landed = { sha: M, tree: receipt.summary.target.value.tree, parents: [B] };
-  const value = truth.build({ receiptRow, record, landing: observed(record, landed), reconciliation: { state: "RECONCILED", asOf: "2026-09-26T13:00:00.000Z" } });
+  const value = truth.build({ receiptRow, record, landing: observed(record, landed), reconciliation: coverage(receipt) });
   a.equal(value.relationship.verdict, "VERIFIED");
   a.equal(value.relationship.state, "LANDED_VERIFIED");
   a.equal(value.landing.path, "squash-or-single-rebase");
@@ -87,7 +100,7 @@ test("base drift and a changed candidate remain not proven", async () => {
 test("stale or missing evidence and an unobserved landing never become verified", async () => {
   const first = await fixture();
   first.receiptRow.current = { state: "STALE", changedClaims: ["TARGET"] };
-  const pending = truth.build({ receiptRow: first.receiptRow, reconciliation: { state: "UNAVAILABLE", inProgress: true } });
+  const pending = truth.build({ receiptRow: first.receiptRow, reconciliation: coverage(first.receipt, { state: "UNAVAILABLE", inProgress: true }) });
   a.equal(pending.relationship.verdict, "NOT_PROVEN");
   a.equal(pending.landing.state, "NOT_OBSERVED");
   a.equal(pending.reconciliation.state, "IN_PROGRESS");
@@ -177,7 +190,8 @@ test("compact evidence chain projects the authoritative relationship in buyer-re
   a.match(html, /The evaluated tree is the tree that landed\./);
   a.ok(html.indexOf("Merge truth: VERIFIED") < html.indexOf("Evaluated merge-target tree"));
   const withSupport = truth.html(value, require("../receipt").escape, '<section id="support">candidate evidence</section>');
-  a.ok(withSupport.indexOf("Download replay packet") < withSupport.indexOf('id="support"'));
+  a.ok(withSupport.indexOf("Download replay packet") < withSupport.indexOf("Provider history"));
+  a.ok(withSupport.indexOf("Provider history") < withSupport.indexOf('id="support"'));
   a.ok(withSupport.indexOf('id="support"') < withSupport.indexOf("Evidence details and identifiers"));
 });
 
@@ -247,8 +261,8 @@ test("compact evidence chain keeps fail, stale, missing, pending, reconciled and
   a.equal(truth.evidenceChain(truth.build({ receiptRow: pendingUnknown.receiptRow })).stages[2].title, "Currentness could not be established for this retained proof.");
 
   const reconciled = await fixture();
-  const reconciledValue = truth.build({ receiptRow: reconciled.receiptRow, record: reconciled.record, landing: observed(reconciled.record, { sha: M, tree: reconciled.receipt.summary.target.value.tree, parents: [B] }), reconciliation: { state: "RECONCILED", asOf: "2026-09-26T13:00:00.000Z" } });
-  a.match(truth.html(reconciledValue, require("../receipt").escape), /Delivery history reconciled through 2026-09-26T13:00:00.000Z/);
+  const reconciledValue = truth.build({ receiptRow: reconciled.receiptRow, record: reconciled.record, landing: observed(reconciled.record, { sha: M, tree: reconciled.receipt.summary.target.value.tree, parents: [B] }), reconciliation: coverage(reconciled.receipt) });
+  a.match(truth.html(reconciledValue, require("../receipt").escape), /Provider history[\s\S]*Reconciled[\s\S]*Relevant provider delivery history was traversed through 2026-09-26T13:00:00.000Z/);
 
   const contradictory = await fixture();
   const stored = observed(contradictory.record, { sha: M, tree: contradictory.receipt.summary.target.value.tree, parents: [B] });
@@ -257,4 +271,78 @@ test("compact evidence chain keeps fail, stale, missing, pending, reconciled and
   a.equal(truth.evidenceChain(contradiction).verdict, "NOT_PROVEN");
   a.equal(truth.evidenceChain(contradiction).reason, "The retained landing observation conflicts with deterministic replay.");
   a.match(truth.html(contradiction, require("../receipt").escape), /Merge truth: NOT_PROVEN/);
+});
+
+test("provider-history coverage is proof-bound, fail-closed and never overrides Merge Truth", async () => {
+  const verified = await fixture();
+  const verifiedLanding = observed(verified.record, { sha: M, tree: verified.receipt.summary.target.value.tree, parents: [B] });
+  const complete = truth.build({ receiptRow: verified.receiptRow, record: verified.record, landing: verifiedLanding, reconciliation: coverage(verified.receipt) });
+  a.equal(complete.reconciliation.state, "RECONCILED");
+  a.equal(complete.reconciliation.coverage, "COMPLETE");
+  a.equal(complete.relationship.verdict, "VERIFIED");
+  a.match(truth.html(complete, require("../receipt").escape), /Provider history[\s\S]*Reconciled[\s\S]*does not change Merge Truth: VERIFIED/);
+
+  const active = truth.build({ receiptRow: verified.receiptRow, record: verified.record, landing: verifiedLanding, reconciliation: coverage(verified.receipt, { inProgress: true }) });
+  a.equal(active.reconciliation.state, "IN_PROGRESS");
+  a.equal(active.reconciliation.coverage, "INCOMPLETE");
+  a.equal(active.relationship.verdict, "VERIFIED");
+  a.match(truth.html(active, require("../receipt").escape), /Reconciliation in progress[\s\S]*coverage is incomplete[\s\S]*Merge Truth: VERIFIED/);
+
+  const unavailable = truth.build({ receiptRow: verified.receiptRow, record: verified.record, landing: verifiedLanding, reconciliation: coverage(verified.receipt, { state: "UNAVAILABLE", asOf: null }) });
+  a.equal(unavailable.reconciliation.state, "UNAVAILABLE");
+  a.equal(unavailable.relationship.verdict, "VERIFIED");
+  a.match(truth.html(unavailable, require("../receipt").escape), /Provider history[\s\S]*Unavailable[\s\S]*coverage remains unproven/);
+
+  const stale = truth.build({ receiptRow: verified.receiptRow, record: verified.record, landing: verifiedLanding, reconciliation: coverage(verified.receipt, { asOf: "2026-09-26T11:59:59.000Z" }) });
+  a.equal(stale.reconciliation.state, "STALE");
+  a.equal(stale.reconciliation.reason, "RECONCILIATION_PREDATES_PROOF");
+  a.match(truth.html(stale, require("../receipt").escape), /Provider history[\s\S]*Out of date/);
+
+  const recovered = truth.build({ receiptRow: verified.receiptRow, record: verified.record, landing: verifiedLanding, reconciliation: coverage(verified.receipt, { recovered: {
+    deliveryId: "delivery-1", event: "pull_request", requestedAt: "2026-09-26T12:30:00.000Z",
+    observedAt: "2026-09-26T12:31:00.000Z", confirmed: true,
+  } }) });
+  a.equal(recovered.reconciliation.state, "RECOVERED");
+  a.equal(recovered.reconciliation.recovered.event, "pull_request");
+  a.equal(recovered.relationship.verdict, "VERIFIED");
+  a.match(truth.html(recovered, require("../receipt").escape), /Provider history[\s\S]*Recovered[\s\S]*delayed or missed provider event/);
+
+  const failed = await fixture();
+  const failedValue = truth.build({ receiptRow: failed.receiptRow, record: failed.record, landing: observed(failed.record, { sha: M, tree: B, parents: [B] }), reconciliation: coverage(failed.receipt) });
+  a.equal(failedValue.relationship.verdict, "FAIL");
+  a.equal(failedValue.reconciliation.state, "RECONCILED");
+  a.match(truth.html(failedValue, require("../receipt").escape), /does not change Merge Truth: FAIL/);
+
+  const missing = await fixture();
+  missing.receipt.verdict = "NOT_PROVEN";
+  missing.receipt.gaps = ["RULES_UNAVAILABLE"];
+  missing.receiptRow.receipt = missing.receipt;
+  missing.record.proof.receiptSnapshot = structuredClone(missing.receipt);
+  const missingValue = truth.build({ receiptRow: missing.receiptRow, record: missing.record, landing: observed(missing.record, { sha: M, tree: missing.receipt.summary.target.value.tree, parents: [B] }), reconciliation: coverage(missing.receipt) });
+  a.equal(missingValue.reconciliation.state, "RECONCILED");
+  a.equal(missingValue.relationship.verdict, "NOT_PROVEN");
+  a.match(truth.html(missingValue, require("../receipt").escape), /does not change Merge Truth: NOT_PROVEN/);
+
+  const wrongSubject = truth.build({ receiptRow: verified.receiptRow, record: verified.record, landing: verifiedLanding, reconciliation: coverage(verified.receipt, { subject: { repositoryId: 999, pullRequest: 2, candidate: B } }) });
+  a.equal(wrongSubject.reconciliation.state, "UNAVAILABLE");
+  a.equal(wrongSubject.reconciliation.reason, "RECONCILIATION_SUBJECT_MISMATCH");
+  const storedLabelOnly = truth.build({ receiptRow: verified.receiptRow, record: verified.record, landing: verifiedLanding, reconciliation: { state: "RECONCILED", asOf: "2026-09-26T13:00:00.000Z" } });
+  a.equal(storedLabelOnly.reconciliation.state, "UNAVAILABLE");
+  const unconfirmedRecovery = truth.build({ receiptRow: verified.receiptRow, record: verified.record, landing: verifiedLanding, reconciliation: coverage(verified.receipt, { recovered: { observedAt: "2026-09-26T12:31:00.000Z", confirmed: false } }) });
+  a.equal(unconfirmedRecovery.reconciliation.state, "RECONCILED");
+  for (const recovered of [
+    { requestedAt: null, observedAt: "2026-09-26T12:31:00.000Z", confirmed: true },
+    { requestedAt: "not-a-time", observedAt: "2026-09-26T12:31:00.000Z", confirmed: true },
+    { requestedAt: "2026-09-26T13:00:00.000Z", observedAt: "2026-09-26T12:31:00.000Z", confirmed: true },
+    { requestedAt: "2026-09-26T14:00:00.000Z", observedAt: "2026-09-26T14:01:00.000Z", confirmed: true },
+  ]) {
+    const invalidRecovery = truth.build({ receiptRow: verified.receiptRow, record: verified.record, landing: verifiedLanding, reconciliation: coverage(verified.receipt, { recovered }) });
+    a.equal(invalidRecovery.reconciliation.state, "RECONCILED");
+    a.equal(invalidRecovery.reconciliation.recovered, null);
+  }
+  const malformedProofPoint = structuredClone(verified.record);
+  malformedProofPoint.mergedAt = "not-a-time";
+  const malformedTime = truth.build({ receiptRow: verified.receiptRow, record: malformedProofPoint, landing: verifiedLanding, reconciliation: coverage(verified.receipt) });
+  a.equal(malformedTime.reconciliation.state, "UNAVAILABLE");
+  a.equal(malformedTime.reconciliation.reason, "PROOF_POINT_TIME_UNAVAILABLE");
 });
