@@ -20,7 +20,18 @@ test("independent-review procedure has canonical metadata and bounded size", () 
     cwd: root,
     encoding: "utf8",
   });
-  assert.equal(ancestor.status, 0, ancestor.stderr || "source main commit must be an ancestor of HEAD");
+  if (ancestor.status !== 0) {
+    const shallow = spawnSync("git", ["rev-parse", "--is-shallow-repository"], {
+      cwd: root,
+      encoding: "utf8",
+    });
+    assert.equal(shallow.status, 0, shallow.stderr);
+    assert.equal(
+      shallow.stdout.trim(),
+      "true",
+      ancestor.stderr || "source main commit must be an ancestor of HEAD in a complete checkout",
+    );
+  }
   assert.ok(procedure.trim().split(/\s+/).length < 2200, "procedure must remain navigation-first and below 2,200 words");
 });
 
