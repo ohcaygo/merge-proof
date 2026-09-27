@@ -90,7 +90,8 @@ test("delivery reconciliation follows cursor pages, redelivers missed GUID and r
   await s.reconcileDeliveries();a.equal(s.data.deliveryHealth,'RECONCILED');a.ok(s.data.events['missed-guid']);a.equal(s.data.queue.length,1);
   a.equal(s.data.deliveryRecoveries['missed-guid'].confirmed,true);
   await s.drain();const row=Object.values(s.data.receipts)[0],projected=s.mergeTruth(row);
-  a.equal(projected.reconciliation.state,'RECOVERED');a.equal(projected.relationship.verdict,'NOT_PROVEN');
+  a.equal(projected.reconciliation.state,'RECOVERED',JSON.stringify(projected.reconciliation));a.equal(projected.relationship.verdict,'NOT_PROVEN');
+  a.ok(Date.parse(projected.reconciliation.asOf)>=Date.parse(projected.reconciliation.recovered.observedAt));
   const n=calls.length;await s.reconcileDeliveries();a.equal(calls.length,n);
 });
 test("unchanged full reconciliations retain one receipt and refresh observation time",async t=>{

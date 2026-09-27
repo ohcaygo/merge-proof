@@ -301,6 +301,7 @@ test("provider-history coverage is proof-bound, fail-closed and never overrides 
   const recovered = truth.build({ receiptRow: verified.receiptRow, record: verified.record, landing: verifiedLanding, reconciliation: coverage(verified.receipt, { recovered: {
     deliveryId: "delivery-1", event: "pull_request", requestedAt: "2026-09-26T12:30:00.000Z",
     observedAt: "2026-09-26T12:31:00.000Z", confirmed: true,
+    subject: { repositoryId: verified.receipt.identity.repositoryId, pullRequest: verified.receipt.identity.pr, candidate: verified.receipt.identity.headSha },
   } }) });
   a.equal(recovered.reconciliation.state, "RECOVERED");
   a.equal(recovered.reconciliation.recovered.event, "pull_request");
@@ -330,10 +331,18 @@ test("provider-history coverage is proof-bound, fail-closed and never overrides 
   a.equal(storedLabelOnly.reconciliation.state, "UNAVAILABLE");
   const unconfirmedRecovery = truth.build({ receiptRow: verified.receiptRow, record: verified.record, landing: verifiedLanding, reconciliation: coverage(verified.receipt, { recovered: { observedAt: "2026-09-26T12:31:00.000Z", confirmed: false } }) });
   a.equal(unconfirmedRecovery.reconciliation.state, "RECONCILED");
+  const forgedRecovery = truth.build({ receiptRow: verified.receiptRow, record: verified.record, landing: verifiedLanding, reconciliation: coverage(verified.receipt, { recovered: {
+    deliveryId: "delivery-forged", event: "pull_request", requestedAt: "2026-09-26T12:30:00.000Z",
+    observedAt: "2026-09-26T12:31:00.000Z", confirmed: true,
+    subject: { repositoryId: 999, pullRequest: verified.receipt.identity.pr, candidate: verified.receipt.identity.headSha },
+  } }) });
+  a.equal(forgedRecovery.reconciliation.state, "RECONCILED");
+  a.equal(forgedRecovery.reconciliation.recovered, null);
   for (const recovered of [
     { requestedAt: null, observedAt: "2026-09-26T12:31:00.000Z", confirmed: true },
     { requestedAt: "not-a-time", observedAt: "2026-09-26T12:31:00.000Z", confirmed: true },
     { requestedAt: "2026-09-26T13:00:00.000Z", observedAt: "2026-09-26T12:31:00.000Z", confirmed: true },
+    { requestedAt: "2026-09-26T12:30:00.000Z", observedAt: "2026-09-26T13:01:00.000Z", confirmed: true },
     { requestedAt: "2026-09-26T14:00:00.000Z", observedAt: "2026-09-26T14:01:00.000Z", confirmed: true },
   ]) {
     const invalidRecovery = truth.build({ receiptRow: verified.receiptRow, record: verified.record, landing: verifiedLanding, reconciliation: coverage(verified.receipt, { recovered }) });
@@ -345,4 +354,12 @@ test("provider-history coverage is proof-bound, fail-closed and never overrides 
   const malformedTime = truth.build({ receiptRow: verified.receiptRow, record: malformedProofPoint, landing: verifiedLanding, reconciliation: coverage(verified.receipt) });
   a.equal(malformedTime.reconciliation.state, "UNAVAILABLE");
   a.equal(malformedTime.reconciliation.reason, "PROOF_POINT_TIME_UNAVAILABLE");
+
+  const proofTime = Date.parse(verified.receipt.issuedAt);
+  const preProofRecovery = truth.build({ receiptRow: verified.receiptRow, reconciliation: coverage(verified.receipt, {
+    asOf: new Date(proofTime - 1000).toISOString(),
+    recovered: { requestedAt: new Date(proofTime - 3000).toISOString(), observedAt: new Date(proofTime - 2000).toISOString(), confirmed: true },
+  }) });
+  a.equal(preProofRecovery.reconciliation.state, "STALE");
+  a.equal(preProofRecovery.reconciliation.reason, "RECONCILIATION_PREDATES_PROOF");
 });

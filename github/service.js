@@ -408,6 +408,11 @@ class ProofService {
           requestedAt: recovered[1].requestedAt,
           observedAt: recovered[1].observedAt,
           confirmed: true,
+          subject: {
+            repositoryId: recovered[1].repositoryId,
+            pullRequest: recovered[1].pullRequest,
+            candidate: recovered[1].candidate,
+          },
         } : null,
       },
     };
@@ -856,7 +861,9 @@ class ProofService {
       }
       assert(!endpoint, "DELIVERY_SCAN_INCOMPLETE");
       delete this.data.deliveryScan;
-      this.data.deliveryScanAt = now; this.data.deliveryHealth = "RECONCILED";
+      // The accepted traversal covers through completion, not merely its start.
+      // Preserve an explicitly later scheduler time used by deterministic runs.
+      this.data.deliveryScanAt = Math.max(now, Date.now()); this.data.deliveryHealth = "RECONCILED";
     } catch { this.data.deliveryHealth = "UNAVAILABLE"; this.data.deliveryScanAt = now - 4 * 3600000 + 300000; }
     this.save();
   }

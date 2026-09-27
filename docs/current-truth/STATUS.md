@@ -1,23 +1,23 @@
 # Merge-Proof current status
 
-**Updated:** 2026-09-27T00:03:04-05:00
-**Source main commit:** `c51c47c8fe6ca478f8b51cb95d613a69c0310a8f`
+**Updated:** 2026-09-27T11:30:24-05:00
+**Source main commit:** `c07fdf4aa61b3afe4deba3270798c21d9bc637db`
 **Authority:** Canonical compact repository/lifecycle state and task router. Fresh Git, GitHub, runtime, and provider evidence overrides this snapshot when they differ.
 
 ## Repository and lifecycle
 
 - Authoritative repository: `https://github.com/ohcaygo/merge-proof`; default branch `main`.
-- Refreshed remote `main`: `c51c47c8fe6ca478f8b51cb95d613a69c0310a8f` (`Merge pull request #22 from ohcaygo/codex/independent-review-procedure`). Working from another branch or clone does not change that authority.
-- Current `main` implements the Merge Truth record, buyer evidence chain, unsigned deterministic replay packet, and authoritative pinned-candidate review procedure. GitHub self-check run `36294771158` completed all nine jobs successfully for this exact SHA.
+- Refreshed remote `main`: `c07fdf4aa61b3afe4deba3270798c21d9bc637db` (`Merge pull request #23 from ohcaygo/codex/context-routing-pilot-refresh`). Working from another branch or clone does not change that authority.
+- Current `main` implements the Merge Truth record, buyer evidence chain, unsigned deterministic replay packet, authoritative pinned-candidate review procedure, and compact context routing. The last recorded nine-job GitHub self-check applies to predecessor `c51c47c8fe6ca478f8b51cb95d613a69c0310a8f`; it is not promoted to the newer main SHA.
 - Last directly verified production backend is `/opt/merge-proof/releases/earlyaccess-b36a1bd`, marker `b36a1bd867f194e727e031bab9da630e899afcb4`. Public `/`, `/proof/`, and the sample PDF returned HTTP 200 on this update. The public service does not expose a source SHA, so current `main` is **not proven deployed**.
 - Controlled Early Access was accepted on 2026-09-22 for its bounded real-user journey. That acceptance does not prove continuous health, current-main deployment, or L3 completion.
 
 | State | Current `main` | Production / acceptance truth |
 | --- | --- | --- |
 | Implemented | Yes, in the landed tree | EA subset is live; L3 code is not proven live |
-| Tested | Nine current-SHA GitHub jobs passed | Prior bounded live/lab evidence remains scoped to its named candidate |
+| Tested | Current-main provider checks are **NOT_PROVEN** in this snapshot; candidate suites must be run directly | Prior bounded live/lab evidence remains scoped to its named candidate |
 | Independently reviewed | Procedure candidate was reviewed before merge; later candidates require their own review | Historical reviews do not approve later candidates |
-| Merged | Yes, through `c51c47c8` | Merge is not deployment authority |
+| Merged | Yes, through `c07fdf4a` | Merge is not deployment authority |
 | Deployed | **NOT_PROVEN** | Last direct backend identity is `b36a1bd` |
 | Accepted | **NOT_PROVEN** for current main and L3 | Controlled EA journey only |
 

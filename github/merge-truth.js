@@ -101,9 +101,13 @@ function reconciliationFor(receipt, record, input = {}) {
   const subject = input.subject || null;
   const subjectMatches = subject?.repositoryId === expected.repositoryId &&
     subject?.pullRequest === expected.pullRequest && subject?.candidate === expected.candidate;
+  const recoverySubject = input.recovered?.subject || null;
+  const recoverySubjectMatches = recoverySubject?.repositoryId === expected.repositoryId &&
+    recoverySubject?.pullRequest === expected.pullRequest && recoverySubject?.candidate === expected.candidate;
   const relevantAt = record?.mergedAt || receipt.issuedAt;
   const relevantTime = Date.parse(relevantAt || "");
-  const asOf = Number.isFinite(Date.parse(input.asOf || "")) ? input.asOf : null;
+  const asOfTime = Date.parse(input.asOf || "");
+  const asOf = Number.isFinite(asOfTime) ? input.asOf : null;
   const base = {
     state: "UNAVAILABLE",
     asOf,
@@ -126,8 +130,11 @@ function reconciliationFor(receipt, record, input = {}) {
   const requestedTime = Date.parse(input.recovered?.requestedAt || "");
   const observedTime = Date.parse(input.recovered?.observedAt || "");
   const recovered = input.recovered?.confirmed === true &&
+    recoverySubjectMatches &&
+    typeof input.recovered.deliveryId === "string" && /^[\w-]{1,100}$/.test(input.recovered.deliveryId) &&
+    typeof input.recovered.event === "string" && /^[a-z][a-z0-9_]{0,99}$/.test(input.recovered.event) &&
     Number.isFinite(requestedTime) && Number.isFinite(observedTime) &&
-    observedTime >= requestedTime && requestedTime <= Date.parse(asOf)
+    observedTime >= requestedTime && observedTime <= asOfTime && requestedTime <= asOfTime
       ? {
           state: "RECOVERED",
           event: input.recovered.event || null,
@@ -136,7 +143,8 @@ function reconciliationFor(receipt, record, input = {}) {
           deliveryId: input.recovered.deliveryId || null,
         }
       : null;
-  if ((record || !recovered) && Date.parse(asOf) < relevantTime)
+  const requiredCoverageTime = recovered && !record ? observedTime : relevantTime;
+  if (asOfTime < requiredCoverageTime)
     return { ...base, state: "STALE", reason: "RECONCILIATION_PREDATES_PROOF" };
   return {
     ...base,
