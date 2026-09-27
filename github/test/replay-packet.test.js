@@ -34,7 +34,10 @@ async function fixture(kind = "VERIFIED") {
   const base = await bundle.create(receipt);
   const evidenceBundle = observed ? bundle.attachLandings(base, [{ record, observation: observed }]) : base;
   receiptRow.artifacts = base;
-  return packet.create({ receiptRow, record, landing: observed, reconciliation: { state: "RECONCILED", asOf: "2026-09-26T13:00:00.000Z" }, evidenceBundle });
+  return packet.create({ receiptRow, record, landing: observed, reconciliation: {
+    state: "RECONCILED", asOf: "2026-09-26T13:00:00.000Z",
+    subject: { repositoryId: receipt.identity.repositoryId, pullRequest: receipt.identity.pr, candidate: receipt.identity.headSha },
+  }, evidenceBundle });
 }
 
 function rehash(value) {

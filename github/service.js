@@ -60,6 +60,8 @@ class ProofService {
     this.data.retractionQueue ||= [];
     this.data.pushQueue ||= [];
     this.data.pushObservations ||= {};
+    this.data.deliveryRecoveryPending ||= {};
+    this.data.deliveryRecoveries ||= {};
     this.data.frontierMetrics ||= {reconciliationSupersessions:0,ruleSuiteDisagreements:0};
     for (const row of Object.values(this.data.receipts)) row.observationId = this.observe(row.receipt);
 
@@ -383,12 +385,35 @@ class ProofService {
     const landing = record
       ? this.data.landings[record.recordId] || (archived?.record.recordId === record.recordId ? archived.observation : null)
       : null;
+    const identity = row.receipt.identity;
+    const recovered = Object.entries(this.data.deliveryRecoveries || {})
+      .filter(([, value]) => value.confirmed === true &&
+        value.repositoryId === identity.repositoryId &&
+        value.pullRequest === identity.pr && value.candidate === identity.headSha)
+      .sort((a,b) => String(b[1].observedAt).localeCompare(String(a[1].observedAt)))[0] || null;
     return {
       receiptRow: row, record, landing,
       reconciliation: {
         state: this.data.deliveryHealth || "UNAVAILABLE",
         asOf: this.data.deliveryScanAt ? new Date(this.data.deliveryScanAt).toISOString() : null,
         inProgress: Boolean(this.data.deliveryScan),
+        subject: {
+          repositoryId: identity.repositoryId,
+          pullRequest: identity.pr,
+          candidate: identity.headSha,
+        },
+        recovered: recovered ? {
+          deliveryId: recovered[0],
+          event: recovered[1].event,
+          requestedAt: recovered[1].requestedAt,
+          observedAt: recovered[1].observedAt,
+          confirmed: true,
+          subject: {
+            repositoryId: recovered[1].repositoryId,
+            pullRequest: recovered[1].pullRequest,
+            candidate: recovered[1].candidate,
+          },
+        } : null,
       },
     };
   }
@@ -509,6 +534,9 @@ class ProofService {
     );
     for (const [guid, seenAt] of Object.entries(this.data.events))
       if (seenAt < Date.now() - 4 * 86400000) delete this.data.events[guid];
+    for (const [guid, recovery] of Object.entries(this.data.deliveryRecoveries))
+      if (Date.parse(recovery.observedAt || "") < Date.now() - 30 * 86400000)
+        delete this.data.deliveryRecoveries[guid];
     if (this.data.events[id]) return { duplicate: true };
     const p = JSON.parse(raw);
     if (event === "ping") return { received: true };
@@ -687,6 +715,28 @@ class ProofService {
     if (event === "push" && Object.values(this.data.receipts).some(r => r.receipt.identity.repositoryId === repositoryId && p.ref === `refs/heads/${r.receipt.identity.baseRef}`))
       this.data.pushQueue.push({ id, repository: repo, repositoryId, installationId, before: p.before, after: p.after, ref: p.ref });
     this.routeEvent(event, p, repo, repositoryId);
+    const pendingRecovery = this.data.deliveryRecoveryPending[id];
+    if (pendingRecovery?.event === event) {
+      const pullRequest = p.pull_request?.number ||
+        p.review?.pull_request_url?.match(/\/pulls\/(\d+)$/)?.[1] ||
+        p.check_run?.pull_requests?.[0]?.number ||
+        p.check_suite?.pull_requests?.[0]?.number ||
+        p.workflow_run?.pull_requests?.[0]?.number || null;
+      const candidate = p.pull_request?.head?.sha || p.review?.commit_id ||
+        p.check_run?.head_sha || p.check_suite?.head_sha ||
+        p.workflow_run?.head_sha || p.sha || null;
+      if (Number.isSafeInteger(Number(pullRequest)) && Number(pullRequest) > 0 &&
+          typeof candidate === "string" && /^[a-f0-9]{40}$/.test(candidate)) {
+        this.data.deliveryRecoveries[id] = {
+          repositoryId, pullRequest: Number(pullRequest), candidate,
+          event, requestedAt: pendingRecovery.requestedAt,
+          observedAt: new Date().toISOString(),
+          confirmed: pendingRecovery.state === "ACCEPTED",
+        };
+        if (pendingRecovery.state === "ACCEPTED")
+          delete this.data.deliveryRecoveryPending[id];
+      }
+    }
     this.save();
     return { accepted: true };
   }
@@ -756,6 +806,9 @@ class ProofService {
   }
   async reconcileDeliveries(now = Date.now()) {
     if (!this.config.appId || !this.config.privateKey || (this.data.deliveryScanAt && now - this.data.deliveryScanAt < 4 * 3600000)) return;
+    for (const [guid, recovery] of Object.entries(this.data.deliveryRecoveryPending))
+      if (Date.parse(recovery.requestedAt || "") < now - 30 * 86400000)
+        delete this.data.deliveryRecoveryPending[guid];
     try {
       const client = this.deliveryClient();
       const scan = this.data.deliveryScan || { endpoint: "/app/hook/deliveries?per_page=100", seen: [] };
@@ -772,8 +825,30 @@ class ProofService {
             typeof row?.id === "string" && /^[1-9][0-9]{0,19}$/.test(row.id);
           assert(validId && typeof row.guid === "string" && /^[\w-]{1,100}$/.test(row.guid), "DELIVERY_IDENTITY_UNAVAILABLE");
           if (row.event === "ping" || seen.has(row.guid)) continue;
-          if (!this.data.events[row.guid] || row.status_code >= 400)
-            await client.request(`/app/hook/deliveries/${row.id}/attempts`, { method: "POST" });
+          if (!this.data.events[row.guid] || row.status_code >= 400) {
+            this.data.deliveryRecoveryPending[row.guid] = {
+              event: row.event,
+              requestedAt: new Date(now).toISOString(),
+              state: "REQUESTING",
+            };
+            this.save();
+            try {
+              await client.request(`/app/hook/deliveries/${row.id}/attempts`, { method: "POST" });
+              const recovered = this.data.deliveryRecoveries[row.guid];
+              if (recovered) {
+                recovered.confirmed = true;
+                delete this.data.deliveryRecoveryPending[row.guid];
+              } else {
+                this.data.deliveryRecoveryPending[row.guid].state = "ACCEPTED";
+              }
+              this.save();
+            } catch (error) {
+              delete this.data.deliveryRecoveryPending[row.guid];
+              if (this.data.deliveryRecoveries[row.guid]?.confirmed !== true)
+                delete this.data.deliveryRecoveries[row.guid];
+              throw error;
+            }
+          }
           seen.add(row.guid);
         }
         const next = client.links.get(endpoint)?.match(/<([^>]+)>; rel="next"/)?.[1];
@@ -786,7 +861,9 @@ class ProofService {
       }
       assert(!endpoint, "DELIVERY_SCAN_INCOMPLETE");
       delete this.data.deliveryScan;
-      this.data.deliveryScanAt = now; this.data.deliveryHealth = "RECONCILED";
+      // The accepted traversal covers through completion, not merely its start.
+      // Preserve an explicitly later scheduler time used by deterministic runs.
+      this.data.deliveryScanAt = Math.max(now, Date.now()); this.data.deliveryHealth = "RECONCILED";
     } catch { this.data.deliveryHealth = "UNAVAILABLE"; this.data.deliveryScanAt = now - 4 * 3600000 + 300000; }
     this.save();
   }

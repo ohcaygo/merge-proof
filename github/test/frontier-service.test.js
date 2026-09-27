@@ -84,11 +84,29 @@ test("delivery reconciliation follows cursor pages, redelivers missed GUID and r
   const h=harness(t),s=h.service,calls=[];s.config.appId=42;s.config.privateKey='fixture-never-used';
   s.deliveryClient=()=>new Client({fetchImpl:async(url,init)=>{
     const u=new URL(url);calls.push([u.pathname,init.method]);
-    if(init.method==='POST') {await h.hook('pull_request',{pull_request:{number:1,state:'open'}},'missed-guid');return new Response(null,{status:202});}
+    if(init.method==='POST') {await h.hook('pull_request',{pull_request:{number:1,state:'open',head:{sha:H}}},'missed-guid');return new Response(null,{status:202});}
     return u.searchParams.has('cursor') ? Response.json([{id:2,guid:'missed-guid',event:'pull_request',status_code:500}]) : new Response('[]',{headers:{link:'<https://api.github.com/app/hook/deliveries?cursor=next&per_page=100>; rel="next"'}});
   }});
   await s.reconcileDeliveries();a.equal(s.data.deliveryHealth,'RECONCILED');a.ok(s.data.events['missed-guid']);a.equal(s.data.queue.length,1);
+  a.equal(s.data.deliveryRecoveries['missed-guid'].confirmed,true);
+  await s.drain();const row=Object.values(s.data.receipts)[0],projected=s.mergeTruth(row);
+  a.equal(projected.reconciliation.state,'RECOVERED',JSON.stringify(projected.reconciliation));a.equal(projected.relationship.verdict,'NOT_PROVEN');
+  a.ok(Date.parse(projected.reconciliation.asOf)>=Date.parse(projected.reconciliation.recovered.observedAt));
   const n=calls.length;await s.reconcileDeliveries();a.equal(calls.length,n);
+});
+test("recovered delivery requires the accepted webhook event requested by reconciliation",async t=>{
+  const h=harness(t),s=h.service,requestedAt=new Date(Date.now()-1000).toISOString();
+  s.data.deliveryRecoveryPending['mismatched-guid']={event:'check_run',requestedAt,state:'ACCEPTED'};
+  const mismatch=await h.hook('pull_request',{pull_request:{number:1,state:'open',head:{sha:H}}},'mismatched-guid');
+  a.deepEqual(mismatch,{accepted:true});
+  a.equal(s.data.deliveryRecoveries['mismatched-guid'],undefined);
+  a.equal(s.data.deliveryRecoveryPending['mismatched-guid'].event,'check_run');
+
+  s.data.deliveryRecoveryPending['ignored-guid']={event:'issues',requestedAt,state:'ACCEPTED'};
+  const ignored=await h.hook('issues',{pull_request:{number:1,head:{sha:H}}},'ignored-guid');
+  a.deepEqual(ignored,{ignored:true});
+  a.equal(s.data.deliveryRecoveries['ignored-guid'],undefined);
+  a.equal(s.data.deliveryRecoveryPending['ignored-guid'].event,'issues');
 });
 test("unchanged full reconciliations retain one receipt and refresh observation time",async t=>{
   const h=harness(t),s=h.service;await h.hook('pull_request',{pull_request:{number:1,state:'open'}});await s.drain();
