@@ -60,6 +60,11 @@ test('receipt foreground is human-readable, raw evidence remains collapsed and H
  a.equal((html.match(/<main\b/g)||[]).length,1);a.equal((html.match(/<\/main>/g)||[]).length,1);
  a.ok(html.indexOf('Next action:')<html.indexOf('Technical evidence and machine verdict'));
 });
+test('evaluated-candidate evidence summary is explicitly supporting evidence and escapes untrusted values',()=>{
+ const r=row(19);const view=ui.presentation(r);view.repository='<script>bad</script>';const html=ui.evidenceSummaryHtml(view);
+ a.match(html,/EVALUATED CANDIDATE EVIDENCE/);a.match(html,/Evidence verdict: FAIL/);a.match(html,/Candidate evidence: FAIL/);
+ a.doesNotMatch(html,/<script>/);a.match(html,/Operational effect:/);
+});
 test('executed client shows one card, collapsed complete history, explicit toggle and retains user-expanded history across refresh',async()=>{
  const els=new Map();function element(tag){return {tag,value:'',checked:false,hidden:false,options:[],textContent:'',append(...xs){this.options.push(...xs);},replaceChildren(){this.options=[];},closest(){return {hidden:false};}};}
  const get=id=>{if(!els.has(id))els.set(id,element(id));return els.get(id);};get('latestOnly').checked=true;

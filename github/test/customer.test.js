@@ -146,9 +146,9 @@ test("customer OAuth login, authorized repository, receipt, free meter, private 
   const machine=await (await request(out.url+'?format=json')).json();
   a.deepEqual(machine.receipt,JSON.parse(savedReceipt));
   const human=await (await request(out.url)).text();
-  a.match(human,/Technical evidence and machine verdict:/);
-  a.match(human,/Verdict: /);a.match(human,/Freshness: /);
-  a.match(human,/Download JSON/);a.match(human,/Trial active/);a.match(human,/Merge truth/);a.match(human,/Merge Truth evidence chain/);a.match(human,/Landing has not yet been observed/);a.match(human,/Download replay packet/);a.match(human,/Unsigned packet:/);a.ok(human.indexOf('Merge truth')<human.indexOf('Technical evidence and machine verdict'));
+  a.match(human,/Raw technical evidence and machine verdict:/);
+  a.match(human,/Evidence verdict: /);a.match(human,/Freshness: /);
+  a.match(human,/Download JSON/);a.match(human,/Trial active/);a.match(human,/Merge truth/);a.match(human,/Merge Truth evidence chain/);a.match(human,/Landing has not yet been observed/);a.match(human,/Download replay packet/);a.match(human,/Unsigned packet:/);a.ok(human.indexOf('Merge truth')<human.indexOf('Evidence verdict:'));a.ok(human.indexOf('Evidence verdict:')<human.indexOf('Raw technical evidence and machine verdict'));
   const mergeTruth=await (await request(out.url+'/merge-truth')).json();
   a.equal(mergeTruth.relationship.verdict,'NOT_PROVEN');a.equal(mergeTruth.landing.state,'NOT_OBSERVED');a.equal(require('../merge-truth').verify(mergeTruth).state,'CONSISTENT_PROJECTION');
   const replayDownload=await request(out.url+'/replay-packet');
@@ -173,7 +173,7 @@ test("customer OAuth login, authorized repository, receipt, free meter, private 
   service.data.receipts[noRequired.receiptId]=row;
   const body=JSON.stringify(noRequired);
   const noRequiredHtml=await (await request('/proof/receipts/'+noRequired.receiptId)).text();
-  a.match(noRequiredHtml,/Verdict: NOT_PROVEN/);a.match(noRequiredHtml,/Freshness: Current at last observation/);
+  a.match(noRequiredHtml,/Evidence verdict: NOT_PROVEN/);a.match(noRequiredHtml,/Freshness: Current at last observation/);
   a.match(noRequiredHtml,/does not require any validation/);a.doesNotMatch(noRequiredHtml,/Unable to evaluate|Receipt currentness: UNAVAILABLE/);
   const card=(await (await request('/proof/account?installation=2&repository=1')).json()).inbox[0];
   a.equal(card.id,noRequired.receiptId);a.equal(card.label,'NOT_PROVEN');a.match(card.freshness,/Current at last observation/);a.match(card.nextAction,/at least one existing check required/);

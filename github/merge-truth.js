@@ -328,7 +328,7 @@ function evidenceChain(value) {
         tone: value.evaluated.candidate.tree ? "good" : "unknown",
         title: `Candidate ${short(value.evaluated.candidate.commit)}`,
         detail: `${value.repository.name} · PR #${value.repository.pullRequest}`,
-        meta: `Tree ${short(value.evaluated.candidate.tree)}`,
+        meta: `Head tree ${short(value.evaluated.candidate.tree)} · evaluated target tree ${short(value.evaluated.target?.tree)}`,
       },
       {
         label: "Evidence",
@@ -366,9 +366,33 @@ function evidenceChain(value) {
   };
 }
 
-function html(value, escape) {
+function buyerOutcome(value) {
+  const verdict = value.relationship.verdict;
+  const current = value.currentness.atMergeEvent || unavailable("CURRENTNESS_NOT_RECORDED");
+  const gaps = value.evidence.gaps || [];
+  const headline = verdict === "VERIFIED"
+    ? "The evaluated tree is the tree that landed."
+    : verdict === "FAIL"
+      ? "Different content landed."
+      : friendlyReason[value.relationship.reason] || value.relationship.plain;
+  let context;
+  if (verdict === "VERIFIED")
+    context = `The ${value.evaluated.receiptVerdict} evaluated-candidate evidence is bound to the landed tree shown below.`;
+  else if (verdict === "FAIL")
+    context = `The evaluated candidate evidence was ${value.evaluated.receiptVerdict}, but the observed landed tree does not match the evaluated tree.`;
+  else if (current.state === "STALE")
+    context = "Merge truth remains NOT_PROVEN because the bound evidence is stale for the recorded merge state.";
+  else if (gaps.length)
+    context = `Merge truth remains NOT_PROVEN. Evaluated-candidate evidence is missing: ${gaps.slice(0, 2).map(words).join("; ")}.`;
+  else
+    context = `Merge truth remains NOT_PROVEN. ${friendlyReason[value.relationship.reason] || value.relationship.plain}`;
+  return { verdict, headline, context };
+}
+
+function html(value, escape, supportingHtml = "") {
   const short = (x) => x ? escape(String(x).replace(/^[a-f0-9]{40}$/, (s) => s.slice(0, 12))) : "Unavailable";
   const chain = evidenceChain(value);
+  const outcome = buyerOutcome(value);
   const claims = value.currentness.claims.length
     ? `<ul>${value.currentness.claims.map((claim) => `<li><strong>${escape(claim.name)}</strong>: evidence ${escape(claim.evidenceState)} · currentness ${escape(claim.currentness.state)}${claim.evidenceReason ? ` · ${escape(claim.evidenceReason)}` : ""}</li>`).join("")}</ul>`
     : "<p>No bound evidence claims were recorded.</p>";
@@ -383,11 +407,14 @@ function html(value, escape) {
     ? `Delivery history reconciled${value.reconciliation.asOf ? ` through ${escape(value.reconciliation.asOf)}` : ""}.`
     : `Delivery reconciliation: ${escape(words(value.reconciliation.state))}${value.reconciliation.asOf ? ` as of ${escape(value.reconciliation.asOf)}` : ""}.`;
   return `<section class="merge-truth" aria-labelledby="merge-truth-heading">
-  <p class="eyebrow">EVALUATED TO LANDED</p><h2 id="merge-truth-heading">Merge truth</h2>
-  <p class="merge-truth-conclusion ${escape(chain.verdict.toLowerCase())}"><strong>${escape(chain.verdict)}</strong> ${escape(chain.reason)}</p>
+  <p class="eyebrow">MERGE TRUTH</p><h1 id="merge-truth-heading">Merge truth: ${escape(outcome.verdict)}</h1>
+  <p class="merge-truth-lede"><strong>${escape(outcome.headline)}</strong></p>
+  <p class="merge-truth-context">${escape(outcome.context)}</p>
+  <div class="merge-truth-comparison" aria-label="Evaluated and landed content"><div class="truth-side"><small>Evaluated merge-target tree</small><strong>${short(value.evaluated.target?.tree)}</strong></div><div class="truth-side"><small>Actual landed tree</small><strong>${short(value.landing.tree)}</strong></div></div>
   <ol class="evidence-chain" aria-label="Merge Truth evidence chain">${stages}</ol>
   <p class="reconciliation-note">${reconciliation}</p>
   ${value.references.replayPacket ? `<div class="replay-packet-action"><a href="${escape(value.references.replayPacket)}" download>Download replay packet</a><p>Replay this conclusion locally from the supplied evidence. <strong>Unsigned packet:</strong> it checks deterministic consistency and detects unmatched alteration, but does not independently establish packet provenance or a public trust root.</p></div>` : ""}
+  ${supportingHtml}
   <details class="merge-truth-details"><summary>Evidence details and identifiers</summary>
     <dl>
       <dt>Evaluated candidate</dt><dd>${short(value.evaluated.candidate.commit)} · tree ${short(value.evaluated.candidate.tree)}</dd>
@@ -401,4 +428,4 @@ function html(value, escape) {
   </details></section>`;
 }
 
-module.exports = { build, verify, summary, evidenceChain, html, relationship, validateLanding };
+module.exports = { build, verify, summary, evidenceChain, buyerOutcome, html, relationship, validateLanding };

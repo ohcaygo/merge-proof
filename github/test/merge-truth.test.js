@@ -4,9 +4,9 @@ const { capture, H, B, M } = require("./fixtures");
 const { prove } = require("../proof"), bundle = require("../bundle"), landing = require("../landing");
 const truth = require("../merge-truth");
 
-async function fixture() {
+async function fixture({ headTree = null } = {}) {
   const evidence = capture();
-  evidence.git.value.headTree = evidence.target.value.tree;
+  evidence.git.value.headTree = headTree || evidence.target.value.tree;
   evidence.git.value.baseTree = "f".repeat(40);
   const receipt = prove(evidence);
   const artifacts = await bundle.create(receipt);
@@ -173,6 +173,24 @@ test("compact evidence chain projects the authoritative relationship in buyer-re
   a.match(html, /Download replay packet/);
   a.match(html, /Unsigned packet:/);
   a.ok(html.indexOf("Download replay packet") < html.indexOf("Evidence details and identifiers"));
+  a.match(html, /Merge truth: VERIFIED/);
+  a.match(html, /The evaluated tree is the tree that landed\./);
+  a.ok(html.indexOf("Merge truth: VERIFIED") < html.indexOf("Evaluated merge-target tree"));
+  const withSupport = truth.html(value, require("../receipt").escape, '<section id="support">candidate evidence</section>');
+  a.ok(withSupport.indexOf("Download replay packet") < withSupport.indexOf('id="support"'));
+  a.ok(withSupport.indexOf('id="support"') < withSupport.indexOf("Evidence details and identifiers"));
+});
+
+test("buyer comparison binds VERIFIED to the evaluated merge-target tree, not the distinct PR head tree", async () => {
+  const { receipt, receiptRow, record } = await fixture({ headTree: B });
+  a.notEqual(receipt.evidence.git.value.headTree, receipt.summary.target.value.tree);
+  const value = truth.build({ receiptRow, record, landing: observed(record, { sha: M, tree: receipt.summary.target.value.tree, parents: [B] }) });
+  a.equal(value.relationship.verdict, "VERIFIED");
+  const rendered = truth.html(value, require("../receipt").escape);
+  const comparison = rendered.match(/Evaluated merge-target tree<\/small><strong>([^<]+)[\s\S]*?Actual landed tree<\/small><strong>([^<]+)/);
+  a.ok(comparison);
+  a.equal(comparison[1], comparison[2]);
+  a.match(rendered, new RegExp(`Head tree ${B.slice(0, 12)} · evaluated target tree ${receipt.summary.target.value.tree.slice(0, 12)}`));
 });
 
 test("compact evidence chain keeps fail, stale, missing, pending, reconciled and contradictory cases fail-closed", async () => {
@@ -180,6 +198,10 @@ test("compact evidence chain keeps fail, stale, missing, pending, reconciled and
   const mismatch = truth.build({ receiptRow: failed.receiptRow, record: failed.record, landing: observed(failed.record, { sha: M, tree: B, parents: [B] }) });
   a.equal(truth.evidenceChain(mismatch).verdict, "FAIL");
   a.equal(truth.evidenceChain(mismatch).reason, "Landed content differs from the evaluated candidate.");
+  const failOutcome = truth.buyerOutcome(mismatch);
+  a.equal(failOutcome.headline, "Different content landed.");
+  a.match(failOutcome.context, /candidate evidence was VERIFIED.*landed tree does not match/);
+  a.match(truth.html(mismatch, require("../receipt").escape), /Merge truth: FAIL[\s\S]*Different content landed\./);
 
   const stale = await fixture();
   stale.receipt.verdict = "NOT_PROVEN";
@@ -192,6 +214,7 @@ test("compact evidence chain keeps fail, stale, missing, pending, reconciled and
   a.equal(staleChain.verdict, "NOT_PROVEN");
   a.equal(staleChain.stages[1].state, "Missing");
   a.equal(staleChain.stages[2].state, "Stale");
+  a.match(truth.buyerOutcome(staleValue).context, /bound evidence is stale/);
 
   const missing = await fixture();
   missing.receipt.verdict = "NOT_PROVEN";
@@ -208,6 +231,7 @@ test("compact evidence chain keeps fail, stale, missing, pending, reconciled and
   a.equal(truth.evidenceChain(pendingValue).verdict, "NOT_PROVEN");
   a.equal(truth.evidenceChain(pendingValue).stages[3].state, "Not proven");
   a.equal(truth.evidenceChain(pendingValue).reason, "Landing has not yet been observed.");
+  a.match(truth.buyerOutcome(pendingValue).headline, /Landing has not yet been observed/);
   a.equal(truth.evidenceChain(pendingValue).stages[2].title, "Current at the latest retained observation.");
   a.doesNotMatch(truth.evidenceChain(pendingValue).stages[2].title, /merge event/i);
   const pendingHtml = truth.html(pendingValue, require("../receipt").escape);
@@ -232,5 +256,5 @@ test("compact evidence chain keeps fail, stale, missing, pending, reconciled and
   const contradiction = truth.build({ receiptRow: contradictory.receiptRow, record: contradictory.record, landing: stored });
   a.equal(truth.evidenceChain(contradiction).verdict, "NOT_PROVEN");
   a.equal(truth.evidenceChain(contradiction).reason, "The retained landing observation conflicts with deterministic replay.");
-  a.match(truth.html(contradiction, require("../receipt").escape), /merge-truth-conclusion not_proven/);
+  a.match(truth.html(contradiction, require("../receipt").escape), /Merge truth: NOT_PROVEN/);
 });

@@ -40,11 +40,16 @@ body.proof-page{margin:0;font-size:16px;line-height:1.6;color-scheme:dark}
 .proof-page .blocks{background:#7a1f1f;color:white}
 .proof-page .reported{background:var(--panel)}
 .proof-page main>header:not(.proof-intro){padding:32px 0;border-bottom:1px solid var(--line)}
-.proof-page .merge-truth{padding-bottom:36px}
-.proof-page .merge-truth>h2{margin-bottom:10px}
+.proof-page .receipt-subject{padding-bottom:18px;border-bottom:0!important}
+.proof-page .receipt-subject>.eyebrow{margin-bottom:0}
+.proof-page .merge-truth{padding-top:18px;padding-bottom:36px}
+.proof-page .merge-truth>h1{margin-bottom:12px}
 .proof-page .merge-truth>.eyebrow{margin:0 0 8px}
-.proof-page .merge-truth-conclusion{font-size:1.08rem;margin:0 0 24px;padding:14px 16px;border-left:3px solid var(--gold);background:var(--panel)}
-.proof-page .merge-truth-conclusion.verified{border-color:#91dcad}.proof-page .merge-truth-conclusion.fail{border-color:#ef8f8f}
+.proof-page .merge-truth-lede{font-size:clamp(1.2rem,2.6vw,1.55rem);line-height:1.35;margin:0 0 10px;max-width:760px}
+.proof-page .merge-truth-context{margin:0 0 24px;color:#d9dadd;max-width:800px}
+.proof-page .merge-truth-comparison{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 24px}
+.proof-page .truth-side{padding:16px;border:1px solid var(--line);border-radius:6px;background:var(--panel)}
+.proof-page .truth-side>small,.proof-page .truth-side>strong{display:block}.proof-page .truth-side>strong{margin-top:6px;overflow-wrap:anywhere}
 .proof-page .evidence-chain{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;list-style:none;margin:0;padding:0}
 .proof-page .chain-stage{min-width:0;margin:0;padding:16px 14px;border:1px solid var(--line);border-top:3px solid #887025;border-radius:6px;background:var(--panel)}
 .proof-page .chain-stage.good{border-top-color:#467557}.proof-page .chain-stage.bad{border-top-color:#9c4848}
@@ -61,9 +66,11 @@ body.proof-page{margin:0;font-size:16px;line-height:1.6;color-scheme:dark}
 .proof-page .replay-packet-action p{margin:0;color:var(--muted);font-size:.92rem;line-height:1.45}
 .proof-page .merge-truth-details{margin-top:18px}
 .proof-page .merge-truth-details h3{margin-top:22px}
+.proof-page .evaluated-evidence{margin-top:8px;padding:28px 0 10px}
+.proof-page .evaluated-evidence>h2{margin-bottom:10px}
 [hidden]{display:none!important}
 @media(max-width:800px){.proof-page .evidence-chain{grid-template-columns:1fr}.proof-page .chain-stage{display:grid;grid-template-columns:minmax(90px,.55fr) 1.45fr;column-gap:14px}.proof-page .chain-label,.proof-page .chain-state{align-self:start}.proof-page .chain-stage>strong,.proof-page .chain-stage>p:not(.chain-label):not(.chain-state),.proof-page .chain-stage>small{grid-column:2}.proof-page .chain-stage>strong{grid-row:1}.proof-page .chain-state{grid-row:2}.proof-page .chain-stage>p:not(.chain-label):not(.chain-state){grid-row:2;margin-top:30px}.proof-page .chain-stage>small{grid-row:3}.proof-page .replay-packet-action{align-items:flex-start;flex-direction:column}}
-@media(max-width:600px){.proof-page main,.proof-page footer{padding-left:20px;padding-right:20px}.proof-page .site-header{padding:20px;gap:14px}.proof-page .site-header nav{font-size:.8rem}.proof-page .proof-intro{padding-top:32px}.proof-page .trial-card{padding:20px}.proof-page .primary{width:100%;text-align:center}.proof-page label{display:block}.proof-page select{display:block;width:100%;margin-top:8px}.proof-page dl{grid-template-columns:1fr}.proof-page dd{margin-bottom:12px}.proof-page .chain-stage{grid-template-columns:1fr}.proof-page .chain-label,.proof-page .chain-state,.proof-page .chain-stage>strong,.proof-page .chain-stage>p:not(.chain-label):not(.chain-state),.proof-page .chain-stage>small{grid-column:1;grid-row:auto}.proof-page .chain-stage>p:not(.chain-label):not(.chain-state){margin-top:8px}}
+@media(max-width:600px){.proof-page main,.proof-page footer{padding-left:20px;padding-right:20px}.proof-page .site-header{padding:20px;gap:14px}.proof-page .site-header nav{font-size:.8rem}.proof-page .proof-intro{padding-top:32px}.proof-page .trial-card{padding:20px}.proof-page .primary{width:100%;text-align:center}.proof-page label{display:block}.proof-page select{display:block;width:100%;margin-top:8px}.proof-page dl{grid-template-columns:1fr}.proof-page dd{margin-bottom:12px}.proof-page .merge-truth-comparison{grid-template-columns:1fr}.proof-page .chain-stage{grid-template-columns:1fr}.proof-page .chain-label,.proof-page .chain-state,.proof-page .chain-stage>strong,.proof-page .chain-stage>p:not(.chain-label):not(.chain-state),.proof-page .chain-stage>small{grid-column:1;grid-row:auto}.proof-page .chain-stage>p:not(.chain-label):not(.chain-state){margin-top:8px}}
 .proof-page .proof-badges{display:flex;gap:10px;flex-wrap:wrap}.proof-page .trial-status{margin:24px 0}.proof-page #receipts h3{font-size:1.3rem}.proof-page #receipts details li{border:0;padding:8px 0}.proof-page .manual-controls{padding:12px 0}.proof-page #run{background:var(--panel);color:#f6f6f4;border:1px solid var(--line);font-weight:600}
 @media print{body.proof-page{background:white;color:black}.proof-page .site-header,.proof-page button{display:none}.proof-page :is(p,small,dt,a){color:black}.proof-page .policy,.proof-page aside{background:white}}
 `;
@@ -71,7 +78,12 @@ const header = `<a class="skip-link" href="#main">Skip to content</a><header cla
 function receipt(document, view = null, trial = null, mergeTruth = null) {
   if(view) {
     const ui=require("./customer-view");
-    document=document.replace(/<main>([\s\S]*?)<\/main>/, (_, original) => `<main><header><p class="eyebrow">${require("./receipt").escape(view.repository)} · PR #${view.pr}</p>${ui.summaryHtml(view,"h1")}</header>${trial?ui.trialHtml(trial):""}${mergeTruth?require("./merge-truth").html(mergeTruth,require("./receipt").escape):""}<details><summary>Technical evidence and machine verdict: ${require("./receipt").escape(view.verdict)}</summary>${original}</details></main>`);
+    const esc=require("./receipt").escape;
+    const primary=mergeTruth
+      ? `<header class="receipt-subject"><p class="eyebrow">${esc(view.repository)} · PR #${view.pr}</p></header>${require("./merge-truth").html(mergeTruth,esc,ui.evidenceSummaryHtml(view))}`
+      : `<header><p class="eyebrow">${esc(view.repository)} · PR #${view.pr}</p>${ui.summaryHtml(view,"h1")}</header>`;
+    const technicalLabel=mergeTruth?"Raw technical evidence and machine verdict":"Technical evidence and machine verdict";
+    document=document.replace(/<main>([\s\S]*?)<\/main>/, (_, original) => `<main>${primary}${trial?ui.trialHtml(trial):""}<details><summary>${technicalLabel}: ${esc(view.verdict)}</summary>${original}</details></main>`);
   }
   return document.replace(/<style>[\s\S]*?<\/style>/, `<style>${css}</style><body class="brand-page proof-page">${header}`)
     .replace('<main>', '<main id="main">')
