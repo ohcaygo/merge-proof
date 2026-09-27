@@ -281,6 +281,10 @@ test("provider-history coverage is proof-bound, fail-closed and never overrides 
   a.equal(complete.reconciliation.coverage, "COMPLETE");
   a.equal(complete.relationship.verdict, "VERIFIED");
   a.match(truth.html(complete, require("../receipt").escape), /Provider history[\s\S]*Reconciled[\s\S]*does not change Merge Truth: VERIFIED/);
+  const hierarchy = truth.html(complete, require("../receipt").escape, '<section id="support">candidate evidence</section>', '<aside id="independent">independent Git verification</aside>');
+  a.ok(hierarchy.indexOf("Download replay packet") < hierarchy.indexOf("Provider history"));
+  a.ok(hierarchy.indexOf("Provider history") < hierarchy.indexOf('id="independent"'));
+  a.ok(hierarchy.indexOf('id="independent"') < hierarchy.indexOf('id="support"'));
 
   const active = truth.build({ receiptRow: verified.receiptRow, record: verified.record, landing: verifiedLanding, reconciliation: coverage(verified.receipt, { inProgress: true }) });
   a.equal(active.reconciliation.state, "IN_PROGRESS");
