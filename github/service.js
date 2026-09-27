@@ -625,28 +625,6 @@ class ProofService {
         Number.isSafeInteger(installationId),
       "INVALID_WEBHOOK_SCOPE",
     );
-    const pendingRecovery = this.data.deliveryRecoveryPending[id];
-    if (pendingRecovery) {
-      const pullRequest = p.pull_request?.number ||
-        p.review?.pull_request_url?.match(/\/pulls\/(\d+)$/)?.[1] ||
-        p.check_run?.pull_requests?.[0]?.number ||
-        p.check_suite?.pull_requests?.[0]?.number ||
-        p.workflow_run?.pull_requests?.[0]?.number || null;
-      const candidate = p.pull_request?.head?.sha || p.review?.commit_id ||
-        p.check_run?.head_sha || p.check_suite?.head_sha ||
-        p.workflow_run?.head_sha || p.sha || null;
-      if (Number.isSafeInteger(Number(pullRequest)) && Number(pullRequest) > 0 &&
-          typeof candidate === "string" && /^[a-f0-9]{40}$/.test(candidate)) {
-        this.data.deliveryRecoveries[id] = {
-          repositoryId, pullRequest: Number(pullRequest), candidate,
-          event, requestedAt: pendingRecovery.requestedAt,
-          observedAt: new Date().toISOString(),
-          confirmed: pendingRecovery.state === "ACCEPTED",
-        };
-        if (pendingRecovery.state === "ACCEPTED")
-          delete this.data.deliveryRecoveryPending[id];
-      }
-    }
     if (this.meter) this.meter.account(installationId);
     if (
       this.meter &&
@@ -737,6 +715,28 @@ class ProofService {
     if (event === "push" && Object.values(this.data.receipts).some(r => r.receipt.identity.repositoryId === repositoryId && p.ref === `refs/heads/${r.receipt.identity.baseRef}`))
       this.data.pushQueue.push({ id, repository: repo, repositoryId, installationId, before: p.before, after: p.after, ref: p.ref });
     this.routeEvent(event, p, repo, repositoryId);
+    const pendingRecovery = this.data.deliveryRecoveryPending[id];
+    if (pendingRecovery?.event === event) {
+      const pullRequest = p.pull_request?.number ||
+        p.review?.pull_request_url?.match(/\/pulls\/(\d+)$/)?.[1] ||
+        p.check_run?.pull_requests?.[0]?.number ||
+        p.check_suite?.pull_requests?.[0]?.number ||
+        p.workflow_run?.pull_requests?.[0]?.number || null;
+      const candidate = p.pull_request?.head?.sha || p.review?.commit_id ||
+        p.check_run?.head_sha || p.check_suite?.head_sha ||
+        p.workflow_run?.head_sha || p.sha || null;
+      if (Number.isSafeInteger(Number(pullRequest)) && Number(pullRequest) > 0 &&
+          typeof candidate === "string" && /^[a-f0-9]{40}$/.test(candidate)) {
+        this.data.deliveryRecoveries[id] = {
+          repositoryId, pullRequest: Number(pullRequest), candidate,
+          event, requestedAt: pendingRecovery.requestedAt,
+          observedAt: new Date().toISOString(),
+          confirmed: pendingRecovery.state === "ACCEPTED",
+        };
+        if (pendingRecovery.state === "ACCEPTED")
+          delete this.data.deliveryRecoveryPending[id];
+      }
+    }
     this.save();
     return { accepted: true };
   }

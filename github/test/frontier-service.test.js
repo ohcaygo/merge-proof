@@ -94,6 +94,20 @@ test("delivery reconciliation follows cursor pages, redelivers missed GUID and r
   a.ok(Date.parse(projected.reconciliation.asOf)>=Date.parse(projected.reconciliation.recovered.observedAt));
   const n=calls.length;await s.reconcileDeliveries();a.equal(calls.length,n);
 });
+test("recovered delivery requires the accepted webhook event requested by reconciliation",async t=>{
+  const h=harness(t),s=h.service,requestedAt=new Date(Date.now()-1000).toISOString();
+  s.data.deliveryRecoveryPending['mismatched-guid']={event:'check_run',requestedAt,state:'ACCEPTED'};
+  const mismatch=await h.hook('pull_request',{pull_request:{number:1,state:'open',head:{sha:H}}},'mismatched-guid');
+  a.deepEqual(mismatch,{accepted:true});
+  a.equal(s.data.deliveryRecoveries['mismatched-guid'],undefined);
+  a.equal(s.data.deliveryRecoveryPending['mismatched-guid'].event,'check_run');
+
+  s.data.deliveryRecoveryPending['ignored-guid']={event:'issues',requestedAt,state:'ACCEPTED'};
+  const ignored=await h.hook('issues',{pull_request:{number:1,head:{sha:H}}},'ignored-guid');
+  a.deepEqual(ignored,{ignored:true});
+  a.equal(s.data.deliveryRecoveries['ignored-guid'],undefined);
+  a.equal(s.data.deliveryRecoveryPending['ignored-guid'].event,'issues');
+});
 test("unchanged full reconciliations retain one receipt and refresh observation time",async t=>{
   const h=harness(t),s=h.service;await h.hook('pull_request',{pull_request:{number:1,state:'open'}});await s.drain();
   const row=Object.values(s.data.receipts)[0],before=JSON.stringify(row.receipt);
