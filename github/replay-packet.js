@@ -28,7 +28,12 @@ function create({ receiptRow, record = null, landing = null, reconciliation = {}
     schema: SCHEMA,
     version: VERSION,
     trust: { packetSignature: "UNSIGNED", limitation: LIMITATION },
-    verifier: { engine: "merge-proof-replay-packet", version: VERSION, command: "npx merge-proof verify --replay-packet <downloaded-packet.json>" },
+    verifier: {
+      engine: "merge-proof-replay-packet",
+      version: VERSION,
+      command: "npx merge-proof verify --replay-packet <downloaded-packet.json>",
+      independentGitCommand: "npx merge-proof verify --replay-packet <downloaded-packet.json> --git-dir <independently-acquired-bare-repository.git> --git-binary <pinned-git-binary>",
+    },
     evidenceBundle: structuredClone(evidenceBundle),
     inputs,
     expected,

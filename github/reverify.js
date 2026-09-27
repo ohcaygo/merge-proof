@@ -72,21 +72,31 @@ function independent(bundle, directory, binary = "/usr/bin/git") {
     return { state: "INDEPENDENT_VERIFICATION_UNAVAILABLE", reason: "RECONSTRUCTION_PIN_OR_CLAIM_UNAVAILABLE", rows, exitCode: 2 };
   try {
     const {engine,reconstruct} = require('./reconstruct');
+    const {sha} = require('./common');
     const g = engine(directory,config);
     const inspect = (kind, expectedValue, read) => {
+      if (expectedValue === undefined || expectedValue === null) {
+        rows.push({kind,state:'CLAIM_UNAVAILABLE'}); return;
+      }
       try { const actual=read(); rows.push({kind,state:JSON.stringify(actual)===JSON.stringify(expectedValue)?'MATCH':'DIVERGED',expected:expectedValue,actual}); }
-      catch { rows.push({kind,state:'OBJECT_UNAVAILABLE'}); }
+      catch { rows.push({kind,state:'OBJECT_UNAVAILABLE',expected:expectedValue}); }
     };
+    const commit = (kind, value) => inspect(kind,value,()=>g.get(['rev-parse','--verify',`${value}^{commit}`]));
+    const tree = (kind, value, commitValue) => inspect(kind,value,()=>g.tree(commitValue));
+    commit('BASE_COMMIT',c.identity.baseSha);
+    commit('HEAD_COMMIT',c.identity.headSha);
+    commit('CANDIDATE_COMMIT',c.target.value?.sha);
     if(c.git.value?.headTree) inspect('HEAD_TREE',c.git.value.headTree,()=>g.tree(c.identity.headSha));
     if(c.git.value?.baseTree) inspect('BASE_TREE',c.git.value.baseTree,()=>g.tree(c.identity.baseSha));
-    inspect('CANDIDATE_TREE',c.target.value?.tree,()=>g.tree(c.target.value.sha));
-    inspect('MERGE_BASE_CONTAINMENT',true,()=>g.get(['merge-base','--all',c.identity.baseSha,c.identity.headSha]).split('\n').includes(c.git.value?.mergeBase));
+    tree('CANDIDATE_TREE',c.target.value?.tree,c.target.value?.sha);
+    commit('RECORDED_MERGE_BASE',c.git.value?.mergeBase);
+    inspect('MERGE_BASE_RELATIONSHIP',true,()=>g.get(['merge-base','--all',c.identity.baseSha,c.identity.headSha]).split('\n').includes(c.git.value?.mergeBase));
     if(c.target.value?.kind==='PR_TEST_MERGE') inspect('TEST_MERGE_PARENTS',[c.identity.baseSha,c.identity.headSha],()=>g.get(['rev-list','--parents','-n','1',c.target.value.sha]).split(' ').slice(1));
     if(c.target.value?.kind==='MERGE_GROUP') for(const [kind,ancestor] of [['GROUP_HEAD_ANCESTRY',c.identity.headSha],['GROUP_BASE_ANCESTRY',c.identity.baseSha]])
       inspect(kind,true,()=>{const result=g.run(['merge-base','--is-ancestor',ancestor,c.target.value.sha]);require('./common').assert(result.code===0 || result.code===1,'ANCESTRY_OBJECT_UNAVAILABLE');return result.code===0;});
     const recomputed = reconstruct(directory,{base:c.identity.baseSha,head:c.identity.headSha,method:expected.method,
       providerTree:c.target.value?.tree, ...(expected.method==='queue'?{entries:expected.steps.map(x=>({head:x.head,candidate:x.candidate,tree:x.providerTree})),providerOrderConfirmed:true}:{})},config);
-    if(recomputed.status==='RECONSTRUCTED') rows.push({kind:'EXPECTED_TREE',state:recomputed.tree===expected.tree?'MATCH':'DIVERGED',expected:expected.tree,actual:recomputed.tree});
+    if(recomputed.status==='RECONSTRUCTED' && sha(expected.tree)) rows.push({kind:'EXPECTED_TREE',state:recomputed.tree===expected.tree?'MATCH':'DIVERGED',expected:expected.tree,actual:recomputed.tree});
     else rows.push({kind:'EXPECTED_TREE',state:'OBJECT_OR_RECONSTRUCTION_UNAVAILABLE',reason:recomputed.reason});
     for(const [n,step] of (expected.steps||[]).entries())if(step.candidate){
       inspect('QUEUE_CANDIDATE_TREE',step.providerTree,()=>g.tree(step.candidate));
@@ -94,8 +104,9 @@ function independent(bundle, directory, binary = "/usr/bin/git") {
     }
     for(const value of bundle.landings||[]) {
       const landed=value.observation.landed;
-      if(!landed?.sha){rows.push({kind:'LANDED_TREE',state:'OBJECT_UNAVAILABLE'});continue;}
-      inspect('LANDED_TREE',landed.tree,()=>g.tree(landed.sha));
+      if(!landed?.sha){rows.push({kind:'LANDED_COMMIT',state:'CLAIM_UNAVAILABLE'});continue;}
+      commit('LANDED_COMMIT',landed.sha);
+      tree('LANDED_TREE',landed.tree,landed.sha);
       inspect('LANDED_PARENTS',landed.parents,()=>g.get(['rev-list','--parents','-n','1',landed.sha]).split(' ').slice(1));
     }
     const diverged=rows.some(x=>x.state==='DIVERGED'), complete=rows.every(x=>x.state==='MATCH');

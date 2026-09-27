@@ -48,18 +48,61 @@ async function remote(input) {
 function lines(d) { return [d.outcome + " · " + d.verdict + " · " + d.currentness,
   ...["expected", "candidate", "tested", "authorized", "landed"].map(k => `${k.toUpperCase()}: ${d.bindings[k] ?? "NOT_YET_APPLICABLE"}`),
   ...(d.reasons.length ? [`Reason: ${d.reasons[0].code}`, `Next: ${d.nextAction.text}`] : []), `Receipt: ${d.receipt.url}`].join("\n"); }
+function independentlyVerifyReplayPacket(packet, directory, binary = "/usr/bin/git") {
+  const replay = require("./replay-packet").replay(packet);
+  const evidence = packet?.evidenceBundle?.receipt?.evidence;
+  const providerRecordTrustedFacts = {
+    state: "NOT_INDEPENDENTLY_AUTHENTICATED",
+    repository: evidence?.identity ? { name: evidence.identity.repository, id: evidence.identity.repositoryId, pullRequest: evidence.identity.pr } : null,
+    records: {
+      checks: { state: evidence?.checks?.state || "UNAVAILABLE", count: evidence?.checks?.value?.length || 0 },
+      reviewsAndApprovals: { state: evidence?.reviews?.state || "UNAVAILABLE", count: evidence?.reviews?.value?.length || 0 },
+      policyAndRules: { state: evidence?.rules ? "SUPPLIED" : "UNAVAILABLE" },
+      webhookAndProviderHistory: { state: packet?.inputs?.reconciliation?.state || "UNAVAILABLE" },
+      currentness: packet?.inputs?.currentness || { state: "UNAVAILABLE" },
+    },
+    limitation: "These repository/PR associations, checks, reviews/approvals, policies/rules, permissions, currentness, webhook delivery and provider-history observations remain supplied GitHub/provider records. Git objects do not independently authenticate them.",
+  };
+  const replayConsistency = {
+    ...replay,
+    establishes: "Deterministic consistency of the unsigned packet's supplied and bound inputs.",
+    doesNotEstablish: "Packet provenance, GitHub/provider truth, or an independently trusted repository/PR association.",
+  };
+  if (replay.exitCode !== 0) return {
+    schema: "urn:merge-proof:independent-verification-result:1",
+    state: "INDEPENDENT_VERIFICATION_NOT_PROVEN",
+    replayConsistency,
+    independentlyRecomputedGitFacts: { state: "NOT_RUN", reason: "REPLAY_PACKET_NOT_CONSISTENT", rows: [], exitCode: replay.exitCode },
+    providerRecordTrustedFacts,
+    exitCode: replay.exitCode,
+  };
+  const git = require("./reverify").independent(packet.evidenceBundle, directory, binary);
+  return {
+    schema: "urn:merge-proof:independent-verification-result:1",
+    state: git.state === "INDEPENDENTLY_RECOMPUTED" ? "INDEPENDENT_VERIFICATION_COMPLETE" : git.state === "INDEPENDENT_VERIFICATION_DIVERGED" ? "INDEPENDENT_VERIFICATION_FAILED" : "INDEPENDENT_VERIFICATION_NOT_PROVEN",
+    replayConsistency,
+    independentlyRecomputedGitFacts: git,
+    providerRecordTrustedFacts,
+    exitCode: git.exitCode,
+  };
+}
 async function main(args) {
-  if (args.includes("--help")) { console.log("merge-proof verify --repo OWNER/REPO --repository-id ID --pr N --head SHA --base SHA --target SHA [--json] [--wait SECONDS]\nmerge-proof verify --replay-packet DOWNLOADED_PACKET.json\nmerge-proof verify --bundle DIRECTORY [--trusted-keys JWKS.json] [--allow-unsigned] [--online] [--git-dir BARE_REPO] [--git-binary PATH]\nmerge-proof mcp\nReplay packets are explicitly unsigned and establish deterministic consistency of supplied inputs, not independently trusted provenance.\nUses MP_GITHUB_TOKEN and optional MP_ORIGIN for online verification; never merges."); return 0; }
+  if (args.includes("--help")) { console.log("merge-proof verify --repo OWNER/REPO --repository-id ID --pr N --head SHA --base SHA --target SHA [--json] [--wait SECONDS]\nmerge-proof verify --replay-packet DOWNLOADED_PACKET.json [--git-dir BARE_REPO] [--git-binary PATH]\nmerge-proof verify --bundle DIRECTORY [--trusted-keys JWKS.json] [--allow-unsigned] [--online] [--git-dir BARE_REPO] [--git-binary PATH]\nmerge-proof mcp\nReplay packets are explicitly unsigned and establish deterministic consistency of supplied inputs, not independently trusted provenance. Adding --git-dir recomputes Git-derived facts from independently acquired bare-repository objects; provider records remain provider-trusted.\nUses MP_GITHUB_TOKEN and optional MP_ORIGIN for online verification; never merges."); return 0; }
   const opts = {};
   for (let n = 0; n < args.length; n++) {
     const flag = args[n];
     assert(["--replay-packet", "--bundle", "--git-dir", "--git-binary", "--trusted-keys", "--allow-unsigned", "--repo", "--repository-id", "--pr", "--head", "--base", "--target", "--json", "--online", "--wait"].includes(flag), "INVALID_ARGUMENT");
-    opts[flag] = ["--json", "--allow-unsigned", "--online"].includes(flag) ? true : args[++n];
+    if (["--json", "--allow-unsigned", "--online"].includes(flag)) opts[flag] = true;
+    else {
+      const value = args[++n];
+      assert(typeof value === "string" && value.length > 0 && !value.startsWith("--"), "INVALID_ARGUMENT");
+      opts[flag] = value;
+    }
   }
   if (opts["--replay-packet"]) {
-    assert(!opts["--bundle"] && !opts["--online"] && !opts["--git-dir"] && !opts["--trusted-keys"], "INVALID_ARGUMENT");
+    assert(!opts["--bundle"] && !opts["--online"] && !opts["--trusted-keys"] && !opts["--allow-unsigned"] && (!opts["--git-binary"] || opts["--git-dir"]), "INVALID_ARGUMENT");
     const packet = require("./replay-packet").read(opts["--replay-packet"]);
-    const result = require("./replay-packet").replay(packet);
+    const result = opts["--git-dir"] ? independentlyVerifyReplayPacket(packet, opts["--git-dir"], opts["--git-binary"] || "/usr/bin/git") : require("./replay-packet").replay(packet);
     console.log(JSON.stringify(result, null, 2));
     return result.exitCode;
   }
@@ -127,4 +170,4 @@ async function mcp(input = process.stdin, output = process.stdout) {
     } catch (e) { output.write(JSON.stringify({ jsonrpc: "2.0", id: r.id, error: { code: -32000, message: e.code || "DECISION_UNAVAILABLE" } }) + "\n"); }
   }
 }
-module.exports = { main, mcp, remote, lines, validateDecision, validateRequest };
+module.exports = { main, mcp, remote, lines, validateDecision, validateRequest, independentlyVerifyReplayPacket };
