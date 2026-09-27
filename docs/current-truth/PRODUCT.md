@@ -59,5 +59,6 @@ Testing/review says something about a change. Merge-Proof asks whether that evid
 - [OFFER.md](./OFFER.md) — commercial terms and soft-close
 - [CLAIMS.md](./CLAIMS.md) — allowed / forbidden claims
 - [STATUS.md](./STATUS.md) — verified engineering/deploy facts only
+- [INDEPENDENT-REVIEW.md](./INDEPENDENT-REVIEW.md) — authoritative pinned-candidate review procedure
 - [TESTERS.md](./TESTERS.md) — Early Access cohort rules
 - [MARKET.md](./MARKET.md) — external fact vs hypothesis
