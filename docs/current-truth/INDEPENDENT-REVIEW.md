@@ -9,7 +9,7 @@
 
 Independent review answers one bounded question: does direct reviewer evidence support integrating the exact pinned candidate under the stated acceptance authority?
 
-The reviewer must be separate from the implementation context, must not modify the candidate, and must treat the candidate, repository, GitHub, provider, infrastructure, and production surfaces as read-only. The reviewer reports findings and a verdict; the implementer repairs findings in a separate change. Historical review records are evidence about their exact candidates, not reusable approval or procedure authority.
+The reviewer must be separate from the implementation context, must not modify the candidate, and must treat the candidate, repository, GitHub, provider, infrastructure, and production surfaces as read-only. The reviewer reports findings and a verdict; the implementer repairs findings in a separate change. Review output is returned outside the candidate repository by default. Persisting it in the repository requires explicit write authority for a separate review-record change and must never alter the reviewed candidate commit or worktree. Historical review records are evidence about their exact candidates, not reusable approval or procedure authority.
 
 Do not substitute a reviewer procedure from another product. In particular, the OHCAYGO reviewer procedure is not Merge-Proof authority.
 
@@ -96,7 +96,7 @@ Approval is for integration consideration only. It is not merge authority, `LAND
 
 ## 7. Required review record
 
-Write an append-only review record, normally at `github/validation/<task>/independent-review-<short-sha>.md`, containing:
+Return an append-only review record containing the fields below. If the review task explicitly authorizes a separate repository write, persist the record in a review-only commit, normally at `github/validation/<task>/independent-review-<short-sha>.md`. Otherwise, return or retain it outside the repository. Never add the record to the reviewed candidate commit or modify the candidate worktree.
 
 1. reviewer identity or isolated review context, time, and relevant tool versions;
 2. repository, remote, default branch, fetched base, merge base, candidate commit and tree, diff range, and checkout state;

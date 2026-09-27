@@ -48,6 +48,9 @@ test("independent-review procedure preserves required proof and lifecycle bounda
     "currentness at the merge decision",
     "OHCAYGO reviewer procedure is not Merge-Proof authority",
     "does not authorize integration",
+    "Review output is returned outside the candidate repository by default",
+    "requires explicit write authority for a separate review-record change",
+    "Never add the record to the reviewed candidate commit or modify the candidate worktree",
   ];
   for (const item of required) assert.ok(procedure.includes(item), `missing required contract: ${item}`);
 });
