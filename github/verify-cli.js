@@ -92,7 +92,12 @@ async function main(args) {
   for (let n = 0; n < args.length; n++) {
     const flag = args[n];
     assert(["--replay-packet", "--bundle", "--git-dir", "--git-binary", "--trusted-keys", "--allow-unsigned", "--repo", "--repository-id", "--pr", "--head", "--base", "--target", "--json", "--online", "--wait"].includes(flag), "INVALID_ARGUMENT");
-    opts[flag] = ["--json", "--allow-unsigned", "--online"].includes(flag) ? true : args[++n];
+    if (["--json", "--allow-unsigned", "--online"].includes(flag)) opts[flag] = true;
+    else {
+      const value = args[++n];
+      assert(typeof value === "string" && value.length > 0 && !value.startsWith("--"), "INVALID_ARGUMENT");
+      opts[flag] = value;
+    }
   }
   if (opts["--replay-packet"]) {
     assert(!opts["--bundle"] && !opts["--online"] && !opts["--trusted-keys"] && !opts["--allow-unsigned"] && (!opts["--git-binary"] || opts["--git-dir"]), "INVALID_ARGUMENT");

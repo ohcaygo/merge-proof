@@ -158,6 +158,21 @@ test("CLI classifies missing and malformed packet files as packet failures", t =
   a.equal(invalid.status, 3);a.equal(JSON.parse(invalid.stderr).reason, "REPLAY_PACKET_FILE_INVALID");
 });
 
+test("CLI rejects missing and empty Git-directory operands instead of degrading to replay-only success", async t => {
+  const fixture = await standardMergePacket(t), file = path.join(fixture.root, "packet.json"), cli = path.join(__dirname, "../../bin/merge-proof.js");
+  fs.writeFileSync(file, JSON.stringify(fixture.value) + "\n");
+  for (const args of [
+    [cli, "verify", "--replay-packet", file, "--git-dir"],
+    [cli, "verify", "--replay-packet", file, "--git-dir", ""],
+    [cli, "verify", "--replay-packet", file, "--git-dir", "--git-binary", "/usr/bin/git"],
+  ]) {
+    const run = spawnSync(process.execPath, args, { encoding: "utf8" });
+    a.equal(run.status, 1, run.stderr + run.stdout);
+    a.equal(JSON.parse(run.stderr).reason, "INVALID_ARGUMENT");
+    a.equal(run.stdout, "");
+  }
+});
+
 test("one replay-packet command separates replay consistency, independently recomputed Git facts and provider-trusted records", async t => {
   const fixture = await standardMergePacket(t), file = path.join(fixture.root, "packet.json");
   fs.writeFileSync(file, JSON.stringify(fixture.value, null, 2) + "\n");
