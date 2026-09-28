@@ -1,13 +1,13 @@
 # Merge-Proof current status
 
-**Updated:** 2026-09-27T12:51:01-05:00
-**Source main commit:** `01a38366be4e51bc69ba04644f3247c70d19b950`
+**Updated:** 2026-09-27T21:11:42-05:00
+**Source main commit:** `f7a0aeccc99e47657d9e66862994dc88822c3cd0`
 **Authority:** Canonical compact repository/lifecycle state and task router. Fresh Git, GitHub, runtime, and provider evidence overrides this snapshot when they differ.
 
 ## Repository and lifecycle
 
 - Authoritative repository: `https://github.com/ohcaygo/merge-proof`; default branch `main`.
-- Refreshed remote `main`: `01a38366be4e51bc69ba04644f3247c70d19b950` (`Merge approved P3 provider history candidate`). Working from another branch or clone does not change that authority.
+- Refreshed remote `main`: `f7a0aeccc99e47657d9e66862994dc88822c3cd0` (`Merge approved Independent Git Verification candidate`). Working from another branch or clone does not change that authority.
 - Current `main` implements P0-P3: the Merge Truth record, buyer evidence chain, unsigned deterministic replay packet, authoritative pinned-candidate review procedure, compact context routing, and provider-history reconciliation coverage beneath Merge Truth. The last recorded nine-job GitHub self-check applies to predecessor `c51c47c8fe6ca478f8b51cb95d613a69c0310a8f`; it is not promoted to the newer main SHA.
 - Last directly verified production backend is `/opt/merge-proof/releases/earlyaccess-b36a1bd`, marker `b36a1bd867f194e727e031bab9da630e899afcb4`. Public `/`, `/proof/`, and the sample PDF returned HTTP 200 on this update. The public service does not expose a source SHA, so current `main` is **not proven deployed**.
 - Controlled Early Access was accepted on 2026-09-22 for its bounded real-user journey. That acceptance does not prove continuous health, current-main deployment, or L3 completion.
@@ -17,7 +17,7 @@
 | Implemented | Yes, in the landed tree | EA subset is live; L3 code is not proven live |
 | Tested | Current-main provider checks are **NOT_PROVEN** in this snapshot; candidate suites must be run directly | Prior bounded live/lab evidence remains scoped to its named candidate |
 | Independently reviewed | Procedure candidate was reviewed before merge; later candidates require their own review | Historical reviews do not approve later candidates |
-| Merged | Yes, through `01a38366` | Merge is not deployment authority |
+| Merged | Yes, through `f7a0aecc` | Merge is not deployment authority |
 | Deployed | **NOT_PROVEN** | Last direct backend identity is `b36a1bd` |
 | Accepted | **NOT_PROVEN** for current main and L3 | Controlled EA journey only |
 

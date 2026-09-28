@@ -148,7 +148,7 @@ test("customer OAuth login, authorized repository, receipt, free meter, private 
   const human=await (await request(out.url)).text();
   a.match(human,/Raw technical evidence and machine verdict:/);
   a.match(human,/Evidence verdict: /);a.match(human,/Freshness: /);
-  a.match(human,/Download JSON/);a.match(human,/Trial active/);a.match(human,/Merge truth/);a.match(human,/Merge Truth evidence chain/);a.match(human,/Landing has not yet been observed/);a.match(human,/Download replay packet/);a.match(human,/Unsigned packet:/);a.ok(human.indexOf('Merge truth')<human.indexOf('Evidence verdict:'));a.ok(human.indexOf('Evidence verdict:')<human.indexOf('Raw technical evidence and machine verdict'));
+  a.match(human,/Download JSON/);a.match(human,/Trial active/);a.match(human,/Merge truth/);a.match(human,/Merge Truth evidence chain/);a.match(human,/Landing has not yet been observed/);a.match(human,/Download replay packet/);a.match(human,/Unsigned packet:/);a.match(human,/Independent Git verification/);a.match(human,/Recompute Git facts on your machine/);a.ok(human.indexOf('Merge truth')<human.indexOf('Independent Git verification'));a.ok(human.indexOf('Independent Git verification')<human.indexOf('Evidence verdict:'));a.ok(human.indexOf('Evidence verdict:')<human.indexOf('Raw technical evidence and machine verdict'));
   const mergeTruth=await (await request(out.url+'/merge-truth')).json();
   a.equal(mergeTruth.relationship.verdict,'NOT_PROVEN');a.equal(mergeTruth.landing.state,'NOT_OBSERVED');a.equal(require('../merge-truth').verify(mergeTruth).state,'CONSISTENT_PROJECTION');
   const replayDownload=await request(out.url+'/replay-packet');
@@ -156,6 +156,12 @@ test("customer OAuth login, authorized repository, receipt, free meter, private 
   const replayPacket=await replayDownload.json(), replayed=require('../replay-packet').replay(replayPacket);
   a.equal(replayed.state,'REPLAY_CONSISTENT');a.equal(replayed.verdict,'NOT_PROVEN');a.equal(replayed.trust,'UNSIGNED');
   a.equal((await request(out.url+'/replay-packet',false,false)).status,403);
+  const independentPage=await request(out.url+'/independent-verification');
+  a.equal(independentPage.status,200);const independentHtml=await independentPage.text();
+  a.match(independentHtml,/Verify Git facts from your own repository copy/);a.match(independentHtml,/Ready to recompute/);
+  a.match(independentHtml,/Checks, approvals, repository rules, currentness, provider history and repository\/PR association remain provider-supplied/);
+  a.doesNotMatch(independentHtml,/INDEPENDENT_VERIFICATION_COMPLETE|13 \/ 13 matched/);
+  a.equal((await request(out.url+'/independent-verification',false,false)).status,403);
   const grouped=await (await request('/proof/account?installation=2&repository=1')).json();
   a.equal(grouped.inbox.length,1);
   a.equal(grouped.inbox[0].history.length+1,grouped.receipts.length);

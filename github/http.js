@@ -509,6 +509,19 @@ async function handle(service, req, res, url) {
       send(200, service.mergeTruth(row));
       return true;
     }
+    const independentVerificationMatch = url.pathname.match(/^\/proof\/receipts\/([a-f0-9-]{36})\/independent-verification$/);
+    if (independentVerificationMatch && req.method === "GET") {
+      const row = await service.access(independentVerificationMatch[1], token);
+      assert(row.artifacts, "HISTORICAL_BUNDLE_UNAVAILABLE");
+      const packet = service.replayPacket(row);
+      const receiptId = independentVerificationMatch[1];
+      send(200, require("./independent-verification-view").page(null, {
+        packetUrl: `/proof/receipts/${receiptId}/replay-packet`,
+        proofUrl: `/proof/receipts/${receiptId}`,
+        command: packet.verifier.independentGitCommand,
+      }, require("./receipt").escape), "text/html; charset=utf-8");
+      return true;
+    }
     const match = url.pathname.match(
       /^\/proof\/receipts\/([a-f0-9-]{36})(\/refresh)?$/,
     );

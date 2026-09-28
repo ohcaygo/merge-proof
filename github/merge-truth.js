@@ -477,7 +477,7 @@ function buyerReconciliation(value) {
   };
 }
 
-function html(value, escape, supportingHtml = "") {
+function html(value, escape, supportingHtml = "", independentVerificationHtml = "") {
   const short = (x) => x ? escape(String(x).replace(/^[a-f0-9]{40}$/, (s) => s.slice(0, 12))) : "Unavailable";
   const chain = evidenceChain(value);
   const outcome = buyerOutcome(value);
@@ -504,6 +504,7 @@ function html(value, escape, supportingHtml = "") {
   <ol class="evidence-chain" aria-label="Merge Truth evidence chain">${stages}</ol>
   ${value.references.replayPacket ? `<div class="replay-packet-action"><a href="${escape(value.references.replayPacket)}" download>Download replay packet</a><p>Replay this conclusion locally from the supplied evidence. <strong>Unsigned packet:</strong> it checks deterministic consistency and detects unmatched alteration, but does not independently establish packet provenance or a public trust root.</p></div>` : ""}
   ${reconciliationHtml}
+  ${independentVerificationHtml}
   ${supportingHtml}
   <details class="merge-truth-details"><summary>Evidence details and identifiers</summary>
     <dl>
