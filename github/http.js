@@ -72,6 +72,27 @@ async function handle(service, req, res, url) {
       send(200, script, "application/javascript");
       return true;
     }
+    if (req.method === "GET" && ["/proof/examples", "/proof/examples/"].includes(url.pathname)) {
+      send(200, require("./public-examples").overview(), "text/html; charset=utf-8");
+      return true;
+    }
+    const exampleMatch = req.method === "GET"
+      ? url.pathname.match(/^\/proof\/examples\/(verified|fail|not-proven)$/)
+      : null;
+    if (exampleMatch) {
+      const examples = require("./public-examples");
+      if (url.searchParams.get("format") === "json")
+        send(200, examples.detail(exampleMatch[1], { json: true }));
+      else
+        send(200, examples.detail(exampleMatch[1]), "text/html; charset=utf-8");
+      return true;
+    }
+    // Example routes are an exact public allowlist. Never reinterpret a
+    // malformed example identifier as a receipt, replay packet, or account route.
+    if (url.pathname.startsWith("/proof/examples/")) {
+      send(404, { error: "NOT_FOUND" });
+      return true;
+    }
     let raw = Buffer.alloc(0);
     if (req.method === "POST") {
       for await (const chunk of req) {

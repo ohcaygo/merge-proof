@@ -11,13 +11,13 @@
 <a class="skip-link" href="#prove">Skip to content</a>
 <header class="site-header">
 <a class="brand" href="#prove"><img src="/ohcaygo-mark.png" width="48" height="48" alt=""><span>OHCAYGO<small>MERGE PROOF</small></span></a>
-<nav aria-label="Main navigation"><a href="#prove">Prove</a><a href="#how-it-works">How it works</a><a href="#what-it-checks">What it checks</a><a href="#pricing">Pricing</a><a class="nav-cta" href="/proof/">Try free <span aria-hidden="true">↗</span></a></nav>
+<nav aria-label="Main navigation"><a href="#prove">Prove</a><a href="#how-it-works">How it works</a><a href="#what-it-checks">What it checks</a><a href="#pricing">Pricing</a><a class="nav-cta" href="/proof/examples/">See an example <span aria-hidden="true">↗</span></a></nav>
 </header>
 <main>
 <section class="hero" id="prove" aria-labelledby="hero-title">
 <div class="hero-copy">
-<h1 id="hero-title">Prove the merge.<br><span class="gold">Verify what landed.</span></h1>
-<p class="hero-evidence"><strong>For an exact candidate, Merge Proof checks available GitHub-reported checks, approvals and policies against current authorization.</strong> When GitHub can bind that evidence to a landing, it keeps a portable receipt for the landed content.</p>
+<h1 id="hero-title">Your checks passed.<br><span class="gold">Did that exact code land?</span></h1>
+<p class="hero-evidence"><strong>GitHub, CI and review evaluate one specific candidate.</strong> Merge Proof follows that evidence through landing and shows whether the evaluated content is actually the content that became merge truth.</p>
 <div class="tip-scene" aria-label="Example of a stale GitHub check">
 <p><span class="green">Checks were green</span> on one tip.</p>
 <p>Someone pushed again. <strong>The tip moved.</strong></p>
@@ -28,22 +28,26 @@
 <p class="hero-boundary">Receipt Checks stay with the PR. Not an AI reviewer; neither NOT_PROVEN nor STALE means bad code.</p>
 </div>
 <aside class="story install-card" id="how-it-works" aria-labelledby="install-title">
-<h2 class="eyebrow" id="install-title">START IN 1–2–3</h2>
+<h2 class="eyebrow" id="install-title">SEE THE VALUE BEFORE YOU CONNECT</h2>
 <ol class="install-steps">
-<li><span class="step-number gold" aria-hidden="true">1</span><span>Connect GitHub and install the App on selected repositories.</span></li>
-<li><span class="step-number gold" aria-hidden="true">2</span><span>We discover open PRs — or watch for the next one.</span></li>
-<li><span class="step-number gold" aria-hidden="true">3</span><span>Read the receipt for the exact observed candidate.</span></li>
+<li><span class="step-number gold" aria-hidden="true">1</span><span>See the exact candidate and tree that were evaluated.</span></li>
+<li><span class="step-number gold" aria-hidden="true">2</span><span>Follow evidence and currentness to the actual landed tree.</span></li>
+<li><span class="step-number gold" aria-hidden="true">3</span><span>Understand VERIFIED, FAIL, or an honest NOT_PROVEN.</span></li>
 </ol>
-<p class="install-prereq">Needs a GitHub account and a repository you can authorize. No card for the trial.</p>
-<a class="primary-cta" href="/proof/">CONNECT GITHUB <span aria-hidden="true">↗</span></a>
-<p class="cta-shadow">7-day hosted trial. Report-only.</p>
-<p class="local-link"><a href="https://github.com/ohcaygo/merge-proof#readme">Free local CLI + GitHub Action →</a></p>
+<p class="install-prereq">No login. No GitHub access. No CLI command.</p>
+<a class="primary-cta" href="/proof/examples/">SEE AN EXAMPLE PROOF <span aria-hidden="true">↗</span></a>
+<p class="cta-shadow">Fixed synthetic data. Real Merge Truth presentation.</p>
 </aside>
 </section>
 <section class="comparison" aria-label="Tests and Merge Proof">
 <div><span class="eyebrow">TESTS ASK</span><p>Did the code behave the way the tests expected?</p></div>
 <div><span class="eyebrow">MERGE PROOF ASKS</span><p>Does the evidence apply to the version you're about to merge?</p></div>
 </section>
+<section class="page-section" id="example-proofs" aria-labelledby="example-title">
+<div class="section-heading"><div><p class="eyebrow">THREE HONEST OUTCOMES</p><h2 id="example-title">What became merge truth?</h2></div><p>Same proof chain.<br>Different evidence conclusions.</p></div>
+<div class="example-grid"><article class="example-card"><p class="eyebrow">EXAMPLE PROOF · VERIFIED</p><h3>The evaluated tree is the tree that landed.</h3><p>See candidate, evidence, currentness, landed tree, and the exact relationship.</p><a href="/proof/examples/verified">Inspect VERIFIED →</a></article><article class="example-card"><p class="eyebrow">EXAMPLE PROOF · FAIL</p><h3>Different content landed.</h3><p>Evidence applied to candidate A. The observed landed tree was B.</p><a href="/proof/examples/fail">Inspect FAIL →</a></article><article class="example-card"><p class="eyebrow">EXAMPLE PROOF · NOT_PROVEN</p><h3>A required landing fact is missing.</h3><p>Merge Proof shows what it established, what it could not, and refuses to guess.</p><a href="/proof/examples/not-proven">Inspect NOT_PROVEN →</a></article></div>
+</section>
+<section class="page-section connect-section" id="connect-real" aria-labelledby="connect-title"><p class="eyebrow">SAFE TO TRY</p><h2 id="connect-title">Try it on a real PR.</h2><p><strong>7 days free. No card.</strong> Merge Proof observes and reports without blocking your merges. Early Access currently reports what happened rather than enabling a required merge policy during the trial.</p><a class="primary-cta" href="/proof/#connect-real">CONNECT GITHUB <span aria-hidden="true">↗</span></a><details class="disclosure"><summary>SEE EXACTLY WHAT WE REQUEST</summary><div class="detail-body"><p><strong>Standard GitHub App repository access</strong></p><ul><li><strong>Read:</strong> Actions, Administration, Commit statuses, Contents, Pull requests, and GitHub's mandatory Metadata permission. These reads collect workflow/check evidence, repository rules, Git identities, PR state, and landed content identifiers.</li><li><strong>Checks: read and write.</strong> Read check results and publish or update the Merge Proof receipt Check on the PR.</li><li><strong>Organization members: read.</strong> Verify that the signed-in billing user is an organization owner.</li></ul><p><strong>GitHub sign-in:</strong> the OAuth request adds no extra OAuth scopes. Its short-lived user token is kept in process memory while Merge Proof checks identity, App installations, authorized repositories, and organization-owner status.</p><p><strong>Not included:</strong> Contents write, Secrets, Workflows write, or organization administration. The standard App cannot edit repository code, branch protection, or rulesets. A separate optional Enhanced Policy Proof companion, if explicitly enabled later, has repository Administration write authority but is constrained by Merge Proof to policy reads; it is not part of this standard connection.</p></div></details></section>
 <section class="page-section" id="what-it-checks" aria-labelledby="checks-title">
 <div class="section-heading"><div><p class="eyebrow">MORE THAN A GREEN LIGHT</p><h2 id="checks-title">Fast work. Clear evidence.</h2></div><p>One deterministic receipt.<br>No AI model decides the verdict.</p></div>
 <div class="benefits">
