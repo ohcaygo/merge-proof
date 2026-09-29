@@ -11,39 +11,59 @@
 <a class="skip-link" href="#prove">Skip to content</a>
 <header class="site-header">
 <a class="brand" href="#prove"><img src="/ohcaygo-mark.png" width="48" height="48" alt=""><span>OHCAYGO<small>MERGE PROOF</small></span></a>
-<nav aria-label="Main navigation"><a href="#prove">Prove</a><a href="#how-it-works">How it works</a><a href="#what-it-checks">What it checks</a><a href="#pricing">Pricing</a><a class="nav-cta" href="/proof/">Try free <span aria-hidden="true">↗</span></a></nav>
+<nav aria-label="Main navigation"><a href="#prove">Prove</a><a href="#how-merge-proof-knows">How it works</a><a href="#what-it-checks">What it checks</a><a href="#pricing">Pricing</a><a class="nav-cta" href="/proof/examples/">See an example <span aria-hidden="true">↗</span></a></nav>
 </header>
 <main>
 <section class="hero" id="prove" aria-labelledby="hero-title">
 <div class="hero-copy">
-<h1 id="hero-title">Prove the merge.<br><span class="gold">Verify what landed.</span></h1>
-<p class="hero-evidence"><strong>For an exact candidate, Merge Proof checks available GitHub-reported checks, approvals and policies against current authorization.</strong> When GitHub can bind that evidence to a landing, it keeps a portable receipt for the landed content.</p>
-<div class="tip-scene" aria-label="Example of a stale GitHub check">
-<p><span class="green">Checks were green</span> on one tip.</p>
-<p>Someone pushed again. <strong>The tip moved.</strong></p>
-<p>Old green no longer proves this tip → <strong class="gold">STALE.</strong></p>
+<h1 id="hero-title">Your checks passed.<br><span class="gold">Did that exact code land?</span></h1>
+<p class="hero-evidence"><strong>GitHub, CI and review evaluate one specific candidate.</strong> Merge Proof follows that evidence through landing and shows whether the evaluated content is actually the content that became merge truth.</p>
+<div class="tip-scene" aria-label="Illustrative base-moved merge scenario">
+<p><span class="green">Every required check passed</span> for PR #41 against main at M0.</p>
+<p>An ordinary PR moved main to M1. With loose required checks and no merge queue, PR #41 could merge without that new combination being retested.</p>
+<p>Merge Proof compares the evaluated tree with the actual landed tree → <strong class="gold">MATCH, MISMATCH, OR NOT_PROVEN.</strong></p>
 </div>
 <p class="hero-evidence"><strong>GitHub-native evidence for an exact observed state.</strong><br>Verdict: VERIFIED / NOT_PROVEN / FAIL. Freshness: CURRENT / STALE.</p>
 <p class="hero-evidence">The receipt records what GitHub reported at that point in time. It is not an atomic GitHub decision or a guarantee about a future merge.</p>
 <p class="hero-boundary">Receipt Checks stay with the PR. Not an AI reviewer; neither NOT_PROVEN nor STALE means bad code.</p>
 </div>
 <aside class="story install-card" id="how-it-works" aria-labelledby="install-title">
-<h2 class="eyebrow" id="install-title">START IN 1–2–3</h2>
+<h2 class="eyebrow" id="install-title">SEE THE VALUE BEFORE YOU CONNECT</h2>
 <ol class="install-steps">
-<li><span class="step-number gold" aria-hidden="true">1</span><span>Connect GitHub and install the App on selected repositories.</span></li>
-<li><span class="step-number gold" aria-hidden="true">2</span><span>We discover open PRs — or watch for the next one.</span></li>
-<li><span class="step-number gold" aria-hidden="true">3</span><span>Read the receipt for the exact observed candidate.</span></li>
+<li><span class="step-number gold" aria-hidden="true">1</span><span>See the exact candidate and tree that were evaluated.</span></li>
+<li><span class="step-number gold" aria-hidden="true">2</span><span>Follow evidence and currentness to the actual landed tree.</span></li>
+<li><span class="step-number gold" aria-hidden="true">3</span><span>Understand VERIFIED, FAIL, or an honest NOT_PROVEN.</span></li>
 </ol>
-<p class="install-prereq">Needs a GitHub account and a repository you can authorize. No card for the trial.</p>
-<a class="primary-cta" href="/proof/">CONNECT GITHUB <span aria-hidden="true">↗</span></a>
-<p class="cta-shadow">7-day hosted trial. Report-only.</p>
-<p class="local-link"><a href="https://github.com/ohcaygo/merge-proof#readme">Free local CLI + GitHub Action →</a></p>
+<p class="install-prereq">No login. No GitHub access. No CLI command.</p>
+<a class="primary-cta" href="/proof/examples/">SEE AN EXAMPLE PROOF <span aria-hidden="true">↗</span></a>
+<p class="cta-shadow">Fixed synthetic data. Real Merge Truth presentation.</p>
 </aside>
 </section>
 <section class="comparison" aria-label="Tests and Merge Proof">
 <div><span class="eyebrow">TESTS ASK</span><p>Did the code behave the way the tests expected?</p></div>
 <div><span class="eyebrow">MERGE PROOF ASKS</span><p>Does the evidence apply to the version you're about to merge?</p></div>
 </section>
+<section class="page-section mechanism-section" id="how-merge-proof-knows" aria-labelledby="mechanism-title">
+<div class="mechanism-heading"><div><p class="eyebrow">HOW MERGE PROOF KNOWS</p><h2 id="mechanism-title">Bind the evidence. Identify what landed. Compare.</h2></div><p>GitHub reports checks, reviews and merge history. Git commit and tree IDs name the exact content. Merge Proof keeps those facts distinct and makes the deterministic comparison.</p></div>
+<ol class="mechanism-flow" aria-label="How Merge Proof reaches a merge-truth conclusion">
+<li><span class="mechanism-source">Provider evidence</span><strong>GitHub evidence</strong><small>Checks, reviews and PR state bound to one observed candidate.</small></li>
+<li><span class="mechanism-source">Git identity</span><strong>Evaluated tree</strong><small><code>b1ec95450a69</code></small></li>
+<li><span class="mechanism-source">Provider history</span><strong>Landing observation</strong><small>Merged commit and landing event, when available.</small></li>
+<li><span class="mechanism-source">Git identity</span><strong>Actual landed tree</strong><small><code>13426dad6335</code> or unavailable.</small></li>
+<li><span class="mechanism-source">Merge Proof</span><strong>Compare</strong><small>Same, different, or missing a required fact.</small></li>
+</ol>
+<div class="mechanism-results" aria-label="Possible deterministic comparison outcomes">
+<article class="same"><code>b1ec95450a69 = b1ec95450a69</code><strong>VERIFIED</strong><small>Required evidence is satisfied and the evaluated tree landed.</small></article>
+<article class="different"><code>b1ec95450a69 ≠ 13426dad6335</code><strong>FAIL · DIFFERENT CONTENT LANDED</strong><small>A sufficiently bound comparison demonstrated a mismatch.</small></article>
+<article class="missing"><code>b1ec95450a69 vs unavailable</code><strong>NOT_PROVEN</strong><small>The required landing comparison cannot be completed, so Merge Proof does not guess.</small></article>
+</div>
+<p class="mechanism-boundary"><strong>Important boundary:</strong> Git identities identify content. They do not independently authenticate GitHub's checks, reviews or merge records.</p>
+</section>
+<section class="page-section" id="example-proofs" aria-labelledby="example-title">
+<div class="section-heading"><div><p class="eyebrow">THREE HONEST OUTCOMES</p><h2 id="example-title">What became merge truth?</h2></div><p>Same proof chain.<br>Different evidence conclusions.</p></div>
+<div class="example-grid"><article class="example-card"><p class="eyebrow">EXAMPLE PROOF · VERIFIED</p><h3>The evaluated tree is the tree that landed.</h3><p>See candidate, evidence, currentness, landed tree, and the exact relationship.</p><a href="/proof/examples/verified">Inspect VERIFIED →</a></article><article class="example-card"><p class="eyebrow">EXAMPLE PROOF · FAIL</p><h3>Different content landed.</h3><p>Evidence applied to candidate A. The observed landed tree was B.</p><a href="/proof/examples/fail">Inspect FAIL →</a></article><article class="example-card"><p class="eyebrow">EXAMPLE PROOF · NOT_PROVEN</p><h3>A required landing fact is missing.</h3><p>Merge Proof shows what it established, what it could not, and refuses to guess.</p><a href="/proof/examples/not-proven">Inspect NOT_PROVEN →</a></article></div>
+</section>
+<section class="page-section connect-section" id="connect-real" aria-labelledby="connect-title"><p class="eyebrow">SAFE TO TRY</p><h2 id="connect-title">Try it on a real PR.</h2><p><strong>7 days free. No card.</strong> Merge Proof observes and reports without blocking your merges. Early Access currently reports what happened rather than enabling a required merge policy during the trial.</p><a class="primary-cta" href="/proof/#connect-real">CONNECT GITHUB <span aria-hidden="true">↗</span></a><section class="security-summary" aria-labelledby="security-title"><p class="eyebrow">SECURITY &amp; ACCESS</p><h3 id="security-title">Don't trust Merge Proof more than necessary.</h3><p>See exactly what authority you grant before connecting.</p><div class="security-questions"><article><h4>Can Merge Proof access source?</h4><p><strong>Yes. Contents read is real source access.</strong> Workflow text, API patch text and exact Git objects may reach the server to bind identities and reconstruct supported tree facts.</p></article><article><h4>Do you store my source?</h4><p>Receipts store normalized evidence, paths, hashes and proof facts—not incidental patch or decoded workflow text. A private partial bare mirror retains exact Git objects and receipt refs for replay.</p></article><article><h4>Does my source go to AI?</h4><p><strong>No.</strong> Source contents are not sent to an LLM or AI provider, and no AI model decides the verdict.</p></article><article><h4>Can Merge Proof change my code?</h4><p><strong>Not through the standard connection.</strong> It has no Contents write authority and cannot push commits or modify repository files.</p></article><article><h4>What can Merge Proof write?</h4><p>Checks read/write lets it publish or update its receipt Check on the PR. That does not grant repository-file write authority.</p></article></div></section><details class="disclosure"><summary>FULL PERMISSION &amp; DATA-HANDLING DETAILS</summary><div class="detail-body"><p><strong>Don't trust Merge Proof more than necessary. See the exact authority before connecting.</strong></p><p><strong>Standard GitHub App repository access</strong></p><ul><li><strong>Read:</strong> Actions, Administration, Commit statuses, Contents, Merge queues, Pull requests, and GitHub's mandatory Metadata permission. These reads collect workflow/check evidence, repository rules, Git identities, merge-queue state, PR state, and landed content identifiers.</li><li><strong>Checks: read and write.</strong> Read check results and publish or update this App's Merge Proof Check output; it cannot change repository files.</li><li><strong>Organization members: read.</strong> Verify that the signed-in billing user is an organization owner.</li></ul><p><strong>GitHub sign-in:</strong> the OAuth request adds no extra OAuth scopes. Its short-lived user token is kept in process memory while Merge Proof checks identity, App installations, authorized repositories, and organization-owner status.</p><p><strong>Technical access and processing:</strong> Contents read is real source access. GitHub responses can include workflow text and diff patches, and reconstruction fetches exact Git objects into a private partial bare mirror. Merge Proof uses these inputs to bind identifiers, inspect workflow action references and deterministically reconstruct trees; it does not execute customer code.</p><p><strong>Persistence and AI boundary:</strong> receipts retain normalized evidence, identifiers, paths, hashes, rules, checks, reviews, actors, workflow provenance and reconstructed Git facts. Exact Git objects and receipt references are retained for replay. Incidental API patch text and decoded workflow text are not written into receipts. No source contents are sent to an LLM or AI provider; no AI model decides the verdict.</p><p><strong>Write authority:</strong> the standard grant does not include Contents write, Secrets, Workflows write or organization administration. It cannot push commits, change branches or files, merge or close PRs, post PR comments, alter repository settings, edit branch protection/rulesets or modify Actions workflows. A separate optional Enhanced Policy Proof companion, if explicitly enabled later, has repository Administration write authority but is constrained by Merge Proof to policy reads; it is not part of this standard connection.</p><p><strong>After uninstall or revocation:</strong> new collection stops and hosted access fails closed because current installation/repository access is rechecked. Historical receipts, evidence, retained Git objects, account records and operational backups are not automatically erased; current code defines durable retention, not a customer-selectable deletion deadline.</p></div></details></section>
 <section class="page-section" id="what-it-checks" aria-labelledby="checks-title">
 <div class="section-heading"><div><p class="eyebrow">MORE THAN A GREEN LIGHT</p><h2 id="checks-title">Fast work. Clear evidence.</h2></div><p>One deterministic receipt.<br>No AI model decides the verdict.</p></div>
 <div class="benefits">
@@ -80,7 +100,7 @@
 <details class="disclosure"><summary>Who counts as an active developer?</summary><div class="detail-body"><p>Distinct human GitHub IDs observed opening covered PRs or pushing covered commits. Bots, configured service identities and inactive organization members are excluded. One human counts once across the paying account’s installations. Initial pricing uses the preceding 30 days of observed covered activity; subsequent counts use the subscription month. Review the count before checkout. Increases require confirmation; changes take effect at renewal without proration.</p></div></details>
 <details class="disclosure"><summary>What's in the bounded historical scan?</summary><div class="detail-body"><p>Look back at what available evidence can establish about previous merges. The free scan covers up to 5 merged PRs among the 30 most recently updated closed PRs. Unsupported history stays unavailable. Current rules cannot establish historical approval validity. One bounded scan does not start the trial or count bugs prevented. Squash/rebase reconstruction and historical approval validity may be unsupported or unavailable. New scan collection pauses when hosted access expires.</p></div></details>
 <details class="disclosure"><summary>Trust, access &amp; private receipts</summary><div class="detail-body">        <p>
-          No AI model decides your proof. Contents read is a real GitHub permission. The hosted collector projects GitHub responses to metadata; compare responses may contain patch text in transit, which is discarded rather than stored, rendered, logged or sent to a model. It does not clone a repository tree or execute customer code. Stored evidence includes sensitive repository metadata such as paths, identifiers, SHAs and normalized checks and rules; this is not “no customer data.” Private receipts require
+          No AI model decides your proof. Contents read is a real GitHub permission. GitHub responses may include workflow text and patch text in transit; that incidental text is not stored in receipts, rendered, logged or sent to a model. Deterministic reconstruction fetches exact Git objects into a private partial bare mirror and retains them for replay; it does not execute customer code. Stored evidence includes sensitive repository metadata such as paths, identifiers, SHAs, normalized checks and rules, plus retained Git objects; this is not “no customer data.” Private receipts require
           current authorized repository access. Repository access is rechecked for each hosted request; uninstalling
           the App revokes hosted receipt access while preserving its history.
         </p>

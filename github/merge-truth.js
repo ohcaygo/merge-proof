@@ -477,7 +477,7 @@ function buyerReconciliation(value) {
   };
 }
 
-function html(value, escape, supportingHtml = "", independentVerificationHtml = "") {
+function html(value, escape, supportingHtml = "", independentVerificationHtml = "", options = {}) {
   const short = (x) => x ? escape(String(x).replace(/^[a-f0-9]{40}$/, (s) => s.slice(0, 12))) : "Unavailable";
   const chain = evidenceChain(value);
   const outcome = buyerOutcome(value);
@@ -515,7 +515,7 @@ function html(value, escape, supportingHtml = "", independentVerificationHtml = 
       <dt>Provider history</dt><dd>${escape(value.reconciliation.state)} · ${escape(value.reconciliation.reason)}${value.reconciliation.asOf ? ` · through ${escape(value.reconciliation.asOf)}` : ""}</dd>
     </dl>
     <h3>Bound claims</h3>${claims}
-    <p><a href="/proof/receipts/${escape(value.evaluated.receiptId)}/merge-truth">Download Merge Truth JSON</a>${value.references.bundle ? ` · <a href="${escape(value.references.bundle)}">Download replay bundle</a>` : ""}</p>
+    <p><a href="${escape(options.mergeTruthUrl || `/proof/receipts/${value.evaluated.receiptId}/merge-truth`)}">Download Merge Truth JSON</a>${value.references.bundle ? ` · <a href="${escape(value.references.bundle)}">Download replay bundle</a>` : ""}</p>
     <p><small>${escape(value.replay.limitation)}</small></p>
   </details></section>`;
 }

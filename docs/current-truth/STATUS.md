@@ -1,52 +1,49 @@
 # Merge-Proof current status
 
-**Updated:** 2026-09-27T21:11:42-05:00
-**Source main commit:** `f7a0aeccc99e47657d9e66862994dc88822c3cd0`
+**Updated:** 2026-09-28T13:20:37-05:00
+**Source main commit:** `3eb6977d3f18722eebc131dcee670c7a89e6b306`
 **Authority:** Canonical compact repository/lifecycle state and task router. Fresh Git, GitHub, runtime, and provider evidence overrides this snapshot when they differ.
 
 ## Repository and lifecycle
 
 - Authoritative repository: `https://github.com/ohcaygo/merge-proof`; default branch `main`.
-- Refreshed remote `main`: `f7a0aeccc99e47657d9e66862994dc88822c3cd0` (`Merge approved Independent Git Verification candidate`). Working from another branch or clone does not change that authority.
-- Current `main` implements P0-P3: the Merge Truth record, buyer evidence chain, unsigned deterministic replay packet, authoritative pinned-candidate review procedure, compact context routing, and provider-history reconciliation coverage beneath Merge Truth. The last recorded nine-job GitHub self-check applies to predecessor `c51c47c8fe6ca478f8b51cb95d613a69c0310a8f`; it is not promoted to the newer main SHA.
-- Last directly verified production backend is `/opt/merge-proof/releases/earlyaccess-b36a1bd`, marker `b36a1bd867f194e727e031bab9da630e899afcb4`. Public `/`, `/proof/`, and the sample PDF returned HTTP 200 on this update. The public service does not expose a source SHA, so current `main` is **not proven deployed**.
-- Controlled Early Access was accepted on 2026-09-22 for its bounded real-user journey. That acceptance does not prove continuous health, current-main deployment, or L3 completion.
+- Refreshed remote `main`: `3eb6977d3f18722eebc131dcee670c7a89e6b306`; tree `2e9ff9cf224247f33892753753e2107c9c391e2e`.
+- Current `main` implements P0-P3: Merge Truth, Evidence Chain, unsigned Replay Packet, Provider History, and downstream Independent Git Verification. Provider facts remain provider-trusted; packet provenance remains unsigned.
+- Production runs `/opt/merge-proof/releases/main-3eb6977d`; `DEPLOYED_COMMIT` is the exact source SHA above. Production acceptance for this release is complete. Public `/` and `/early-access` return HTTP 200; anonymous private receipt and replay access return HTTP 403.
+- The service was active with zero restarts, no failed units or warning-level service logs, empty processing queues, `RECONCILED` delivery health, and 7% disk use on this update. This is a point-in-time health observation, not continuous monitoring.
 
 | State | Current `main` | Production / acceptance truth |
 | --- | --- | --- |
-| Implemented | Yes, in the landed tree | EA subset is live; L3 code is not proven live |
-| Tested | Current-main provider checks are **NOT_PROVEN** in this snapshot; candidate suites must be run directly | Prior bounded live/lab evidence remains scoped to its named candidate |
-| Independently reviewed | Procedure candidate was reviewed before merge; later candidates require their own review | Historical reviews do not approve later candidates |
-| Merged | Yes, through `f7a0aecc` | Merge is not deployment authority |
-| Deployed | **NOT_PROVEN** | Last direct backend identity is `b36a1bd` |
-| Accepted | **NOT_PROVEN** for current main and L3 | Controlled EA journey only |
+| Implemented | Yes, exact landed tree | Exact source is live |
+| Tested | Core 27/27; pilot 10/10; factory 37/37; GitHub 419/419; Chromium PDF 11/11 at deployment | Nine current-main GitHub checks succeeded |
+| Independently reviewed | Candidate-specific reviews completed | Historical reviews do not approve later candidates |
+| Merged | Yes, through `3eb6977d` | Merge is not deployment authority |
+| Deployed | Yes, exact source marker above | Production acceptance complete |
+| Accepted | Current buyer journey accepted | L3 remains incomplete |
 
 ## GitHub policy truth
 
-Fresh read on 2026-09-27:
+Fresh read on 2026-09-28:
 
 - `main` reports no classic branch protection.
 - Active repository ruleset `23000277`, `Merge assurance temporary acceptance`, applies only to `codex/merge-assurance-acceptance-base` and `codex/ruleset-only-acceptance-base`; it requires two named checks and a merge queue.
 - Ruleset `23717603`, `L3 isolated signed queue fixture`, is disabled and targets only its fixture branch.
-- `main` has nine successful check runs at the source SHA and no commit-status contexts. These facts do not establish a protected `main` policy.
-- PR `#11` remains open on the old production-lineage branch. Do not treat it as current deployment or integration authority.
+- `main` has nine successful check runs at the source SHA. These facts do not establish a protected `main` policy.
 
 Re-read GitHub before any PR, policy, approval, currentness, or landed-tree claim; rules and checks can change without a repository commit.
 
 ## Active objective and finish line
 
-The active product objective is one truthful buyer path from evaluated candidate through bound evidence/authority/currentness to landed content and reproducible replay. P0-P3 are present on `main`; release completion still requires an exact candidate, full regression and adversarial verification, an applicable independent review, deliberate integration/deployment authority, and controlled hosted acceptance. A documentation or context change must not move any product lifecycle state.
+The current objective is a bounded Early Access cohort testing installation, first-proof value, comprehension, landing, return use, and price acceptance. Do not add P4/P5 depth without customer or provider evidence.
 
 ## Level 3 and external gates
 
-L3 is **not complete or certified**. The reviewed L3 closure tree landed through `2e6bf02`, but current `main` is newer. Retained evidence now supports cold-host recovery and delivery reconciliation within their recorded bounds. Remaining established gates include:
+L3 is **not complete or certified**.
 
-- one successful actual scheduled differential-lab event;
-- owner-gated production schedule and 30-day COMPLIANCE retention activation;
-- positive qualifying coverage, externally blocked under the frozen contract;
-- exact-final-candidate review and production-lineage reconciliation;
-- owner-authorized public JWKS/trust-root/checkpoint publication and independent verification;
-- owner-authorized production L3 cutover, rollback readiness, and controlled L3 journey.
+- Requirement #1, Differential Lab, is **CLOSED** by scheduled run `36340809936` against exact candidate `f0a4f353`: 389/389 tests, isolation and baseline comparison passed with zero alarms; retained evidence was verified and the completed watcher was deleted.
+- Requirement #3, Positive Coverage, is **EXTERNALLY BLOCKED** under the frozen provider-evidence trust contract. Do not reinvestigate it without materially changed provider capability.
+- Requirement #5, Public Trust, remains **PREPARE ONLY**. No production signing, public JWKS/history, trust root, or anchoring is active.
+- Requirement #6, L3 Production Acceptance, remains **PREPARE ONLY**. The current production deployment is Early Access product acceptance, not an L3 cutover.
 
 Do not alter AWS, KMS, JWKS, anchoring, retention, GitHub policy/App permissions, authentication, or production without the separate authority named in the operational records.
 
@@ -63,6 +60,19 @@ npm run report:sample
 ```
 
 For release work, also run the exact live/provider/preflight checks required by the selected release packet. Unit fixtures, retained captures, browser rendering, signed replay, recovery, and live provider acceptance are not interchangeable.
+
+## Controlled Early Access operating gate
+
+Run one manual check daily using the existing SSH identity and production state:
+
+1. Confirm `/opt/merge-proof/current`, `DEPLOYED_COMMIT`, `systemctl is-active merge-proof`, restart count, failed units, and warning-or-higher service logs.
+2. Report only aggregates: the five queues; subscription refresh states; landing retries; scan states; `deliveryHealth` and age; `billingHealth`; receipt/archive counts. Never print customer identifiers or evidence.
+3. Confirm disk use below 70%, available memory, public `/` and `/early-access` HTTP 200, and anonymous known-private receipt/replay HTTP 403.
+4. Fence the writer; archive both state roots; restart immediately; copy through the existing private SSH path to the off-host workspace; and match SHA-256 at both ends. Extract into a new mode-0700 destination. Require parseable state, expected roots, matching aggregates, and explicit replay classification. Never open it as a writer or replace newer state. Restored facts are historical; currentness is `NOT_PROVEN`.
+
+Stop invitations and investigate if the service is inactive, a failed unit appears, restart count rises unexpectedly, warning logs are unexplained, any queue/retry remains stuck, a subscription is `UNAVAILABLE`, delivery is not `RECONCILED` or older than five hours, `billingHealth` reports `RECONCILIATION_UNAVAILABLE`, disk reaches 70%, access-control probes change, or the latest off-host restore fails.
+
+**Current invitation gate: GO for the first 5-10 invited developers under this manual procedure.** On 2026-09-28 a fenced full-state snapshot crossed the existing off-host path with matching SHA-256 and restored cleanly in isolation. It preserved 907 active and 1,008 archived receipts, 3 accounts, 3 installations, and 11 trial proofs. All archive rows parsed: 8 current-policy receipts replayed `CONSISTENT_OFFLINE`; 1,000 legacy rows remain `UNSUPPORTED`. The shipped exporter still fails closed on those rows with `BACKUP_REPLAY_FAILED`; its failed candidate is named accordingly. This is an automation/legacy-compatibility limitation, not new replay evidence. Continue the manual daily check until resolved without deleting history or weakening semantics.
 
 ## Task routing
 
