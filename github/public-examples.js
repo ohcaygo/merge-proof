@@ -9,11 +9,14 @@ const brand = require("./customer-brand");
 const { escape } = require("./receipt");
 
 const SHAS = Object.freeze({
-  base: "1".repeat(40),
-  head: "2".repeat(40),
-  evaluatedTree: "3".repeat(40),
-  merge: "4".repeat(40),
-  differentTree: "5".repeat(40),
+  base: "b9d4c5768e34cc502b41943a3a67a273eea808ea",
+  baseAfter: "aa603530d21b1f993aea4d7fbac0ac5ad147b8d2",
+  head: "ff6be1f9c318bbe7648abb1e0070666e2226bf99",
+  headTree: "7b0e72f0c1a9dc0eecb257ed42518166174ae699",
+  evaluatedTarget: "a9aa3501363fca80a047615b2e5a92324ba4bd9e",
+  evaluatedTree: "b1ec95450a69e8d501594a7b727c3145720cca8e",
+  merge: "6bb4a8da2f46e7387a0253117e47af656674bd3c",
+  differentTree: "13426dad63358629ea49a886d4742a6d297d7b93",
 });
 const issuedAt = "2026-09-28T15:00:00.000Z";
 
@@ -24,10 +27,11 @@ function currentClaims(claims) {
   }]));
 }
 
-function receipt(id, pr) {
+function receipt(id, pr, options = {}) {
+  const targetSha = options.targetSha || SHAS.head;
   const claims = [
-    { name: "TARGET", state: "PROVEN", binding: SHAS.head },
-    { name: "CI_EXECUTED:test", state: "PROVEN", binding: SHAS.head },
+    { name: "TARGET", state: "PROVEN", binding: targetSha },
+    { name: "CI_EXECUTED:test", state: "PROVEN", binding: targetSha },
     { name: "APPROVAL_CURRENT", state: "PROVEN", binding: SHAS.head },
     { name: "RULES_SNAPSHOT", state: "PROVEN", binding: SHAS.base },
     { name: "REMOTE_DURABLE", state: "PROVEN", binding: SHAS.head },
@@ -48,10 +52,10 @@ function receipt(id, pr) {
       baseSha: SHAS.base,
     },
     evidence: {
-      git: { state: "AVAILABLE", value: { headTree: SHAS.evaluatedTree, baseTree: SHAS.base } },
+      git: { state: "AVAILABLE", value: { headTree: options.headTree || SHAS.evaluatedTree, baseTree: SHAS.base } },
     },
     summary: {
-      target: { state: "AVAILABLE", value: { kind: "HEAD_CONTAINS_CURRENT_BASE", sha: SHAS.head, tree: SHAS.evaluatedTree } },
+      target: { state: "AVAILABLE", value: { kind: options.targetKind || "HEAD_CONTAINS_CURRENT_BASE", sha: targetSha, tree: SHAS.evaluatedTree } },
       authorization: { state: "PROVEN", subject: SHAS.head, counted: [{ id: 9001, login: "reviewer" }] },
       ci: { required: [{ name: "test", appId: 101 }] },
       approval: { required: 1 },
@@ -105,7 +109,11 @@ function project(kind) {
   };
   const definition = definitions[kind];
   if (!definition) return null;
-  const value = receipt(definition.id, definition.pr);
+  const value = receipt(definition.id, definition.pr, kind === "fail" ? {
+    targetKind: "PR_TEST_MERGE",
+    targetSha: SHAS.evaluatedTarget,
+    headTree: SHAS.headTree,
+  } : {});
   const receiptRow = { receipt: value, current: structuredClone(value.freshness) };
   if (!definition.landedTree)
     return mergeTruth.build({ receiptRow, reconciliation: reconciliationFor(value) });
@@ -114,7 +122,7 @@ function project(kind) {
     ...landing.compare(record, {
       sha: SHAS.merge,
       tree: definition.landedTree,
-      parents: [SHAS.base],
+      parents: kind === "fail" ? [SHAS.baseAfter, SHAS.head] : [SHAS.base],
     }),
     observationId: `example-landing-${kind}`,
     recordedAt: "2026-09-28T15:03:10.000Z",
@@ -131,7 +139,7 @@ const descriptions = Object.freeze({
   fail: {
     label: "FAIL",
     title: "Different content landed.",
-    copy: "The candidate had coherent evidence, but the actual landed tree is different. This is the mismatch Merge Proof exists to surface.",
+    copy: "Required checks passed for PR #41 against main at M0. Main advanced, loose required checks allowed the PR to merge without retesting that combination, and a different tree landed.",
   },
   "not-proven": {
     label: "NOT_PROVEN",
@@ -140,7 +148,12 @@ const descriptions = Object.freeze({
   },
 });
 
-const permissionsHtml = `<details class="permission-details"><summary>SEE EXACTLY WHAT WE REQUEST</summary><div class="detail-body"><p><strong>Standard GitHub App repository access</strong></p><ul><li><strong>Read:</strong> Actions, Administration, Commit statuses, Contents, Merge queues, Pull requests, and GitHub's mandatory Metadata permission. These reads collect workflow/check evidence, repository rules, Git identities, merge-queue state, PR state, and landed content identifiers.</li><li><strong>Checks: read and write.</strong> Read check results and publish or update the Merge Proof receipt Check on the PR.</li><li><strong>Organization members: read.</strong> Verify that the signed-in billing user is an organization owner.</li></ul><p><strong>GitHub sign-in:</strong> the OAuth request adds no extra OAuth scopes. The short-lived user token is kept in process memory while Merge Proof checks your identity, App installations, authorized repositories, and organization-owner status.</p><p><strong>What this grant does not include:</strong> Contents write, Secrets, Workflows write, or organization administration. The standard App cannot edit repository code, branch protection, or rulesets. A separate optional Enhanced Policy Proof companion, if explicitly enabled later, has repository Administration write authority but is constrained by Merge Proof to policy reads; it is not part of this standard connection.</p></div></details>`;
+const permissionsHtml = `<details class="permission-details"><summary>SEE EXACTLY WHAT WE REQUEST</summary><div class="detail-body"><p><strong>Don't trust Merge Proof more than necessary. See the exact authority before connecting.</strong></p><p><strong>Standard GitHub App repository access</strong></p><ul><li><strong>Read:</strong> Actions, Administration, Commit statuses, Contents, Merge queues, Pull requests, and GitHub's mandatory Metadata permission. These reads collect workflow/check evidence, repository rules, Git identities, merge-queue state, PR state, and landed content identifiers.</li><li><strong>Checks: read and write.</strong> Read check results and publish or update the Merge Proof receipt Check on the PR. That write can create or update this App's Check Run output; it cannot change repository files.</li><li><strong>Organization members: read.</strong> Verify that the signed-in billing user is an organization owner.</li></ul><p><strong>GitHub sign-in:</strong> the OAuth request adds no extra OAuth scopes. The short-lived user token is kept in process memory while Merge Proof checks your identity, App installations, authorized repositories, and organization-owner status.</p><p><strong>Technical access and processing:</strong> Contents read is real source access. GitHub API responses can include workflow text and diff patches, and reconstruction fetches exact Git objects into a private partial bare mirror. Merge Proof uses these inputs to bind identifiers, inspect workflow action references, and deterministically reconstruct trees; it does not execute customer code.</p><p><strong>Persistence and AI boundary:</strong> receipts retain normalized evidence, identifiers, paths, hashes, rules, checks, reviews, actors, workflow provenance, and reconstructed Git facts. Exact Git objects and receipt references are retained for replay. Incidental API patch text and decoded workflow text are not written into receipts. No source contents are sent to an LLM or AI provider; no AI model decides the verdict.</p><p><strong>Write authority:</strong> this standard grant does not include Contents write, Secrets, Workflows write, or organization administration. It cannot push commits, change branches or files, merge or close PRs, post PR comments, alter repository settings, edit branch protection/rulesets, or modify Actions workflows. A separate optional Enhanced Policy Proof companion, if explicitly enabled later, has repository Administration write authority but is constrained by Merge Proof to policy reads; it is not part of this standard connection.</p><p><strong>After uninstall or revocation:</strong> new collection stops and hosted access fails closed because current installation/repository access is rechecked. Historical receipts, evidence, retained Git objects, account records, and operational backups are not automatically erased; current code defines durable retention, not a customer-selectable deletion deadline.</p></div></details>`;
+
+function scenarioHtml() {
+  const short = (value) => value.slice(0, 12);
+  return `<section class="example-scenario" aria-labelledby="scenario-title"><p class="eyebrow">ILLUSTRATION · LOOSE REQUIRED CHECKS · NO MERGE QUEUE</p><h1 id="scenario-title">All required checks passed. Then main moved.</h1><p>This is one supported GitHub configuration—not a universal merge path and not a claim that GitHub is broken.</p><ol class="scenario-frames"><li><p class="eyebrow">1 · EVERY REQUIRED CHECK PASSED</p><h2>PR #41 was evaluated against main at M0.</h2><dl><dt>PR head</dt><dd><code>${short(SHAS.head)}</code></dd><dt>GitHub test-merge target</dt><dd><code>${short(SHAS.evaluatedTarget)}</code></dd><dt>Evaluated tree E0</dt><dd><code>${short(SHAS.evaluatedTree)}</code></dd></dl><p>Required CI and approval evidence were bound to that exact evaluated state.</p></li><li><p class="eyebrow">2 · MEANWHILE, MAIN MOVED</p><h2>An ordinary PR #40 advanced main.</h2><dl><dt>Before</dt><dd><code>${short(SHAS.base)}</code></dd><dt>After</dt><dd><code>${short(SHAS.baseAfter)}</code></dd></dl><p>PR #41's head did not change, but its combination with main did.</p></li><li><p class="eyebrow">3 · PR #41 MERGED TOO</p><h2>Loose required checks did not require that new combination to be retested.</h2><dl><dt>Landed commit</dt><dd><code>${short(SHAS.merge)}</code></dd><dt>Actual landed tree L1</dt><dd><code>${short(SHAS.differentTree)}</code></dd></dl><p>No bypass or rogue actor is assumed.</p></li><li><p class="eyebrow">4 · COMPARE</p><h2>The evaluated and landed trees differ.</h2><dl><dt>Evaluated E0</dt><dd><code>${short(SHAS.evaluatedTree)}</code></dd><dt>Landed L1</dt><dd><code>${short(SHAS.differentTree)}</code></dd></dl><p class="scenario-result"><strong>Merge Truth: FAIL</strong> · LANDED_MISMATCH</p></li></ol><p class="scenario-boundary"><strong>When this path does not apply:</strong> requiring branches to be up to date or using a merge queue makes GitHub form and check a current combined state before merge.</p></section><header class="example-receipt-label"><p class="eyebrow">EXAMPLE MERGE-PROOF RECEIPT</p><p>The receipt below is the proof artifact. The illustration above only explains its facts.</p></header>`;
+}
 
 function optionalVerification() {
   return `<aside class="independent-verification-status" aria-label="Optional advanced verification"><p class="independent-verification-heading"><span>Optional advanced verification</span><strong>NOT REQUIRED FOR NORMAL USE</strong></p><h2>Recompute Git-derived facts when you want extra assurance.</h2><p>A real replay packet can be checked against a separately acquired repository copy. This can independently recompute Git-derived facts. It does not authenticate GitHub/provider records, prove the unsigned packet's provenance, or create a public trust root.</p><small>Commands, hashes, and machine rows remain available on eligible real receipts for developers and security teams who want them.</small></aside>`;
@@ -169,7 +182,7 @@ function detail(kind, options = {}) {
   const truthHtml = mergeTruth.html(value, escape, supporting, optionalVerification(), {
     mergeTruthUrl: `/proof/examples/${kind}?format=json`,
   });
-  return document(`${item.label} example proof`, `<header class="example-label"><p class="eyebrow">EXAMPLE PROOF · SYNTHETIC PUBLIC DATA</p><p>This demonstrates product behavior. It is not a customer result and is not evidence about a real repository.</p></header>${truthHtml}`);
+  return document(`${item.label} example proof`, `<header class="example-label"><p class="eyebrow">EXAMPLE PROOF · SYNTHETIC PUBLIC DATA</p><p>This demonstrates product behavior. It is not a customer result and is not evidence about a real repository.</p></header>${kind === "fail" ? scenarioHtml() : ""}${truthHtml}`);
 }
 
-module.exports = { descriptions, detail, overview, permissionsHtml, project };
+module.exports = { SHAS, descriptions, detail, overview, permissionsHtml, project };

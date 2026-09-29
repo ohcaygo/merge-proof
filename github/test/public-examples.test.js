@@ -54,6 +54,33 @@ test("public example projections preserve exact fail-closed Merge Truth semantic
   }
 });
 
+test("base-moved illustration is the exact coherent landing mismatch projected by the FAIL receipt", () => {
+  const value = examples.project("fail");
+  a.equal(value.evaluated.target.kind, "PR_TEST_MERGE");
+  a.equal(value.evaluated.target.commit, examples.SHAS.evaluatedTarget);
+  a.equal(value.evaluated.target.tree, examples.SHAS.evaluatedTree);
+  a.equal(value.landing.mergeCommit, examples.SHAS.merge);
+  a.equal(value.landing.tree, examples.SHAS.differentTree);
+  a.equal(value.landing.parents[0], examples.SHAS.baseAfter);
+  a.equal(value.landing.parents[1], examples.SHAS.head);
+  a.equal(value.relationship.verdict, "FAIL");
+  a.equal(value.relationship.reason, "LANDED_TREE_DIFFERS_FROM_PROVEN_TREE");
+  a.equal(value.landing.state, "LANDED_MISMATCH");
+
+  const html = examples.detail("fail");
+  for (const phrase of [
+    "ILLUSTRATION · LOOSE REQUIRED CHECKS · NO MERGE QUEUE",
+    "EVERY REQUIRED CHECK PASSED",
+    "MEANWHILE, MAIN MOVED",
+    "PR #41 MERGED TOO",
+    "Merge Truth: FAIL",
+    "EXAMPLE MERGE-PROOF RECEIPT",
+    "requiring branches to be up to date or using a merge queue",
+  ]) a.match(html, new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  a.ok(html.indexOf("ILLUSTRATION") < html.indexOf("EXAMPLE MERGE-PROOF RECEIPT"));
+  a.ok(html.indexOf("EXAMPLE MERGE-PROOF RECEIPT") < html.indexOf("Merge truth: FAIL"));
+});
+
 test("anonymous visitors can inspect only the fixed public example namespace", async (t) => {
   const root = await server(t);
   for (const kind of ["verified", "fail", "not-proven"]) {
@@ -117,6 +144,25 @@ test("buyer copy states current pricing, trial, report-only, permissions, and tr
   a.match(detail, /does not authenticate GitHub\/provider records/i);
   a.match(detail, /does not.*public trust root/i);
   a.doesNotMatch(detail, /Proof-of-Control Tier 3|L3 complete|publicly anchored/i);
+  const permissions = examples.permissionsHtml;
+  a.match(permissions, /Contents read is real source access/i);
+  a.match(permissions, /private partial bare mirror/i);
+  a.match(permissions, /No source contents are sent to an LLM or AI provider/i);
+  a.match(permissions, /cannot push commits, change branches or files, merge or close PRs, post PR comments/i);
+  a.match(permissions, /not automatically erased/i);
+});
+
+test("documented data boundary matches current runtime dependencies and standard App request", () => {
+  const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, "../../package.json"), "utf8"));
+  a.deepEqual(pkg.dependencies, {});
+  const hosted = ["app.js", "client.js", "collect.js", "mirror.js", "reconstruct.js", "service.js"]
+    .map((name) => fs.readFileSync(path.join(__dirname, "..", name), "utf8"))
+    .join("\n");
+  a.doesNotMatch(hosted, /api\.(?:openai|anthropic)\.com|generativelanguage\.googleapis\.com/i);
+  a.match(hosted, /contents:\s*"read"/);
+  a.match(hosted, /checks:\s*config\.publishChecks \? "write" : "read"/);
+  a.doesNotMatch(hosted, /contents:\s*"write"|workflows:\s*"write"|pull_requests:\s*"write"/);
+  a.match(hosted, /--filter=blob:none/);
 });
 
 test("public examples contain no environment-derived, customer, or secret material", () => {
