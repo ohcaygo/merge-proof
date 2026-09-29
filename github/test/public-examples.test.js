@@ -107,7 +107,7 @@ test("buyer copy states current pricing, trial, report-only, permissions, and tr
     a.match(html, /7 days free|7-day|seven-day/i);
     a.match(html, /No card/i);
     a.match(html, /observes? and reports? without blocking/i);
-    a.match(html, /Actions, Administration, Commit statuses, Contents, Pull requests/i);
+    a.match(html, /Actions, Administration, Commit statuses, Contents, Merge queues, Pull requests/i);
     a.match(html, /Checks: read and write/i);
     a.match(html, /Organization members: read/i);
     a.match(html, /no extra OAuth scopes/i);
