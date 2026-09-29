@@ -81,6 +81,32 @@ test("base-moved illustration is the exact coherent landing mismatch projected b
   a.ok(html.indexOf("EXAMPLE MERGE-PROOF RECEIPT") < html.indexOf("Merge truth: FAIL"));
 });
 
+test("public mechanism explains provider evidence, Git identity, and all three outcomes without trust overclaim", () => {
+  const homepage = fs.readFileSync(path.join(__dirname, "../../factory/public/index.html"), "utf8");
+  const overview = examples.overview();
+  const evaluated = examples.SHAS.evaluatedTree.slice(0, 12);
+  const landed = examples.SHAS.differentTree.slice(0, 12);
+  for (const html of [homepage, overview]) {
+    for (const phrase of [
+      "HOW MERGE PROOF KNOWS",
+      "Provider evidence",
+      "Evaluated tree",
+      "Provider history",
+      "Landing observation",
+      "Actual landed tree",
+      "Required evidence is satisfied and the evaluated tree landed.",
+      "FAIL · DIFFERENT CONTENT LANDED",
+      "The required landing comparison cannot be completed, so Merge Proof does not guess.",
+      "They do not independently authenticate GitHub's checks, reviews or merge records.",
+    ]) a.match(html, new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+    a.match(html, new RegExp(`${evaluated} = ${evaluated}`));
+    a.match(html, new RegExp(`${evaluated} ≠ ${landed}`));
+    a.match(html, new RegExp(`${evaluated} vs unavailable`));
+    a.ok(html.indexOf("HOW MERGE PROOF KNOWS") < html.indexOf("THREE HONEST OUTCOMES"));
+    a.ok(html.indexOf("THREE HONEST OUTCOMES") < html.indexOf("CONNECT GITHUB"));
+  }
+});
+
 test("anonymous visitors can inspect only the fixed public example namespace", async (t) => {
   const root = await server(t);
   for (const kind of ["verified", "fail", "not-proven"]) {
@@ -150,6 +176,27 @@ test("buyer copy states current pricing, trial, report-only, permissions, and tr
   a.match(permissions, /No source contents are sent to an LLM or AI provider/i);
   a.match(permissions, /cannot push commits, change branches or files, merge or close PRs, post PR comments/i);
   a.match(permissions, /not automatically erased/i);
+});
+
+test("five-question security summary preserves the audited access, persistence, AI, and write boundaries", () => {
+  const homepage = fs.readFileSync(path.join(__dirname, "../../factory/public/index.html"), "utf8");
+  for (const html of [homepage, examples.overview(), examples.securitySummaryHtml]) {
+    for (const question of [
+      "Can Merge Proof access source?",
+      "Do you store my source?",
+      "Does my source go to AI?",
+      "Can Merge Proof change my code?",
+      "What can Merge Proof write?",
+    ]) a.match(html, new RegExp(question.replace(/[?]/g, "\\?")));
+    a.match(html, /Contents read is real source access/i);
+    a.match(html, /private partial bare mirror retains exact Git objects/i);
+    a.match(html, /Source contents are not sent to an LLM or AI provider/i);
+    a.match(html, /no Contents write authority/i);
+    a.match(html, /Checks read\/write lets it publish or update its receipt Check/i);
+    a.match(html, /does not grant repository-file write authority/i);
+  }
+  for (const html of [homepage, examples.overview(), examples.permissionsHtml])
+    a.match(html, /FULL PERMISSION &amp; DATA-HANDLING DETAILS/i);
 });
 
 test("documented data boundary matches current runtime dependencies and standard App request", () => {
