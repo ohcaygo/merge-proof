@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily Merge-Proof Early Access health schedule
+
+[Timer]
+OnCalendar=*-*-* 09:00:00 America/Chicago
+RandomizedDelaySec=5m
+Persistent=true
+Unit=merge-proof-early-access-health.service
+
+[Install]
+WantedBy=timers.target

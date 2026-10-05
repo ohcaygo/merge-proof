@@ -1,0 +1,17 @@
+[Unit]
+Description=Merge-Proof Early Access daily health
+After=network-online.target merge-proof.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+WorkingDirectory=/opt/merge-proof/current
+ExecStart=/usr/bin/node /usr/local/libexec/merge-proof-early-access-health.js /etc/merge-proof/early-access-health.json
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadOnlyPaths=/var/lib/merge-proof /etc/merge-proof /opt/merge-proof
