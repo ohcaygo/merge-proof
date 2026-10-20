@@ -18,6 +18,53 @@ for (const rule of ["required_signatures", "required_linear_history"])
     a.equal(freshness(before, after).state, "STALE");
     a.equal(before.verdict, "VERIFIED");
   });
+test("rename endpoints use existing sorted bound path sets on both comparison sides", async () => {
+  const c = await collect(new Client(fixtureFetch({
+    mutate: (p, v) => p.includes("/compare/") ? { ...v, files: [
+      { filename: "src/handler.js", previous_filename: "auth/handler.js", status: "renamed", patch: "NEVER STORE" },
+      { filename: "src/handler.js", status: "modified" },
+    ] } : v,
+  })), "fixture/public", 1);
+  a.deepEqual(c.git.value.candidateFiles, ["auth/handler.js", "src/handler.js"]);
+  a.deepEqual(c.git.value.baseFiles, c.git.value.candidateFiles);
+  a.equal(c.consistency, "STABLE_OBSERVATION");
+  a.doesNotMatch(JSON.stringify(c), /NEVER STORE/);
+  // No new evidence fields: the frozen canonical TARGET binding already
+  // includes the full git observation, including these existing path arrays.
+  const bindings = require("../bindings"), frozen = require("../verifier/v7/bindings");
+  a.deepEqual(bindings.fingerprints(c), frozen.fingerprints(c));
+  const before = bindings.fingerprints(c).TARGET;
+  const altered = structuredClone(c);
+  altered.git.value.candidateFiles = ["src/handler.js"];
+  a.notEqual(bindings.fingerprints(altered).TARGET, before);
+  altered.git.value = structuredClone(c.git.value);
+  altered.git.value.baseFiles = ["src/handler.js"];
+  a.notEqual(bindings.fingerprints(altered).TARGET, before);
+});
+
+test("rename origin movement between observations changes the bound target", async () => {
+  let round = 0;
+  const c = await collect(new Client(fixtureFetch({
+    mutate: (p, v) => {
+      if (p.endsWith("/pulls/1")) round++;
+      return p.includes("/compare/") && p.endsWith(`...${H}`)
+        ? { ...v, files: [{ filename: "src/handler.js", status: "renamed",
+          previous_filename: round === 1 ? "auth/handler.js" : "src/old.js" }] } : v;
+    },
+  })), "fixture/public", 1);
+  a.equal(c.consistency, "CHANGED_DURING_COLLECTION");
+  a.equal(prove(c).verdict, "NOT_PROVEN");
+});
+
+test("ordinary path projection remains unchanged", async () => {
+  const c = await collect(new Client(fixtureFetch({
+    changedFiles: ["src/z.js", "src/a.js", "src/z.js", "vendor/auth/handler.js"],
+  })), "fixture/public", 1);
+  a.deepEqual(c.git.value.candidateFiles, ["src/a.js", "src/z.js", "vendor/auth/handler.js"]);
+  a.deepEqual(c.git.value.baseFiles, []);
+  a.equal(prove(c).verdict, "VERIFIED");
+});
+
 test("real collector projects REST metadata into a complete proof with no source or review bodies", async () => {
   const f = fixtureFetch(),
     c = await collect(new Client(f), "fixture/public", 1);

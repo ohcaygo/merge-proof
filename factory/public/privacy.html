@@ -19,7 +19,7 @@
 <p class="eyebrow">OHCAYGO / MERGE PROOF</p>
 <h1 id="privacy-title">Privacy Policy</h1>
 <p class="small">Effective September 16, 2026</p>
-<p>OHCAYGO operates Merge Proof, a service that provides independent exact-state merge evidence for GitHub pull requests. This policy describes the information processed by our website and hosted service. Contact <a href="mailto:support@ohcaygo.com">support@ohcaygo.com</a>, or <a href="mailto:ryan@ohcaygo.com">ryan@ohcaygo.com</a> if support is unreachable.</p>
+<p>OHCAYGO operates Merge Proof, a service that binds available GitHub evidence to exact pull-request and merge states. Provider facts remain GitHub-trusted. This policy describes the information processed by our website and hosted service. Contact <a href="mailto:support@ohcaygo.com">support@ohcaygo.com</a>, or <a href="mailto:ryan@ohcaygo.com">ryan@ohcaygo.com</a> if support is unreachable.</p>
 
 <h2>Information we process and why</h2>
 <ul>
@@ -29,13 +29,18 @@
 <li><strong>Service operation and support:</strong> request and security information, product events and information you send when asking for help. We use these to run, protect and troubleshoot the service, respond to requests and understand the connection-to-proof journey.</li>
 </ul>
 
-<h2>GitHub permissions and source text</h2>
-<p>Contents read is a real GitHub permission. The hosted collector projects GitHub responses to metadata; compare responses may contain patch text in transit, which is discarded rather than stored, rendered, logged or sent to a model. The hosted collector does not clone a repository tree or execute customer code. Stored evidence includes paths, identifiers, SHAs and normalized checks and rules. No AI model decides the verdict.</p>
+<h2>GitHub permissions, source access and retained Git objects</h2>
+<p>Contents read is real source access. The hosted service reads workflow text to inspect action references, and GitHub compare responses may carry diff patch text through server memory. Deterministic reconstruction creates a private partial bare mirror for the repository, fetches exact Git commit/tree objects for base, head, candidate and queue states, and retains Git objects and receipt refs for reconstruction and replay. Git may materialize reachable blobs when needed. This is source access and persistence, not metadata-only processing. Customer code is not executed.</p>
+<p>Incidental API patch bodies and decoded workflow text are not persisted in receipts. Receipts retain normalized evidence, paths, workflow blob identities, hashes, checks, rules, reviews, actors and merge/landing facts. The mirror's retained Git objects are separate from that normalized receipt evidence.</p>
+<p>The hosted proof product does not send source contents to an LLM or AI provider. No AI model decides the verdict.</p>
+<p>The standard GitHub App reads Actions, Administration, Commit statuses, Contents, Merge queues, Metadata and Pull requests; Checks read/write lets it publish or update its own Check Runs. Organization members read verifies billing-owner authority. The standard App has no Contents write authority and cannot push commits, change files or workflows, merge or close PRs, post PR comments, or edit repository settings, branch protection or rulesets.</p>
+<p>The optional Enhanced Policy Proof companion is separately authorized. Its repository Administration write grant is broader than the standard App's read-only Administration grant; the isolated broker constrains product operations to policy reads. It is not part of the standard connection.</p>
 <p>The free local CLI and GitHub Action operate in the environment where you run them. You control the repositories and generated reports in that environment; GitHub also processes data when you use its Actions service.</p>
 
 <h2>Private receipts, access and retention</h2>
-<p>Private hosted receipts require current authorized repository access, which is rechecked for each hosted request. Uninstalling the App revokes hosted receipt access while preserving its history. Uninstalling is not a deletion request.</p>
-<p>Records are subject to product retention and capacity limits. We do not promise permanent receipt availability or a fixed retention period for every record. Information may also need to be retained to administer billing, meet applicable legal obligations, resolve disputes or protect the service.</p>
+<p>Private hosted receipts require current authorized repository and installation access, rechecked for each hosted request. Access follows repository authority, not only billing ownership. Uninstalling or revoking access stops new collection and hosted access fails closed. Uninstalling is not a deletion request and does not make retained evidence public.</p>
+<p>Historical receipt and landing archives are append-only. Exact Git objects are retained by receipt refs in the private mirror. Active receipt eviction does not delete the historical archive. Uninstall or access revocation does not automatically erase receipts, archived artifacts, merge/landing observations, retained mirror objects and refs, account and billing records, event/operator history or operational backups.</p>
+<p>The current implementation has capacity limits and backups, but no customer-selectable deletion deadline or automatic uninstall purge. Receipt access and availability are separate from historical retention; we do not promise permanent availability or a fixed retention period for every record. Information may also need to be retained to administer billing, meet applicable legal obligations, resolve disputes or protect the service. Contact us about a deletion request; any authorized removal must account for archives, mirror objects and backups separately.</p>
 
 <h2>Providers that help run Merge Proof</h2>
 <p>We use GitHub for account authorization and repository evidence, Stripe for subscriptions and payments, Cloudflare Pages and Cloudflare services for the public site and network delivery, and DigitalOcean for the hosted backend. These providers process information needed to deliver their services under their own policies and our service arrangements.</p>

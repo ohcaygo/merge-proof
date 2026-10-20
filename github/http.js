@@ -2,6 +2,17 @@
 const { html } = require("./receipt");
 const { assert } = require("./common");
 const { page, script, interactive } = require("./public");
+// Bearer reads use the same live selected-App scope for lookup and downloads.
+// Public-only local development has no customer installation intersection.
+async function authorizeSelectedRepository(customers, token, installationId, repositoryId, repository) {
+  if (!customers) return;
+  assert(Number.isSafeInteger(installationId) && Number.isSafeInteger(repositoryId), "INVALID_SCOPE");
+  const credential = { token };
+  const installations = await customers.installations(credential);
+  assert(installations.some(i => i.id === installationId), "ACCESS_DENIED");
+  const repositories = await customers.list(credential, `/user/installations/${installationId}/repositories`, "repositories");
+  assert(repositories.some(r => r.id === repositoryId && r.full_name?.toLowerCase() === repository.toLowerCase()), "ACCESS_DENIED");
+}
 async function handle(service, req, res, url) {
   if (!url.pathname.startsWith("/proof/")) return false;
   const send = (status, data, type = "application/json") => {
@@ -162,6 +173,8 @@ async function handle(service, req, res, url) {
       const pushes = Object.values(service.data.pushObservations).filter(p => p.repositoryId === repositoryId && p.commits.some(c => c.sha === commit));
       assert(records.length || pushes.length, "NOT_FOUND");
       await service.clientFactory({ token }).authorize((records[0] || pushes[0]).repository, repositoryId);
+      for (const r of [...records, ...pushes])
+        await authorizeSelectedRepository(customers, token, r.installationId, r.repositoryId, r.repository);
       if (service.meter) for (const r of [...records, ...pushes]) service.meter.account(r.installationId);
       send(200, { records: records.map(r => ({ receipt: r.proof?.receiptSnapshot || null, landed: landedFor(r) })),
         pushObservations: pushes.map(p => ({ observedAt: p.observedAt, ref: p.ref, commit: p.commits.find(c => c.sha === commit) })) });
@@ -170,25 +183,13 @@ async function handle(service, req, res, url) {
     const machineBundle=url.pathname.match(/^\/proof\/receipts\/([a-f0-9-]{36})\/bundle$/);
     if(req.method==='GET'&&machineBundle&&token){
       const row=await service.access(machineBundle[1],token);
-      if(customers){
-        const credential={token};
-        const installations=await customers.installations(credential);
-        assert(installations.some(i=>i.id===row.installationId),'ACCESS_DENIED');
-        const repositories=await customers.list(credential,`/user/installations/${row.installationId}/repositories`,'repositories');
-        assert(repositories.some(r=>r.id===row.receipt.identity.repositoryId&&r.full_name?.toLowerCase()===row.receipt.identity.repository.toLowerCase()),'ACCESS_DENIED');
-      }
+      await authorizeSelectedRepository(customers, token, row.installationId, row.receipt.identity.repositoryId, row.receipt.identity.repository);
       assert(row.artifacts,'HISTORICAL_BUNDLE_UNAVAILABLE');send(200,service.portable(row));return true;
     }
     const machineReplay=url.pathname.match(/^\/proof\/receipts\/([a-f0-9-]{36})\/replay-packet$/);
     if(req.method==='GET'&&machineReplay&&token){
       const row=await service.access(machineReplay[1],token);
-      if(customers){
-        const credential={token};
-        const installations=await customers.installations(credential);
-        assert(installations.some(i=>i.id===row.installationId),'ACCESS_DENIED');
-        const repositories=await customers.list(credential,`/user/installations/${row.installationId}/repositories`,'repositories');
-        assert(repositories.some(r=>r.id===row.receipt.identity.repositoryId&&r.full_name?.toLowerCase()===row.receipt.identity.repository.toLowerCase()),'ACCESS_DENIED');
-      }
+      await authorizeSelectedRepository(customers, token, row.installationId, row.receipt.identity.repositoryId, row.receipt.identity.repository);
       assert(row.artifacts,'HISTORICAL_BUNDLE_UNAVAILABLE');download(`merge-proof-${machineReplay[1]}-replay.json`,service.replayPacket(row));return true;
     }
     let session;

@@ -62,6 +62,8 @@ class ProofService {
     this.data.pushObservations ||= {};
     this.data.deliveryRecoveryPending ||= {};
     this.data.deliveryRecoveries ||= {};
+    if (this.data.deliveryHealth === "RECONCILED" && Object.keys(this.data.deliveryRecoveryPending).length)
+      this.data.deliveryHealth = "RECOVERY_PENDING";
     this.data.frontierMetrics ||= {reconciliationSupersessions:0,ruleSuiteDisagreements:0};
     for (const row of Object.values(this.data.receipts)) row.observationId = this.observe(row.receipt);
 
@@ -289,6 +291,7 @@ class ProofService {
       );
       const prior = Object.values(this.data.receipts).filter(r => r.receipt.identity.repositoryId === receipt.identity.repositoryId && r.receipt.identity.pr === receipt.identity.pr).pop();
       receipt.supersedes = prior ? { receiptId: prior.receipt.receiptId, digest: require("./common").hash(prior.receipt) } : null;
+      this.invalidateObservedReceipts(capture);
       const { receipt: bundledReceipt, ...artifacts } = await require("./bundle").create(receipt, { signer: this.receiptSigner, keys: this.receiptSigner?.keys || null });
       const current = freshness(receipt, capture);
       if (require("./common").hash(policyBefore[capture.identity.repositoryId] || null) !== require("./common").hash(this.policyFor(capture.identity.repositoryId)) || eventStart.some(e => e.repo === repo.toLowerCase() && currentness.touches(e.event, e.payload, capture).length))
@@ -323,18 +326,6 @@ class ProofService {
         installationId,
         metering,
       };
-      for (const row of Object.values(this.data.receipts))
-        if (
-          row.receipt.receiptId !== receipt.receiptId &&
-          row.receipt.identity.repositoryId === receipt.identity.repositoryId &&
-          row.receipt.identity.pr === receipt.identity.pr &&
-          row.receipt.identity.headSha !== receipt.identity.headSha
-        )
-          row.current = {
-            state: "STALE",
-            reason: "PR_HEAD_CHANGED",
-            next: "RE-PROOF REQUIRED",
-          };
       if (
         collectionComplete &&
         current.state === "CURRENT" &&
@@ -450,8 +441,28 @@ class ProofService {
       } catch {} // Revoked installations stay stopped.
     }
   }
+  invalidateObservedReceipts(capture) {
+    // Collection and refresh share the same invalidation boundary. Persist
+    // clearance/retraction changes before signing or other fallible awaits.
+    let invalidated = false;
+    for (const row of Object.values(this.data.receipts)) {
+      if (row.receipt.identity.repositoryId !== capture.identity.repositoryId ||
+          row.receipt.identity.pr !== capture.identity.pr) continue;
+      const observed = freshness(row.receipt, capture);
+      if (observed.state === "CURRENT") continue;
+      // Do not revive already-invalidated historical proof on a later run.
+      if (row.current.state !== "STALE") row.current = observed;
+      row.gate = this.gateFor(row.receipt, row.current);
+      this.queueRetraction(row);
+      invalidated = true;
+    }
+    if (invalidated) this.save();
+  }
   queueRetraction(row) {
-    if(this.config.publishChecks&&(row.checkIds?.length||row.checkId)&&!this.data.retractionQueue.some(q=>q.receiptId===row.receipt.receiptId))
+    const ids = row.checkIds?.length ? row.checkIds : row.checkId ? [row.checkId] : [];
+    const conclusion = policies.staleConclusion(this.policyFor(row.receipt.identity.repositoryId));
+    if (this.config.publishChecks && ids.some(id => row.retractedChecks?.[id] !== conclusion) &&
+        !this.data.retractionQueue.some(q => q.receiptId === row.receipt.receiptId))
       this.data.retractionQueue.push({receiptId:row.receipt.receiptId,repo:row.receipt.identity.repository,repositoryId:row.receipt.identity.repositoryId,installationId:row.installationId,pr:row.receipt.identity.pr});
   }
   async read(id, token, { refresh = false } = {}) {
@@ -477,6 +488,7 @@ class ProofService {
                   : null,
             },
           );
+          this.invalidateObservedReceipts(c);
           row.current = freshness(row.receipt, c);
           if (eventStart.some(e => e.repo === row.receipt.identity.repository.toLowerCase() && currentness.touches(e.event, e.payload, c).length))
             row.current = { state: "STALE", reason: "EVENT_DURING_REFRESH" };
@@ -486,6 +498,7 @@ class ProofService {
               ? { ...row.current, refreshState: "UNAVAILABLE" }
               : freshness(row.receipt, null);
         }
+        row.gate = this.gateFor(row.receipt, row.current);
         if(row.current.state!=="CURRENT")this.queueRetraction(row);
         this.save();
       });
@@ -537,7 +550,10 @@ class ProofService {
     for (const [guid, recovery] of Object.entries(this.data.deliveryRecoveries))
       if (Date.parse(recovery.observedAt || "") < Date.now() - 30 * 86400000)
         delete this.data.deliveryRecoveries[guid];
-    if (this.data.events[id]) return { duplicate: true };
+    // A requested redelivery must reach validation/application even when its
+    // GUID was previously seen. Ordinary duplicates still have no side effects.
+    if (this.data.events[id] && this.data.deliveryRecoveryPending[id]?.event !== event)
+      return { duplicate: true };
     const p = JSON.parse(raw);
     if (event === "ping") return { received: true };
     if (this.meter && event === "installation") {
@@ -561,7 +577,7 @@ class ProofService {
         this.meter.connect(installationId, p.installation.account?.id);
         for (const repo of p.repositories || []) this.activate(installationId, repo);
       } else return { ignored: true };
-      this.data.events[id] = Date.now();
+      this.completeDelivery(id, event);
       this.save();
       return { accepted: true };
     }
@@ -589,7 +605,7 @@ class ProofService {
           )
             delete this.data.subscriptions[key];
       }
-      this.data.events[id] = Date.now();
+      this.completeDelivery(id, event);
       this.save();
       return { accepted: true };
     }
@@ -598,21 +614,21 @@ class ProofService {
       event === "check_run" &&
       String(p.check_run?.app?.id) === String(this.config.appId)
     )
-      { this.data.events[id] = Date.now(); this.save(); return { ignored: true }; }
+      { this.completeDelivery(id, event); this.save(); return { ignored: true }; }
     if (
       event === "check_suite" &&
       String(p.check_suite?.app?.id) === String(this.config.appId)
     )
-      { this.data.events[id] = Date.now(); this.save(); return { ignored: true }; }
+      { this.completeDelivery(id, event); this.save(); return { ignored: true }; }
     if (!p.repository && p.organization && [...currentness.RULE_EVENTS, ...currentness.PERMISSION_EVENTS].includes(event)) {
       const installationId = p.installation?.id;
       assert(Number.isSafeInteger(installationId) && typeof p.organization.login === "string", "INVALID_WEBHOOK_SCOPE");
       if (this.meter) this.meter.account(installationId);
-      this.data.events[id] = Date.now();
       for (const sub of Object.values(this.data.subscriptions)) {
         if (sub.installationId !== installationId || sub.repo.split("/")[0].toLowerCase() !== p.organization.login.toLowerCase()) continue;
         this.routeEvent(event, p, sub.repo, sub.repositoryId, sub.pr);
       }
+      this.completeDelivery(id, event);
       this.save();
       return { accepted: true };
     }
@@ -671,7 +687,6 @@ class ProofService {
       "installation_repositories",
     ];
     if (!supported.includes(event)) { this.data.events[id] = Date.now(); this.save(); return { ignored: true }; }
-    this.data.events[id] = Date.now();
     // Recorded before anything is staled, so the ledger preserves what was
     // known at the decision point rather than what is known afterwards.
     if (
@@ -715,30 +730,44 @@ class ProofService {
     if (event === "push" && Object.values(this.data.receipts).some(r => r.receipt.identity.repositoryId === repositoryId && p.ref === `refs/heads/${r.receipt.identity.baseRef}`))
       this.data.pushQueue.push({ id, repository: repo, repositoryId, installationId, before: p.before, after: p.after, ref: p.ref });
     this.routeEvent(event, p, repo, repositoryId);
-    const pendingRecovery = this.data.deliveryRecoveryPending[id];
-    if (pendingRecovery?.event === event) {
-      const pullRequest = p.pull_request?.number ||
-        p.review?.pull_request_url?.match(/\/pulls\/(\d+)$/)?.[1] ||
-        p.check_run?.pull_requests?.[0]?.number ||
-        p.check_suite?.pull_requests?.[0]?.number ||
-        p.workflow_run?.pull_requests?.[0]?.number || null;
-      const candidate = p.pull_request?.head?.sha || p.review?.commit_id ||
-        p.check_run?.head_sha || p.check_suite?.head_sha ||
-        p.workflow_run?.head_sha || p.sha || null;
-      if (Number.isSafeInteger(Number(pullRequest)) && Number(pullRequest) > 0 &&
-          typeof candidate === "string" && /^[a-f0-9]{40}$/.test(candidate)) {
-        this.data.deliveryRecoveries[id] = {
-          repositoryId, pullRequest: Number(pullRequest), candidate,
-          event, requestedAt: pendingRecovery.requestedAt,
-          observedAt: new Date().toISOString(),
-          confirmed: pendingRecovery.state === "ACCEPTED",
-        };
-        if (pendingRecovery.state === "ACCEPTED")
-          delete this.data.deliveryRecoveryPending[id];
-      }
-    }
+    this.completeDelivery(id, event, p);
     this.save();
     return { accepted: true };
+  }
+  completeDelivery(id, event, p = null) {
+    // Call only after successful validation/application, never on dedup alone.
+    this.data.events[id] = Date.now();
+    const pendingRecovery = this.data.deliveryRecoveryPending[id];
+    if (pendingRecovery?.event === event) {
+      const pullRequest = p?.pull_request?.number ||
+        p?.review?.pull_request_url?.match(/\/pulls\/(\d+)$/)?.[1] ||
+        p?.check_run?.pull_requests?.[0]?.number ||
+        p?.check_suite?.pull_requests?.[0]?.number ||
+        p?.workflow_run?.pull_requests?.[0]?.number || null;
+      const candidate = p?.pull_request?.head?.sha || p?.review?.commit_id ||
+        p?.check_run?.head_sha || p?.check_suite?.head_sha ||
+        p?.workflow_run?.head_sha || p?.sha || null;
+      const subjectBound = Number.isSafeInteger(Number(pullRequest)) && Number(pullRequest) > 0 &&
+        typeof candidate === "string" && /^[a-f0-9]{40}$/.test(candidate);
+      if (subjectBound) {
+        this.data.deliveryRecoveries[id] = {
+          repositoryId: p.repository.id, pullRequest: Number(pullRequest), candidate,
+          event, requestedAt: pendingRecovery.requestedAt,
+          attemptId: pendingRecovery.attemptId,
+          observedAt: new Date().toISOString(),
+          confirmed: (pendingRecovery.attemptState || pendingRecovery.state) === "ACCEPTED",
+        };
+      }
+      // Application/receipt completion is not a PR-specific RECOVERED claim.
+      // This also covers a signed webhook arriving during its request POST.
+      delete this.data.deliveryRecoveryPending[id];
+      // Every applied recovery invalidates pre-application coverage, whether
+      // or not it can separately support an exact-subject RECOVERED claim.
+      this.data.deliveryRecoveryRevision = (this.data.deliveryRecoveryRevision || 0) + 1;
+      delete this.data.deliveryScan;
+      this.data.deliveryHealth = "RECOVERY_PENDING";
+      this.data.deliveryScanAt = 0;
+    }
   }
   observe(receipt) {
     const { hash } = require("./common");
@@ -806,9 +835,12 @@ class ProofService {
   }
   async reconcileDeliveries(now = Date.now()) {
     if (!this.config.appId || !this.config.privateKey || (this.data.deliveryScanAt && now - this.data.deliveryScanAt < 4 * 3600000)) return;
-    for (const [guid, recovery] of Object.entries(this.data.deliveryRecoveryPending))
+    for (const recovery of Object.values(this.data.deliveryRecoveryPending))
       if (Date.parse(recovery.requestedAt || "") < now - 30 * 86400000)
-        delete this.data.deliveryRecoveryPending[guid];
+        // Provider retention ending cannot establish that a missed event was
+        // received. Keep an explicit unresolved marker instead of erasing it.
+        recovery.state = "EXPIRED";
+    const recoveryRevision = this.data.deliveryRecoveryRevision || 0;
     try {
       const client = this.deliveryClient();
       const scan = this.data.deliveryScan || { endpoint: "/app/hook/deliveries?per_page=100", seen: [] };
@@ -826,25 +858,40 @@ class ProofService {
           assert(validId && typeof row.guid === "string" && /^[\w-]{1,100}$/.test(row.guid), "DELIVERY_IDENTITY_UNAVAILABLE");
           if (row.event === "ping" || seen.has(row.guid)) continue;
           if (!this.data.events[row.guid] || row.status_code >= 400) {
-            this.data.deliveryRecoveryPending[row.guid] = {
+            const priorRecovery = this.data.deliveryRecoveryPending[row.guid];
+            this.data.deliveryRecoveryPending[row.guid] ||= {
               event: row.event,
               requestedAt: new Date(now).toISOString(),
               state: "REQUESTING",
             };
+            // Correlate this POST continuation with application during this
+            // local attempt, never with a historical confirmation for the GUID.
+            // A late signed delivery can count only by actually applying anew.
+            const pending = this.data.deliveryRecoveryPending[row.guid];
+            const attemptId = randomUUID();
+            pending.attemptId = attemptId;
+            pending.attemptState = "REQUESTING";
             this.save();
             try {
               await client.request(`/app/hook/deliveries/${row.id}/attempts`, { method: "POST" });
               const recovered = this.data.deliveryRecoveries[row.guid];
-              if (recovered) {
+              if (recovered?.attemptId === attemptId) {
                 recovered.confirmed = true;
-                delete this.data.deliveryRecoveryPending[row.guid];
-              } else {
-                this.data.deliveryRecoveryPending[row.guid].state = "ACCEPTED";
+              }
+              if (this.data.deliveryRecoveryPending[row.guid]?.attemptId === attemptId) {
+                pending.state = "ACCEPTED";
+                pending.attemptState = "ACCEPTED";
               }
               this.save();
             } catch (error) {
-              delete this.data.deliveryRecoveryPending[row.guid];
-              if (this.data.deliveryRecoveries[row.guid]?.confirmed !== true)
+              // Rejection cannot erase an observed missing event or an earlier
+              // accepted obligation. Do not recreate one already applied in-flight.
+              if (this.data.deliveryRecoveryPending[row.guid]?.attemptId === attemptId) {
+                pending.attemptState = "FAILED";
+                if (!priorRecovery) pending.state = "FAILED";
+              }
+              if (this.data.deliveryRecoveries[row.guid]?.attemptId === attemptId &&
+                this.data.deliveryRecoveries[row.guid].confirmed !== true)
                 delete this.data.deliveryRecoveries[row.guid];
               throw error;
             }
@@ -856,14 +903,19 @@ class ProofService {
         else { const url = new URL(next); assert(url.origin === "https://api.github.com" && url.pathname === "/app/hook/deliveries", "INVALID_DELIVERY_CURSOR"); endpoint = url.pathname + url.search; }
         // Keep bounded passes resumable across retries and process restarts.
         // Successful requests are deduplicated for the entire scan, not each pass.
-        this.data.deliveryScan = { endpoint, seen: [...seen] };
+        if (recoveryRevision === (this.data.deliveryRecoveryRevision || 0))
+          this.data.deliveryScan = { endpoint, seen: [...seen] };
+        else delete this.data.deliveryScan; // Never persist a cursor predating recovery application.
         this.save();
       }
       assert(!endpoint, "DELIVERY_SCAN_INCOMPLETE");
       delete this.data.deliveryScan;
       // The accepted traversal covers through completion, not merely its start.
       // Preserve an explicitly later scheduler time used by deterministic runs.
-      this.data.deliveryScanAt = Math.max(now, Date.now()); this.data.deliveryHealth = "RECONCILED";
+      const receivedDuringScan = recoveryRevision !== (this.data.deliveryRecoveryRevision || 0);
+      this.data.deliveryScanAt = receivedDuringScan ? 0 : Math.max(now, Date.now());
+      this.data.deliveryHealth = receivedDuringScan || Object.keys(this.data.deliveryRecoveryPending).length
+        ? "RECOVERY_PENDING" : "RECONCILED";
     } catch { this.data.deliveryHealth = "UNAVAILABLE"; this.data.deliveryScanAt = now - 4 * 3600000 + 300000; }
     this.save();
   }
@@ -926,16 +978,24 @@ class ProofService {
     for (const row of Object.values(this.data.receipts)) {
       if ((receiptId && row.receipt.receiptId !== receiptId) || row.receipt.identity.repositoryId !== repositoryId ||
           (pr !== null && row.receipt.identity.pr !== pr) || !["STALE", "UNAVAILABLE"].includes(row.current.state)) continue;
-      for (const id of row.checkIds?.length ? row.checkIds : row.checkId ? [row.checkId] : []) {
+      const ids = row.checkIds?.length ? row.checkIds : row.checkId ? [row.checkId] : [];
+      const gate = this.gateFor(row.receipt, row.current);
+      let rowFailed = false;
+      for (const id of ids) {
         try {
           await client.request(`/repos/${row.receipt.identity.repository}/check-runs/${id}`, {
             method: "PATCH", body: { status: "completed",
-              conclusion: policies.staleConclusion(this.policyFor(repositoryId)),
+              conclusion: gate.conclusion,
               output: { title: row.current.state === "STALE" ? "STALE — RE-PROOF REQUIRED" : "Evidence refresh pending",
                 summary: `Historical ${row.receipt.verdict} remains available. Relevant evidence changed; refresh is pending.` }
             }
           });
-        } catch { failed = true; row.checkDelivery = "UNAVAILABLE"; }
+          (row.retractedChecks ||= {})[id] = gate.conclusion;
+        } catch { failed = true; rowFailed = true; row.checkDelivery = "UNAVAILABLE"; }
+      }
+      if (ids.length && !rowFailed) {
+        row.publishedGate = gate;
+        row.publishedAt = new Date().toISOString();
       }
     }
     this.save();
@@ -1085,6 +1145,7 @@ class ProofService {
         const c = await this.exclusive(() => collect(client, job.repo, job.pr, { previous: previousRow.receipt.evidence,
           areas: this.config.enhancedPolicy && areas ? [...new Set([...areas, "rules"])] : areas,
           mergeGroup: job.mergeGroup, executionPolicyReader: this.enhanced.reader(job.installationId, client) }));
+        this.invalidateObservedReceipts(c);
         const current = freshness(previousRow.receipt, c);
         if (current.state === "CURRENT" && previousRow.receipt.evidence.consistency === "STABLE_OBSERVATION" && !eventStart.some(e => e.repo === job.repo.toLowerCase() && currentness.touches(e.event, e.payload, c).length)) {
           previousRow.current = current;

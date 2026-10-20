@@ -33,6 +33,10 @@ function fixture(t, { activityAt = Date.now(), backupAt = Date.now() - 10000, si
   const memoryInfoFile = path.join(root, "meminfo");
   fs.writeFileSync(externalHealthFile, JSON.stringify({ service: serviceUrl, backup: backupUrl }), { mode: 0o600 });
   fs.writeFileSync(memoryInfoFile, "MemTotal:       1000 kB\nMemAvailable:    500 kB\n");
+  // These are synthetic service/heartbeat fixtures, not an assessment of the
+  // developer machine. Keep the healthy disk deterministic, like memory;
+  // storage-alarm tests below override this with their explicit full disk.
+  t.mock.method(fs, "statfsSync", () => ({ blocks: 100, bavail: 50, files: 100, ffree: 50 }));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   return { root, stateDir, backupRecord, externalHealthFile, memoryInfoFile };
 }

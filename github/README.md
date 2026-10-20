@@ -110,8 +110,16 @@ The collector projects REST responses to Git metadata, rule parameters, paths,
 SHA/ref identities, IDs, states and timestamps. GitHub compare responses may
 include patch text in transit; patches are discarded immediately and are not
 stored, rendered, logged or sent to a model. Review bodies, commit messages and
-check output text are discarded. No repository tree is cloned or customer code
-executed by this layer. The local verifier still uses only local Git reads.
+check output text are discarded. This API projection is separate from hosted
+Git reconstruction: when configured, reconstruction creates a private partial
+bare mirror and retains exact Git objects and receipt refs for replay. A bare
+mirror is not a checked-out working tree, but it is retained source material;
+Git may obtain reachable blobs as needed. Customer code is not executed or sent
+to an AI provider. Uninstalling revokes access and stops collection; it does not
+automatically delete retained objects, archives or backups. There is no
+customer-selectable deletion deadline in the current implementation. See
+[`AUTHORIZATION-DATA-HANDLING.md`](../docs/current-truth/AUTHORIZATION-DATA-HANDLING.md).
+The local verifier still uses only local Git reads.
 
 Two complete bounded observations must match. This detects observed races; the
 GitHub API is not an atomic snapshot and cannot guarantee future merge state.
