@@ -753,19 +753,18 @@ class ProofService {
         this.data.deliveryRecoveries[id] = {
           repositoryId: p.repository.id, pullRequest: Number(pullRequest), candidate,
           event, requestedAt: pendingRecovery.requestedAt,
+          attemptId: pendingRecovery.attemptId,
           observedAt: new Date().toISOString(),
-          confirmed: pendingRecovery.state === "ACCEPTED",
+          confirmed: (pendingRecovery.attemptState || pendingRecovery.state) === "ACCEPTED",
         };
       }
       // Application/receipt completion is not a PR-specific RECOVERED claim.
       // This also covers a signed webhook arriving during its request POST.
       delete this.data.deliveryRecoveryPending[id];
-      if (!subjectBound) {
-        // Generic receipt completion has no subject-bound recovery evidence.
-        // Require a new traversal even if it arrived inside the current POST.
-        this.data.deliveryRecoveryRevision = (this.data.deliveryRecoveryRevision || 0) + 1;
-        delete this.data.deliveryScan;
-      }
+      // Every applied recovery invalidates pre-application coverage, whether
+      // or not it can separately support an exact-subject RECOVERED claim.
+      this.data.deliveryRecoveryRevision = (this.data.deliveryRecoveryRevision || 0) + 1;
+      delete this.data.deliveryScan;
       this.data.deliveryHealth = "RECOVERY_PENDING";
       this.data.deliveryScanAt = 0;
     }
@@ -865,23 +864,34 @@ class ProofService {
               requestedAt: new Date(now).toISOString(),
               state: "REQUESTING",
             };
+            // Correlate this POST continuation with application during this
+            // local attempt, never with a historical confirmation for the GUID.
+            // A late signed delivery can count only by actually applying anew.
+            const pending = this.data.deliveryRecoveryPending[row.guid];
+            const attemptId = randomUUID();
+            pending.attemptId = attemptId;
+            pending.attemptState = "REQUESTING";
             this.save();
             try {
               await client.request(`/app/hook/deliveries/${row.id}/attempts`, { method: "POST" });
               const recovered = this.data.deliveryRecoveries[row.guid];
-              if (recovered) {
+              if (recovered?.attemptId === attemptId) {
                 recovered.confirmed = true;
-                delete this.data.deliveryRecoveryPending[row.guid];
-              } else if (this.data.deliveryRecoveryPending[row.guid]) {
-                this.data.deliveryRecoveryPending[row.guid].state = "ACCEPTED";
+              }
+              if (this.data.deliveryRecoveryPending[row.guid]?.attemptId === attemptId) {
+                pending.state = "ACCEPTED";
+                pending.attemptState = "ACCEPTED";
               }
               this.save();
             } catch (error) {
               // Rejection cannot erase an observed missing event or an earlier
               // accepted obligation. Do not recreate one already applied in-flight.
-              if (!priorRecovery && this.data.deliveryRecoveryPending[row.guid])
-                this.data.deliveryRecoveryPending[row.guid].state = "FAILED";
-              if (this.data.deliveryRecoveries[row.guid]?.confirmed !== true)
+              if (this.data.deliveryRecoveryPending[row.guid]?.attemptId === attemptId) {
+                pending.attemptState = "FAILED";
+                if (!priorRecovery) pending.state = "FAILED";
+              }
+              if (this.data.deliveryRecoveries[row.guid]?.attemptId === attemptId &&
+                this.data.deliveryRecoveries[row.guid].confirmed !== true)
                 delete this.data.deliveryRecoveries[row.guid];
               throw error;
             }
@@ -895,7 +905,7 @@ class ProofService {
         // Successful requests are deduplicated for the entire scan, not each pass.
         if (recoveryRevision === (this.data.deliveryRecoveryRevision || 0))
           this.data.deliveryScan = { endpoint, seen: [...seen] };
-        else delete this.data.deliveryScan; // Never persist a cursor predating generic application.
+        else delete this.data.deliveryScan; // Never persist a cursor predating recovery application.
         this.save();
       }
       assert(!endpoint, "DELIVERY_SCAN_INCOMPLETE");

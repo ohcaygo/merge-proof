@@ -1,6 +1,6 @@
 # Merge-Proof current status
 
-**Updated:** 2026-10-19T19:07:28-05:00
+**Updated:** 2026-10-19T20:12:40-05:00
 **Source main commit:** `01be538c333314a4c2defd9b7a4334dd4f52aa28`
 **Base tree:** `6f735bc1d31d981dee6621bae7d4364eb6ee4189`.
 **Authority:** Compact task router. Fresh Git, GitHub and runtime evidence overrides this snapshot. This working copy is an unpublished local candidate, not deployed truth.
@@ -17,9 +17,9 @@
 
 | State | Verified remote main | This local candidate |
 |---|---|---|
-| Implemented | Existing source at the SHA above | Local integrity repairs and website revision implemented |
-| Tested | Historical exact-base CI success | Focused regressions passed; full candidate verification pending |
-| Independently reviewed | No new review in this task | Pending exact-candidate review |
+| Implemented | Existing source at the SHA above | Original repairs retained; bounded recovery-state repair and editorial/receipt-led visual revision implemented locally |
+| Tested | Historical exact-base CI success | Prior candidate `5ea8f2d` passed 535/535 hosted tests on explicit Node22; changed working source needs new exact-candidate verification |
+| Independently reviewed | No new review in this task | `5ea8f2d` received NEEDS_FIXES for PR traversal coverage and duplicate recovery attempts; current pass unreviewed |
 | Merged | Yes, through `01be538c` | Not merged or pushed |
 | Deployed | Current deployed identity unverified | No; not authorized |
 | Customer accepted | Not established by this task | Not established |
@@ -34,7 +34,7 @@ Observed October 19, 2026:
 
 ## Active objective and finish line
 
-Repair validated same-head currentness/publication coherence, protected rename-origin classification, premature provider-history reconciliation and receipt-route authorization inconsistency. Reconcile retained-source disclosures. Improve the existing website's clarity and evidence-first evaluation path without changing pricing or marketing proposed features as shipped.
+Repair validated same-head currentness/publication coherence, protected rename-origin classification, premature provider-history reconciliation and receipt-route authorization inconsistency. Retain source disclosures. Ryan reauthorized a bounded review/repair of recovery traversal generations and individual application/request attempts after the `5ea8f2d` rejection, plus a distinct editorial/receipt-led website visual revision. Original fixes remain; no new product features, marketing expansion or pricing changes are included. Pin only after all workers stop, then run exact-source suites and a fresh adversarial review.
 
 Preserve issued verdict, present currentness, enforcing policy and supported landing relationship as distinct facts. A new commit SHA does not itself establish untested content. Tree equality is not proof of actual runner checkout, equal execution conditions, behavioral correctness or permission to skip CI.
 

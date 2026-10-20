@@ -17,24 +17,28 @@
 <section class="hero" id="prove" aria-labelledby="hero-title">
 <div class="hero-copy">
 <p class="eyebrow">MERGE INTEGRITY / GITHUB-NATIVE</p>
-<h1 id="hero-title">Evidence for <span class="gold">the code that landed.</span></h1>
+<h1 id="hero-title">Evidence for <span>the code that landed.</span></h1>
+</div><div class="hero-introduction">
 <p class="lead">Connect checks, approvals and repository rules to the exact merge candidate. See what changed, what landed, and what the evidence cannot establish.</p>
 <div class="hero-actions"><a class="primary-cta" href="/proof/examples/">Inspect an example receipt <span aria-hidden="true">→</span></a><a class="text-link" href="#connect-real">Start a 7-day trial</a></div>
 <p class="cta-shadow">Examples use synthetic data. No login or repository access.</p>
 </div>
 <aside class="receipt-card opening-receipt" id="receipt" aria-labelledby="receipt-title">
 <div class="receipt-top"><span>PUBLIC EXAMPLE / SYNTHETIC</span><span>NOT LIVE</span></div>
+<div class="record-heading">
 <h2 id="receipt-title">The evaluated tree landed.</h2>
 <p class="receipt-subject">example/acme-service · PR #101</p>
+</div><div class="record-evidence">
 <div class="tree-excerpt"><div><span>Evaluated tree</span><code>b1ec95450a69</code></div><span aria-hidden="true">=</span><div><span>Landed tree</span><code>b1ec95450a69</code></div></div>
 <a class="text-link receipt-inspect" href="/proof/examples/verified">Inspect this VERIFIED example →</a>
-<dl>
+</div><div class="record-facts"><dl>
 <div><dt>Verdict when issued</dt><dd><code>VERIFIED</code></dd></div>
 <div><dt>Currentness</dt><dd>CURRENT at retained observation<span>Merge-decision state: UNAVAILABLE.</span></dd></div>
 <div><dt>Policy</dt><dd>Enforcement not established</dd></div>
 <div><dt>Landing</dt><dd><code>VERIFIED</code><span>Matching content, with supporting evidence.</span></dd></div>
 </dl>
 <a class="text-link" href="/proof/examples/not-proven">Inspect a NOT_PROVEN example →</a>
+</div>
 </aside>
 </section>
 <section class="comparison" aria-label="Where Merge Proof fits">
@@ -52,6 +56,7 @@
 </section>
 <section class="page-section" id="how-merge-proof-knows" aria-labelledby="mechanism-title">
 <div class="section-heading"><div><p class="eyebrow">HOW IT WORKS</p><h2 id="mechanism-title">Follow the evidence through the merge.</h2></div></div>
+<details class="disclosure method-reference"><summary>Candidate, evidence, currentness and landing</summary>
 <ol class="evidence-sequence" id="how-it-works">
 <li><h3>Identify the candidate</h3><p>Bind the repository, PR, head, base and provider merge target to exact commit and tree identities.</p></li>
 <li><h3>Establish what supports it</h3><p>Collect available checks, workflow execution records, approvals and applicable repository rules. Missing or unsupported evidence stays explicit.</p></li>
@@ -60,15 +65,18 @@
 </ol>
 <p class="scope-note">GitHub merge queues already test combined changes. Merge Proof adds an inspectable evidence chain; it does not replace the queue or assume your merges are untested. Base movement alone is not a bug or an automatic failed verdict.</p>
 <p class="small">GitHub remains the source for provider checks, reviews and merge records. Git identities identify content; they do not independently authenticate those provider facts. A receipt is a point-in-time observation, not an atomic GitHub merge decision or a guarantee about a future merge.</p>
+</details>
 </section>
 <section class="page-section" id="what-it-checks" aria-labelledby="checks-title">
 <p class="eyebrow">SCOPE AND LIMITS</p><h2 id="checks-title">Evidence you can inspect, gaps you can act on.</h2>
 <p>Merge Proof is deterministic merge integrity, not an AI reviewer, security scanner or CI replacement.</p>
+<details class="disclosure"><summary>Checks, approvals, rules and currentness</summary>
 <dl class="scope-list">
 <div><dt>Checks and execution</dt><dd>Distinguishes accepted check conclusions from matching workflow, job and step execution records. Status-only success does not prove execution. Even execution records do not prove checkout contents or semantic test coverage.</dd></div>
 <div><dt>Approvals and rules</dt><dd>Uses available classic protection and applicable rulesets together. Old-head approvals are insufficient under the implemented policy. Code-owner coverage, required teams, review-thread resolution and other unsupported requirements remain explicit gaps.</dd></div>
 <div><dt>Currentness and history</dt><dd>Preserves the issued receipt and records refreshed observations separately. Provider unavailability is not proof of currentness or absence. Landing and merge records describe what could be bound, not GitHub's decision at the exact merge instant.</dd></div>
 </dl>
+</details>
 <details class="disclosure"><summary>Technical boundaries and portable evidence</summary><div class="detail-body"><p>Two matching bounded observations detect observed races, but the GitHub API is not an atomic snapshot. Exact candidate, check producer and attempt identities matter. Missing validation requirements do not become automatic VERIFIED. Unsupported queue requirements, including ALLGREEN other-entry evidence, cannot be waived.</p><p>HTML and JSON receipts expose the evidence and gaps. Eligible receipts can carry portable replay artifacts. Unsigned replay checks consistency over supplied inputs; it does not establish packet provenance or independently authenticate GitHub facts. Git-derived facts can be recomputed against a separately acquired repository copy.</p><p>Merge Proof does not guarantee correctness or security. The free local CLI and Action inspect local Git evidence; they do not collect the hosted service's CI execution, approvals or remote-ref evidence.</p><a href="https://github.com/ohcaygo/merge-proof/blob/main/github/README.md#what-the-proof-means">Read the hosted evidence policy on GitHub →</a></div></details>
 </section>
 <section class="page-section" id="plain-english" aria-labelledby="learn-title">

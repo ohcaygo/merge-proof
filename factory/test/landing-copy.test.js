@@ -90,7 +90,7 @@ test("public offer, navigation anchors and semantic landmarks remain intact", ()
   assert.doesNotMatch(content, /Level.?3 (?:certified|complete)|saves? \d+%|trusted by \d+/i);
 });
 
-test("homepage-specific responsive layout does not restyle hosted example surfaces", () => {
+test("homepage record layout rules remain scoped within the shared public theme", () => {
   const css = read("brand.css");
   assert.match(css, /\.home-page \.example-list/);
   assert.match(css, /\.home-page \.opening-receipt/);
@@ -128,6 +128,33 @@ test("public example overview uses grounded framing without changing synthetic o
     assert.equal(examples.project(kind).relationship.verdict,
       kind === "not-proven" ? "NOT_PROVEN" : kind.toUpperCase());
   }
+});
+
+test("editorial opening presents a full technical record and keeps authorization facts visible", () => {
+  const html = read("index.html");
+  assert.match(html, /class="record-heading"/);
+  assert.match(html, /class="record-evidence"/);
+  assert.match(html, /class="record-facts"/);
+  assert.match(html, /<details class="disclosure method-reference"><summary>Candidate, evidence, currentness and landing/);
+  const access = html.slice(html.indexOf('id="connect-real"'), html.indexOf('id="pricing"'));
+  const visible = text(access.replace(/<details\b[\s\S]*?<\/details>/g, ""));
+  for (const phrase of ["Contents read is real source access", "private partial bare mirror", "not automatically erased on uninstall", "no customer-selectable deletion deadline", "no Contents write authority"]) {
+    assert.ok(visible.includes(phrase), `material authorization fact remains visible: ${phrase}`);
+  }
+  const css = read("brand.css");
+  assert.match(css, /font-family:.*Georgia/);
+  assert.doesNotMatch(css, /(?:linear|radial)-gradient|backdrop-filter|box-shadow/);
+});
+
+test("invited entry discloses retained Git objects consistently without changing its offer", () => {
+  const html = read("early-access.html"), copy = text(html);
+  assert.match(copy, /private partial bare mirror/);
+  assert.match(copy, /exact Git objects and receipt refs/);
+  assert.match(copy, /not automatically erased on uninstall/);
+  assert.doesNotMatch(copy, /does not clone your repository tree/);
+  assert.match(copy, /10 calendar days of hosted, report-only access/);
+  assert.match(copy, /ordinary public offer of 7 days/);
+  assert.match(copy, /does not execute customer code or send source contents to an AI provider/);
 });
 
 test("existing landing attribution keeps only coarse channels and legacy routing", () => {

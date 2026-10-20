@@ -226,6 +226,146 @@ for (const [event, payload, hosted] of genericEvents) test(`F3 requested duplica
   a.equal(s.data.deliveryHealth, "RECONCILED");
 });
 
+const recoveryPR = { ...scope, pull_request: { number: 1, state: "open", head: { sha: H } } };
+for (const [event, payload] of [["pull_request", recoveryPR], genericEvents[0]]) {
+  test(`R1 ${event} in-flight application requires a subsequent fresh traversal`, async t => {
+    const h = harness(t), s = h.service; h.event(event);
+    const out = await s.run("fixture/public", 1, { installationId: 2 });
+    const issued = JSON.stringify(out.receipt);
+    h.onPost(() => h.receive(payload));
+    await s.reconcileDeliveries();
+    a.equal(s.data.deliveryHealth, "RECOVERY_PENDING");
+    a.equal(s.data.deliveryScanAt, 0);
+    a.equal(s.data.deliveryScan, undefined);
+    a.notEqual(s.mergeTruth(s.data.receipts[out.receipt.receiptId]).reconciliation.coverage, "COMPLETE");
+    h.onPost(null);
+    await s.reconcileDeliveries();
+    a.equal(s.data.deliveryHealth, "RECONCILED");
+    a.equal(JSON.stringify(s.data.receipts[out.receipt.receiptId].receipt), issued);
+    a.equal(Boolean(s.data.deliveryRecoveries["requested-event"]), event === "pull_request");
+  });
+  test(`R1 ${event} page shift after application and restart cannot reuse the old page-two cursor`, async t => {
+    const h = harness(t), s = h.service; h.event(event);
+    const out = await s.run("fixture/public", 1, { installationId: 2 });
+    const old = Array.from({ length: 100 }, (_, i) => ({ id: i + 1,
+      guid: i ? `ping-${i}` : "requested-event", event: i ? "ping" : event, status_code: 200 }));
+    const reads = [], posts = [];
+    h.onPost(() => { posts.push("request"); });
+    h.onGet = url => { reads.push(url); return url.includes("page=2") ? new Response(null, { status: 503 }) :
+      Response.json(old, { headers: { link: '<https://api.github.com/app/hook/deliveries?per_page=100&page=2>; rel="next"' } }); };
+    await s.reconcileDeliveries();
+    a.ok(s.data.deliveryScan?.endpoint.includes("page=2"));
+    await h.receive(payload);
+    // A real page-one event is now shifted ahead of the unchanged old tail.
+    const restored = h.restart();
+    h.onGet = url => { reads.push(url); return url.includes("page=2") ? Response.json([old.at(-1)]) :
+      Response.json([{ id: 102, guid: "new-unreceived", event: "push", status_code: 200 }, ...old.slice(0, 99)],
+        { headers: { link: '<https://api.github.com/app/hook/deliveries?per_page=100&page=2>; rel="next"' } }); };
+    await restored.reconcileDeliveries();
+    a.ok(restored.data.deliveryRecoveryPending["new-unreceived"], "fresh page one must discover the new missing event");
+    a.equal(posts.length, 2);
+    a.ok(!reads[2].includes("page=2"), "restart must read page one");
+    a.equal(restored.data.deliveryScan, undefined);
+    a.equal(restored.data.events["new-unreceived"], undefined);
+    a.equal(restored.mergeTruth(restored.data.receipts[out.receipt.receiptId]).reconciliation.coverage, "INCOMPLETE");
+    a.equal(restored.data.deliveryHealth, "RECOVERY_PENDING");
+  });
+}
+
+for (const postStatus of [202, 503]) test(`R2 historical confirmation cannot discharge new request ${postStatus} across restart`, async t => {
+  const h = harness(t), s = h.service;
+  await s.reconcileDeliveries(); await h.receive(recoveryPR); await s.reconcileDeliveries();
+  const historical = structuredClone(s.data.deliveryRecoveries["requested-event"]);
+  a.equal(historical.confirmed, true);
+  const restored = h.restart(); h.rowStatus(500); h.postStatus(postStatus);
+  await restored.reconcileDeliveries(Date.now() + 5 * 3600000);
+  a.ok(restored.data.deliveryRecoveryPending["requested-event"], "new POST without fresh application cannot reuse historical confirmation");
+  a.deepEqual(restored.data.deliveryRecoveries["requested-event"], historical);
+  a.notEqual(restored.data.deliveryHealth, "RECONCILED");
+  const again = h.restart();
+  a.ok(again.data.deliveryRecoveryPending["requested-event"]);
+  await a.rejects(h.receive(recoveryPR, "pull_request", "requested-event", false));
+  await a.rejects(h.receive({ ...recoveryPR, pull_request: { state: "open", number: -1 } }));
+  a.ok(again.data.deliveryRecoveryPending["requested-event"], "failed duplicate reapplication cannot discharge");
+  await h.receive(recoveryPR);
+  a.equal(again.data.deliveryRecoveryPending["requested-event"], undefined);
+  a.equal(again.data.deliveryRecoveries["requested-event"].confirmed, postStatus === 202);
+  h.rowStatus(200); h.postStatus(202);
+  await again.reconcileDeliveries();
+  a.equal(again.data.deliveryHealth, "RECONCILED");
+  a.equal((await h.receive(recoveryPR)).duplicate, true);
+});
+
+for (const [event, payload] of [["pull_request", recoveryPR], genericEvents[0]]) {
+  for (const postStatus of [202, 503]) {
+    for (const retry of [false, true]) test(`R2 ${event} ${retry ? "repeat" : "initial"} in-flight application with POST ${postStatus} preserves receipt versus acceptance`, async t => {
+      const h = harness(t), s = h.service; h.event(event);
+      if (retry) {
+        await s.reconcileDeliveries();
+        a.equal(s.data.deliveryRecoveryPending["requested-event"].state, "ACCEPTED");
+      }
+      h.postStatus(postStatus);
+      let applied = 0;
+      h.onPost(async () => { await h.receive(payload); applied++; });
+      await s.reconcileDeliveries(Date.now() + (retry ? 5 * 3600000 : 0));
+      a.equal(applied, 1);
+      a.equal(s.data.deliveryRecoveryPending["requested-event"], undefined, "POST response cannot recreate genuinely applied work");
+      a.equal(s.data.deliveryScan, undefined);
+      a.notEqual(s.data.deliveryHealth, "RECONCILED");
+      a.equal(Boolean(s.data.deliveryRecoveries["requested-event"]?.confirmed), event === "pull_request" && postStatus === 202,
+        "failed current POST cannot inherit earlier request acceptance");
+      const restored = h.restart();
+      a.equal(restored.data.deliveryRecoveryPending["requested-event"], undefined);
+      a.equal((await h.receive(payload)).duplicate, true);
+      h.onPost(null); h.rowStatus(200);
+      await restored.reconcileDeliveries(Date.now() + 10 * 3600000);
+      a.equal(restored.data.deliveryHealth, "RECONCILED");
+    });
+  }
+  test(`R2 ${event} partial duplicate reapplication preserves obligation and retries after restart`, async t => {
+    const h = harness(t), s = h.service; h.event(event);
+    const out = await s.run("fixture/public", 1, { installationId: 2 });
+    const issued = JSON.stringify(out.receipt);
+    await s.reconcileDeliveries(); await h.receive(payload); await s.reconcileDeliveries();
+    h.rowStatus(500);
+    await s.reconcileDeliveries(Date.now() + 5 * 3600000);
+    const pending = structuredClone(s.data.deliveryRecoveryPending["requested-event"]);
+    a.ok(pending);
+    // Fail after real routing has already made partial mutable changes. An old
+    // GUID/application marker is not proof that this reapplication completed.
+    const route = s.routeEvent.bind(s);
+    s.routeEvent = (...args) => { route(...args); throw Error("fixture partial application"); };
+    await a.rejects(h.receive(payload), /fixture partial application/);
+    a.deepEqual(s.data.deliveryRecoveryPending["requested-event"], pending);
+    const restored = h.restart();
+    a.deepEqual(restored.data.deliveryRecoveryPending["requested-event"], pending);
+    a.equal((await h.receive(payload)).accepted, true);
+    a.equal(restored.data.deliveryRecoveryPending["requested-event"], undefined);
+    a.equal(JSON.stringify(restored.data.receipts[out.receipt.receiptId].receipt), issued);
+    a.equal((await h.receive(payload)).duplicate, true);
+    h.rowStatus(200);
+    await restored.reconcileDeliveries();
+    a.equal(restored.data.deliveryHealth, "RECONCILED");
+  });
+  test(`R1 ${event} delayed receipt during GET cannot resurrect an interrupted cursor`, async t => {
+    const h = harness(t), s = h.service; h.event(event);
+    await s.reconcileDeliveries();
+    h.onGet = async url => {
+      if (url.includes("page=2")) return new Response(null, { status: 503 });
+      await h.receive(payload);
+      return Response.json([{ id: 22, guid: "requested-event", event, status_code: 200 }],
+        { headers: { link: '<https://api.github.com/app/hook/deliveries?per_page=100&page=2>; rel="next"' } });
+    };
+    await s.reconcileDeliveries(Date.now() + 5 * 3600000);
+    a.equal(s.data.deliveryScan, undefined);
+    a.equal(s.data.deliveryRecoveryPending["requested-event"], undefined);
+    a.notEqual(s.data.deliveryHealth, "RECONCILED");
+    const restored = h.restart(); h.onGet = null;
+    await restored.reconcileDeliveries(Date.now() + 10 * 3600000);
+    a.equal(restored.data.deliveryHealth, "RECONCILED");
+  });
+}
+
 test("F3 generic receipt during interrupted traversal discards the old cursor across restart", async t => {
   const h = harness(t), s = h.service; h.event("push");
   h.onGet = url => url.includes("page=2") ? new Response(null, { status: 503 }) :

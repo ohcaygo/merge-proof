@@ -85,10 +85,17 @@ test("delivery reconciliation follows cursor pages, redelivers missed GUID and r
   s.deliveryClient=()=>new Client({fetchImpl:async(url,init)=>{
     const u=new URL(url);calls.push([u.pathname,init.method]);
     if(init.method==='POST') {await h.hook('pull_request',{pull_request:{number:1,state:'open',head:{sha:H}}},'missed-guid');return new Response(null,{status:202});}
-    return u.searchParams.has('cursor') ? Response.json([{id:2,guid:'missed-guid',event:'pull_request',status_code:500}]) : new Response('[]',{headers:{link:'<https://api.github.com/app/hook/deliveries?cursor=next&per_page=100>; rel="next"'}});
+    return u.searchParams.has('cursor') ? Response.json([{id:2,guid:'missed-guid',event:'pull_request',status_code:s.data.events['missed-guid']?200:500}]) : new Response('[]',{headers:{link:'<https://api.github.com/app/hook/deliveries?cursor=next&per_page=100>; rel="next"'}});
   }});
-  await s.reconcileDeliveries();a.equal(s.data.deliveryHealth,'RECONCILED');a.ok(s.data.events['missed-guid']);a.equal(s.data.queue.length,1);
+  // R1: this traversal started before application. The former RECONCILED
+  // assertion admitted false completion; receipt alone cannot cover page one.
+  await s.reconcileDeliveries();a.equal(s.data.deliveryHealth,'RECOVERY_PENDING');a.ok(s.data.events['missed-guid']);a.equal(s.data.queue.length,1);
+  a.equal(s.data.deliveryScanAt,0);a.equal(s.data.deliveryScan,undefined);
   a.equal(s.data.deliveryRecoveries['missed-guid'].confirmed,true);
+  const beforeFresh=calls.length;
+  await s.reconcileDeliveries();a.equal(s.data.deliveryHealth,'RECONCILED');
+  a.deepEqual(calls.slice(beforeFresh),[['/app/hook/deliveries','GET'],['/app/hook/deliveries','GET']]);
+  a.equal(calls.filter(x=>x[1]==='POST').length,1);
   await s.drain();const row=Object.values(s.data.receipts)[0],projected=s.mergeTruth(row);
   a.equal(projected.reconciliation.state,'RECOVERED',JSON.stringify(projected.reconciliation));a.equal(projected.relationship.verdict,'NOT_PROVEN');
   a.ok(Date.parse(projected.reconciliation.asOf)>=Date.parse(projected.reconciliation.recovered.observedAt));
