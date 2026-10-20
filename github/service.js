@@ -62,6 +62,8 @@ class ProofService {
     this.data.pushObservations ||= {};
     this.data.deliveryRecoveryPending ||= {};
     this.data.deliveryRecoveries ||= {};
+    if (this.data.deliveryHealth === "RECONCILED" && Object.keys(this.data.deliveryRecoveryPending).length)
+      this.data.deliveryHealth = "RECOVERY_PENDING";
     this.data.frontierMetrics ||= {reconciliationSupersessions:0,ruleSuiteDisagreements:0};
     for (const row of Object.values(this.data.receipts)) row.observationId = this.observe(row.receipt);
 
@@ -289,6 +291,7 @@ class ProofService {
       );
       const prior = Object.values(this.data.receipts).filter(r => r.receipt.identity.repositoryId === receipt.identity.repositoryId && r.receipt.identity.pr === receipt.identity.pr).pop();
       receipt.supersedes = prior ? { receiptId: prior.receipt.receiptId, digest: require("./common").hash(prior.receipt) } : null;
+      this.invalidateObservedReceipts(capture);
       const { receipt: bundledReceipt, ...artifacts } = await require("./bundle").create(receipt, { signer: this.receiptSigner, keys: this.receiptSigner?.keys || null });
       const current = freshness(receipt, capture);
       if (require("./common").hash(policyBefore[capture.identity.repositoryId] || null) !== require("./common").hash(this.policyFor(capture.identity.repositoryId)) || eventStart.some(e => e.repo === repo.toLowerCase() && currentness.touches(e.event, e.payload, capture).length))
@@ -323,18 +326,6 @@ class ProofService {
         installationId,
         metering,
       };
-      for (const row of Object.values(this.data.receipts))
-        if (
-          row.receipt.receiptId !== receipt.receiptId &&
-          row.receipt.identity.repositoryId === receipt.identity.repositoryId &&
-          row.receipt.identity.pr === receipt.identity.pr &&
-          row.receipt.identity.headSha !== receipt.identity.headSha
-        )
-          row.current = {
-            state: "STALE",
-            reason: "PR_HEAD_CHANGED",
-            next: "RE-PROOF REQUIRED",
-          };
       if (
         collectionComplete &&
         current.state === "CURRENT" &&
@@ -450,8 +441,28 @@ class ProofService {
       } catch {} // Revoked installations stay stopped.
     }
   }
+  invalidateObservedReceipts(capture) {
+    // Collection and refresh share the same invalidation boundary. Persist
+    // clearance/retraction changes before signing or other fallible awaits.
+    let invalidated = false;
+    for (const row of Object.values(this.data.receipts)) {
+      if (row.receipt.identity.repositoryId !== capture.identity.repositoryId ||
+          row.receipt.identity.pr !== capture.identity.pr) continue;
+      const observed = freshness(row.receipt, capture);
+      if (observed.state === "CURRENT") continue;
+      // Do not revive already-invalidated historical proof on a later run.
+      if (row.current.state !== "STALE") row.current = observed;
+      row.gate = this.gateFor(row.receipt, row.current);
+      this.queueRetraction(row);
+      invalidated = true;
+    }
+    if (invalidated) this.save();
+  }
   queueRetraction(row) {
-    if(this.config.publishChecks&&(row.checkIds?.length||row.checkId)&&!this.data.retractionQueue.some(q=>q.receiptId===row.receipt.receiptId))
+    const ids = row.checkIds?.length ? row.checkIds : row.checkId ? [row.checkId] : [];
+    const conclusion = policies.staleConclusion(this.policyFor(row.receipt.identity.repositoryId));
+    if (this.config.publishChecks && ids.some(id => row.retractedChecks?.[id] !== conclusion) &&
+        !this.data.retractionQueue.some(q => q.receiptId === row.receipt.receiptId))
       this.data.retractionQueue.push({receiptId:row.receipt.receiptId,repo:row.receipt.identity.repository,repositoryId:row.receipt.identity.repositoryId,installationId:row.installationId,pr:row.receipt.identity.pr});
   }
   async read(id, token, { refresh = false } = {}) {
@@ -477,6 +488,7 @@ class ProofService {
                   : null,
             },
           );
+          this.invalidateObservedReceipts(c);
           row.current = freshness(row.receipt, c);
           if (eventStart.some(e => e.repo === row.receipt.identity.repository.toLowerCase() && currentness.touches(e.event, e.payload, c).length))
             row.current = { state: "STALE", reason: "EVENT_DURING_REFRESH" };
@@ -486,6 +498,7 @@ class ProofService {
               ? { ...row.current, refreshState: "UNAVAILABLE" }
               : freshness(row.receipt, null);
         }
+        row.gate = this.gateFor(row.receipt, row.current);
         if(row.current.state!=="CURRENT")this.queueRetraction(row);
         this.save();
       });
@@ -733,8 +746,12 @@ class ProofService {
           observedAt: new Date().toISOString(),
           confirmed: pendingRecovery.state === "ACCEPTED",
         };
-        if (pendingRecovery.state === "ACCEPTED")
+        if (pendingRecovery.state === "ACCEPTED") {
           delete this.data.deliveryRecoveryPending[id];
+          // Receiving the event is distinct from a completed traversal. Prompt
+          // a new pass rather than treating the old scan time as new coverage.
+          if (this.data.deliveryHealth === "RECOVERY_PENDING") this.data.deliveryScanAt = 0;
+        }
       }
     }
     this.save();
@@ -806,9 +823,11 @@ class ProofService {
   }
   async reconcileDeliveries(now = Date.now()) {
     if (!this.config.appId || !this.config.privateKey || (this.data.deliveryScanAt && now - this.data.deliveryScanAt < 4 * 3600000)) return;
-    for (const [guid, recovery] of Object.entries(this.data.deliveryRecoveryPending))
+    for (const recovery of Object.values(this.data.deliveryRecoveryPending))
       if (Date.parse(recovery.requestedAt || "") < now - 30 * 86400000)
-        delete this.data.deliveryRecoveryPending[guid];
+        // Provider retention ending cannot establish that a missed event was
+        // received. Keep an explicit unresolved marker instead of erasing it.
+        recovery.state = "EXPIRED";
     try {
       const client = this.deliveryClient();
       const scan = this.data.deliveryScan || { endpoint: "/app/hook/deliveries?per_page=100", seen: [] };
@@ -863,7 +882,9 @@ class ProofService {
       delete this.data.deliveryScan;
       // The accepted traversal covers through completion, not merely its start.
       // Preserve an explicitly later scheduler time used by deterministic runs.
-      this.data.deliveryScanAt = Math.max(now, Date.now()); this.data.deliveryHealth = "RECONCILED";
+      this.data.deliveryScanAt = Math.max(now, Date.now());
+      this.data.deliveryHealth = Object.keys(this.data.deliveryRecoveryPending).length
+        ? "RECOVERY_PENDING" : "RECONCILED";
     } catch { this.data.deliveryHealth = "UNAVAILABLE"; this.data.deliveryScanAt = now - 4 * 3600000 + 300000; }
     this.save();
   }
@@ -926,16 +947,24 @@ class ProofService {
     for (const row of Object.values(this.data.receipts)) {
       if ((receiptId && row.receipt.receiptId !== receiptId) || row.receipt.identity.repositoryId !== repositoryId ||
           (pr !== null && row.receipt.identity.pr !== pr) || !["STALE", "UNAVAILABLE"].includes(row.current.state)) continue;
-      for (const id of row.checkIds?.length ? row.checkIds : row.checkId ? [row.checkId] : []) {
+      const ids = row.checkIds?.length ? row.checkIds : row.checkId ? [row.checkId] : [];
+      const gate = this.gateFor(row.receipt, row.current);
+      let rowFailed = false;
+      for (const id of ids) {
         try {
           await client.request(`/repos/${row.receipt.identity.repository}/check-runs/${id}`, {
             method: "PATCH", body: { status: "completed",
-              conclusion: policies.staleConclusion(this.policyFor(repositoryId)),
+              conclusion: gate.conclusion,
               output: { title: row.current.state === "STALE" ? "STALE — RE-PROOF REQUIRED" : "Evidence refresh pending",
                 summary: `Historical ${row.receipt.verdict} remains available. Relevant evidence changed; refresh is pending.` }
             }
           });
-        } catch { failed = true; row.checkDelivery = "UNAVAILABLE"; }
+          (row.retractedChecks ||= {})[id] = gate.conclusion;
+        } catch { failed = true; rowFailed = true; row.checkDelivery = "UNAVAILABLE"; }
+      }
+      if (ids.length && !rowFailed) {
+        row.publishedGate = gate;
+        row.publishedAt = new Date().toISOString();
       }
     }
     this.save();

@@ -81,12 +81,11 @@ test("base-moved illustration is the exact coherent landing mismatch projected b
   a.ok(html.indexOf("EXAMPLE MERGE-PROOF RECEIPT") < html.indexOf("Merge truth: FAIL"));
 });
 
-test("public mechanism explains provider evidence, Git identity, and all three outcomes without trust overclaim", () => {
-  const homepage = fs.readFileSync(path.join(__dirname, "../../factory/public/index.html"), "utf8");
+test("examples overview mechanism explains provider evidence, Git identity, and all three outcomes without trust overclaim", () => {
   const overview = examples.overview();
   const evaluated = examples.SHAS.evaluatedTree.slice(0, 12);
   const landed = examples.SHAS.differentTree.slice(0, 12);
-  for (const html of [homepage, overview]) {
+  for (const html of [overview]) {
     for (const phrase of [
       "HOW MERGE PROOF KNOWS",
       "Provider evidence",
@@ -178,9 +177,8 @@ test("buyer copy states current pricing, trial, report-only, permissions, and tr
   a.match(permissions, /not automatically erased/i);
 });
 
-test("five-question security summary preserves the audited access, persistence, AI, and write boundaries", () => {
-  const homepage = fs.readFileSync(path.join(__dirname, "../../factory/public/index.html"), "utf8");
-  for (const html of [homepage, examples.overview(), examples.securitySummaryHtml]) {
+test("five-question example security summary preserves the audited access, persistence, AI, and write boundaries", () => {
+  for (const html of [examples.overview(), examples.securitySummaryHtml]) {
     for (const question of [
       "Can Merge Proof access source?",
       "Do you store my source?",
@@ -195,8 +193,64 @@ test("five-question security summary preserves the audited access, persistence, 
     a.match(html, /Checks read\/write lets it publish or update its receipt Check/i);
     a.match(html, /does not grant repository-file write authority/i);
   }
-  for (const html of [homepage, examples.overview(), examples.permissionsHtml])
+  for (const html of [examples.overview(), examples.permissionsHtml])
     a.match(html, /FULL PERMISSION &amp; DATA-HANDLING DETAILS/i);
+});
+
+test("homepage evidence-first composition preserves fixture provenance, uncertainty, and example access before connection", () => {
+  const homepage = fs.readFileSync(path.join(__dirname, "../../factory/public/index.html"), "utf8");
+  const text = homepage.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ");
+  const fixture = examples.project("verified");
+  const excerpt = homepage.match(/<aside\b[^>]*id="receipt"[\s\S]*?<\/aside>/)?.[0] || "";
+  a.match(excerpt, /SYNTHETIC/);
+  a.match(excerpt, /NOT LIVE/);
+  a.match(excerpt, /PR #101/);
+  a.ok(excerpt.includes(fixture.repository.name));
+  a.ok(excerpt.includes(fixture.evaluated.target.tree.slice(0, 12)));
+  a.ok(excerpt.includes(fixture.landing.tree.slice(0, 12)));
+  a.match(excerpt, /<dt>Verdict when issued<\/dt><dd><code>VERIFIED<\/code>/);
+  a.match(excerpt, /<dt>Landing<\/dt><dd><code>VERIFIED<\/code>/);
+  a.match(excerpt, /Currentness/);
+  a.match(excerpt, /Merge-decision state: UNAVAILABLE/);
+  a.match(excerpt, /Enforcement not established/);
+  for (const kind of ["verified", "fail", "not-proven"]) a.ok(homepage.includes(`href="/proof/examples/${kind}"`));
+  a.ok(homepage.indexOf('id="receipt"') < homepage.indexOf('id="connect-real"'));
+  a.match(homepage.match(/class="primary-cta"[^>]*>/)[0], /href="\/proof\/examples\//);
+  a.match(text, /Tree equality alone does not prove that tests ran/);
+  a.match(text, /Git identities identify content; they do not independently authenticate those provider facts/);
+  a.match(text, /merge queues already test combined changes/);
+  a.match(text, /not an atomic GitHub merge decision/);
+});
+
+test("homepage access disclosure preserves all five audited security answers before authorization", () => {
+  const homepage = fs.readFileSync(path.join(__dirname, "../../factory/public/index.html"), "utf8");
+  const start = homepage.indexOf('id="connect-real"');
+  const connect = homepage.indexOf('href="/proof/"', start);
+  a.ok(start >= 0 && connect > start);
+  const access = homepage.slice(start, connect).replace(/<[^>]*>/g, " ").replace(/\s+/g, " ");
+  // Check the five answers, not their former question-card wording/layout.
+  a.match(access, /Contents read is real source access/);
+  a.match(access, /private partial bare mirror/);
+  a.match(access, /retains exact Git objects and receipt refs/);
+  a.match(access, /not incidental API patches or decoded workflow text/);
+  a.match(access, /does not send source contents to an LLM or AI provider/);
+  a.match(access, /no AI model decides the verdict/i);
+  a.match(access, /no Contents write authority/);
+  a.match(access, /cannot push commits, modify files or workflows, merge or close PRs, post PR comments, or change branch protection and rulesets/);
+  a.match(access, /standard App can publish or update its own receipt Check/);
+  a.match(access, /Checks: read and write/);
+  a.match(access, /cannot change repository files/);
+  a.match(access, /Organization members: read/);
+  a.match(access, /no extra OAuth scopes/);
+  a.match(access, /Administration write authority.*constrained.*policy reads/);
+  a.match(access, /not part of this standard connection/);
+  a.match(access, /not automatically erased/);
+  a.match(access, /operational backups/);
+  a.match(access, /no customer-selectable deletion deadline or automatic uninstall purge/);
+  a.match(access, /current installation\/repository access is rechecked/);
+  a.match(access, /observes and reports without blocking your merges/);
+  a.match(access, /previously configured enforcing policies remain enforced/i);
+  a.ok(homepage.slice(start, connect).includes('href="/privacy"'));
 });
 
 test("documented data boundary matches current runtime dependencies and standard App request", () => {

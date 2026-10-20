@@ -198,11 +198,18 @@ async function collectOnce(
       );
       assert(
         x.files.every(
-          (f) => typeof f.filename === "string" && f.filename.length > 0,
+          (f) => typeof f.filename === "string" && f.filename.length > 0 &&
+            ((f.status !== "renamed" && f.previous_filename === undefined) ||
+              (typeof f.previous_filename === "string" && f.previous_filename.length > 0)),
         ),
       );
       return {
-        files: [...new Set(x.files.map((f) => f.filename))].sort(),
+        // A rename touches both endpoints. Keep them in the existing bound
+        // path set so exclusions and protected-boundary classification apply
+        // independently to each, without introducing unbound rename fields.
+        files: [...new Set(x.files.flatMap((f) =>
+          f.previous_filename ? [f.previous_filename, f.filename] : [f.filename],
+        ))].sort(),
         count: x.total_commits,
       };
     };

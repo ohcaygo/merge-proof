@@ -244,3 +244,77 @@
 .brand-page .legal-copy h2 { font-size:1.4rem; line-height:1.3; margin:32px 0 12px; }
 .brand-page .legal-copy ul { padding-left:24px; }
 .brand-page .legal-copy a { text-decoration:underline; }
+
+/* Decide / Learn homepage. Scoped so hosted receipts and examples stay unchanged. */
+.home-page main { max-width:1240px; }
+.home-page .hero { grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); gap:64px; padding:40px 0 56px; align-items:start; }
+.home-page .hero h1 { font-size:clamp(2.8rem,4.3vw,4.1rem); line-height:1.04; margin:0 0 24px; letter-spacing:-.045em; }
+.home-page .hero-copy .eyebrow { margin-bottom:22px; }
+.home-page .lead { font-size:1.06rem; max-width:560px; line-height:1.65; }
+.home-page .hero-actions { display:flex; flex-wrap:wrap; align-items:center; gap:16px 24px; margin-top:28px; }
+.home-page .hero-actions .text-link { display:inline-flex; align-items:center; min-height:44px; font-size:.9rem; }
+.home-page .primary-cta { text-transform:none; font-weight:750; }
+.home-page .opening-receipt { padding:20px; border-radius:6px; }
+.home-page .opening-receipt .receipt-top { padding-bottom:12px; }
+.home-page .opening-receipt h2 { font-size:1.25rem; line-height:1.3; margin:16px 0 8px; letter-spacing:-.025em; }
+.home-page .opening-receipt dl > div { grid-template-columns:1fr 1.4fr; gap:18px; padding:8px 0; }
+.home-page .opening-receipt dd { font-weight:650; }
+.home-page .opening-receipt dd span { display:block; font-weight:400; color:var(--muted); font-size:.75rem; line-height:1.4; margin-top:4px; }
+.home-page .opening-receipt code { color:var(--gold); font-size:.8rem; }
+.home-page .receipt-subject { color:var(--muted); font:.8rem ui-monospace,monospace; overflow-wrap:anywhere; }
+.home-page .tree-excerpt { display:grid; grid-template-columns:1fr 20px 1fr; gap:12px; align-items:center; border-block:1px solid var(--line); padding:12px 0; margin:12px 0 4px; }
+.home-page .tree-excerpt div span { display:block; font-size:.75rem; color:var(--muted); margin-bottom:6px; }
+.home-page .tree-excerpt code { overflow-wrap:anywhere; }
+.home-page .opening-receipt .text-link { display:inline-block; margin-top:10px; font-size:.8rem; line-height:1.6; overflow-wrap:anywhere; }
+.home-page .opening-receipt .receipt-inspect { margin:8px 0 12px; }
+.home-page .example-list { margin-bottom:20px; border-top:1px solid var(--line); }
+.home-page .example-list a { display:grid; grid-template-columns:150px 1fr 20px; gap:24px; align-items:center; padding:22px 0; border-bottom:1px solid var(--line); text-decoration:none; }
+.home-page .example-list a:hover { color:var(--gold); }
+.home-page .example-list code { color:var(--gold); font-size:.85rem; }
+.home-page .example-list span { line-height:1.5; }
+.home-page .evidence-sequence { list-style:none; padding:0; margin:30px 0; counter-reset:evidence; }
+.home-page .evidence-sequence li { display:grid; grid-template-columns:36px minmax(160px,.7fr) 1.5fr; gap:24px; padding:22px 0; margin:0; border-top:1px solid var(--line); }
+.home-page .evidence-sequence li::before { counter-increment:evidence; content:"0" counter(evidence); color:var(--gold); font:.85rem ui-monospace,monospace; padding-top:4px; }
+.home-page .evidence-sequence h3 { margin:0; }
+.home-page .evidence-sequence p { color:var(--muted); margin:0; }
+.home-page .scope-note { padding:22px 0; border-block:1px solid var(--line); }
+.home-page .scope-list { margin:28px 0; }
+.home-page .scope-list > div { grid-template-columns:minmax(160px,.6fr) 1.5fr; padding:22px 0; font-size:1rem; gap:36px; }
+.home-page .scope-list dt { color:#f6f6f4; font-weight:650; }
+.home-page .scope-list dd { color:var(--muted); line-height:1.65; }
+.home-page .scope-list dd strong { color:#f6f6f4; font-weight:600; }
+.home-page .section-lead { max-width:850px; color:var(--muted); }
+.home-page .access-summary { margin-top:32px; }
+.home-page .access-summary > h3 { font-size:1.4rem; }
+.home-page .access-summary > p a { color:var(--gold); }
+.home-page .connect-action { margin-top:28px; }
+.home-page .price-card { border-radius:6px; }
+.home-page .pricing-grid { margin-bottom:24px; }
+@media(max-width:1000px) {
+  .home-page .hero { gap:32px; }
+  .home-page .hero h1 { font-size:2.9rem; }
+  .home-page .opening-receipt dl > div { grid-template-columns:1fr; gap:7px; }
+}
+@media(max-width:760px) {
+  .home-page .site-header { gap:20px; }
+  .home-page .site-header .brand { padding-right:0; }
+  .home-page nav { flex-wrap:wrap; justify-content:flex-start; gap:4px 12px; }
+  .home-page nav .nav-cta { position:static; font-size:.8rem; padding:11px 12px; }
+  .home-page nav a { min-height:44px; display:inline-flex; align-items:center; }
+  .home-page .hero { grid-template-columns:1fr; gap:32px; padding:36px 0; }
+  .home-page .hero h1 { font-size:clamp(2.5rem,9vw,3.5rem); }
+  .home-page .hero-actions { gap:10px; margin-top:22px; }
+  .home-page .hero-actions .text-link { justify-content:center; width:100%; }
+  .home-page .opening-receipt { padding:22px; }
+  .home-page .opening-receipt .text-link { min-height:44px; display:flex; align-items:center; }
+  .home-page .opening-receipt dl > div { grid-template-columns:minmax(100px,.8fr) 1.2fr; gap:14px; }
+  .home-page .comparison { grid-template-columns:1fr; gap:22px; }
+  .home-page .example-list a { grid-template-columns:1fr 20px; gap:8px 12px; }
+  .home-page .example-list a code { grid-column:1/-1; }
+  .home-page .evidence-sequence li { grid-template-columns:28px 1fr; gap:10px 16px; }
+  .home-page .evidence-sequence li p { grid-column:2; }
+  .home-page .scope-list > div { grid-template-columns:1fr; gap:8px; }
+}
+@media(max-width:380px) {
+  .home-page .opening-receipt dl > div { grid-template-columns:1fr; gap:7px; }
+}

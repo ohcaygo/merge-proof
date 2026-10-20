@@ -135,6 +135,9 @@ function createServer(factory, proofService = null) {
           "/app.js",
           "/landing.js",
           "/legacy",
+          "/privacy",
+          "/terms",
+          "/early-access",
           "/style.css",
           "/brand.css",
           "/ohcaygo-mark.png",
@@ -152,7 +155,9 @@ function createServer(factory, proofService = null) {
                   ? "index.html"
                   : url.pathname === "/legacy"
                     ? "legacy.html"
-                    : url.pathname.slice(1),
+                    : ["/privacy", "/terms", "/early-access"].includes(url.pathname)
+                      ? url.pathname.slice(1) + ".html"
+                      : url.pathname.slice(1),
               );
         res.writeHead(200, { "Content-Type": types[path.extname(file)] });
         fs.createReadStream(file).pipe(res);

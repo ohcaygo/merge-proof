@@ -123,7 +123,9 @@ test('live-sized delivery IDs survive parsing, pagination, and redelivery exactl
     if(u.searchParams.has('cursor'))return new Response('[{"id":3843641202479988736,"guid":"missed-large-id","event":"pull_request","status_code":200}]');
     return new Response('[{"id":1,"guid":"ping","event":"ping","status_code":200}]',{headers:{link:'<https://api.github.com/app/hook/deliveries?cursor=next&per_page=100>; rel="next"'}});
   }});
-  await s.reconcileDeliveries();a.equal(s.data.deliveryHealth,'RECONCILED');a.equal(calls.filter(x=>x[1]==='POST').length,1);
+  // Exact identity and HTTP acceptance are proven; webhook receipt is not.
+  await s.reconcileDeliveries();a.equal(s.data.deliveryHealth,'RECOVERY_PENDING');a.equal(calls.filter(x=>x[1]==='POST').length,1);
+  a.equal(s.data.deliveryRecoveryPending['missed-large-id'].state,'ACCEPTED');
 });
 for(const id of [null,0,-1,1.5,3843641202479988700,'../attempts','1e20','999999999999999999999'])
  test(`malformed delivery identity cannot report reconciled (${id})`,async t=>{
@@ -160,7 +162,8 @@ test("bounded delivery reconciliation resumes its saved cursor after restart",as
   a.equal(s.data.deliveryHealth,'UNAVAILABLE');a.equal(reads.length,100);a.equal(calls.length,1);
   const restored=new ProofService({store:h.store,config:s.config,deliveryClient});
   await restored.reconcileDeliveries(Date.now()+300001);
-  a.equal(restored.data.deliveryHealth,'RECONCILED');a.equal(reads.at(-1),100);a.equal(calls.length,1);a.equal(restored.data.deliveryScan,undefined);
+  a.equal(restored.data.deliveryHealth,'RECOVERY_PENDING');a.equal(reads.at(-1),100);a.equal(calls.length,1);a.equal(restored.data.deliveryScan,undefined);
+  a.equal(restored.data.deliveryRecoveryPending['one-missing-event'].state,'ACCEPTED');
 });
 test("delivery reconciliation does not skip a failed request on its saved page",async t=>{
   const h=harness(t),s=h.service;let fail=true,posts=0;s.config.appId=42;s.config.privateKey='fixture';
@@ -170,7 +173,8 @@ test("delivery reconciliation does not skip a failed request on its saved page",
     return Response.json([{id:1,guid:'already-requested',event:'push',status_code:200},{id:2,guid:'still-missing',event:'push',status_code:200}]);
   }});
   await s.reconcileDeliveries();a.equal(s.data.deliveryHealth,'UNAVAILABLE');a.equal(posts,1);
-  fail=false;await s.reconcileDeliveries(Date.now()+300001);a.equal(s.data.deliveryHealth,'RECONCILED');a.equal(posts,2);
+  fail=false;await s.reconcileDeliveries(Date.now()+300001);a.equal(s.data.deliveryHealth,'RECOVERY_PENDING');a.equal(posts,2);
+  a.equal(s.data.deliveryRecoveryPending['still-missing'].state,'ACCEPTED');
 });
 test("saved delivery cursors cannot redirect reconciliation away from the App endpoint",async t=>{
   const h=harness(t),s=h.service;s.config.appId=42;s.config.privateKey='fixture';
